@@ -43,7 +43,7 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_paged_ram_crw_crw IS
   GENERIC (
-    g_technology     : NATURAL := 0;
+    g_technology     : NATURAL := 4;
     g_str            : STRING := "use_adr";
     g_data_w         : NATURAL;
     g_nof_pages      : NATURAL := 2;  -- >= 2

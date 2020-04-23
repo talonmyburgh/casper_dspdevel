@@ -122,7 +122,6 @@ BEGIN
 		wr_en_a <= '0';
 		proc_common_wait_some_cycles(clk, c_page_sz);
 		tb_end  <= '1';
-		WAIT;
 	END PROCESS;
 
 	u_dut_mux : ENTITY work.common_paged_ram_crw_crw
