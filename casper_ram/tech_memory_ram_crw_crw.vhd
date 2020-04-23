@@ -32,7 +32,7 @@ USE work.tech_memory_component_pkg.ALL;
 
 ENTITY tech_memory_ram_crw_crw IS
 	GENERIC(
-		g_technology : NATURAL := 0;    --c_tech_select_default;
+		g_technology : NATURAL := 4;    --c_tech_select_default;
 		g_adr_w      : NATURAL := 5;
 		g_dat_w      : NATURAL := 8;
 		g_nof_words  : NATURAL := 2**5;
@@ -58,64 +58,89 @@ ENTITY tech_memory_ram_crw_crw IS
 END tech_memory_ram_crw_crw;
 
 ARCHITECTURE str OF tech_memory_ram_crw_crw IS
+	signal readresA, readresB : std_logic_vector(g_dat_w - 1 downto 0) := (others => '0');
 
 BEGIN
 
-	gen_ip_stratixiv : IF g_technology = 0 GENERATE
-		u0 : ip_stratixiv_ram_crw_crw
-			GENERIC MAP(
-				g_adr_w      => g_adr_w,
-				g_dat_w      => g_dat_w,
-				g_nof_words  => g_nof_words,
-				g_rd_latency => g_rd_latency,
-				g_init_file  => g_init_file
-			)
-			PORT MAP(
-				address_a => address_a,
-				address_b => address_b,
-				clock_a   => clock_a,
-				clock_b   => clock_b,
-				data_a    => data_a,
-				data_b    => data_b,
-				enable_a  => enable_a,
-				enable_b  => enable_b,
-				rden_a    => rden_a,
-				rden_b    => rden_b,
-				wren_a    => wren_a,
-				wren_b    => wren_b,
-				q_a       => q_a,
-				q_b       => q_b
-			);
-	END GENERATE;
+	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE
+	--		u0 : ip_stratixiv_ram_crw_crw
+	--			GENERIC MAP(
+	--				g_adr_w      => g_adr_w,
+	--				g_dat_w      => g_dat_w,
+	--				g_nof_words  => g_nof_words,
+	--				g_rd_latency => g_rd_latency,
+	--				g_init_file  => g_init_file
+	--			)
+	--			PORT MAP(
+	--				address_a => address_a,
+	--				address_b => address_b,
+	--				clock_a   => clock_a,
+	--				clock_b   => clock_b,
+	--				data_a    => data_a,
+	--				data_b    => data_b,
+	--				enable_a  => enable_a,
+	--				enable_b  => enable_b,
+	--				rden_a    => rden_a,
+	--				rden_b    => rden_b,
+	--				wren_a    => wren_a,
+	--				wren_b    => wren_b,
+	--				q_a       => q_a,
+	--				q_b       => q_b
+	--			);
+	--	END GENERATE;
 
---Generate XILINX TDP RAM where we have two ports A and B for dual w/r
+	--Generate XILINX TDP RAM where we have two ports A and B for dual w/r
 	gen_ip_xilinx_tdp : IF g_technology = 4 GENERATE
-		u1 : asym_ram_tdp_read_first
+		u1 : ip_tdp_ram_infer
 			generic map(
-				WIDTHA     => g_dat_w,
-				SIZEA      => g_nof_words,
-				ADDRWIDTHA => g_adr_w,
-				WIDTHB     => g_dat_w,
-				SIZEB      => g_nof_words,
-				ADDRWIDTHB => g_adr_w
+				addressWidth => g_adr_w,
+				dataWidth    => g_dat_w
 			)
 			port map(
-				clkA  => clock_a,
-				clkB  => clock_b,
-				enA   => enable_a,
-				enB   => enable_b,
-				weA   => wren_a,
-				weB   => wren_b,
-				addrA => address_a,
-				addrB => address_b,
-				diA   => data_a,
-				diB   => data_b,
-				doA   => q_a,
-				doB   => q_b
+				addressA => address_a,
+				addressB => address_b,
+				clockA   => clock_a,
+				clockB   => clock_b,
+				dataA    => data_a,
+				dataB    => data_b,
+				enableA  => enable_a,
+				enableB  => enable_b,
+				wrenA    => wren_a,
+				wrenB    => wren_b,
+				qA       => readresA,
+				qB       => readresB
 			);
 	END GENERATE;
+	--Xilinx won't permit building tdp BRAM's with read enables or read latencies. So we artificially make them here:
+	process(clock_a)
+		variable cnt_a : integer := 0;
+	begin
+		if (rising_edge(clock_a) and (rden_a = '1')) then
+			if (cnt_a = 1 and g_rd_latency = 1) then
+				q_a <= readresA;
+			elsif (cnt_a = 2 and g_rd_latency = 2) then
+				q_a <= readresA;
+			else
+				q_a <= null;
+			end if;
+			cnt_a := cnt_a + 1;
+		end if;
+	end process;
 
-
+	process(clock_b)
+		variable cnt_b : integer := 0;
+	begin
+		if (rising_edge(clock_b) and (rden_b = '1')) then
+			if (cnt_b = 1 and g_rd_latency = 1) then
+				q_b <= readresB;
+			elsif (cnt_b = 2 and g_rd_latency = 2) then
+				q_b <= readresB;
+			else
+				q_b <= null;
+			end if;
+			cnt_b := cnt_b + 1;
+		end if;
+	end process;
 
 	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
 	--    u0 : ip_arria10_ram_crw_crw

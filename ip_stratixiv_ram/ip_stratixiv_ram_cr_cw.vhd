@@ -72,8 +72,6 @@ ARCHITECTURE SYN OF ip_stratixiv_ram_cr_cw IS
   
   SIGNAL sub_wire0  : STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
 
-
-
   COMPONENT altsyncram
   GENERIC (
     address_aclr_b    : STRING;
