@@ -20,15 +20,40 @@
 
 -- Purpose: IP components declarations for various devices that get wrapped by the tech components
 
-LIBRARY IEEE;
+LIBRARY IEEE,ip_xilinx_mult_lib;
 USE IEEE.STD_LOGIC_1164.ALL;
+use ip_xilinx_mult_lib.all;
 
 PACKAGE tech_mult_component_pkg IS
 
 	-----------------------------------------------------------------------------
 	-- Xilinx 7 Series Components
 	-----------------------------------------------------------------------------
+	component ip_cmult_infer_rtl
+		generic(
+			AWIDTH : natural;
+			BWIDTH : natural
+		);
+		port(
+			clk    : in  std_logic;
+			ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
+			br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
+			rst    : in  std_logic;
+			clken  : in  std_logic;
+			pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
+		);
+	end component ip_cmult_infer_rtl;
 	
+	component ip_mult_infer_rtl
+		port(
+			a   : in  std_logic_vector(15 downto 0);
+			b   : in  std_logic_vector(15 downto 0);
+			clk : in  std_logic;
+			rst : in  std_logic;
+			ce  : in  std_logic;
+			p   : out std_logic_vector(31 downto 0)
+		);
+	end component ip_mult_infer_rtl;
 
 	-----------------------------------------------------------------------------
 	-- Stratix IV components
