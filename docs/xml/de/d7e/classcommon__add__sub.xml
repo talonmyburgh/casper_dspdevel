@@ -1,0 +1,298 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="de/d7e/classcommon__add__sub" kind="class" language="VHDL" prot="public">
+    <compoundname>common_add_sub</compoundname>
+    <derivedcompoundref refid="dc/df9/classcommon__add__sub__tb" prot="public" virt="non-virtual">common_add_sub_tb</derivedcompoundref>
+    <innerclass refid="d6/d43/classcommon__add__sub_1_1add__sub" prot="private">common_add_sub::add_sub</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a499aa826d26cded72bd38b628ded8105" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_direction STRING :=   &quot;ADD&quot;</definition>
+        <argsstring> STRING :=   &quot;ADD&quot;</argsstring>
+        <name>g_direction</name>
+        <briefdescription>
+<para>&quot;ADD&quot;, &quot;SUB&quot; or &quot;BOTH&quot; and use sel_add to pick </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a64841845ee37710460b61b493d2f4979" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_representation STRING :=   &quot;SIGNED&quot;</definition>
+        <argsstring> STRING :=   &quot;SIGNED&quot;</argsstring>
+        <name>g_representation</name>
+        <briefdescription>
+<para>&quot;SIGNED&quot; or &quot;UNSIGNED&quot; </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="49" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1ade830d6ebcf89e543a6d4dff4048e3e8" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_pipeline_input NATURAL := 0</definition>
+        <argsstring> NATURAL := 0</argsstring>
+        <name>g_pipeline_input</name>
+        <briefdescription>
+<para>0 or 1 </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="50" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a5981b29e1ee07dc9d940751e3a422a80" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_pipeline_output NATURAL := 1</definition>
+        <argsstring> NATURAL := 1</argsstring>
+        <name>g_pipeline_output</name>
+        <briefdescription>
+<para>&gt;= 0 </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="51" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a2a9792e15af50383bf6156af163d2ae6" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_in_dat_w NATURAL := 8</definition>
+        <argsstring> NATURAL := 8</argsstring>
+        <name>g_in_dat_w</name>
+        <briefdescription>
+<para>input data width </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="52" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a702f1fa3d48604774c322fd2e8130b96" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_out_dat_w NATURAL := 9</definition>
+        <argsstring> NATURAL := 9</argsstring>
+        <name>g_out_dat_w</name>
+        <briefdescription>
+<para>output data width. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="54" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clk STD_LOGIC </definition>
+        <argsstring> STD_LOGIC </argsstring>
+        <name>clk</name>
+        <briefdescription>
+<para>input clock source </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="56" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1acea3987784765b87fe360c8ece3c7587" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clken STD_LOGIC := &apos;1&apos;</definition>
+        <argsstring> STD_LOGIC := &apos;1&apos;</argsstring>
+        <name>clken</name>
+        <briefdescription>
+<para>enable process triggering on clock rising edge </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="57" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a4fa755f20b2745b4c3484938582e1c3a" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in sel_add STD_LOGIC := &apos;1&apos;</definition>
+        <argsstring> STD_LOGIC := &apos;1&apos;</argsstring>
+        <name>sel_add</name>
+        <briefdescription>
+<para>decide whether to add or subtract (only used when g_direction is &quot;BOTH&quot;) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="58" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a31a0d23ea0399b883c384eaa3a28164a" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_a STD_LOGIC_VECTOR(   g_in_dat_w- 1 DOWNTO  0) </definition>
+        <argsstring> STD_LOGIC_VECTOR(   g_in_dat_w- 1 DOWNTO  0) </argsstring>
+        <name>in_a</name>
+        <briefdescription>
+<para>input value A - must be width of g_in_dat_w </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1ab886a00fc6e478705fbee505c314c0b7" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_b STD_LOGIC_VECTOR(   g_in_dat_w- 1 DOWNTO  0) </definition>
+        <argsstring> STD_LOGIC_VECTOR(   g_in_dat_w- 1 DOWNTO  0) </argsstring>
+        <name>in_b</name>
+        <briefdescription>
+<para>input value B - must be width of g_in_dat_w </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="60" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a9c774474d4c9f39a467caa59f4f95058" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out result STD_LOGIC_VECTOR(   g_out_dat_w- 1 DOWNTO  0) </definition>
+        <argsstring> STD_LOGIC_VECTOR(   g_out_dat_w- 1 DOWNTO  0) </argsstring>
+        <name>result</name>
+        <briefdescription>
+<para>result of A +/- B of width g_out_dat_w </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1ac1ebcc4faa34f687aecd1f2ffe111199" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ IEEEIEEE,common_pkg_lib,common_components_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,common_components_lib</argsstring>
+        <name>IEEE</name>
+        <briefdescription>
+<para>Use standard library logic elements, common_pkg_lib and common_components_lib. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a4d579720ff86c6e8a625fcaadd27246a" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libIEEE,common_pkg_lib,common_components_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,common_components_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1ace3420cca9c70b48a5bc4ead1b2be3cd" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_components_libIEEE,common_pkg_lib,common_components_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,common_components_lib</argsstring>
+        <name>common_components_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="22" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/d7e/classcommon__add__sub_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="23" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><dot>
+ digraph example {
+ node [shape=record, fontname=Helvetica, fontsize=10,color=&quot;black&quot;];
+ DataExtract [ label=&quot;Entity CDR_Top&quot; URL=&quot;\ref CDR_Top&quot;];
+   Blah -&gt; Ser2Par;
+   Ser2Par -&gt; DataExtract;
+	  DataExtract -&gt; Blah;
+   Blah -&gt; Ser2Par;
+ }
+ </dot>
+ </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Purpose : Adder with extra functionality Description:<itemizedlist>
+<listitem><para>Allow for function select (subtract or add) with sel_add signal</para>
+</listitem><listitem><para>Specify input and output widths</para>
+</listitem><listitem><para>Enable/disable option</para>
+</listitem><listitem><para>Sum signed or unsigned values </para>
+</listitem></itemizedlist>
+</para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>common_add_sub</label>
+        <link refid="de/d7e/classcommon__add__sub"/>
+      </node>
+      <node id="2">
+        <label>common_add_sub_tb</label>
+        <link refid="dc/df9/classcommon__add__sub__tb"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/CASPERFFT/casper_adder/casper_common_add_sub.vhd" bodystart="46" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="de/d7e/classcommon__add__sub_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>clk</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>clken</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1ace3420cca9c70b48a5bc4ead1b2be3cd" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>common_components_lib</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>common_pkg</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a4d579720ff86c6e8a625fcaadd27246a" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>common_pkg_lib</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a499aa826d26cded72bd38b628ded8105" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_direction</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a2a9792e15af50383bf6156af163d2ae6" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_in_dat_w</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a702f1fa3d48604774c322fd2e8130b96" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_out_dat_w</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1ade830d6ebcf89e543a6d4dff4048e3e8" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_pipeline_input</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a5981b29e1ee07dc9d940751e3a422a80" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_pipeline_output</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>g_representation</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1ac1ebcc4faa34f687aecd1f2ffe111199" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>IEEE</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a31a0d23ea0399b883c384eaa3a28164a" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>in_a</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1ab886a00fc6e478705fbee505c314c0b7" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>in_b</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a9c774474d4c9f39a467caa59f4f95058" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>result</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a4fa755f20b2745b4c3484938582e1c3a" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>sel_add</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>common_add_sub</scope><name>std_logic_1164</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

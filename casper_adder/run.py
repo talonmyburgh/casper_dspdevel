@@ -4,7 +4,7 @@ from vunit import VUnit
 vu = VUnit.from_argv()
 
 # Create library 'casper_common_adder_lib'
-lib1 = vu.add_library("common_adder_lib",allow_duplicate=True)
+lib1 = vu.add_library("casper_adder_lib",allow_duplicate=True)
 lib1.add_source_files("*.vhd")
 
 # Create library 'casper_common_components_lib'
