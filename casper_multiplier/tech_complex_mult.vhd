@@ -18,21 +18,14 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, casper_multiplier_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
---USE technology_lib.technology_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
-USE work.tech_mult_component_pkg.ALL;
+USE casper_multiplier_lib.tech_mult_component_pkg.all;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_stratixiv_mult_lib;
---LIBRARY ip_arria10_mult_lib;
---LIBRARY ip_arria10_mult_rtl_lib;
---LIBRARY ip_arria10_complex_mult_altmult_complex_150;
---LIBRARY ip_arria10_e1sg_complex_mult_altmult_complex_170;
---LIBRARY ip_arria10_complex_mult_rtl_lib;
---LIBRARY ip_arria10_complex_mult_rtl_canonical_lib;
+LIBRARY ip_xilinx_mult_lib;
+USE ip_xilinx_mult_lib.all;
 
 ENTITY tech_complex_mult IS
 	GENERIC(
@@ -64,12 +57,12 @@ END tech_complex_mult;
 
 ARCHITECTURE str of tech_complex_mult is
 
-	-- Force to maximum 18 bit width, because:
-	-- . the ip_stratixiv_complex_mult is generated for 18b inputs and 36b output and then uses 4 real multipliers and no additional registers
-	-- . if one input   > 18b then another IP needs to be regenerated and that will use  8 real multipliers and some extra LUTs and registers
-	-- . if both inputs > 18b then another IP needs to be regenerated and that will use 16 real multipliers and some extra LUTs and registers
-	-- . if the output is set to 18b+18b + 1b =37b to account for the sum then another IP needs to be regenerated and that will use some extra registers
-	-- ==> for inputs <= 18b this ip_stratixiv_complex_mult is appropriate and it can not be made parametrisable to fit also inputs > 18b.
+	--! Force to maximum 18 bit width, because:
+	--! . the ip_cmult_infer is generated for 18b inputs and 36b output and then uses 4 real multipliers and no additional registers
+	--! . if one input   > 18b then another IP needs to be regenerated and that will use  8 real multipliers and some extra LUTs and registers
+	--! . if both inputs > 18b then another IP needs to be regenerated and that will use 16 real multipliers and some extra LUTs and registers
+	--! . if the output is set to 18b+18b + 1b =37b to account for the sum then another IP needs to be regenerated and that will use some extra registers
+	--! ==> for inputs <= 18b this ip_complex_mult is appropriate and it can not be made parametrisable to fit also inputs > 18b.
 	CONSTANT c_dsp_dat_w  : NATURAL := 18;
 	CONSTANT c_dsp_prod_w : NATURAL := 2 * c_dsp_dat_w;
 
@@ -86,36 +79,37 @@ ARCHITECTURE str of tech_complex_mult is
 
 begin
 
-	gen_ip_stratixiv_ip : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") GENERATE
-
+	gen_xilinx_cmult_ip : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") generate
 		-- Adapt DSP input widths
 		ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
 		ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
 		br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
 		bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b = FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
 
-		u0 : ip_stratixiv_complex_mult
-			PORT MAP(
-				aclr        => rst,
-				clock       => clk,
-				dataa_imag  => ai,
-				dataa_real  => ar,
-				datab_imag  => bi,
-				datab_real  => br,
-				ena         => clken,
-				result_imag => mult_im,
-				result_real => mult_re
+		u0 : entity ip_cmult_infer
+			generic map(
+				AWIDTH => c_dsp_dat_w,
+				BWIDTH => c_dsp_dat_w
+			)
+			port map(
+				clk   => clk,
+				ar    => ar,
+				ai    => ai,
+				br    => br,
+				bi    => bi,
+				rst   => rst,
+				clken => clken,
+				pr    => mult_re,
+				pi    => mult_im
 			);
-
 		-- Back to true input widths and then resize for output width
 		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
 		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
+	end generate;
 
-	END GENERATE;
-
-	gen_ip_stratixiv_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
-		u0 : ip_stratixiv_complex_mult_rtl
-			GENERIC MAP(
+	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
+		u1 : entity ip_xilinx_cmult_rtl
+			generic map(
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
 				g_out_p_w          => g_out_p_w,
@@ -125,7 +119,7 @@ begin
 				g_pipeline_adder   => g_pipeline_adder,
 				g_pipeline_output  => g_pipeline_output
 			)
-			PORT MAP(
+			port map(
 				rst       => rst,
 				clk       => clk,
 				clken     => clken,
@@ -136,116 +130,59 @@ begin
 				result_re => result_re,
 				result_im => result_im
 			);
-	END GENERATE;
+	end generate;
 
-	--  gen_ip_arria10_ip : IF (g_sim=FALSE OR (g_sim=TRUE AND g_sim_level=0)) AND (g_technology=c_tech_arria10 AND g_variant="IP") GENERATE
+	--	gen_ip_stratixiv_ip : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") GENERATE
 	--
-	--    -- Adapt DSP input widths
-	--    ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
-	--    ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
-	--    br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
-	--    bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b=FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
+	--		-- Adapt DSP input widths
+	--		ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
+	--		ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
+	--		br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
+	--		bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b = FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
 	--
-	--    u0 : ip_arria10_complex_mult
-	--    PORT MAP (
-	--         aclr        => rst,
-	--         clock       => clk,
-	--         dataa_imag  => ai,
-	--         dataa_real  => ar,
-	--         datab_imag  => bi,
-	--         datab_real  => br,
-	--         ena         => clken,
-	--         result_imag => mult_im,
-	--         result_real => mult_re
-	--         );
+	--		u0 : ip_stratixiv_complex_mult
+	--			PORT MAP(
+	--				aclr        => rst,
+	--				clock       => clk,
+	--				dataa_imag  => ai,
+	--				dataa_real  => ar,
+	--				datab_imag  => bi,
+	--				datab_real  => br,
+	--				ena         => clken,
+	--				result_imag => mult_im,
+	--				result_real => mult_re
+	--			);
 	--
-	--    -- Back to true input widths and then resize for output width
-	--    result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
-	--    result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
+	--		-- Back to true input widths and then resize for output width
+	--		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
+	--		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
 	--
-	--  END GENERATE;
-	--
-	--  -- RTL variant is the same for unb2, unb2a and unb2b
-	--  gen_ip_arria10_rtl : IF (g_sim=FALSE OR (g_sim=TRUE AND g_sim_level=0)) AND 
-	--      ((g_technology=c_tech_arria10 OR g_technology=c_tech_arria10_e3sge3 OR g_technology=c_tech_arria10_e1sg ) AND g_variant="RTL") GENERATE
-	--    u0 : ip_arria10_complex_mult_rtl
-	--  GENERIC MAP(
-	--    g_in_a_w           => g_in_a_w,
-	--    g_in_b_w           => g_in_b_w,
-	--    g_out_p_w          => g_out_p_w,
-	--    g_conjugate_b      => g_conjugate_b,
-	--    g_pipeline_input   => g_pipeline_input,
-	--    g_pipeline_product => g_pipeline_product,
-	--    g_pipeline_adder   => g_pipeline_adder,
-	--    g_pipeline_output  => g_pipeline_output
-	--  )
-	--  PORT MAP(
-	--    rst        => rst,
-	--    clk        => clk,
-	--    clken      => clken,
-	--    in_ar      => in_ar,
-	--    in_ai      => in_ai,
-	--    in_br      => in_br,
-	--    in_bi      => in_bi,
-	--    result_re  => result_re,
-	--    result_im  => result_im
-	--    );
-	--  END GENERATE;
-	--
-	--  gen_ip_arria10_rtl_canonical : IF (g_sim=FALSE OR (g_sim=TRUE AND g_sim_level=0)) AND 
-	--      ((g_technology=c_tech_arria10 OR g_technology=c_tech_arria10_e3sge3 OR g_technology=c_tech_arria10_e1sg ) AND g_variant="RTL_C") GENERATE
-	--    u0 : ip_arria10_complex_mult_rtl_canonical
-	--  GENERIC MAP(
-	--    g_in_a_w           => g_in_a_w,
-	--    g_in_b_w           => g_in_b_w,
-	--    g_out_p_w          => g_out_p_w,
-	----    g_conjugate_b      => g_conjugate_b, -- NOT SUPPORTED
-	--    g_pipeline_input   => g_pipeline_input,
-	--    g_pipeline_product => g_pipeline_product,
-	--    g_pipeline_adder   => g_pipeline_adder,
-	--    g_pipeline_output  => g_pipeline_output
-	--  )
-	--  PORT MAP(
-	--    rst        => rst,
-	--    clk        => clk,
-	--    clken      => clken,
-	--    in_ar      => in_ar,
-	--    in_ai      => in_ai,
-	--    in_br      => in_br,
-	--    in_bi      => in_bi,
-	--    result_re  => result_re,
-	--    result_im  => result_im
-	--    );
-	--  END GENERATE;
-	--
-	--
-	--  gen_ip_arria10_e1sg_ip : IF (g_sim=FALSE OR (g_sim=TRUE AND g_sim_level=0)) AND (g_technology=c_tech_arria10_e1sg AND g_variant="IP") GENERATE
-	--
-	--    -- Adapt DSP input widths
-	--    ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
-	--    ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
-	--    br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
-	--    bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b=FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
-	--
-	--
-	--    u0 : ip_arria10_e1sg_complex_mult
-	--    PORT MAP (
-	--         aclr        => rst,
-	--         clock       => clk,
-	--         dataa_imag  => ai,
-	--         dataa_real  => ar,
-	--         datab_imag  => bi,
-	--         datab_real  => br,
-	--         ena         => clken,
-	--         result_imag => mult_im,
-	--         result_real => mult_re
-	--         );
-	--
-	--    -- Back to true input widths and then resize for output width
-	--    result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
-	--    result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
-	--
-	--  END GENERATE;
+	--	END GENERATE;
+
+	--	gen_ip_stratixiv_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
+	--		u0 : ip_stratixiv_complex_mult_rtl
+	--			GENERIC MAP(
+	--				g_in_a_w           => g_in_a_w,
+	--				g_in_b_w           => g_in_b_w,
+	--				g_out_p_w          => g_out_p_w,
+	--				g_conjugate_b      => g_conjugate_b,
+	--				g_pipeline_input   => g_pipeline_input,
+	--				g_pipeline_product => g_pipeline_product,
+	--				g_pipeline_adder   => g_pipeline_adder,
+	--				g_pipeline_output  => g_pipeline_output
+	--			)
+	--			PORT MAP(
+	--				rst       => rst,
+	--				clk       => clk,
+	--				clken     => clken,
+	--				in_ar     => in_ar,
+	--				in_ai     => in_ai,
+	--				in_br     => in_br,
+	--				in_bi     => in_bi,
+	--				result_re => result_re,
+	--				result_im => result_im
+	--			);
+	--	END GENERATE;
 
 	-------------------------------------------------------------------------------
 	-- Model: forward concatenated inputs to the 'result' output
@@ -291,5 +228,4 @@ begin
 			);
 
 	END GENERATE;
-
 end str;

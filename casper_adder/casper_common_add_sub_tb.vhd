@@ -24,7 +24,7 @@ USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 context vunit_lib.vunit_context;
 
-ENTITY tb_common_add_sub IS
+ENTITY common_add_sub_tb IS
 	GENERIC(
 		runner_cfg : string;
 		g_direction    : STRING    := "SUB"; -- "SUB", "ADD" or "BOTH"
@@ -34,9 +34,9 @@ ENTITY tb_common_add_sub IS
 		g_in_dat_w     : NATURAL   := 5;
 		g_out_dat_w    : NATURAL   := 5 -- g_in_dat_w or g_in_dat_w+1
 	);
-END tb_common_add_sub;
+END common_add_sub_tb;
 
-ARCHITECTURE tb OF tb_common_add_sub IS
+ARCHITECTURE tb OF common_add_sub_tb IS
 
 	CONSTANT clk_period : TIME    := 10 ns;
 	CONSTANT c_pipeline : NATURAL := g_pipeline_in + g_pipeline_out;

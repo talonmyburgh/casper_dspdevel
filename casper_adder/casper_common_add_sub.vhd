@@ -1,47 +1,70 @@
--------------------------------------------------------------------------------
---
--- Copyright 2020
--- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
--- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
--- 
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
--- 
---     http://www.apache.org/licenses/LICENSE-2.0
--- 
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
---
--------------------------------------------------------------------------------
+/*!
+ * @file
+ * @brief Common adder/subtracter for signed/unsigned values.*/
+ 
+/* Copyright 2020
+ * ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
+ * P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
+ 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 
+--! Use standard library logic elements, common_pkg_lib and common_components_lib
 LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 
+--! Purpose : Adder with extra functionality
+--! Description:
+--!   + Allow for function select (subtract or add) with sel_add signal
+--!   + Specify input and output widths
+--!   + Enable/disable option
+--!   + Sum signed or unsigned values
+
+--! Remarks:
+--!  + Currently only support for g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1
+--!  + Specifying signed or unsiged is only important if g_out_dat_w > g_in_dat_w. It is not relevant if g_out_dat_w = g_in_dat_w
+
+--! @dot
+--! digraph example {
+--! node [shape=record, fontname=Helvetica, fontsize=10,color="black"];
+--! DataExtract [ label="Entity CDR_Top" URL="\ref CDR_Top"];
+--!   Blah -> Ser2Par;
+--!   Ser2Par -> DataExtract;
+--!	  DataExtract -> Blah;
+--!   Blah -> Ser2Par;
+--! }
+--! @enddot
 ENTITY common_add_sub IS
 	GENERIC(
-		g_direction       : STRING  := "ADD"; -- or "SUB", or "BOTH" and use sel_add
-		g_representation  : STRING  := "SIGNED"; -- or "UNSIGNED", important if g_out_dat_w > g_in_dat_w, not relevant if g_out_dat_w = g_in_dat_w
-		g_pipeline_input  : NATURAL := 0; -- 0 or 1
-		g_pipeline_output : NATURAL := 1; -- >= 0
-		g_in_dat_w        : NATURAL := 8;
-		g_out_dat_w       : NATURAL := 9 -- only support g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1
+		g_direction       : STRING  := "ADD"; --! "ADD", "SUB" or "BOTH" and use sel_add to pick
+		g_representation  : STRING  := "SIGNED"; --! "SIGNED" or "UNSIGNED"
+		g_pipeline_input  : NATURAL := 0; --! 0 or 1
+		g_pipeline_output : NATURAL := 1; --! >= 0
+		g_in_dat_w        : NATURAL := 8; --! input data width
+		g_out_dat_w       : NATURAL := 9 --! output data width. 
 	);
 	PORT(
-		clk     : IN  STD_LOGIC;
-		clken   : IN  STD_LOGIC := '1';
-		sel_add : IN  STD_LOGIC := '1'; -- only used for g_direction "BOTH"
-		in_a    : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
-		in_b    : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
-		result  : OUT STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0)
+		clk     : IN  STD_LOGIC; --! input clock source
+		clken   : IN  STD_LOGIC := '1'; --! enable process triggering on clock rising edge
+		sel_add : IN  STD_LOGIC := '1'; --! decide whether to add or subtract (only used when g_direction is "BOTH")
+		in_a    : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0); --! input value A - must be width of g_in_dat_w
+		in_b    : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0); --! input value B - must be width of g_in_dat_w
+		result  : OUT STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0) --! result of A +/- B of width g_out_dat_w
 	);
 END common_add_sub;
 
-ARCHITECTURE str OF common_add_sub IS
+ARCHITECTURE add_sub OF common_add_sub IS
 
 	CONSTANT c_res_w : NATURAL := g_in_dat_w + 1;
 
@@ -99,4 +122,4 @@ BEGIN
 			out_dat => result
 		);
 
-END str;
+END add_sub;
