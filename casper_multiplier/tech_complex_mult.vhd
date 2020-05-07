@@ -108,7 +108,7 @@ begin
 	end generate;
 
 	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
-		u1 : entity ip_xilinx_cmult_rtl
+		u1 : entity ip_cmult_rtl
 			generic map(
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
