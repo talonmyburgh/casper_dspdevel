@@ -32,7 +32,7 @@ USE IEEE.numeric_std.ALL;
 --!     =  ar*br + ai*bi + j (-ar*bi + ai*br)
 
 
-ENTITY ip_xilinx_cmult_rtl IS
+ENTITY ip_cmult_rtl IS
 	GENERIC(
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;
@@ -54,9 +54,9 @@ ENTITY ip_xilinx_cmult_rtl IS
 		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
 		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
 	);
-END ip_xilinx_cmult_rtl;
+END ip_cmult_rtl;
 
-ARCHITECTURE str OF ip_xilinx_cmult_rtl IS
+ARCHITECTURE str OF ip_cmult_rtl IS
 
 	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
 	BEGIN

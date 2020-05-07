@@ -3,30 +3,39 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 context vunit_lib.vunit_context;
 
-ENTITY ip_cmult_infer_tb IS
+ENTITY ip_cmult_rtl_tb IS
 	generic(
 		runner_cfg: string
 	);
-END ip_cmult_infer_tb;
+END ip_cmult_rtl_tb;
  
-ARCHITECTURE behavior OF ip_cmult_infer_tb IS 
+ARCHITECTURE behavior OF ip_cmult_rtl_tb IS 
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    component ip_cmult_infer_rtl
+    component ip_cmult_rtl
     	generic(
-    		AWIDTH : natural;
-    		BWIDTH : natural
+    		g_in_a_w           : POSITIVE;
+    		g_in_b_w           : POSITIVE;
+    		g_out_p_w          : POSITIVE;
+    		g_conjugate_b      : BOOLEAN;
+    		g_pipeline_input   : NATURAL;
+    		g_pipeline_product : NATURAL;
+    		g_pipeline_adder   : NATURAL;
+    		g_pipeline_output  : NATURAL
     	);
     	port(
-    		clk    : in  std_logic;
-    		ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
-    		br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
-    		rst    : in  std_logic;
-    		clken  : in  std_logic;
-    		pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
+    		rst       : IN  STD_LOGIC;
+    		clk       : IN  STD_LOGIC;
+    		clken     : IN  STD_LOGIC;
+    		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+    		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+    		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+    		in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+    		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
+    		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
     	);
-    end component ip_cmult_infer_rtl;
+    end component ip_cmult_rtl;
     
 
    --Inputs
@@ -48,21 +57,28 @@ ARCHITECTURE behavior OF ip_cmult_infer_tb IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: ip_cmult_infer_rtl 	generic map(
-   		AWIDTH => 18,
-   		BWIDTH => 18
+   uut: ip_cmult_rtl
+   	generic map(
+   		g_in_a_w           => 18,
+   		g_in_b_w           => 18,
+   		g_out_p_w          => 36,
+   		g_conjugate_b      => FALSE,
+   		g_pipeline_input   => 1,
+   		g_pipeline_product => 0,
+   		g_pipeline_adder   => 1,
+   		g_pipeline_output  => 1
    	)
-   PORT MAP (
-          clk => clk,
-          ar => ar,
-          ai => ai,
-          br => br,
-          bi => bi,
-          rst => rst,
-          clken => clken,
-          pr => pr,
-          pi => pi
-        );
+   	port map(
+   		rst       => rst,
+   		clk       => clk,
+   		clken     => clken,
+   		in_ar     => ar,
+   		in_ai     => ai,
+   		in_br     => br,
+   		in_bi     => bi,
+   		result_re => pr,
+   		result_im => pi
+   	);
 
    -- Clock process definitions
    clk_process :process

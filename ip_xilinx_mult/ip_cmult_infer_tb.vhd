@@ -13,20 +13,20 @@ ARCHITECTURE behavior OF ip_cmult_infer_tb IS
  
     -- Component Declaration for the Unit Under Test (UUT)
  
-    component ip_cmult_infer_rtl
-    	generic(
-    		AWIDTH : natural;
-    		BWIDTH : natural
-    	);
-    	port(
-    		clk    : in  std_logic;
-    		ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
-    		br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
-    		rst    : in  std_logic;
-    		clken  : in  std_logic;
-    		pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
-    	);
-    end component ip_cmult_infer_rtl;
+	component ip_cmult_infer
+		generic(
+			AWIDTH : natural;
+			BWIDTH : natural
+		);
+		port(
+			clk    : in  std_logic;
+			ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
+			br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
+			rst    : in  std_logic;
+			clken  : in  std_logic;
+			pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
+		);
+	end component ip_cmult_infer;
     
 
    --Inputs
@@ -48,22 +48,22 @@ ARCHITECTURE behavior OF ip_cmult_infer_tb IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: ip_cmult_infer_rtl 	generic map(
+   uut: ip_cmult_infer
+   	generic map(
    		AWIDTH => 18,
    		BWIDTH => 18
    	)
-   PORT MAP (
-          clk => clk,
-          ar => ar,
-          ai => ai,
-          br => br,
-          bi => bi,
-          rst => rst,
-          clken => clken,
-          pr => pr,
-          pi => pi
-        );
-
+   	port map(
+   		clk   => clk,
+   		ar    => ar,
+   		ai    => ai,
+   		br    => br,
+   		bi    => bi,
+   		rst   => rst,
+   		clken => clken,
+   		pr    => pr,
+   		pi    => pi
+   	);
    -- Clock process definitions
    clk_process :process
    begin
