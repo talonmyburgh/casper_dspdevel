@@ -17,5 +17,9 @@ lib2.add_source_files("../casper_common_components/*.vhd")
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
 lib3.add_source_files("../casper_common_pkg/*.vhd")
 
+#Create library 'ip_xilinx_mult_lib'
+lib4 = vu.add_library("ip_xilinx_mult_lib",allow_duplicate=True)
+lib4.add_source_files("../ip_xilinx_mult/*.vhd")
+
 # Run vunit function
 vu.main()

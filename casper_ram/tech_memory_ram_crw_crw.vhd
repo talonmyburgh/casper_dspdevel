@@ -120,8 +120,6 @@ BEGIN
 				q_a <= readresA;
 			elsif (cnt_a = 2 and g_rd_latency = 2) then
 				q_a <= readresA;
-			else
-				q_a <= null;
 			end if;
 			cnt_a := cnt_a + 1;
 		end if;
@@ -135,8 +133,6 @@ BEGIN
 				q_b <= readresB;
 			elsif (cnt_b = 2 and g_rd_latency = 2) then
 				q_b <= readresB;
-			else
-				q_b <= null;
 			end if;
 			cnt_b := cnt_b + 1;
 		end if;

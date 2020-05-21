@@ -109,7 +109,7 @@ begin
 		u_CmplxMul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
 				g_technology       => g_technology,
-				g_variant          => "RTL",
+				g_variant          => "IP",
 				g_in_a_w           => c_in_dat_w,
 				g_in_b_w           => c_weight_w,
 				g_out_p_w          => c_prod_w,

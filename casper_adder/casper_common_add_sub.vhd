@@ -1,23 +1,22 @@
-/*!
- * @file
- * @brief Common adder/subtracter for signed/unsigned values.*/
+--!
+--! @file
+--! @brief Common adder/subtracter for signed/unsigned values.*/
  
-/* Copyright 2020
- * ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
- * P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
+--! Copyright 2020
+--! ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
+--! P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
  
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+--! Licensed under the Apache License, Version 2.0 (the "License");
+--! you may not use this file except in compliance with the License.
+--! You may obtain a copy of the License at
  
- *    http://www.apache.org/licenses/LICENSE-2.0
+--!    http://www.apache.org/licenses/LICENSE-2.0
  
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+--! Unless required by applicable law or agreed to in writing, software
+--! distributed under the License is distributed on an "AS IS" BASIS,
+--! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+--! See the License for the specific language governing permissions and
+--! limitations under the License.
 
 --! Use standard library logic elements, common_pkg_lib and common_components_lib
 LIBRARY IEEE, common_pkg_lib, common_components_lib;
@@ -38,7 +37,7 @@ USE common_pkg_lib.common_pkg.ALL;
 --! @dot
 --! digraph example {
 --! node [shape=record, fontname=Helvetica, fontsize=10,color="black"];
---! DataExtract [ label="Entity CDR_Top" URL="\ref CDR_Top"];
+--! DataExtract [ label="Entity common_add_sub" URL="\ref common_add_sub"];
 --!   Blah -> Ser2Par;
 --!   Ser2Par -> DataExtract;
 --!	  DataExtract -> Blah;
@@ -121,5 +120,4 @@ BEGIN
 			in_dat  => result_p(result'RANGE),
 			out_dat => result
 		);
-
 END add_sub;
