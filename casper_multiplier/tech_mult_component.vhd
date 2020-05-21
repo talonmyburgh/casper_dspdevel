@@ -29,7 +29,7 @@ PACKAGE tech_mult_component_pkg IS
 	-- Xilinx 7 Series Mults
 	-----------------------------------------------------------------------------
 	--! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not translate to DSP element.
-		COMPONENT ip_xilinx_cmult_rtl IS
+		COMPONENT ip_cmult_rtl IS
 		GENERIC(
 			g_in_a_w           : POSITIVE := 18;
 			g_in_b_w           : POSITIVE := 18;
