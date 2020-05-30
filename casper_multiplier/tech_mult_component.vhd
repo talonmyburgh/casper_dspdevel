@@ -20,25 +20,24 @@
 
 --! Purpose: IP components declarations for various devices that get wrapped by the tech components
 
-LIBRARY IEEE,ip_xilinx_mult_lib;
+LIBRARY IEEE, ip_xilinx_mult_lib;
 USE IEEE.STD_LOGIC_1164.ALL;
-use ip_xilinx_mult_lib.all;
 PACKAGE tech_mult_component_pkg IS
 
-	-----------------------------------------------------------------------------
+	-- ---------------------------------------------------------------------------
 	-- Xilinx 7 Series Mults
-	-----------------------------------------------------------------------------
-	--! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not translate to DSP element.
-		COMPONENT ip_cmult_rtl IS
+	-- ---------------------------------------------------------------------------
+	-- ! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not necessarily translate to DSP element.
+	COMPONENT ip_cmult_rtl IS
 		GENERIC(
-			g_in_a_w           : POSITIVE := 18;
-			g_in_b_w           : POSITIVE := 18;
-			g_out_p_w          : POSITIVE := 36;
-			g_conjugate_b      : BOOLEAN  := FALSE;
-			g_pipeline_input   : NATURAL  := 1; -- 0 or 1
-			g_pipeline_product : NATURAL  := 0; -- 0 or 1
-			g_pipeline_adder   : NATURAL  := 1; -- 0 or 1
-			g_pipeline_output  : NATURAL  := 1 -- >= 0
+			g_in_a_w           : POSITIVE;
+			g_in_b_w           : POSITIVE;
+			g_out_p_w          : POSITIVE; -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
+			g_conjugate_b      : BOOLEAN := FALSE;
+			g_pipeline_input   : NATURAL := 1; -- 0 or 1
+			g_pipeline_product : NATURAL := 0; -- 0 or 1
+			g_pipeline_adder   : NATURAL := 1; -- 0 or 1
+			g_pipeline_output  : NATURAL := 1 -- >= 0
 		);
 		PORT(
 			rst       : IN  STD_LOGIC := '0';
@@ -52,12 +51,12 @@ PACKAGE tech_mult_component_pkg IS
 			result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
 		);
 	END COMPONENT;
-	
+
 	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
 	component ip_cmult_infer
 		generic(
-			AWIDTH : natural;
-			BWIDTH : natural
+			AWIDTH : natural := 18;
+			BWIDTH : natural := 18
 		);
 		port(
 			clk    : in  std_logic;
@@ -68,12 +67,12 @@ PACKAGE tech_mult_component_pkg IS
 			pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
 		);
 	end component ip_cmult_infer;
-	
+
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
 	component ip_mult_infer
 		generic(
-			AWIDTH : natural;
-			BWIDTH : natural
+			AWIDTH : positive := 16;
+			BWIDTH : positive := 16
 		);
 		port(
 			a   : in  std_logic_vector(AWIDTH - 1 downto 0);

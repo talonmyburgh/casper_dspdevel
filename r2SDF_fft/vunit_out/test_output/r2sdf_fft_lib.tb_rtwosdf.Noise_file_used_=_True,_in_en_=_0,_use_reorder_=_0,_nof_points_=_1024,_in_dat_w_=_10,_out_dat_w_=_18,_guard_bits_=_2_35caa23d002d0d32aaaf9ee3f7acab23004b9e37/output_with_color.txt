@@ -1,0 +1,11 @@
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:89:16:warning: instance "u0" of component "ip_cmult_infer" is not bound [-Wbinding]
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:113:16:warning: instance "u1" of component "ip_cmult_rtl" is not bound [-Wbinding]
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/tech_memory_ram_crw_crw.vhd:94:16:warning: instance "u1" of component "ip_tdp_ram_infer" is not bound [-Wbinding]
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/tech_memory_ram_crw_crw.vhd:60:14:warning: (in default configuration of tech_memory_ram_crw_crw(str))
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/tech_memory_ram_cr_cw.vhd:82:16:warning: instance "u2" of component "ip_sdp_ram_infer" is not bound [-Wbinding]
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/tech_memory_ram_cr_cw.vhd:56:14:warning: (in default configuration of tech_memory_ram_cr_cw(str))
+/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF_tb.vhd:317:8: process labeled "p_verify_output" must not contain wait statement, but calls
+/home/talon/anaconda3/lib/python3.7/site-packages/vunit_hdl-4.4.0-py3.7.egg/vunit/vhdl/run/src/run_api.vhd:25:13: procedure "test_runner_setup" which has (indirectly) a wait statement
+/etc/ghdl-llvm/bin/ghdl: compilation error

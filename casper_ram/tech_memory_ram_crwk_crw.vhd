@@ -25,7 +25,7 @@ USE work.tech_memory_component_pkg.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_stratixiv_ram_lib;
+LIBRARY ip_stratixiv_ram_lib;
 --LIBRARY ip_arria10_ram_lib;
 --LIBRARY ip_arria10_e3sge3_ram_lib;
 --LIBRARY ip_arria10_e1sg_ram_lib;
@@ -64,7 +64,7 @@ ARCHITECTURE str OF tech_memory_ram_crwk_crw IS
 BEGIN
 
 	gen_ip_stratixiv : IF g_technology = 0 GENERATE
-		u0 : ip_stratixiv_ram_crwk_crw
+		u0 : ip_stratixiv_ram_lib.ip_stratixiv_ram_crwk_crw
 			GENERIC MAP(g_adr_a_w, g_dat_a_w, g_adr_b_w, g_dat_b_w, g_nof_words_a, g_nof_words_b, g_rd_latency, g_init_file)
 			PORT MAP(address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
 	END GENERATE;

@@ -46,7 +46,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_complex_mult IS
 	GENERIC(
-		g_sim              : BOOLEAN := FALSE;
+		g_sim              : BOOLEAN := TRUE;
 		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
 		g_variant          : STRING  := "RTL";
@@ -86,9 +86,10 @@ ARCHITECTURE str OF common_complex_mult IS
 
 	SIGNAL result_re : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
 	SIGNAL result_im : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
+	signal in_clr : STD_LOGIC := '0';
+	signal in_en : STD_LOGIC := '1';
 
 BEGIN
-
 	-- User specificied latency must be >= MegaWizard IP dsp_mult_add2 latency
 	ASSERT c_pipeline >= c_dsp_latency
 	REPORT "tech_complex_mult: pipeline value not supported"
@@ -100,10 +101,12 @@ BEGIN
 			g_pipeline => c_pipeline
 		)
 		PORT MAP(
-			rst     => rst,
-			clk     => clk,
-			clken   => clken,
-			in_dat  => in_val,
+			rst => rst,
+			clk => clk,
+			clken => clken,
+			in_clr => in_clr,
+			in_en => in_en,
+			in_dat => in_val,
 			out_dat => out_val
 		);
 
@@ -146,9 +149,12 @@ BEGIN
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
-			clk     => clk,
-			clken   => clken,
-			in_dat  => STD_LOGIC_VECTOR(result_re),
+			rst => rst,
+			clk => clk,
+			clken => clken,
+			in_clr => in_clr,
+			in_en => in_en,
+			in_dat => STD_LOGIC_VECTOR(result_re),
 			out_dat => out_pr
 		);
 
@@ -160,9 +166,12 @@ BEGIN
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
-			clk     => clk,
-			clken   => clken,
-			in_dat  => STD_LOGIC_VECTOR(result_im),
+			rst => rst,
+			clk => clk,
+			clken => clken,
+			in_clr => in_clr,
+			in_en => in_en,
+			in_dat => STD_LOGIC_VECTOR(result_im),
 			out_dat => out_pi
 		);
 

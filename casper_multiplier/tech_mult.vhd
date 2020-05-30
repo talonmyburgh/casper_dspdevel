@@ -1,9 +1,8 @@
-LIBRARY IEEE, common_pkg_lib, common_components_lib, casper_multiplier_lib;
+
+LIBRARY IEEE, common_pkg_lib, ip_xilinx_mult_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-USE casper_multiplier_lib.tech_mult_component_pkg.all;
-LIBRARY ip_xilinx_mult_lib;
-USE ip_xilinx_mult_lib.all;
+USE work.tech_mult_component_pkg.all;
 
 ENTITY tech_mult IS
 	GENERIC(

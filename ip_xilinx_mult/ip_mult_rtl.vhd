@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity ip_mult_infer_rtl is
+entity ip_mult_rtl is
 	generic(AWIDTH : natural := 16;
 	        BWIDTH : natural := 16);
 	port(
@@ -14,7 +14,7 @@ entity ip_mult_infer_rtl is
 		p   : out std_logic_vector(AWIDTH+BWIDTH -1 downto 0)
 	);
 end entity;
-architecture ip_mult_infer_rtl of ip_mult_infer_rtl is
+architecture ip_mult_infer_rtl of ip_mult_rtl is
 	signal a1 : signed(AWIDTH-1 downto 0);
 	signal b1 : signed(BWIDTH-1 downto 0);
 	signal p1 : signed(AWIDTH+BWIDTH-1 downto 0);

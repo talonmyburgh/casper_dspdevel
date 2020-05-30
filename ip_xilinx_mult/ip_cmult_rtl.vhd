@@ -1,4 +1,4 @@
- 	-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 --
 -- Copyright 2020
 -- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
@@ -17,7 +17,6 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
-
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
@@ -30,7 +29,6 @@ USE IEEE.numeric_std.ALL;
 --!   p = a * conj(b) when g_conjugate_b = TRUE
 --!     = (ar + j ai) * (br - j bi)
 --!     =  ar*br + ai*bi + j (-ar*bi + ai*br)
-
 
 ENTITY ip_cmult_rtl IS
 	GENERIC(
@@ -122,7 +120,7 @@ BEGIN
 
 	-- Put all potential registers in a single process for optimal DSP inferrence
 	-- Use rst only if it is supported by the DSP primitive, else leave it at '0'
-	p_reg : PROCESS(rst, clk)
+	p_reg : PROCESS(clk)
 	BEGIN
 		IF rising_edge(clk) THEN
 			IF rst = '1' THEN

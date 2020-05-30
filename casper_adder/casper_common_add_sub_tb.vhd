@@ -26,13 +26,13 @@ context vunit_lib.vunit_context;
 
 ENTITY common_add_sub_tb IS
 	GENERIC(
-		runner_cfg : string;
 		g_direction    : STRING    := "SUB"; -- "SUB", "ADD" or "BOTH"
-		g_sel_add      : STD_LOGIC := '1'; -- '0' = sub, '1' = add, only valid for g_direction = "BOTH"
+		s_sel_add      : STRING    := "1"; -- '0' = sub, '1' = add, only valid for g_direction = "BOTH"
 		g_pipeline_in  : NATURAL   := 0; -- input pipelining 0 or 1
 		g_pipeline_out : NATURAL   := 2; -- output pipelining >= 0
 		g_in_dat_w     : NATURAL   := 5;
-		g_out_dat_w    : NATURAL   := 5 -- g_in_dat_w or g_in_dat_w+1
+		g_out_dat_w    : NATURAL   := 5; -- g_in_dat_w or g_in_dat_w+1;
+		runner_cfg : string
 	);
 END common_add_sub_tb;
 
@@ -40,9 +40,23 @@ ARCHITECTURE tb OF common_add_sub_tb IS
 
 	CONSTANT clk_period : TIME    := 10 ns;
 	CONSTANT c_pipeline : NATURAL := g_pipeline_in + g_pipeline_out;
+	
+		
+	FUNCTION str_to_std(strval : STRING) RETURN STD_LOGIC IS
+	BEGIN
+		if(strval = "1") then
+			return '1';
+		elsif(strval = "0") then
+			return '0';
+		else
+			null;
+		end if;	
+	END;
+	
+	SIGNAL g_sel_add : STD_LOGIC := '1';
 
 	-- This is function used to generate the expected result for the test bench.
-	FUNCTION func_result(in_a, in_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR IS
+	FUNCTION func_result(in_a, in_b : STD_LOGIC_VECTOR; g_sel_add : std_logic) RETURN STD_LOGIC_VECTOR IS
 		VARIABLE v_a, v_b, v_result : INTEGER;
 	BEGIN
 		-- Calculate expected result
@@ -69,6 +83,7 @@ ARCHITECTURE tb OF common_add_sub_tb IS
 		END IF;
 		RETURN TO_SVEC(v_result, g_out_dat_w);
 	END;
+	
 
 	SIGNAL tb_end          : STD_LOGIC := '0';
 	SIGNAL rst             : STD_LOGIC;
@@ -80,13 +95,13 @@ ARCHITECTURE tb OF common_add_sub_tb IS
 	SIGNAL result_rtl      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
 
 BEGIN
-
+	g_sel_add <= str_to_std(s_sel_add);
 	clk <= NOT clk OR tb_end AFTER clk_period / 2;
 
 	-- run 1 us or -all
 	p_in_stimuli : PROCESS
 	BEGIN
-		test_runner_setup(runner,runner_cfg);
+	test_runner_setup(runner,runner_cfg);
 		rst  <= '1';
 		in_a <= TO_SVEC(0, g_in_dat_w);
 		in_b <= TO_SVEC(0, g_in_dat_w);
@@ -140,9 +155,10 @@ BEGIN
 		WAIT UNTIL rising_edge(clk);
 		tb_end <= '1';
 		test_runner_cleanup(runner);	
+
 	END PROCESS;
 
-	out_result <= func_result(in_a, in_b);
+	out_result <= func_result(in_a, in_b,g_sel_add);
 
 	u_result : ENTITY common_components_lib.common_pipeline
 		GENERIC MAP(
@@ -180,10 +196,12 @@ BEGIN
 
 	p_verify : PROCESS(rst, clk)
 	BEGIN
+
 		IF rst = '0' THEN
 			IF rising_edge(clk) THEN
 				check(result_rtl = result_expected,"Error: wrong RTL result, expected: "&to_hstring(result_expected)&" but got: "&to_hstring(result_rtl));
 			END IF;
 		END IF;
+
 	END PROCESS;
 END tb;
