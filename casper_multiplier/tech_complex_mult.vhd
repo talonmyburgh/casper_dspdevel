@@ -18,14 +18,14 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib, casper_multiplier_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib,ip_xilinx_mult_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-USE casper_multiplier_lib.tech_mult_component_pkg.all;
+USE work.tech_mult_component_pkg.all;
 
--- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
-LIBRARY ip_xilinx_mult_lib;
-USE ip_xilinx_mult_lib.all;
+---- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
+--LIBRARY ip_xilinx_mult_lib;
+--USE ip_xilinx_mult_lib.all;
 
 ENTITY tech_complex_mult IS
 	GENERIC(
@@ -70,23 +70,23 @@ ARCHITECTURE str of tech_complex_mult is
 	SIGNAL ai      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
 	SIGNAL br      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
 	SIGNAL bi      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
-	SIGNAL mult_re : STD_LOGIC_VECTOR(c_dsp_prod_w - 1 DOWNTO 0);
-	SIGNAL mult_im : STD_LOGIC_VECTOR(c_dsp_prod_w - 1 DOWNTO 0);
+	SIGNAL mult_re : STD_LOGIC_VECTOR(c_dsp_prod_w DOWNTO 0);
+	SIGNAL mult_im : STD_LOGIC_VECTOR(c_dsp_prod_w DOWNTO 0);
 
 	-- sim_model=1
 	SIGNAL result_re_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 	SIGNAL result_im_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 
 begin
-
-	gen_xilinx_cmult_ip : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") generate
+	
+	gen_xilinx_cmult_ip_infer : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") generate -- @suppress "Redundant boolean equality check with true"
 		-- Adapt DSP input widths
 		ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
 		ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
 		br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
 		bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b = FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
 
-		u0 : entity ip_cmult_infer
+		u0 : ip_cmult_infer
 			generic map(
 				AWIDTH => c_dsp_dat_w,
 				BWIDTH => c_dsp_dat_w
@@ -103,12 +103,14 @@ begin
 				pi    => mult_im
 			);
 		-- Back to true input widths and then resize for output width
+		
+		
 		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
 		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
 	end generate;
 
-	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
-		u1 : entity ip_cmult_rtl
+	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE -- @suppress "Redundant boolean equality check with true"
+		u1 : ip_cmult_rtl
 			generic map(
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
@@ -131,58 +133,6 @@ begin
 				result_im => result_im
 			);
 	end generate;
-
-	--	gen_ip_stratixiv_ip : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") GENERATE
-	--
-	--		-- Adapt DSP input widths
-	--		ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
-	--		ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
-	--		br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
-	--		bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b = FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
-	--
-	--		u0 : ip_stratixiv_complex_mult
-	--			PORT MAP(
-	--				aclr        => rst,
-	--				clock       => clk,
-	--				dataa_imag  => ai,
-	--				dataa_real  => ar,
-	--				datab_imag  => bi,
-	--				datab_real  => br,
-	--				ena         => clken,
-	--				result_imag => mult_im,
-	--				result_real => mult_re
-	--			);
-	--
-	--		-- Back to true input widths and then resize for output width
-	--		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
-	--		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
-	--
-	--	END GENERATE;
-
-	--	gen_ip_stratixiv_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE
-	--		u0 : ip_stratixiv_complex_mult_rtl
-	--			GENERIC MAP(
-	--				g_in_a_w           => g_in_a_w,
-	--				g_in_b_w           => g_in_b_w,
-	--				g_out_p_w          => g_out_p_w,
-	--				g_conjugate_b      => g_conjugate_b,
-	--				g_pipeline_input   => g_pipeline_input,
-	--				g_pipeline_product => g_pipeline_product,
-	--				g_pipeline_adder   => g_pipeline_adder,
-	--				g_pipeline_output  => g_pipeline_output
-	--			)
-	--			PORT MAP(
-	--				rst       => rst,
-	--				clk       => clk,
-	--				clken     => clken,
-	--				in_ar     => in_ar,
-	--				in_ai     => in_ai,
-	--				in_br     => in_br,
-	--				in_bi     => in_bi,
-	--				result_re => result_re,
-	--				result_im => result_im
-	--			);
-	--	END GENERATE;
 
 	-------------------------------------------------------------------------------
 	-- Model: forward concatenated inputs to the 'result' output

@@ -7,6 +7,7 @@ use ieee.numeric_std.all;
 --  DSP48 CMULT inference module for Xilinx chips
 ----------------------------------------------------------------------
 
+
 entity ip_cmult_infer is
 	generic(AWIDTH : natural := 18;
 	        BWIDTH : natural := 18);
@@ -30,6 +31,7 @@ architecture rtl of ip_cmult_infer is
 begin
 	process(clk)
 	begin
+		report "reached clock tick on infer cmult for 0";
 		if rising_edge(clk) then
 			ar_d   <= signed(ar);
 			ar_dd  <= signed(ar_d);
@@ -48,6 +50,7 @@ begin
 	--
 	process(clk)
 	begin
+		report "reached clock tick on infer cmult for 1";
 		if rising_edge(clk) then
 			if (clken = '1') then
 				addcommon <= resize(ar_d, AWIDTH + 1) - resize(ai_d, AWIDTH + 1);
@@ -64,6 +67,7 @@ begin
 	--
 	process(clk)
 	begin
+		report "reached clock tick on infer cmult for 2";
 		if rising_edge(clk) then
 			if (clken = '1') then
 				ar_ddd   <= ar_dd;
@@ -86,8 +90,10 @@ begin
 	--
 	process(clk)
 	begin
+		report "reached clock tick on infer cmult for 3";
 		if rising_edge(clk) then
 			if (clken = '1') then
+				report "reached clock enable on ip_cmult_infer";
 				ai_ddd   <= ai_dd;
 				ai_dddd  <= ai_ddd;
 				addi     <= resize(br_ddd, BWIDTH + 1) + resize(bi_ddd, BWIDTH + 1);
@@ -95,6 +101,7 @@ begin
 				commonr2 <= common;
 				pi_int   <= multi + commonr2;
 			elsif (rst = '1') then
+				report "reached reset on ip_cmult_infer";
 				ai_ddd   <= (others => '0');
 				ai_dddd  <= (others => '0');
 				addi     <= (others => '0');
@@ -104,10 +111,9 @@ begin
 			end if;
 		end if;
 	end process;
-	--
+	
 	-- VHDL type conversion for output
 	--
 	pr <= std_logic_vector(pr_int);
 	pi <= std_logic_vector(pi_int);
 end rtl;
-

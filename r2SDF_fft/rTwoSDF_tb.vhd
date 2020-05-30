@@ -75,15 +75,15 @@ context vunit_lib.vunit_context;
 entity tb_rTwoSDF is
 	generic(
 		-- generics for tb
-		g_use_uniNoise_file : boolean := true;
 		g_in_en             : natural := 1; -- 1 = always active, others = random control
+		g_use_uniNoise_file : boolean := true;
 		-- generics for rTwoSDF
-		g_use_reorder       : boolean := false; -- tb supports both true and false
 		g_nof_points        : natural := 1024;
+		g_use_reorder       : boolean := false; -- tb supports both true and false
 		g_in_dat_w          : natural := 8;
 		g_out_dat_w         : natural := 14;
 		g_guard_w           : natural := 2; -- guard bits are used to avoid overflow in single FFT stage
-		runner_cfg          : string -- @suppress "Unused generic: runner_cfg is not used in r2sdf_fft_lib.tb_rTwoSDF(tb)"
+		runner_cfg          : string 
 	);
 end entity tb_rTwoSDF;
 
@@ -101,14 +101,14 @@ architecture tb of tb_rTwoSDF is
 	constant c_repeat   : natural := 2; -- >= 2 to have sufficent frames for c_outputFile evaluation by testFFT_output.m
 
 	-- input from uniform noise file created automatically by MATLAB testFFT_input.m
-	constant c_noiseInputFile  : string := "data/test/in/uniNoise_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_in.txt";
-	constant c_noiseGoldenFile : string := "data/test/out/uniNoise_p" & natural'image(g_nof_points) & "_in" & natural'image(g_in_dat_w) & "_out" & natural'image(g_out_dat_w) & "_out.txt";
-	constant c_noiseOutputFile : string := "data/test/out/uniNoise_out.txt";
+	constant c_noiseInputFile  : string := "./data/test/in/uniNoise_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_in.txt";
+	constant c_noiseGoldenFile : string := "./data/test/out/uniNoise_p" & natural'image(g_nof_points) & "_in" & natural'image(g_in_dat_w) & "_out" & natural'image(g_out_dat_w) & "_out.txt";
+	constant c_noiseOutputFile : string := "./data/test/out/uniNoise_out.txt";
 
 	-- input from manually created file
-	constant c_impulseInputFile  : string := "data/test/in/impulse_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_in.txt";
-	constant c_impulseGoldenFile : string := "data/test/out/impulse_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_out.txt";
-	constant c_impulseOutputFile : string := "data/test/out/impulse_out.txt";
+	constant c_impulseInputFile  : string := "./data/test/in/impulse_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_in.txt";
+	constant c_impulseGoldenFile : string := "./data/test/out/impulse_p" & natural'image(g_nof_points) & "_b" & natural'image(g_in_dat_w) & "_out.txt";
+	constant c_impulseOutputFile : string := "./data/test/out/impulse_out.txt";
 
 	-- determine active stimuli and result files
 	constant c_inputFile  : string := sel_a_b(g_use_uniNoise_file, c_noiseInputFile, c_impulseInputFile);
@@ -316,6 +316,7 @@ begin
 	-- Verify the output of the DUT with the expected output from the golden reference file
 	p_verify_output : process(clk)
 	begin
+		test_runner_setup(runner,runner_cfg);
 		-- Compare
 		if rising_edge(clk) then
 			if out_val = '1' and gold_index <= gold_index_max then
@@ -323,10 +324,11 @@ begin
 				check(out_sync = gold_sync, "Output sync error");
 				check(TO_SINT(out_re) = gold_re, "Output real data error");
 				check(TO_SINT(out_im) = gold_im, "Output imag data error");
-				report "hello world!";
 			end if;
 		end if;	
+		test_runner_cleanup(runner);
 	end process;
+		
 
 	-- Write to default output file, this allows using command line diff or graphical diff viewer to compare it with the golden result file
 	p_write_output_file : process(clk)

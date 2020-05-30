@@ -1,5 +1,4 @@
 -------------------------------------------------------------------------------
---
 -- Copyright 2020
 -- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
 -- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
@@ -15,9 +14,9 @@
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
---
 -------------------------------------------------------------------------------
 
+--! Libraries IEEE, common_pkg_lib and VUnit
 LIBRARY IEEE, common_pkg_lib, vunit_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
@@ -38,8 +37,8 @@ ARCHITECTURE tb OF tb_common_counter IS
 	SIGNAL rst : STD_LOGIC;
 	SIGNAL clk : STD_LOGIC := '0';
 
-	SIGNAL cnt_clr  : STD_LOGIC                              := '0'; -- synchronous cnt_clr is only interpreted when clken is active
-	SIGNAL cnt_ld   : STD_LOGIC                              := '0'; -- cnt_ld loads the output count with the input load value, independent of cnt_en
+	SIGNAL cnt_clr  : STD_LOGIC                              := '0'; --! synchronous cnt_clr is only interpreted when clken is active
+	SIGNAL cnt_ld   : STD_LOGIC                              := '0'; --! cnt_ld loads the output count with the input load value, independent of cnt_en
 	SIGNAL cnt_en   : STD_LOGIC                              := '1';
 	SIGNAL load     : STD_LOGIC_VECTOR(c_cnt_w - 1 DOWNTO 0) := TO_UVEC(c_cnt_init, c_cnt_w);
 	SIGNAL count    : STD_LOGIC_VECTOR(c_cnt_w - 1 DOWNTO 0);

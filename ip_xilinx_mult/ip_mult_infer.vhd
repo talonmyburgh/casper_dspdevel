@@ -3,8 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity ip_mult_infer is
-	generic(AWIDTH : natural := 16;
-	        BWIDTH : natural := 16);
+	generic(AWIDTH : positive := 16;
+	        BWIDTH : positive := 16);
 	port(
 		a   : in  std_logic_vector(AWIDTH-1 downto 0);
 		b   : in  std_logic_vector(BWIDTH-1 downto 0);

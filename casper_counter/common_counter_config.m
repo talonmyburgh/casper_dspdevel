@@ -33,37 +33,37 @@ function common_counter_config(this_block)
   if (this_block.inputTypesKnown)
     % do input type checking, dynamic output type and generic setup in this code block.
 
-    if (this_block.port('rst').width ~= 1);
+    if (this_block.port('rst').width ~= 1)
       this_block.setError('Input data type for port "rst" must have width=1.');
     end
 
     this_block.port('rst').useHDLVector(false);
 
-    if (this_block.port('clk').width ~= 1);
+    if (this_block.port('clk').width ~= 1)
       this_block.setError('Input data type for port "clk" must have width=1.');
     end
 
     this_block.port('clk').useHDLVector(false);
 
-    if (this_block.port('clken').width ~= 1);
+    if (this_block.port('clken').width ~= 1)
       this_block.setError('Input data type for port "clken" must have width=1.');
     end
 
     this_block.port('clken').useHDLVector(false);
 
-    if (this_block.port('cnt_clr').width ~= 1);
+    if (this_block.port('cnt_clr').width ~= 1)
       this_block.setError('Input data type for port "cnt_clr" must have width=1.');
     end
 
     this_block.port('cnt_clr').useHDLVector(false);
 
-    if (this_block.port('cnt_ld').width ~= 1);
+    if (this_block.port('cnt_ld').width ~= 1)
       this_block.setError('Input data type for port "cnt_ld" must have width=1.');
     end
 
     this_block.port('cnt_ld').useHDLVector(false);
 
-    if (this_block.port('cnt_en').width ~= 1);
+    if (this_block.port('cnt_en').width ~= 1)
       this_block.setError('Input data type for port "cnt_en" must have width=1.');
     end
 
@@ -95,17 +95,24 @@ function common_counter_config(this_block)
    end  % if(inputRatesKnown)
   % -----------------------------
 
-    uniqueInputRates = unique(this_block.getInputRates);
+  uniqueInputRates = unique(this_block.getInputRates);
+  CommonCounter = this_block.blockName; %This is the name of the black box block
+  ccntr_mask = get_param(CommonCounter,'Parent'); %This is the name of the black box subsystem
+  latency = (get_param(ccntr_mask,'g_latency')); %Grab the 'direction' parameter from the parent's mask
+  initval = (get_param(ccntr_mask,'g_init'));
+  width = (get_param(ccntr_mask,'g_width'));
+  maxval = (get_param(ccntr_mask,'g_max'));
+  step_size = (get_param(ccntr_mask,'g_step_size'));
 
   % (!) Custimize the following generic settings as appropriate. If any settings depend
   %      on input types, make the settings in the "inputTypesKnown" code block.
   %      The addGeneric function takes  3 parameters, generic name, type and constant value.
   %      Supported types are boolean, real, integer and string.
-  this_block.addGeneric('g_latency','NATURAL','1');
-  this_block.addGeneric('g_init','INTEGER','0');
-  this_block.addGeneric('g_width','NATURAL','32');
-  this_block.addGeneric('g_max','NATURAL','0');
-  this_block.addGeneric('g_step_size','INTEGER','1');
+  this_block.addGeneric('g_latency','NATURAL',latency);
+  this_block.addGeneric('g_init','INTEGER',initval);
+  this_block.addGeneric('g_width','NATURAL',width);
+  this_block.addGeneric('g_max','NATURAL',maxval);
+  this_block.addGeneric('g_step_size','INTEGER',step_size);
 
   % Add addtional source files as needed.
   %  |-------------
