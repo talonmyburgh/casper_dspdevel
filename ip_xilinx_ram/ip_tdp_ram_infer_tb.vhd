@@ -1,13 +1,12 @@
-
-
-library ieee;
+library ieee, vunit_lib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+context vunit_lib.vunit_context;
 
 entity ip_tdp_ram_infer_tb is
-	--generic(
-		--runner_cfg : string
-	--);
+	generic(
+		runner_cfg : string
+	);
 end entity ip_tdp_ram_infer_tb;
 
 architecture RTL of ip_tdp_ram_infer_tb is
@@ -94,6 +93,7 @@ BEGIN
 	-- Stimulus process
 	stim_proc : process
 	begin
+		test_runner_setup(runner,runner_cfg);
 		-- hold reset state for 100 ns.
 		wait for 100 ns;
 
@@ -106,18 +106,19 @@ BEGIN
 		addressB <= "00001";
 		dataA    <= "10101010";
 		dataB    <= "11110000";
-		wait for clockA_period;
+		wait for clockA_period*2;
 		wrenA    <= '1';
 		wrenB    <= '1';
-		wait for clockB_period;
+		wait for clockB_period*2;
 		wrenA <='0';
 		wrenB <= '0';
 		wait for clockA_period*2;
 		addressA<="00001";
 		addressB<="00000";
-		wait for clockA_period;
-		assert qA = dataB report "data not read correctly from port A, got "&to_hstring(qA)&" not "&to_hstring(dataB);
-		assert qB = dataA report "data not read correctly from port B, got "&to_hstring(qB)&" not "&to_hstring(dataA);
+		wait for clockA_period*2;
+		check(qA = dataB, "data not read correctly from port A, got "&to_hstring(qA)&" not "&to_hstring(dataB));
+		check(qB = dataA,"data not read correctly from port B, got "&to_hstring(qB)&" not "&to_hstring(dataA));
+		test_runner_cleanup(runner);
 	end process;
 
 end architecture RTL;
