@@ -1,36 +1,33 @@
 v 4
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF_tb_tb.vhd" "d21a077018ce99f5c04bcd68a6d050d365c36158" "20200530114222.892":
-  entity tb_tb_rtwosdf at 27( 1104) + 0 on 32;
-  architecture tb of tb_tb_rtwosdf at 40( 1427) + 0 on 33;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" "ea18f3d435c066420879a00412d869aba790c78e" "20200530114222.459":
-  entity rtwosdf at 25( 967) + 0 on 28;
-  architecture str of rtwosdf at 56( 2173) + 0 on 29;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBFStage.vhd" "d95531d57dff59384549fc755539f7a4b3cd9b1e" "20200530114222.160":
-  entity rtwobfstage at 21( 875) + 0 on 24;
-  architecture str of rtwobfstage at 50( 2054) + 0 on 25;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" "9678801a8d54281f4e5170d7a81ee26c931bb3f1" "20200530114221.703":
-  entity rtwowmul at 21( 875) + 0 on 20;
-  architecture str of rtwowmul at 47( 1613) + 0 on 21;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoOrder.vhd" "32736deab6a1a00af77c858e8e8b27c19d8f3363" "20200530114221.136":
-  entity rtwoorder at 21( 875) + 0 on 16;
-  architecture rtl of rtwoorder at 43( 1409) + 0 on 17;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" "3b0db9dbf96f21fc52f8b6ee51dbb4c0ebbefcf2" "20200530114136.532":
-  package rtwosdfpkg at 21( 875) + 0 on 12;
-  package body rtwosdfpkg at 45( 1625) + 0 on 13;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/twiddlesPkg.vhd" "d0106472cf0666e918b881a9c03d8ac38794b18c" "20200530114057.465":
-  package twiddlespkg at 11( 263) + 0 on 11;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" "238dd7f51b069d17a57272611411313681944042" "20200530114219.303":
-  entity rtwoweights at 32( 1360) + 0 on 14;
-  architecture rtl of rtwoweights at 52( 1972) + 0 on 15;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoOrder_tb.vhd" "5a2ba3ed3b7ed516ce744e018cd7b3b87435b9d3" "20200530114221.300":
-  entity tb_rtwoorder at 30( 1107) + 0 on 18;
-  architecture tb of tb_rtwoorder at 41( 1402) + 0 on 19;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" "e5214286cf5b86f9d5f51c64cca6df1e77e9d798" "20200530114221.901":
-  entity rtwobf at 43( 2019) + 0 on 22;
-  architecture rtl of rtwobf at 63( 2523) + 0 on 23;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFStage.vhd" "6eb79e3f829a0fa435f29884670829f7c7a8e372" "20200530114222.320":
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF_tb.vhd" "dfe1027b18c426668ff26636ed899498d3c79996" "20200602110527.721":
+  entity tb_rtwosdf at 63( 2969) + 0 on 30;
+  architecture tb of tb_rtwosdf at 90( 3881) + 0 on 31;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFStage.vhd" "6eb79e3f829a0fa435f29884670829f7c7a8e372" "20200602110527.396":
   entity rtwosdfstage at 21( 875) + 0 on 26;
   architecture str of rtwosdfstage at 48( 1893) + 0 on 27;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF_tb.vhd" "052a9516b0d78da5930105a6452d290c0bb38b11" "20200530145214.363":
-  entity tb_rtwosdf at 63( 2969) + 0 on 36;
-  architecture tb of tb_rtwosdf at 90( 3966) + 0 on 37;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" "e5214286cf5b86f9d5f51c64cca6df1e77e9d798" "20200602110527.032":
+  entity rtwobf at 43( 2019) + 0 on 22;
+  architecture rtl of rtwobf at 63( 2523) + 0 on 23;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoOrder_tb.vhd" "5a2ba3ed3b7ed516ce744e018cd7b3b87435b9d3" "20200602110526.584":
+  entity tb_rtwoorder at 30( 1107) + 0 on 18;
+  architecture tb of tb_rtwoorder at 41( 1402) + 0 on 19;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" "238dd7f51b069d17a57272611411313681944042" "20200602110524.812":
+  entity rtwoweights at 32( 1360) + 0 on 14;
+  architecture rtl of rtwoweights at 52( 1972) + 0 on 15;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/twiddlesPkg.vhd" "d0106472cf0666e918b881a9c03d8ac38794b18c" "20200602110443.199":
+  package twiddlespkg at 11( 263) + 0 on 11;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" "3b0db9dbf96f21fc52f8b6ee51dbb4c0ebbefcf2" "20200602110523.460":
+  package rtwosdfpkg at 21( 875) + 0 on 12;
+  package body rtwosdfpkg at 45( 1625) + 0 on 13;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoOrder.vhd" "32736deab6a1a00af77c858e8e8b27c19d8f3363" "20200602110526.439":
+  entity rtwoorder at 21( 875) + 0 on 16;
+  architecture rtl of rtwoorder at 43( 1409) + 0 on 17;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" "9678801a8d54281f4e5170d7a81ee26c931bb3f1" "20200602110526.873":
+  entity rtwowmul at 21( 875) + 0 on 20;
+  architecture str of rtwowmul at 47( 1613) + 0 on 21;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBFStage.vhd" "d95531d57dff59384549fc755539f7a4b3cd9b1e" "20200602110527.253":
+  entity rtwobfstage at 21( 875) + 0 on 24;
+  architecture str of rtwobfstage at 50( 2054) + 0 on 25;
+file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" "ea18f3d435c066420879a00412d869aba790c78e" "20200602110527.537":
+  entity rtwosdf at 25( 967) + 0 on 28;
+  architecture str of rtwosdf at 56( 2173) + 0 on 29;
