@@ -314,7 +314,7 @@ begin
 	gold_im    <= gold_file_data(gold_index, 2) when g_use_reorder = true else gold_file_data(flip_index, 2);
 
 	-- Verify the output of the DUT with the expected output from the golden reference file
-	p_verify_output : process(clk)
+	p_verify_output : process
 	begin
 		test_runner_setup(runner,runner_cfg);
 		-- Compare

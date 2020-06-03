@@ -5,32 +5,20 @@ from itertools import product
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 
-def generate_tests(test,use_noise_file, in_en, reorder, nof_pts, in_dat_w,out_dat_w,guard_w):
-    """
-    Generate test by varying the generics of rTwoSDF_tb:
-        g_use_uniNoise_file : boolean
-        g_in_en             : natural
-        g_use_reorder       : boolean 
-        g_nof_points        : natural
-        g_in_dat_w          : natural   
-        g_out_dat_w         : natural
-        g_guard_w           : natural
-    """
-
-    for nsfile, i_e,r_ord,nop,i_d_w,o_d_w,g_w in product(use_noise_file, in_en, reorder, nof_pts, in_dat_w,out_dat_w,guard_w):
-        config_name1 = "Noise file used = %s, in_en = %s, use_reorder = %i, nof_points = %i, in_dat_w = %i, out_dat_w = %i, guard_bits = %i" % (nsfile, i_e,r_ord,nop,i_d_w,o_d_w,g_w)
-        print(config_name1)
+# Create library 'lib' 
+def generate_tests(test, in_en, use_ns_file, nop, reorder, i_d_w, o_d_w, g_w):
+    for i_e, r_ord in product(in_en, reorder):
+        config_name = "In enable = %i, Use noise file = %r, number of points = %i, use reorder = %r,in data width = %i,out data width = %i, guard bit width = %i"%(i_e,use_ns_file, nop,r_ord,i_d_w,o_d_w,g_w)
         test.add_config(
-            name = config_name1,
-            generics=dict(g_use_uniNoise_file=nsfile,g_in_en=i_e,g_use_reorder=r_ord,
-             g_nof_points=nop, g_in_dat_w=i_d_w,g_out_dat_w=o_d_w,g_guard_w = g_w)
+            name = config_name,
+            generics = dict(g_in_en=i_e,g_use_uniNoise_file = use_ns_file,g_nof_points = nop,g_use_reorder=r_ord,g_in_dat_w=i_d_w,g_out_dat_w=o_d_w,g_guard_w=g_w)
         )
-
-# Create library 'lib'
+        
+use_noise_file, in_en, use_reord, nof_pts, i_d_w, o_d_w, g_w= True, [1,0], [True,False], 1024,8,14,2 
 lib1 = vu.add_library("r2sdf_fft_lib")
 lib1.add_source_files("*.vhd")
 TB_GENERATED = lib1.test_bench("tb_rTwoSDF")
-generate_tests(TB_GENERATED, [True],[1,0],[True,False],[1024],[8,10],[14,18],[2])
+generate_tests(TB_GENERATED,in_en,use_noise_file,nof_pts,use_reord,i_d_w,o_d_w,g_w)
 
 lib2 = vu.add_library("common_pkg_lib")
 lib2.add_source_files("../casper_common_pkg/*.vhd")
