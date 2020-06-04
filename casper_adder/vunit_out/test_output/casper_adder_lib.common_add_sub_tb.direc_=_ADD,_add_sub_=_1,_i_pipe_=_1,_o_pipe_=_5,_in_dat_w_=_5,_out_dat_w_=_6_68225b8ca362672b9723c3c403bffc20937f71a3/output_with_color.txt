@@ -1,0 +1,3 @@
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+simulation stopped @11035ns with status 0

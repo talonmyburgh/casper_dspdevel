@@ -21,8 +21,8 @@ architecture RTL of ip_tdp_ram_infer_tb is
 			addressA, addressB : in  std_logic_vector(addressWidth - 1 downto 0);
 			clockA, clockB     : in  std_logic;
 			dataA, dataB       : in  std_logic_vector(dataWidth - 1 downto 0);
-			enableA, enableB   : in  std_logic;
-			wrenA, wrenB       : in  std_logic;
+			enA, enB   : in  std_logic;
+			weA, weB       : in  std_logic;
 			qA, qB             : out std_logic_vector(dataWidth - 1 downto 0)
 		);
 	end component ip_tdp_ram_infer;
@@ -34,10 +34,10 @@ architecture RTL of ip_tdp_ram_infer_tb is
 	signal clockB   : std_logic                    := '0';
 	signal dataA    : std_logic_vector(7 downto 0) := (others => '0');
 	signal dataB    : std_logic_vector(7 downto 0) := (others => '0');
-	signal enableA  : std_logic                    := '0';
-	signal enableB  : std_logic                    := '0';
-	signal wrenA    : std_logic                    := '0';
-	signal wrenB    : std_logic                    := '0';
+	signal enA  : std_logic                    := '0';
+	signal enB  : std_logic                    := '0';
+	signal weA    : std_logic                    := '0';
+	signal weB    : std_logic                    := '0';
 
 	--Outputs
 	signal qA : std_logic_vector(7 downto 0);
@@ -65,10 +65,10 @@ BEGIN
 			clockB   => clockB,
 			dataA    => dataA,
 			dataB    => dataB,
-			enableA  => enableA,
-			enableB  => enableB,
-			wrenA    => wrenA,
-			wrenB    => wrenB,
+			enA  => enA,
+			enB  => enB,
+			weA    => weA,
+			weB    => weB,
 			qA       => qA,
 			qB       => qB
 		);
@@ -100,18 +100,18 @@ BEGIN
 		wait for clockA_period * 10;
 
 		-- insert stimulus here 
-		enableA <='1';
-		enableB <='1';
+		enA <='1';
+		enB <='1';
 		addressA <= "00000";
 		addressB <= "00001";
 		dataA    <= "10101010";
 		dataB    <= "11110000";
 		wait for clockA_period*2;
-		wrenA    <= '1';
-		wrenB    <= '1';
+		weA    <= '1';
+		weB    <= '1';
 		wait for clockB_period*2;
-		wrenA <='0';
-		wrenB <= '0';
+		weA <='0';
+		weB <= '0';
 		wait for clockA_period*2;
 		addressA<="00001";
 		addressB<="00000";
