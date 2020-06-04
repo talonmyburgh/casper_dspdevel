@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="db/d3d/classrTwoSDFPkg" kind="class" language="VHDL" prot="package">
+    <compoundname>rTwoSDFPkg</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a0a6af6eef40212dbaf130d57ce711256" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee</definition>
+        <argsstring>ieee</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="22" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a175ac371ec930706783235a0c139fa7d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>t_fft_pipeline</definition>
+        <argsstring></argsstring>
+        <name>t_fft_pipeline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="28" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1af8c3b2663ec85da8bd1768c807361c91" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural stage_lat~0</definition>
+        <argsstring></argsstring>
+        <name>stage_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1ab5eedf800c5dfb54f4263c23ad7b0174" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural weight_lat~1</definition>
+        <argsstring></argsstring>
+        <name>weight_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a0847c8da41ea99daa6ec09ffd6eae743" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural mul_lat~2</definition>
+        <argsstring></argsstring>
+        <name>mul_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="32" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a221995c74c2c5b121e13c3d049fe6734" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural bf_lat~3</definition>
+        <argsstring></argsstring>
+        <name>bf_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="34" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a672cd0ac0c1b443652ddfc6b302838ef" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural bf_use_zdly~4</definition>
+        <argsstring></argsstring>
+        <name>bf_use_zdly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="36" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a985703b884c3bc07c23dc103b088b41b" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural bf_in_a_zdly~5</definition>
+        <argsstring></argsstring>
+        <name>bf_in_a_zdly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="37" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1a5487125cb552a915b7b042db554a4579" prot="public" static="no" mutable="no">
+        <type>natural</type>
+        <definition>natural bf_out_d_zdly~6</definition>
+        <argsstring></argsstring>
+        <name>bf_out_d_zdly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="38" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d3d/classrTwoSDFPkg_1ac06a28f7e85558c4310cad792ea302b8" prot="public" static="no" mutable="no">
+        <type><ref refid="db/d3d/classrTwoSDFPkg_1a175ac371ec930706783235a0c139fa7d" kindref="member">t_fft_pipeline</ref> :=( 1, 1, 4, 1, 1, 0, 0)</type>
+        <definition>t_fft_pipeline :=( 1, 1, 4, 1, 1, 0, 0) c_fft_pipeline</definition>
+        <argsstring></argsstring>
+        <name>c_fft_pipeline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="41" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="24" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" bodystart="24" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="db/d3d/classrTwoSDFPkg_1a985703b884c3bc07c23dc103b088b41b" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>bf_in_a_zdly</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a221995c74c2c5b121e13c3d049fe6734" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>bf_lat</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a5487125cb552a915b7b042db554a4579" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>bf_out_d_zdly</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a672cd0ac0c1b443652ddfc6b302838ef" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>bf_use_zdly</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1ac06a28f7e85558c4310cad792ea302b8" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>c_fft_pipeline</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a0a6af6eef40212dbaf130d57ce711256" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>ieee</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a0847c8da41ea99daa6ec09ffd6eae743" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>mul_lat</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1af8c3b2663ec85da8bd1768c807361c91" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>stage_lat</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>std_logic_1164</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1a175ac371ec930706783235a0c139fa7d" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>t_fft_pipeline</name></member>
+      <member refid="db/d3d/classrTwoSDFPkg_1ab5eedf800c5dfb54f4263c23ad7b0174" prot="public" virt="non-virtual"><scope>rTwoSDFPkg</scope><name>weight_lat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

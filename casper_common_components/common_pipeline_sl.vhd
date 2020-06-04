@@ -18,6 +18,7 @@
 --
 -------------------------------------------------------------------------------
 
+--! IEEE and common_pkg_lib
 LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
@@ -25,18 +26,18 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_pipeline_sl IS
 	GENERIC(
-		g_pipeline    : NATURAL := 1;   -- 0 for wires, > 0 for registers, 
-		g_reset_value : NATURAL := 0;   -- 0 or 1, bit reset value,
+		g_pipeline    : NATURAL := 1;   --! 0 for wires, > 0 for registers, 
+		g_reset_value : NATURAL := 0;   --! 0 or 1, bit reset value,
 		g_out_invert  : BOOLEAN := FALSE
 	);
 	PORT(
-		rst     : IN  STD_LOGIC := '0';
-		clk     : IN  STD_LOGIC;
-		clken   : IN  STD_LOGIC := '1';
-		in_clr  : IN  STD_LOGIC := '0';
-		in_en   : IN  STD_LOGIC := '1';
-		in_dat  : IN  STD_LOGIC;
-		out_dat : OUT STD_LOGIC
+		rst     : IN  STD_LOGIC := '0'; --! Reset signal
+		clk     : IN  STD_LOGIC; --! Clock input
+		clken   : IN  STD_LOGIC := '1'; --! Clock enable signal
+		in_clr  : IN  STD_LOGIC := '0'; --! Clear input signal 
+		in_en   : IN  STD_LOGIC := '1'; --! Enable input
+		in_dat  : IN  STD_LOGIC; --! Signal used to pass data to common_pipeline
+		out_dat : OUT STD_LOGIC --! Output valid signal
 	);
 END common_pipeline_sl;
 

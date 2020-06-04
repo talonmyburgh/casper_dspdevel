@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d9/d82/classip__cmult__infer" kind="class" language="VHDL" prot="public">
+    <compoundname>ip_cmult_infer</compoundname>
+    <derivedcompoundref refid="d2/db6/classip__cmult__infer__tb" prot="public" virt="non-virtual">ip_cmult_infer_tb</derivedcompoundref>
+    <innerclass refid="d1/db4/classip__cmult__infer_1_1rtl" prot="private">ip_cmult_infer::rtl</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a08f0b76cd788c1c08ef60858dd3810de" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>AWIDTH natural := 18</definition>
+        <argsstring> natural := 18</argsstring>
+        <name>AWIDTH</name>
+        <briefdescription>
+<para>A input bit width. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="44" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a9771368efcec1062d597573242022d5a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>BWIDTH natural := 18</definition>
+        <argsstring> natural := 18</argsstring>
+        <name>BWIDTH</name>
+        <briefdescription>
+<para>B input bit width. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a50da91b765765ac486df1b41692e962f" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clk std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clk</name>
+        <briefdescription>
+<para>Clock input. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="47" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1ac5cc44b92063f026edcbd2d6d6b54234" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in ar std_logic_vector(   AWIDTH- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   AWIDTH- 1 downto  0) </argsstring>
+        <name>ar</name>
+        <briefdescription>
+<para>Real and imaginary A inputs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a0fa28043b00e65dc13c399ecb97f2d35" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in ai std_logic_vector(   AWIDTH- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   AWIDTH- 1 downto  0) </argsstring>
+        <name>ai</name>
+        <briefdescription>
+<para>Real and imaginary A inputs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a399cedb48a588a5227cc13c28a63337a" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in br std_logic_vector(   BWIDTH- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   BWIDTH- 1 downto  0) </argsstring>
+        <name>br</name>
+        <briefdescription>
+<para>Real and imaginary B inputs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="49" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a15f6d70968625aeb7c9511d5682e92b9" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in bi std_logic_vector(   BWIDTH- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   BWIDTH- 1 downto  0) </argsstring>
+        <name>bi</name>
+        <briefdescription>
+<para>Real and imaginary B inputs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="49" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1ae106f17a2b73445119c8eb039d3e102e" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in rst std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>rst</name>
+        <briefdescription>
+<para>Reset signal. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="50" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a2b0d65fc2347e418d3100b9ade0eb4e8" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clken std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clken</name>
+        <briefdescription>
+<para>Clock enable signal. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="51" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="51" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1aeef512c8f0138574ae7b0df85c37b469" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out pr std_logic_vector(   AWIDTH+   BWIDTH downto  0) </definition>
+        <argsstring> std_logic_vector(   AWIDTH+   BWIDTH downto  0) </argsstring>
+        <name>pr</name>
+        <briefdescription>
+<para>Real and imaginary Outputs. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1af21255e38bab3578e429d14cdd9f306d" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out pi std_logic_vector(   AWIDTH+   BWIDTH downto  0) </definition>
+        <argsstring> std_logic_vector(   AWIDTH+   BWIDTH downto  0) </argsstring>
+        <name>pi</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a0a6af6eef40212dbaf130d57ce711256" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee</definition>
+        <argsstring>ieee</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+<para>Library IEEE. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="5" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="6" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d82/classip__cmult__infer_1a2edc34402b573437d5f25fa90ba4013e" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ numeric_stdnumeric_std</definition>
+        <argsstring>numeric_std</argsstring>
+        <name>numeric_std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="7" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><dot>
+ digraph ip_mult_infer {
+	rankdir=&quot;LR&quot;;
+ node [shape=box, fontname=Helvetica, fontsize=12,color=&quot;black&quot;];
+ ip_mult_infer;
+ node [shape=plaintext];
+ ar;
+ ai;
+ br;
+ bi;
+ clk;
+ rst;
+ clken;
+ pr;
+ pi;
+ clk -&gt; ip_mult_infer;
+ clken -&gt; ip_mult_infer;
+ ar -&gt; ip_mult_infer;
+ ai -&gt; ip_mult_infer;
+ br -&gt; ip_mult_infer;
+ bi -&gt; ip_mult_infer;
+ rst -&gt; ip_mult_infer;
+ ip_mult_infer -&gt; pr;
+ ip_mult_infer -&gt; pi;
+}
+ </dot>
+ </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Complex Multiplier: (pr+i.pi) = (ar+i.ai)*(br+i.bi) This inference module is likely to be implemented in DSP48 elements in Xilinx chips. </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>ip_cmult_infer_tb</label>
+        <link refid="d2/db6/classip__cmult__infer__tb"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>ip_cmult_infer</label>
+        <link refid="d9/d82/classip__cmult__infer"/>
+      </node>
+    </inheritancegraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" line="43" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer.vhd" bodystart="43" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d9/d82/classip__cmult__infer_1a0fa28043b00e65dc13c399ecb97f2d35" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>ai</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1ac5cc44b92063f026edcbd2d6d6b54234" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>ar</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a08f0b76cd788c1c08ef60858dd3810de" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>AWIDTH</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a15f6d70968625aeb7c9511d5682e92b9" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>bi</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a399cedb48a588a5227cc13c28a63337a" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>br</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a9771368efcec1062d597573242022d5a" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>BWIDTH</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a50da91b765765ac486df1b41692e962f" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>clk</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a2b0d65fc2347e418d3100b9ade0eb4e8" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>clken</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a0a6af6eef40212dbaf130d57ce711256" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>ieee</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>numeric_std</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1af21255e38bab3578e429d14cdd9f306d" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>pi</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1aeef512c8f0138574ae7b0df85c37b469" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>pr</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1ae106f17a2b73445119c8eb039d3e102e" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>rst</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>ip_cmult_infer</scope><name>std_logic_1164</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

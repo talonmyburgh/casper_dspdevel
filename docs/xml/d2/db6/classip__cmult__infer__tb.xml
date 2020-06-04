@@ -1,0 +1,150 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d2/db6/classip__cmult__infer__tb" kind="class" language="VHDL" prot="public">
+    <compoundname>ip_cmult_infer_tb</compoundname>
+    <basecompoundref refid="d9/d82/classip__cmult__infer" prot="public" virt="non-virtual">ip_cmult_infer</basecompoundref>
+    <innerclass refid="de/d12/classip__cmult__infer__tb_1_1behavior" prot="private">ip_cmult_infer_tb::behavior</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>runner_cfg string </definition>
+        <argsstring> string </argsstring>
+        <name>runner_cfg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="8" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a2251a195b05b508380c3861a104735ee" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>a_wd positive </definition>
+        <argsstring> positive </argsstring>
+        <name>a_wd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="9" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="9" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a565f253e4eaf5991ebf4cab71fe092aa" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>b_wd positive </definition>
+        <argsstring> positive </argsstring>
+        <name>b_wd</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="11" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a5dff50b4c369a13c08a9f9e3a4f2b74f" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee,vunit_lib</definition>
+        <argsstring>ieee,vunit_lib</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="1" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="1" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a7efdde7c2a31e6ef391de6d557b96b5d" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ vunit_libieee,vunit_lib</definition>
+        <argsstring>ieee,vunit_lib</argsstring>
+        <name>vunit_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="1" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="1" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="2" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="2" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/db6/classip__cmult__infer__tb_1a2edc34402b573437d5f25fa90ba4013e" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ numeric_stdnumeric_std</definition>
+        <argsstring>numeric_std</argsstring>
+        <name>numeric_std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="3" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="3" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>ip_cmult_infer_tb</label>
+        <link refid="d2/db6/classip__cmult__infer__tb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>ip_cmult_infer</label>
+        <link refid="d9/d82/classip__cmult__infer"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>ip_cmult_infer_tb</label>
+        <link refid="d2/db6/classip__cmult__infer__tb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>ip_cmult_infer</label>
+        <link refid="d9/d82/classip__cmult__infer"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" line="6" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_cmult_infer_tb.vhd" bodystart="6" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a2251a195b05b508380c3861a104735ee" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>a_wd</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a0fa28043b00e65dc13c399ecb97f2d35" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>ai</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1ac5cc44b92063f026edcbd2d6d6b54234" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>ar</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a08f0b76cd788c1c08ef60858dd3810de" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>AWIDTH</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a565f253e4eaf5991ebf4cab71fe092aa" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>b_wd</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a15f6d70968625aeb7c9511d5682e92b9" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>bi</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a399cedb48a588a5227cc13c28a63337a" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>br</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a9771368efcec1062d597573242022d5a" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>BWIDTH</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a50da91b765765ac486df1b41692e962f" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>clk</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1a2b0d65fc2347e418d3100b9ade0eb4e8" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>clken</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a5dff50b4c369a13c08a9f9e3a4f2b74f" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>ieee</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>numeric_std</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1af21255e38bab3578e429d14cdd9f306d" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>pi</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1aeef512c8f0138574ae7b0df85c37b469" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>pr</name></member>
+      <member refid="d9/d82/classip__cmult__infer_1ae106f17a2b73445119c8eb039d3e102e" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>rst</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>runner_cfg</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>std_logic_1164</name></member>
+      <member refid="d2/db6/classip__cmult__infer__tb_1a7efdde7c2a31e6ef391de6d557b96b5d" prot="public" virt="non-virtual"><scope>ip_cmult_infer_tb</scope><name>vunit_lib</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

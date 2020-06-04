@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dir_b89992f127bfce8b9fb467e6176affdf" kind="dir">
+    <compoundname>casper_counter</compoundname>
+    <innerfile refid="d3/daf/common__counter_8vhd">common_counter.vhd</innerfile>
+    <innerfile refid="d5/d03/common__counter__tb_8vhd">common_counter_tb.vhd</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/"/>
+  </compounddef>
+</doxygen>

@@ -25,25 +25,25 @@ use common_pkg_lib.common_pkg.all;
 entity rTwoBFStage is
 	generic(
 		-- generics for this stage
-		g_nof_chan      : natural := 0; -- Exponent of nr of subbands (0 means 1 subband)
-		g_stage         : natural;      -- The stage indices are ..., 3, 2, 1. The input stage has the highest index, the output stage has index 1.
-		g_bf_lat        : natural := 1; -- Digital pipelining latency
+		g_nof_chan      : natural := 0; --! Exponent of nr of subbands (0 means 1 subband)
+		g_stage         : natural;      --! The stage indices are ..., 3, 2, 1. The input stage has the highest index, the output stage has index 1.
+		g_bf_lat        : natural := 1; --! Digital pipelining latency
 		-- generics for rTwoBF
-		g_bf_use_zdly   : natural := 1; -- >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
-		g_bf_in_a_zdly  : natural := 0; -- g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
-		g_bf_out_d_zdly : natural := 0  -- The stage z^(-1) delays are ..., 4, 2, 1.
+		g_bf_use_zdly   : natural := 1; --! >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
+		g_bf_in_a_zdly  : natural := 0; --! g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
+		g_bf_out_d_zdly : natural := 0  --! The stage z^(-1) delays are ..., 4, 2, 1.
 	);
 	port(
-		clk     : in  std_logic;
-		rst     : in  std_logic;
-		in_re   : in  std_logic_vector;
-		in_im   : in  std_logic_vector;
-		in_val  : in  std_logic;
-		in_sel  : in  std_logic;
-		out_re  : out std_logic_vector;
-		out_im  : out std_logic_vector;
-		out_val : out std_logic;
-		out_sel : out std_logic
+		clk     : in  std_logic; --! Input clock source
+		rst     : in  std_logic; --! Reset signal
+		in_re   : in  std_logic_vector; --! Real input
+		in_im   : in  std_logic_vector; --! Imaginary input
+		in_val  : in  std_logic; --! Accept input value (for delay)
+		in_sel  : in  std_logic; --! Select input
+		out_re  : out std_logic_vector; --! Real output
+		out_im  : out std_logic_vector; --! Imaginary output
+		out_val : out std_logic; --! Output value valid signal
+		out_sel : out std_logic --! Select output
 	);
 end entity rTwoBFStage;
 

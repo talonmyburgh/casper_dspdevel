@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+--! @file
+--! @brief RTL Complex Multiplier
+
+--! Library IEEE
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
@@ -29,28 +33,57 @@ USE IEEE.numeric_std.ALL;
 --!   p = a * conj(b) when g_conjugate_b = TRUE
 --!     = (ar + j ai) * (br - j bi)
 --!     =  ar*br + ai*bi + j (-ar*bi + ai*br)
+--! This RTL complex multiply is unlikely to be implemented in DSP48.
+--! Use inference version if that is required.
+
+--! @dot 
+--! digraph ip_mult_rtl {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! ip_mult_rtl;
+--! node [shape=plaintext];
+--! in_ar;
+--! in_ai;
+--! in_br;
+--! in_bi;
+--! clk;
+--! rst;
+--! clken;
+--! result_re;
+--! result_im;
+--! clk -> ip_mult_rtl;
+--! clken -> ip_mult_rtl;
+--! in_ar -> ip_mult_rtl;
+--! in_ai -> ip_mult_rtl;
+--! in_br -> ip_mult_rtl;
+--! in_bi -> ip_mult_rtl;
+--! rst -> ip_mult_rtl;
+--! ip_mult_rtl -> result_re;
+--! ip_mult_rtl -> result_im;
+--!}
+--! @enddot
 
 ENTITY ip_cmult_rtl IS
 	GENERIC(
-		g_in_a_w           : POSITIVE;
-		g_in_b_w           : POSITIVE;
-		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
-		g_conjugate_b      : BOOLEAN := FALSE;
-		g_pipeline_input   : NATURAL := 1; -- 0 or 1
-		g_pipeline_product : NATURAL := 0; -- 0 or 1
-		g_pipeline_adder   : NATURAL := 1; -- 0 or 1
-		g_pipeline_output  : NATURAL := 1 -- >= 0
+		g_in_a_w           : POSITIVE; --! A input bit width
+		g_in_b_w           : POSITIVE; --! B input bit width
+		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
+		g_conjugate_b      : BOOLEAN := FALSE; --! Whether or not to conjugate B value
+		g_pipeline_input   : NATURAL := 1; --! 0 or 1
+		g_pipeline_product : NATURAL := 0; --! 0 or 1
+		g_pipeline_adder   : NATURAL := 1; --! 0 or 1
+		g_pipeline_output  : NATURAL := 1 --! >= 0
 	);
 	PORT(
-		rst       : IN  STD_LOGIC := '0';
-		clk       : IN  STD_LOGIC;
-		clken     : IN  STD_LOGIC := '1';
-		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
-		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
-		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-		in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
+		rst       : IN  STD_LOGIC := '0'; --! Reset signal
+		clk       : IN  STD_LOGIC; --! Input clock signal
+		clken     : IN  STD_LOGIC := '1'; --! Clock enable
+		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Real input A
+		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Imaginary input A
+		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Real input B
+		in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Imaginary input B
+		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Real result
+		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0) --! Imaginary result
 	);
 END ip_cmult_rtl;
 

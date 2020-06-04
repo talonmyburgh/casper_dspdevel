@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dir_6c8d300c0e2a3ee48e77b59a26e5ea8e" kind="dir">
+    <compoundname>ip_xilinx_ram</compoundname>
+    <innerfile refid="db/d44/ip__sdp__ram__infer_8vhd">ip_sdp_ram_infer.vhd</innerfile>
+    <innerfile refid="dd/df9/ip__sdp__ram__infer__tb_8vhd">ip_sdp_ram_infer_tb.vhd</innerfile>
+    <innerfile refid="d5/d8b/ip__tdp__ram__infer_8vhd">ip_tdp_ram_infer.vhd</innerfile>
+    <innerfile refid="d7/da5/ip__tdp__ram__infer__tb_8vhd">ip_tdp_ram_infer_tb.vhd</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/"/>
+  </compounddef>
+</doxygen>

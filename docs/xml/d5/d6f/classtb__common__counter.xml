@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d5/d6f/classtb__common__counter" kind="class" language="VHDL" prot="public">
+    <compoundname>tb_common_counter</compoundname>
+    <basecompoundref refid="d1/dc3/classcommon__counter" prot="public" virt="non-virtual">common_counter</basecompoundref>
+    <innerclass refid="da/dec/classtb__common__counter_1_1tb" prot="private">tb_common_counter::tb</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>runner_cfg string </definition>
+        <argsstring> string </argsstring>
+        <name>runner_cfg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="27" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a5b9f5f86a90eb43620cde3e507a6bb21" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ IEEEIEEE,common_pkg_lib,vunit_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,vunit_lib</argsstring>
+        <name>IEEE</name>
+        <briefdescription>
+<para>Libraries IEEE, common_pkg_lib and VUnit. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="20" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a1b8747bf75d7cbc3b557afa9b1c82453" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libIEEE,common_pkg_lib,vunit_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,vunit_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="20" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a5adc04b2ff2f79412e7d908def93a9b2" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ vunit_libIEEE,common_pkg_lib,vunit_lib</definition>
+        <argsstring>IEEE,common_pkg_lib,vunit_lib</argsstring>
+        <name>vunit_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="20" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a2edc34402b573437d5f25fa90ba4013e" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ numeric_stdnumeric_std</definition>
+        <argsstring>numeric_std</argsstring>
+        <name>numeric_std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="22" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d5/d6f/classtb__common__counter_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="23" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="23" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>common_counter</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="1">
+        <label>tb_common_counter</label>
+        <link refid="d5/d6f/classtb__common__counter"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>common_counter</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="1">
+        <label>tb_common_counter</label>
+        <link refid="d5/d6f/classtb__common__counter"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="26" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="26" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d1/dc3/classcommon__counter_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>clk</name></member>
+      <member refid="d1/dc3/classcommon__counter_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>clken</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a03f0c3c8f88e895a0f1f834861098cd1" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>cnt_clr</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ad2fe0513aa4e4f5326093ca63fbb48a9" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>cnt_en</name></member>
+      <member refid="d1/dc3/classcommon__counter_1abcd7f3d11869760f1b845b0afd555992" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>cnt_ld</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aa38183da72b80ccbc5d3d04930f0a172" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>cnt_max</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>common_pkg</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a1b8747bf75d7cbc3b557afa9b1c82453" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>common_pkg_lib</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a40e3ef614f1f55b88b0ed16a2ac5b186" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>count</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a3fcaac0a20358eef8f48e94fd4933c5e" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>g_init</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a95ec3a363599c003a78ad4400301979b" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>g_latency</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a2f30a68feb488c6a19c92610629a2ae8" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>g_max</name></member>
+      <member refid="d1/dc3/classcommon__counter_1afcf494de0e8842fb27fac7831e89c632" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>g_step_size</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a44bcdee410b3f40aadd6cf9c5e4bddfa" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>g_width</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a5b9f5f86a90eb43620cde3e507a6bb21" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>IEEE</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aba16565fa2695fb0cd920da67afe5c86" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>load</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>numeric_std</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ae9b5070dc93368d71f49ae554bc2de22" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>rst</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>runner_cfg</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>std_logic_1164</name></member>
+      <member refid="d5/d6f/classtb__common__counter_1a5adc04b2ff2f79412e7d908def93a9b2" prot="public" virt="non-virtual"><scope>tb_common_counter</scope><name>vunit_lib</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

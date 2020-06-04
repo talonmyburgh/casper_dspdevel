@@ -1,24 +1,23 @@
---!
 --! @file
---! @brief Common adder/subtracter for signed/unsigned values.*/
+--! @brief Common adder/subtractor for signed/unsigned values.
  
---! Copyright 2020
---! ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
---! P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
+-- Copyright 2020
+-- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
+-- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
  
---! Licensed under the Apache License, Version 2.0 (the "License");
---! you may not use this file except in compliance with the License.
---! You may obtain a copy of the License at
+-- Licensed under the Apache License, Version 2.0 (the "License");
+-- you may not use this file except in compliance with the License.
+-- You may obtain a copy of the License at
  
---!    http://www.apache.org/licenses/LICENSE-2.0
+--    http://www.apache.org/licenses/LICENSE-2.0
  
---! Unless required by applicable law or agreed to in writing, software
---! distributed under the License is distributed on an "AS IS" BASIS,
---! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
---! See the License for the specific language governing permissions and
---! limitations under the License.
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-- See the License for the specific language governing permissions and
+-- limitations under the License.
 
---! Use standard library logic elements, common_pkg_lib and common_components_lib
+--! Libraries: IEEE, common_pkg_lib and common_components_lib
 LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
@@ -29,21 +28,31 @@ USE common_pkg_lib.common_pkg.ALL;
 --!   + Specify input and output widths
 --!   + Enable/disable option
 --!   + Sum signed or unsigned values
-
 --! Remarks:
 --!  + Currently only support for g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1
 --!  + Specifying signed or unsiged is only important if g_out_dat_w > g_in_dat_w. It is not relevant if g_out_dat_w = g_in_dat_w
 
---! @dot
---! digraph example {
---! node [shape=record, fontname=Helvetica, fontsize=10,color="black"];
---! DataExtract [ label="Entity common_add_sub" URL="\ref common_add_sub"];
---!   Blah -> Ser2Par;
---!   Ser2Par -> DataExtract;
---!	  DataExtract -> Blah;
---!   Blah -> Ser2Par;
---! }
+--! @dot 
+--! digraph common_add_sub {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black", width = 0.5, height = 1];
+--! common_add_sub;
+--! node [shape=plaintext];
+--! clk;
+--! clken;
+--! sel_add;
+--! in_a;
+--! in_b;
+--! result;
+--! clk -> common_add_sub ;
+--! clken -> common_add_sub;
+--! sel_add -> common_add_sub;
+--! in_a -> common_add_sub;
+--! in_b -> common_add_sub;
+--! common_add_sub -> result;
+--!}
 --! @enddot
+
 ENTITY common_add_sub IS
 	GENERIC(
 		g_direction       : STRING  := "ADD"; --! "ADD", "SUB" or "BOTH" and use sel_add to pick

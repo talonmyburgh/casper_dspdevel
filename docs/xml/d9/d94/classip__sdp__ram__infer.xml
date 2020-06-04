@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d9/d94/classip__sdp__ram__infer" kind="class" language="VHDL" prot="public">
+    <compoundname>ip_sdp_ram_infer</compoundname>
+    <derivedcompoundref refid="da/d21/classip__sdp__ram__infer__tb" prot="public" virt="non-virtual">ip_sdp_ram_infer_tb</derivedcompoundref>
+    <innerclass refid="de/dd5/classip__sdp__ram__infer_1_1behavioral" prot="private">ip_sdp_ram_infer::behavioral</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a6dc229ff11f564bd831621a5cafc007b" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>addressWidth natural </definition>
+        <argsstring> natural </argsstring>
+        <name>addressWidth</name>
+        <briefdescription>
+<para>Address width dictates RAM size. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1ad567103b35620d5e45bdfd2d4074851d" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>dataWidth natural </definition>
+        <argsstring> natural </argsstring>
+        <name>dataWidth</name>
+        <briefdescription>
+<para>Width of data to be stored/fetched. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="50" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a1b3294348f438a64be41de59876b3d0c" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clkA std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clkA</name>
+        <briefdescription>
+<para>Clock input for port A. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a4d8c97990b0cc4d513205096c07e8d9b" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clkB std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clkB</name>
+        <briefdescription>
+<para>Clock input for port B. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="54" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1adf93a8faacc9ea91b0217e468d60df5b" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in enA std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>enA</name>
+        <briefdescription>
+<para>Port A enable. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="55" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a4d217bc1d2ef17f9fe8d4630bcc34c52" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in enB std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>enB</name>
+        <briefdescription>
+<para>Port B enable. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="56" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1ad7459a03c8d440e64472db114d01e56f" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in weA std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>weA</name>
+        <briefdescription>
+<para>Write enable for port A. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="57" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1ad8ea53767fa345be9098fd8215e6b242" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in addrA std_logic_vector(   addressWidth- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   addressWidth- 1 downto  0) </argsstring>
+        <name>addrA</name>
+        <briefdescription>
+<para>Write address (port A) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="58" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a6ed81a6ea156ead15f222e668335371b" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in addrB std_logic_vector(   addressWidth- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   addressWidth- 1 downto  0) </argsstring>
+        <name>addrB</name>
+        <briefdescription>
+<para>Read address (port B) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1aa8438b2b4ba16f8dba8559ea2fd710ad" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in diA std_logic_vector(   dataWidth- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   dataWidth- 1 downto  0) </argsstring>
+        <name>diA</name>
+        <briefdescription>
+<para>Write data (into port A) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="60" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a7e771e991c78903a9715f040e73fbdf6" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out doB std_logic_vector(   dataWidth- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   dataWidth- 1 downto  0) </argsstring>
+        <name>doB</name>
+        <briefdescription>
+<para>Read data (from port B) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a0a6af6eef40212dbaf130d57ce711256" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee</definition>
+        <argsstring>ieee</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+<para>IEEE library. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="5" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="5" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="6" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d94/classip__sdp__ram__infer_1a2edc34402b573437d5f25fa90ba4013e" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ numeric_stdnumeric_std</definition>
+        <argsstring>numeric_std</argsstring>
+        <name>numeric_std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="7" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><dot>
+ digraph ip_sdp_ram_infer {
+	rankdir=&quot;LR&quot;;
+ node [shape=box, fontname=Helvetica, fontsize=12,color=&quot;black&quot;];
+ PortA;
+ PortB;
+ node [shape=plaintext];
+ clkA;
+ clkB;
+ enA;
+ enB;
+ weA;
+ addrA;
+ addrB;
+ diA;
+ doB;
+ clkA -&gt; PortA;
+ clkB -&gt; PortB;
+ enA -&gt; PortA;
+ enB -&gt; PortB;
+ weA -&gt; PortA;
+ addrA -&gt; PortA;
+ addrB -&gt; PortB;
+ diA -&gt; PortA;
+ PortB -&gt; doB;
+ subgraph sdp_ram {
+ {rank=same PortA PortB}
+ PortA -&gt; PortB [color=grey arrowhead=none];
+}
+}
+ </dot>
+ </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Simple dual port symmetric ram: +Port A is the write port +Port B is the read port </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>ip_sdp_ram_infer</label>
+        <link refid="d9/d94/classip__sdp__ram__infer"/>
+      </node>
+      <node id="2">
+        <label>ip_sdp_ram_infer_tb</label>
+        <link refid="da/d21/classip__sdp__ram__infer__tb"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="46" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d9/d94/classip__sdp__ram__infer_1ad8ea53767fa345be9098fd8215e6b242" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>addrA</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a6ed81a6ea156ead15f222e668335371b" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>addrB</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a6dc229ff11f564bd831621a5cafc007b" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>addressWidth</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a1b3294348f438a64be41de59876b3d0c" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>clkA</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a4d8c97990b0cc4d513205096c07e8d9b" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>clkB</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1ad567103b35620d5e45bdfd2d4074851d" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>dataWidth</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1aa8438b2b4ba16f8dba8559ea2fd710ad" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>diA</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a7e771e991c78903a9715f040e73fbdf6" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>doB</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1adf93a8faacc9ea91b0217e468d60df5b" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>enA</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a4d217bc1d2ef17f9fe8d4630bcc34c52" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>enB</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a0a6af6eef40212dbaf130d57ce711256" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>ieee</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>numeric_std</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>std_logic_1164</name></member>
+      <member refid="d9/d94/classip__sdp__ram__infer_1ad7459a03c8d440e64472db114d01e56f" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer</scope><name>weA</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

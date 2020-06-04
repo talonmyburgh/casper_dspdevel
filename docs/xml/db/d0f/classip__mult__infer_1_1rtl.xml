@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="db/d0f/classip__mult__infer_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>ip_mult_infer::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="db/d0f/classip__mult__infer_1_1rtl_1ae0944573229899e5018e6978e364cb1e" prot="public" static="no" mutable="no">
+        <type>signed(   <ref refid="d1/d92/classip__mult__infer_1a6dccb9bb6290376a4e8d4efc2cd2cbe2" kindref="member">AWIDTH</ref>- 1 downto  0)</type>
+        <definition>signed(   AWIDTH- 1 downto  0) a1</definition>
+        <argsstring></argsstring>
+        <name>a1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d0f/classip__mult__infer_1_1rtl_1a4add11247830dd7135288246ef5766e1" prot="public" static="no" mutable="no">
+        <type>signed(   <ref refid="d1/d92/classip__mult__infer_1adc54b8521e3354b1ab68b7e4a4644432" kindref="member">BWIDTH</ref>- 1 downto  0)</type>
+        <definition>signed(   BWIDTH- 1 downto  0) b1</definition>
+        <argsstring></argsstring>
+        <name>b1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" line="47" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="db/d0f/classip__mult__infer_1_1rtl_1a77dc5977093bc945ec493180ede1dade" prot="public" static="no" mutable="no">
+        <type>signed(   <ref refid="d1/d92/classip__mult__infer_1a6dccb9bb6290376a4e8d4efc2cd2cbe2" kindref="member">AWIDTH</ref>+   <ref refid="d1/d92/classip__mult__infer_1adc54b8521e3354b1ab68b7e4a4644432" kindref="member">BWIDTH</ref>- 1 downto  0)</type>
+        <definition>signed(   AWIDTH+   BWIDTH- 1 downto  0) p1</definition>
+        <argsstring></argsstring>
+        <name>p1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="db/d0f/classip__mult__infer_1_1rtl_1a48eca184941965dba78b02eb271c3488" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>PROCESS_4</definition>
+        <argsstring>clk</argsstring>
+        <name>PROCESS_4</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" line="51" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" bodystart="51" bodyend="64"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" line="45" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/ip_mult_infer.vhd" bodystart="45" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="db/d0f/classip__mult__infer_1_1rtl_1ae0944573229899e5018e6978e364cb1e" prot="public" virt="non-virtual"><scope>ip_mult_infer::rtl</scope><name>a1</name></member>
+      <member refid="db/d0f/classip__mult__infer_1_1rtl_1a4add11247830dd7135288246ef5766e1" prot="public" virt="non-virtual"><scope>ip_mult_infer::rtl</scope><name>b1</name></member>
+      <member refid="db/d0f/classip__mult__infer_1_1rtl_1a77dc5977093bc945ec493180ede1dade" prot="public" virt="non-virtual"><scope>ip_mult_infer::rtl</scope><name>p1</name></member>
+      <member refid="db/d0f/classip__mult__infer_1_1rtl_1a48eca184941965dba78b02eb271c3488" prot="public" virt="non-virtual"><scope>ip_mult_infer::rtl</scope><name>PROCESS_4</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

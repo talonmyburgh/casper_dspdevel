@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d7/d29/classcommon__switch_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>common_switch::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d7/d29/classcommon__switch_1_1rtl_1a347d75d36c333018276fd227f2adef09" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC :=   <ref refid="d4/d0e/classcommon__switch_1ad088a737dcdcda7c6bce84fbd7cbc424" kindref="member">g_rst_level</ref></type>
+        <definition>STD_LOGIC :=   g_rst_level switch_level</definition>
+        <argsstring></argsstring>
+        <name>switch_level</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d7/d29/classcommon__switch_1_1rtl_1a67db1b775112c48e81aa570684623723" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC nxt_switch_level</definition>
+        <argsstring></argsstring>
+        <name>nxt_switch_level</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" line="54" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="d7/d29/classcommon__switch_1_1rtl_1a6de19f496d8c4d50293e7fb6c9081ffd" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_reg</definition>
+        <argsstring>rst,clk</argsstring>
+        <name>p_reg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" line="74" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" bodystart="74" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="function" id="d7/d29/classcommon__switch_1_1rtl_1a07c9fe80d4b8c097c9d2a937bf1166b1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_switch_level</definition>
+        <argsstring>switch_level,switch_low,switch_high</argsstring>
+        <name>p_switch_level</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" line="85" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" bodystart="85" bodyend="101"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" line="51" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch.vhd" bodystart="51" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d7/d29/classcommon__switch_1_1rtl_1a67db1b775112c48e81aa570684623723" prot="public" virt="non-virtual"><scope>common_switch::rtl</scope><name>nxt_switch_level</name></member>
+      <member refid="d7/d29/classcommon__switch_1_1rtl_1a6de19f496d8c4d50293e7fb6c9081ffd" prot="public" virt="non-virtual"><scope>common_switch::rtl</scope><name>p_reg</name></member>
+      <member refid="d7/d29/classcommon__switch_1_1rtl_1a07c9fe80d4b8c097c9d2a937bf1166b1" prot="public" virt="non-virtual"><scope>common_switch::rtl</scope><name>p_switch_level</name></member>
+      <member refid="d7/d29/classcommon__switch_1_1rtl_1a347d75d36c333018276fd227f2adef09" prot="public" virt="non-virtual"><scope>common_switch::rtl</scope><name>switch_level</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

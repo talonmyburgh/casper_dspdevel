@@ -1,0 +1,301 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dc/d77/classrTwoBF" kind="class" language="VHDL" prot="public">
+    <compoundname>rTwoBF</compoundname>
+    <basecompoundref refid="d6/ddb/classcommon__delay" prot="public" virt="non-virtual">common_delay</basecompoundref>
+    <derivedcompoundref refid="dd/dc9/classrTwoBFStage" prot="public" virt="non-virtual">rTwoBFStage</derivedcompoundref>
+    <innerclass refid="d2/d73/classrTwoBF_1_1rtl" prot="private">rTwoBF::rtl</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a302a62069272b57ab8f157ddd0f2ff43" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_in_a_zdly natural := 0</definition>
+        <argsstring> natural := 0</argsstring>
+        <name>g_in_a_zdly</name>
+        <briefdescription>
+<para>default 0, 1 </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="76" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1af8616f560a2b1b61561ad9ae8a1d3a73" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_out_d_zdly natural := 0</definition>
+        <argsstring> natural := 0</argsstring>
+        <name>g_out_d_zdly</name>
+        <briefdescription>
+<para>default 0, optionally use 1 </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1aec3fb464350f4999866a4771531ecd24" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clk std_logic := &apos;0&apos;</definition>
+        <argsstring> std_logic := &apos;0&apos;</argsstring>
+        <name>clk</name>
+        <briefdescription>
+<para>Input clock source. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="80" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a80d94276e404738c398b66d2b7ed0931" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_a std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>in_a</name>
+        <briefdescription>
+<para>Input signal A. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="81" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a7ffc176a1117052c28cd6b3b53179f6d" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_b std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>in_b</name>
+        <briefdescription>
+<para>Input signal B. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="82" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_sel std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>in_sel</name>
+        <briefdescription>
+<para>Select input. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="83" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a203605699656bdaf3e9b841cabe6518a" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_val std_logic := &apos;0&apos;</definition>
+        <argsstring> std_logic := &apos;0&apos;</argsstring>
+        <name>in_val</name>
+        <briefdescription>
+<para>Select input for delay. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="84" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1ad982d697f803c222f9255b1ae24758e8" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_c std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>out_c</name>
+        <briefdescription>
+<para>Output signal c. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="85" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1adb63c560713267c64637a10e1627a5a7" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_d std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>out_d</name>
+        <briefdescription>
+<para>Output signal d. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="87" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a29b870e2995b8bd809601488c822adad" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee,common_pkg_lib,common_components_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+<para>Libraries: IEEE, common_pkg_lib, common_components_lib. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="25" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a52e8feec37d3182c926725569c712ce8" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libieee,common_pkg_lib,common_components_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="25" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a1fa0f21ad664a7f1c5ca42ec6d03f4b2" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_components_libieee,common_pkg_lib,common_components_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib</argsstring>
+        <name>common_components_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="25" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="26" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="26" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d77/classrTwoBF_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="27" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+<para><dot>
+ digraph rTwoBF {
+	rankdir=&quot;LR&quot;;
+ node [shape=box, fontname=Helvetica, fontsize=12,color=&quot;black&quot;];
+ rTwoBF;
+ node [shape=plaintext];
+ clk;
+ in_a;
+ in_b;
+ in_sel;
+ in_val;
+ out_c;
+ out_d;
+ clk -&gt; rTwoBF;
+ in_a -&gt; rTwoBF;
+ in_b -&gt; rTwoBF;
+ in_sel -&gt; rTwoBF;
+ in_val -&gt; rTwoBF;
+ rTwoBF -&gt; out_c;
+ rTwoBF -&gt; out_d;
+}
+ </dot>
+ </para>
+    </briefdescription>
+    <detaileddescription>
+<para>Purpose : Butterfly Description : Default the <ref refid="dc/d77/classrTwoBF" kindref="compound">rTwoBF</ref> is combinatorial and it can not be pipelined because of the feedback shift register. However for the FFT input stages with larger feedback shift registers it may be beneficial for achieving timing closure to move some of the z^(-1) shift delay out from the d to a feedback shift register into this <ref refid="dc/d77/classrTwoBF" kindref="compound">rTwoBF</ref>. The shift must only occur for valid data, so therefor then the in_val input is also needed. The g_in_a_zdly allows getting a delay shift into this <ref refid="dc/d77/classrTwoBF" kindref="compound">rTwoBF</ref> for input in_a. The g_out_d_zdly allows getting a delay shift into this <ref refid="dc/d77/classrTwoBF" kindref="compound">rTwoBF</ref> for output out_d. Externally the feedback shift register depth must then be decreased by g_in_a_zdly+g_out_d_zdly. Remarks: . For the last FFT output stages the feedback shift register depth is ..., 4, 2, 1 so then there is less need to use g_in_a_zdly or g_in_a_zdly other than 0. . Default use g_in_a_zdly=0 and g_out_d_zdly=0, so then clk and in_val can be left not connected. . Alternatively one can use g_in_a_zdly=0 and g_out_d_zdly=1 for all stages. </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="5">
+        <label>rTwoSDF</label>
+        <link refid="da/d05/classrTwoSDF"/>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>rTwoBFStage</label>
+        <link refid="dd/dc9/classrTwoBFStage"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>rTwoSDFStage</label>
+        <link refid="d3/da3/classrTwoSDFStage"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>common_delay(2)</label>
+        <link refid="d6/ddb/classcommon__delay"/>
+      </node>
+      <node id="1">
+        <label>rTwoBF</label>
+        <link refid="dc/d77/classrTwoBF"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>tb_rTwoSDF</label>
+        <link refid="d0/d99/classtb__rTwoSDF"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>common_delay(2)</label>
+        <link refid="d6/ddb/classcommon__delay"/>
+      </node>
+      <node id="1">
+        <label>rTwoBF</label>
+        <link refid="dc/d77/classrTwoBF"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="74" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="74" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="dc/d77/classrTwoBF_1aec3fb464350f4999866a4771531ecd24" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>clk</name></member>
+      <member refid="dc/d77/classrTwoBF_1a1fa0f21ad664a7f1c5ca42ec6d03f4b2" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>common_components_lib</name></member>
+      <member refid="dc/d77/classrTwoBF_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>common_pkg</name></member>
+      <member refid="dc/d77/classrTwoBF_1a52e8feec37d3182c926725569c712ce8" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>common_pkg_lib</name></member>
+      <member refid="d6/ddb/classcommon__delay_1aa606d3c5f84e6a3856b0c58c5e8f3f26" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>g_dat_w</name></member>
+      <member refid="d6/ddb/classcommon__delay_1ad003b1a7231a119f6e0c31bd22a78d55" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>g_depth</name></member>
+      <member refid="dc/d77/classrTwoBF_1a302a62069272b57ab8f157ddd0f2ff43" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>g_in_a_zdly</name></member>
+      <member refid="dc/d77/classrTwoBF_1af8616f560a2b1b61561ad9ae8a1d3a73" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>g_out_d_zdly</name></member>
+      <member refid="dc/d77/classrTwoBF_1a29b870e2995b8bd809601488c822adad" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>ieee</name></member>
+      <member refid="dc/d77/classrTwoBF_1a80d94276e404738c398b66d2b7ed0931" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>in_a</name></member>
+      <member refid="dc/d77/classrTwoBF_1a7ffc176a1117052c28cd6b3b53179f6d" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>in_b</name></member>
+      <member refid="d6/ddb/classcommon__delay_1a9e162f717010fc6c9a484616acf2a8db" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>in_dat</name></member>
+      <member refid="dc/d77/classrTwoBF_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>in_sel</name></member>
+      <member refid="dc/d77/classrTwoBF_1a203605699656bdaf3e9b841cabe6518a" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>in_val</name></member>
+      <member refid="dc/d77/classrTwoBF_1ad982d697f803c222f9255b1ae24758e8" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>out_c</name></member>
+      <member refid="dc/d77/classrTwoBF_1adb63c560713267c64637a10e1627a5a7" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>out_d</name></member>
+      <member refid="d6/ddb/classcommon__delay_1a15eab8d2ac228eee18fb64b2aba83e28" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>out_dat</name></member>
+      <member refid="dc/d77/classrTwoBF_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>std_logic_1164</name></member>
+      <member refid="d6/ddb/classcommon__delay_1aa4b2b25246a821511120e3149b003563" prot="public" virt="non-virtual"><scope>rTwoBF</scope><name>STD_LOGIC_1164</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

@@ -18,24 +18,24 @@
 --
 --------------------------------------------------------------------------------
 
---   Purpose: Shift register for data
---   Description:
---     Delays input data by g_depth. The delay line shifts when in_val is
---     indicates an active clock cycle.
+--!   Purpose: Shift register for data
+--!   Description:
+--!     Delays input data by g_depth. The delay line shifts when in_val is high,
+--!     indicating an active clock cycle.
 
 library ieee;
 use IEEE.STD_LOGIC_1164.all;
 
 entity common_delay is
   generic (
-    g_dat_w    : NATURAL := 8;   -- need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
-    g_depth    : NATURAL := 16
+    g_dat_w    : NATURAL := 8;   --! need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
+    g_depth    : NATURAL := 16   --! Delay depth
   );
   port (
-    clk      : in  STD_LOGIC;
-    in_val   : in  STD_LOGIC := '1';
-    in_dat   : in  STD_LOGIC_VECTOR(g_dat_w-1 downto 0);
-    out_dat  : out STD_LOGIC_VECTOR(g_dat_w-1 downto 0)
+    clk      : in  STD_LOGIC; --! Clock input
+    in_val   : in  STD_LOGIC := '1'; --! Select input value
+    in_dat   : in  STD_LOGIC_VECTOR(g_dat_w-1 downto 0); --! Input value
+    out_dat  : out STD_LOGIC_VECTOR(g_dat_w-1 downto 0) --! Output value
   );
 end entity common_delay;
 

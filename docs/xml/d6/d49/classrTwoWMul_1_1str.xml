@@ -1,0 +1,421 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d6/d49/classrTwoWMul_1_1str" kind="class" language="VHDL" prot="private">
+    <compoundname>rTwoWMul::str</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a5c8f16dcb7be13902cf03c0bcfc89dad" prot="public" static="no" mutable="no">
+        <type>boolean :=   true</type>
+        <definition>boolean :=   true c_use_truncate</definition>
+        <argsstring></argsstring>
+        <name>c_use_truncate</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ab62f4a4f8ee8772363435a2ddc5466ac" prot="public" static="no" mutable="no">
+        <type>natural := 3</type>
+        <definition>natural := 3 c_dsp_mult_lat</definition>
+        <argsstring></argsstring>
+        <name>c_dsp_mult_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ad76aada6ba92b278172c5be551c066c9" prot="public" static="no" mutable="no">
+        <type>natural :=   sel_a_b(   <ref refid="d1/d60/classrTwoWMul_1a3851b67a7cd050e3cbef555be5f7c1ec" kindref="member">g_lat</ref>&gt;   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab62f4a4f8ee8772363435a2ddc5466ac" kindref="member">c_dsp_mult_lat</ref>, 1, 0)</type>
+        <definition>natural :=   sel_a_b(   g_lat&gt;   c_dsp_mult_lat, 1, 0) c_round_lat</definition>
+        <argsstring></argsstring>
+        <name>c_round_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d1/d60/classrTwoWMul_1a3851b67a7cd050e3cbef555be5f7c1ec" kindref="member">g_lat</ref>-   <ref refid="d6/d49/classrTwoWMul_1_1str_1ad76aada6ba92b278172c5be551c066c9" kindref="member">c_round_lat</ref></type>
+        <definition>natural :=   g_lat-   c_round_lat c_lat</definition>
+        <argsstring></argsstring>
+        <name>c_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="63" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1abdeda63d2ee3090bf3ee78b5eeb432ae" prot="public" static="no" mutable="no">
+        <type>natural :=   sel_a_b(   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" kindref="member">c_lat</ref>&gt; 1, 1, 0)</type>
+        <definition>natural :=   sel_a_b(   c_lat&gt; 1, 1, 0) c_mult_input_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_input_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="65" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a5f452fa685eb955a8775e2707561436d" prot="public" static="no" mutable="no">
+        <type>natural := 0</type>
+        <definition>natural := 0 c_mult_product_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_product_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="66" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a7d65c9b7b882d136a1f072d4aed50fd8" prot="public" static="no" mutable="no">
+        <type>natural :=   sel_a_b(   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" kindref="member">c_lat</ref>&gt; 2, 1, 0)</type>
+        <definition>natural :=   sel_a_b(   c_lat&gt; 2, 1, 0) c_mult_adder_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_adder_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="67" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1aa8a1c4f14a6a64d8fdf76defe8696943" prot="public" static="no" mutable="no">
+        <type>natural :=   sel_a_b(   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" kindref="member">c_lat</ref>&gt; 3,   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" kindref="member">c_lat</ref>- 3, 0)</type>
+        <definition>natural :=   sel_a_b(   c_lat&gt; 3,   c_lat- 3, 0) c_mult_extra_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_extra_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="68" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a9ea8ac5d863ae2fa3f548f285f810a1f" prot="public" static="no" mutable="no">
+        <type>natural :=   sel_a_b(   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" kindref="member">c_lat</ref>&gt; 0, 1, 0)+   <ref refid="d6/d49/classrTwoWMul_1_1str_1aa8a1c4f14a6a64d8fdf76defe8696943" kindref="member">c_mult_extra_lat</ref></type>
+        <definition>natural :=   sel_a_b(   c_lat&gt; 0, 1, 0)+   c_mult_extra_lat c_mult_output_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_output_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a3e8dcebc007bec5a6d2e491a127669ae" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d6/d49/classrTwoWMul_1_1str_1abdeda63d2ee3090bf3ee78b5eeb432ae" kindref="member">c_mult_input_lat</ref>+   <ref refid="d6/d49/classrTwoWMul_1_1str_1a5f452fa685eb955a8775e2707561436d" kindref="member">c_mult_product_lat</ref>+   <ref refid="d6/d49/classrTwoWMul_1_1str_1a7d65c9b7b882d136a1f072d4aed50fd8" kindref="member">c_mult_adder_lat</ref>+   <ref refid="d6/d49/classrTwoWMul_1_1str_1a9ea8ac5d863ae2fa3f548f285f810a1f" kindref="member">c_mult_output_lat</ref></type>
+        <definition>natural :=   c_mult_input_lat+   c_mult_product_lat+   c_mult_adder_lat+   c_mult_output_lat c_mult_lat</definition>
+        <argsstring></argsstring>
+        <name>c_mult_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="70" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ae47ab6e3a285a77340f9ba693d032ab4" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d6/d49/classrTwoWMul_1_1str_1a3e8dcebc007bec5a6d2e491a127669ae" kindref="member">c_mult_lat</ref>+   <ref refid="d6/d49/classrTwoWMul_1_1str_1ad76aada6ba92b278172c5be551c066c9" kindref="member">c_round_lat</ref></type>
+        <definition>natural :=   c_mult_lat+   c_round_lat c_total_lat</definition>
+        <argsstring></argsstring>
+        <name>c_total_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="73" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a57c0f50acb04c297e9ca670bf353dbdb" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d1/d60/classrTwoWMul_1a49a562993216f997b21d6a881c0f72ad" kindref="member">in_re</ref>&apos;length</type>
+        <definition>natural :=   in_re&apos;length c_in_dat_w</definition>
+        <argsstring></argsstring>
+        <name>c_in_dat_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="76" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ab7edce27ec180df09e784ad9cc2e67d8" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d1/d60/classrTwoWMul_1a004af977b1a33eeb33101a34645714c3" kindref="member">weight_re</ref>&apos;length</type>
+        <definition>natural :=   weight_re&apos;length c_weight_w</definition>
+        <argsstring></argsstring>
+        <name>c_weight_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="77" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a3621712bb8e767ce83717420d6913672" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d6/d49/classrTwoWMul_1_1str_1a57c0f50acb04c297e9ca670bf353dbdb" kindref="member">c_in_dat_w</ref>+   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab7edce27ec180df09e784ad9cc2e67d8" kindref="member">c_weight_w</ref>+ 1</type>
+        <definition>natural :=   c_in_dat_w+   c_weight_w+ 1 c_prod_w</definition>
+        <argsstring></argsstring>
+        <name>c_prod_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ac134385ce5154d4ca7eac9105a12f06a" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d6/d49/classrTwoWMul_1_1str_1ab7edce27ec180df09e784ad9cc2e67d8" kindref="member">c_weight_w</ref>-   c_sign_w</type>
+        <definition>natural :=   c_weight_w-   c_sign_w c_round_w</definition>
+        <argsstring></argsstring>
+        <name>c_round_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="79" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a94e11e5ebb7d0a01c10262c5f426c4b2" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="d1/d60/classrTwoWMul_1a77c3a2ae46a92a6048e561c8e0a834f1" kindref="member">out_re</ref>&apos;length</type>
+        <definition>natural :=   out_re&apos;length c_out_dat_w</definition>
+        <argsstring></argsstring>
+        <name>c_out_dat_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="80" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="80" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a2e14390082b9a54de6acdaa2da7ae5fa" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="d1/d60/classrTwoWMul_1a49a562993216f997b21d6a881c0f72ad" kindref="member">in_re</ref>)</type>
+        <definition>std_logic_vector(in_re) in_re_dly</definition>
+        <argsstring></argsstring>
+        <name>in_re_dly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="82" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="82" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a4b6e1380805d5910be99cd1ac727af35" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="d1/d60/classrTwoWMul_1a49a562993216f997b21d6a881c0f72ad" kindref="member">in_re</ref>)</type>
+        <definition>std_logic_vector(in_re) in_im_dly</definition>
+        <argsstring></argsstring>
+        <name>in_im_dly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="83" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="83" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a08ab1e833e85b5b1e6089de952ea5a8b" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="d6/d49/classrTwoWMul_1_1str_1a3621712bb8e767ce83717420d6913672" kindref="member">c_prod_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector(   c_prod_w- 1 downto  0) product_re</definition>
+        <argsstring></argsstring>
+        <name>product_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="84" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="84" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a7fc4bffad14d2811e90901d2170a7435" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="d6/d49/classrTwoWMul_1_1str_1a3621712bb8e767ce83717420d6913672" kindref="member">c_prod_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector(   c_prod_w- 1 downto  0) product_im</definition>
+        <argsstring></argsstring>
+        <name>product_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="85" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="85" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a62e9b03a54c8d5dbd1a818076681eb44" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="d1/d60/classrTwoWMul_1a77c3a2ae46a92a6048e561c8e0a834f1" kindref="member">out_re</ref>)</type>
+        <definition>std_logic_vector(out_re) round_re</definition>
+        <argsstring></argsstring>
+        <name>round_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="86" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a318cd87f8c92b7e82021f7d195243339" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="d1/d60/classrTwoWMul_1a77c3a2ae46a92a6048e561c8e0a834f1" kindref="member">out_re</ref>)</type>
+        <definition>std_logic_vector(out_re) round_im</definition>
+        <argsstring></argsstring>
+        <name>round_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="87" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ae3a09ffca126c65733bc5fdbdf04819d" prot="public" static="no" mutable="no">
+        <type>std_logic</type>
+        <definition>std_logic out_sel</definition>
+        <argsstring></argsstring>
+        <name>out_sel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="88" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1aeb1f79d00539bba627eb94fd2596574b" prot="public" static="no" mutable="no">
+        <type>common_complex_mult</type>
+        <definition></definition>
+        <argsstring>u_cmplxmul</argsstring>
+        <name>u_cmplxmul</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="134" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a0f5c8f461ae18c04b9393f21837a04f5" prot="public" static="no" mutable="no">
+        <type>common_complex_mult</type>
+        <definition></definition>
+        <argsstring>u_cmplx_mul</argsstring>
+        <name>u_cmplx_mul</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="162" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1a3e422d4581d783ba6914e663f76c2213" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_re_lat</argsstring>
+        <name>u_re_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="210" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="210" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ae46388add70458a31a58c0ded84a2982" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_im_lat</argsstring>
+        <name>u_im_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="222" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="222" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ac119c8bd42c98ece82d28e663e9a6f99" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_sel_lat</argsstring>
+        <name>u_sel_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="234" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="234" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d49/classrTwoWMul_1_1str_1ac85ca7fffabd6604868ec2bdbdc978f8" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_pipeline_out_val</argsstring>
+        <name>u_pipeline_out_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="245" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="245" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="47" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="47" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ab62f4a4f8ee8772363435a2ddc5466ac" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_dsp_mult_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a57c0f50acb04c297e9ca670bf353dbdb" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_in_dat_w</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ab29b5e3c5f70aff7c2d642f0e8306a44" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a7d65c9b7b882d136a1f072d4aed50fd8" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_adder_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1aa8a1c4f14a6a64d8fdf76defe8696943" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_extra_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1abdeda63d2ee3090bf3ee78b5eeb432ae" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_input_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a3e8dcebc007bec5a6d2e491a127669ae" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a9ea8ac5d863ae2fa3f548f285f810a1f" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_output_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a5f452fa685eb955a8775e2707561436d" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_mult_product_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a94e11e5ebb7d0a01c10262c5f426c4b2" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_out_dat_w</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a3621712bb8e767ce83717420d6913672" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_prod_w</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ad76aada6ba92b278172c5be551c066c9" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_round_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ac134385ce5154d4ca7eac9105a12f06a" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_round_w</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ae47ab6e3a285a77340f9ba693d032ab4" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_total_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a5c8f16dcb7be13902cf03c0bcfc89dad" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_use_truncate</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ab7edce27ec180df09e784ad9cc2e67d8" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>c_weight_w</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a4b6e1380805d5910be99cd1ac727af35" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>in_im_dly</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a2e14390082b9a54de6acdaa2da7ae5fa" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>in_re_dly</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ae3a09ffca126c65733bc5fdbdf04819d" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>out_sel</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a7fc4bffad14d2811e90901d2170a7435" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>product_im</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a08ab1e833e85b5b1e6089de952ea5a8b" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>product_re</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a318cd87f8c92b7e82021f7d195243339" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>round_im</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a62e9b03a54c8d5dbd1a818076681eb44" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>round_re</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a0f5c8f461ae18c04b9393f21837a04f5" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_cmplx_mul</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1aeb1f79d00539bba627eb94fd2596574b" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_cmplxmul</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ae46388add70458a31a58c0ded84a2982" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_im_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ac85ca7fffabd6604868ec2bdbdc978f8" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_pipeline_out_val</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1a3e422d4581d783ba6914e663f76c2213" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_re_lat</name></member>
+      <member refid="d6/d49/classrTwoWMul_1_1str_1ac119c8bd42c98ece82d28e663e9a6f99" prot="public" virt="non-virtual"><scope>rTwoWMul::str</scope><name>u_sel_lat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

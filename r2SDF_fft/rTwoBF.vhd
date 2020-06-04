@@ -1,3 +1,7 @@
+--! @file
+--! @brief Radix 2 butterfly module
+
+
 --------------------------------------------------------------------------------
 --
 -- Copyright 2020
@@ -17,46 +21,69 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
-
--- Purpose : Butterfly
--- Description :
---   Default the rTwoBF is combinatorial and it can not be pipelined because
---   of the feedback shift register.
---   However for the FFT input stages with larger feedback shift registers it
---   may be beneficial for achieving timing closure to move some of the z^(-1)
---   shift delay out from the d to a feedback shift register into this rTwoBF.
---   The shift must only occur for valid data, so therefor then the in_val
---   input is also needed.
---   The g_in_a_zdly allows getting a delay shift into this rTwoBF for input
---   in_a. The g_out_d_zdly allows getting a delay shift into this rTwoBF for
---   output out_d. Externally the feedback shift register depth must then be 
---   decreased by g_in_a_zdly+g_out_d_zdly.
--- Remarks:
--- . For the last FFT output stages the feedback shift register depth is ...,
---   4, 2, 1 so then there is less need to use g_in_a_zdly or g_in_a_zdly
---   other than 0.
--- . Default use g_in_a_zdly=0 and g_out_d_zdly=0, so then clk and in_val can
---   be left not connected.
--- . Alternatively one can use g_in_a_zdly=0 and g_out_d_zdly=1 for all
---   stages.
-
+--! Libraries: IEEE, common_pkg_lib, common_components_lib
 library ieee, common_pkg_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 
+--! Purpose : Butterfly
+--! Description :
+--!   Default the rTwoBF is combinatorial and it can not be pipelined because
+--!   of the feedback shift register.
+--!   However for the FFT input stages with larger feedback shift registers it
+--!   may be beneficial for achieving timing closure to move some of the z^(-1)
+--!   shift delay out from the d to a feedback shift register into this rTwoBF.
+--!   The shift must only occur for valid data, so therefor then the in_val
+--!   input is also needed.
+--!   The g_in_a_zdly allows getting a delay shift into this rTwoBF for input
+--!   in_a. The g_out_d_zdly allows getting a delay shift into this rTwoBF for
+--!   output out_d. Externally the feedback shift register depth must then be 
+--!   decreased by g_in_a_zdly+g_out_d_zdly.
+--! Remarks:
+--! . For the last FFT output stages the feedback shift register depth is ...,
+--!   4, 2, 1 so then there is less need to use g_in_a_zdly or g_in_a_zdly
+--!   other than 0.
+--! . Default use g_in_a_zdly=0 and g_out_d_zdly=0, so then clk and in_val can
+--!   be left not connected.
+--! . Alternatively one can use g_in_a_zdly=0 and g_out_d_zdly=1 for all
+--!   stages.
+
+--! @dot 
+--! digraph rTwoBF {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! rTwoBF;
+--! node [shape=plaintext];
+--! clk;
+--! in_a;
+--! in_b;
+--! in_sel;
+--! in_val;
+--! out_c;
+--! out_d;
+--! clk -> rTwoBF;
+--! in_a -> rTwoBF;
+--! in_b -> rTwoBF;
+--! in_sel -> rTwoBF;
+--! in_val -> rTwoBF;
+--! rTwoBF -> out_c;
+--! rTwoBF -> out_d;
+--!}
+--! @enddot
+
 entity rTwoBF is
 	generic(
-		g_in_a_zdly  : natural := 0;    -- default 0, 1
-		g_out_d_zdly : natural := 0     -- default 0, optionally use 1
+		g_in_a_zdly  : natural := 0;    --! default 0, 1
+		g_out_d_zdly : natural := 0     --! default 0, optionally use 1
 	);
 	port(
-		clk    : in  std_logic := '0';
-		in_a   : in  std_logic_vector;
-		in_b   : in  std_logic_vector;
-		in_sel : in  std_logic;
-		in_val : in  std_logic := '0';
-		out_c  : out std_logic_vector;
-		out_d  : out std_logic_vector
+		clk    : in  std_logic := '0'; --! Input clock source
+		in_a   : in  std_logic_vector; --! Input signal A
+		in_b   : in  std_logic_vector; --! Input signal B
+		in_sel : in  std_logic; --! Select input
+		in_val : in  std_logic := '0'; --! Select input for delay
+		out_c  : out std_logic_vector; --! Output signal c
+		out_d  : out std_logic_vector --! Output signal d
 	);
 end;
 
