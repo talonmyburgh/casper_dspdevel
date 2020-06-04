@@ -1,22 +1,56 @@
--- Complex Multiplier (pr+i.pi) = (ar+i.ai)*(br+i.bi)
---
+--! @file
+--! @brief Inference Complex Multiplier
+
+--! Library IEEE
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 ----------------------------------------------------------------------
 --  DSP48 CMULT inference module for Xilinx chips
 ----------------------------------------------------------------------
+--! Complex Multiplier:
+--!    (pr+i.pi) = (ar+i.ai)*(br+i.bi)
+--! This inference module is likely to be implemented in DSP48 elements
+--! in Xilinx chips.
 
+--! @dot 
+--! digraph ip_mult_infer {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! ip_mult_infer;
+--! node [shape=plaintext];
+--! ar;
+--! ai;
+--! br;
+--! bi;
+--! clk;
+--! rst;
+--! clken;
+--! pr;
+--! pi;
+--! clk -> ip_mult_infer;
+--! clken -> ip_mult_infer;
+--! ar -> ip_mult_infer;
+--! ai -> ip_mult_infer;
+--! br -> ip_mult_infer;
+--! bi -> ip_mult_infer;
+--! rst -> ip_mult_infer;
+--! ip_mult_infer -> pr;
+--! ip_mult_infer -> pi;
+--!}
+--! @enddot
 
 entity ip_cmult_infer is
-	generic(AWIDTH : natural := 18;
-	        BWIDTH : natural := 18);
-	port(clk    : in  std_logic;
-	     ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
-	     br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
-	     rst    : in  std_logic;
-	     clken  : in  std_logic;
-	     pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0));
+	generic(AWIDTH : natural := 18; --! A input bit width 
+			BWIDTH : natural := 18 --! B input bit width
+			);
+	port(clk    : in  std_logic; --! Clock input
+	     ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0); --! Real and imaginary A inputs
+	     br, bi : in  std_logic_vector(BWIDTH - 1 downto 0); --! Real and imaginary B inputs
+	     rst    : in  std_logic; --! Reset signal
+	     clken  : in  std_logic; --! Clock enable signal
+		 pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0) --! Real and imaginary Outputs
+		 ); 
 
 end ip_cmult_infer;
 architecture rtl of ip_cmult_infer is

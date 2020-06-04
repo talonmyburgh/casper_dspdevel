@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d9/d17/classcommon__spulse__tb" kind="class" language="VHDL" prot="public">
+    <compoundname>common_spulse_tb</compoundname>
+    <basecompoundref refid="dc/db3/classcommon__areset" prot="public" virt="non-virtual">common_areset</basecompoundref>
+    <basecompoundref refid="d7/d95/classcommon__spulse" prot="public" virt="non-virtual">common_spulse</basecompoundref>
+    <innerclass refid="d2/d5e/classcommon__spulse__tb_1_1tb" prot="private">common_spulse_tb::tb</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d9/d17/classcommon__spulse__tb_1ac14da77d3d5ded18977de50569862ad6" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ IEEEIEEE,common_pkg_lib</definition>
+        <argsstring>IEEE,common_pkg_lib</argsstring>
+        <name>IEEE</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="28" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d17/classcommon__spulse__tb_1a88d849b66a6ff92ebc8e591884f9b8d6" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libIEEE,common_pkg_lib</definition>
+        <argsstring>IEEE,common_pkg_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="28" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d17/classcommon__spulse__tb_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d17/classcommon__spulse__tb_1a2edc34402b573437d5f25fa90ba4013e" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ numeric_stdnumeric_std</definition>
+        <argsstring>numeric_std</argsstring>
+        <name>numeric_std</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d9/d17/classcommon__spulse__tb_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="2">
+        <label>common_areset</label>
+        <link refid="dc/db3/classcommon__areset"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>common_switch</label>
+        <link refid="d4/d0e/classcommon__switch"/>
+      </node>
+      <node id="1">
+        <label>common_spulse_tb</label>
+        <link refid="d9/d17/classcommon__spulse__tb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>common_spulse</label>
+        <link refid="d7/d95/classcommon__spulse"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>common_async</label>
+        <link refid="db/d85/classcommon__async"/>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="2">
+        <label>common_areset</label>
+        <link refid="dc/db3/classcommon__areset"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>common_switch</label>
+        <link refid="d4/d0e/classcommon__switch"/>
+      </node>
+      <node id="1">
+        <label>common_spulse_tb</label>
+        <link refid="d9/d17/classcommon__spulse__tb"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>common_spulse</label>
+        <link refid="d7/d95/classcommon__spulse"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>common_async</label>
+        <link refid="db/d85/classcommon__async"/>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" line="33" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_spulse_tb.vhd" bodystart="33" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="dc/db3/classcommon__areset_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>clk</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>clk</name></member>
+      <member refid="d4/d0e/classcommon__switch_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>clken</name></member>
+      <member refid="d9/d17/classcommon__spulse__tb_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>common_pkg</name></member>
+      <member refid="d9/d17/classcommon__spulse__tb_1a88d849b66a6ff92ebc8e591884f9b8d6" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>common_pkg_lib</name></member>
+      <member refid="db/d85/classcommon__async_1a321eef78af7be69b4d7476360aa218fa" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>din</name></member>
+      <member refid="db/d85/classcommon__async_1a17f647dcf5684d05f0459ed9fe8d744b" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>dout</name></member>
+      <member refid="d4/d0e/classcommon__switch_1af101781274f18b30b31c64faeaed1a62" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>g_and_low</name></member>
+      <member refid="dc/db3/classcommon__areset_1ab1ee99a6663474d1a1db74c9bb3fe6d8" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>g_delay_len</name></member>
+      <member refid="d7/d95/classcommon__spulse_1ab1ee99a6663474d1a1db74c9bb3fe6d8" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>g_delay_len</name></member>
+      <member refid="d4/d0e/classcommon__switch_1aa66fd087706f1047c75a853bfef9ec20" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>g_or_high</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a79a717db73df839c2ee9eaaef963af03" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>g_priority_lo</name></member>
+      <member refid="db/d85/classcommon__async_1a9d5fa387d8cd2db3709103e818b0a0cd" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>g_rising_edge</name></member>
+      <member refid="dc/db3/classcommon__areset_1af2e1eaaba231b52c95e64216320dba86" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>g_rst_level</name></member>
+      <member refid="d4/d0e/classcommon__switch_1ad088a737dcdcda7c6bce84fbd7cbc424" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>g_rst_level</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a0a6af6eef40212dbaf130d57ce711256" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>ieee</name></member>
+      <member refid="d9/d17/classcommon__spulse__tb_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>IEEE</name></member>
+      <member refid="d7/d95/classcommon__spulse_1aae1072af45d3007719e56c6725f14768" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>in_busy</name></member>
+      <member refid="d7/d95/classcommon__spulse_1ab8a5151eebc1c1397752540c8de93cd1" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>in_clk</name></member>
+      <member refid="d7/d95/classcommon__spulse_1adfa4758460b2a0cbf398400e0b9f4718" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>in_clken</name></member>
+      <member refid="d7/d95/classcommon__spulse_1ae5cd7fee077aa8de674d2c86b28a9cea" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>in_pulse</name></member>
+      <member refid="dc/db3/classcommon__areset_1ae366520ed179c23bc52d3bdaf4719eed" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>in_rst</name></member>
+      <member refid="d7/d95/classcommon__spulse_1ad41c9b0beb859f62fb918e9b3caa6d96" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>in_rst</name></member>
+      <member refid="d9/d17/classcommon__spulse__tb_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>numeric_std</name></member>
+      <member refid="d7/d95/classcommon__spulse_1abac3719ca3ecaabf285e1220c5974e24" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>out_clk</name></member>
+      <member refid="d7/d95/classcommon__spulse_1a9176a2072c3d5a7f2f089b12252208b5" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>out_clken</name></member>
+      <member refid="d4/d0e/classcommon__switch_1ad667d81cbf63b2b9fdd69378f24bcaf4" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>out_level</name></member>
+      <member refid="d7/d95/classcommon__spulse_1a1f270dad6eb6784ab69e40636a667eb7" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>out_pulse</name></member>
+      <member refid="dc/db3/classcommon__areset_1ae8973c2d8fd47f7c399d9cebf54889dd" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>out_rst</name></member>
+      <member refid="d7/d95/classcommon__spulse_1ab064012a6d640f5c7fad522625d14917" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>out_rst</name></member>
+      <member refid="db/d85/classcommon__async_1ae9b5070dc93368d71f49ae554bc2de22" prot="public" virt="non-virtual" ambiguityscope="common_areset."><scope>common_spulse_tb</scope><name>rst</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a8eeb8904ee153a4a020f01009cee0218" prot="public" virt="non-virtual" ambiguityscope="common_spulse."><scope>common_spulse_tb</scope><name>rst</name></member>
+      <member refid="d9/d17/classcommon__spulse__tb_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>std_logic_1164</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a7df40ea90c8408b93af5a0acfcc1366a" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>switch_high</name></member>
+      <member refid="d4/d0e/classcommon__switch_1a0865d29d641953c19501ce93a4e09145" prot="public" virt="non-virtual"><scope>common_spulse_tb</scope><name>switch_low</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

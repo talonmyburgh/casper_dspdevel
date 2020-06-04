@@ -2,23 +2,10 @@
 <doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
   <compounddef id="dc/df9/classcommon__add__sub__tb" kind="class" language="VHDL" prot="public">
     <compoundname>common_add_sub_tb</compoundname>
+    <basecompoundref refid="d3/d5d/classcommon__pipeline" prot="public" virt="non-virtual">common_pipeline</basecompoundref>
     <basecompoundref refid="de/d7e/classcommon__add__sub" prot="public" virt="non-virtual">common_add_sub</basecompoundref>
-    <derivedcompoundref refid="d5/de9/classcommon__add__sub__tb__tb" prot="public" virt="non-virtual">common_add_sub_tb_tb</derivedcompoundref>
     <innerclass refid="d9/d25/classcommon__add__sub__tb_1_1tb" prot="private">common_add_sub_tb::tb</innerclass>
       <sectiondef kind="public-attrib">
-      <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" static="no" mutable="no">
-        <type></type>
-        <definition>runner_cfg string </definition>
-        <argsstring> string </argsstring>
-        <name>runner_cfg</name>
-        <briefdescription>
-        </briefdescription>
-        <detaileddescription>
-        </detaileddescription>
-        <inbodydescription>
-        </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="29" bodyend="-1"/>
-      </memberdef>
       <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1afde758736b333f0a14012dd668959e0b" prot="public" static="no" mutable="no">
         <type></type>
         <definition>g_direction STRING :=   &quot;SUB&quot;</definition>
@@ -30,20 +17,20 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="30" bodyend="-1"/>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="29" bodyend="-1"/>
       </memberdef>
-      <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1a318762ed024fa17691d68b69d6bdf596" prot="public" static="no" mutable="no">
+      <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1aad6246ffb14158ef27e4b9a4f3a54e89" prot="public" static="no" mutable="no">
         <type></type>
-        <definition>g_sel_add STD_LOGIC := &apos;1&apos;</definition>
-        <argsstring> STD_LOGIC := &apos;1&apos;</argsstring>
-        <name>g_sel_add</name>
+        <definition>s_sel_add STRING :=   &quot;1&quot;</definition>
+        <argsstring> STRING :=   &quot;1&quot;</argsstring>
+        <name>s_sel_add</name>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="31" bodyend="-1"/>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="30" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1ad41e917a5e60725f3a3fce637b752725" prot="public" static="no" mutable="no">
         <type></type>
@@ -56,7 +43,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="32" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="32" bodyend="-1"/>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="31" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1a9aee21d8ea63ba1cb909259535e0fe92" prot="public" static="no" mutable="no">
         <type></type>
@@ -69,7 +56,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="33" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="33" bodyend="-1"/>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="32" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="32" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1a30ac30512f6b5604e66a2e31699555a0" prot="public" static="no" mutable="no">
         <type></type>
@@ -82,13 +69,26 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="34" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="34" bodyend="-1"/>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="33" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="33" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1ac9e8a078009978a6244676b1361729a3" prot="public" static="no" mutable="no">
         <type></type>
         <definition>g_out_dat_w NATURAL := 5</definition>
         <argsstring> NATURAL := 5</argsstring>
         <name>g_out_dat_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="34" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/df9/classcommon__add__sub__tb_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>runner_cfg string </definition>
+        <argsstring> string </argsstring>
+        <name>runner_cfg</name>
         <briefdescription>
         </briefdescription>
         <detaileddescription>
@@ -194,57 +194,84 @@
     <detaileddescription>
     </detaileddescription>
     <inheritancegraph>
-      <node id="2">
+      <node id="3">
         <label>common_add_sub</label>
         <link refid="de/d7e/classcommon__add__sub"/>
-      </node>
-      <node id="3">
-        <label>common_add_sub_tb_tb</label>
-        <link refid="d5/de9/classcommon__add__sub__tb__tb"/>
-        <childnode refid="1" relation="public-inheritance">
+        <childnode refid="2" relation="public-inheritance">
         </childnode>
+      </node>
+      <node id="2">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
       </node>
       <node id="1">
         <label>common_add_sub_tb</label>
         <link refid="dc/df9/classcommon__add__sub__tb"/>
         <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="3" relation="public-inheritance">
         </childnode>
       </node>
     </inheritancegraph>
     <collaborationgraph>
-      <node id="2">
+      <node id="3">
         <label>common_add_sub</label>
         <link refid="de/d7e/classcommon__add__sub"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
       </node>
       <node id="1">
         <label>common_add_sub_tb</label>
         <link refid="dc/df9/classcommon__add__sub__tb"/>
         <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="3" relation="public-inheritance">
         </childnode>
       </node>
     </collaborationgraph>
     <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" line="27" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd" bodystart="27" bodyend="-1"/>
     <listofallmembers>
-      <member refid="de/d7e/classcommon__add__sub_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>clk</name></member>
-      <member refid="de/d7e/classcommon__add__sub_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>clken</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>clk</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a70120f1e8cec2d88609e7ce3c4d8f941" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>clk</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>clken</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>clken</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a927e3fc5cd4b7ec56798bb3fea715191" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>common_components_lib</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>common_pkg</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a48d19d7976b2f7ba059daa4a890871d3" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>common_pkg_lib</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1afde758736b333f0a14012dd668959e0b" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_direction</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a30ac30512f6b5604e66a2e31699555a0" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_in_dat_w</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1ac9e8a078009978a6244676b1361729a3" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_out_dat_w</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae0677aa1031770c217381bdb170498dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>g_pipeline</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae0677aa1031770c217381bdb170498dc" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>g_pipeline</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1ad41e917a5e60725f3a3fce637b752725" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_pipeline_in</name></member>
       <member refid="de/d7e/classcommon__add__sub_1ade830d6ebcf89e543a6d4dff4048e3e8" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_pipeline_input</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a9aee21d8ea63ba1cb909259535e0fe92" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_pipeline_out</name></member>
       <member refid="de/d7e/classcommon__add__sub_1a5981b29e1ee07dc9d940751e3a422a80" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_pipeline_output</name></member>
-      <member refid="de/d7e/classcommon__add__sub_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_representation</name></member>
-      <member refid="dc/df9/classcommon__add__sub__tb_1a318762ed024fa17691d68b69d6bdf596" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>g_sel_add</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>g_representation</name></member>
+      <member refid="de/d7e/classcommon__add__sub_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a0ec5e20f76ff8bf8ccfd48eae760b5b3" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>g_reset_value</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a0ec5e20f76ff8bf8ccfd48eae760b5b3" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>g_reset_value</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a438ed21d6de6106bc378f8d8cb92c054" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>IEEE</name></member>
       <member refid="de/d7e/classcommon__add__sub_1a31a0d23ea0399b883c384eaa3a28164a" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>in_a</name></member>
       <member refid="de/d7e/classcommon__add__sub_1ab886a00fc6e478705fbee505c314c0b7" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>in_b</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>in_clr</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>in_clr</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1adc27c695c03d5f1a657bc84366825eac" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>in_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1adc27c695c03d5f1a657bc84366825eac" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>in_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>in_en</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>in_en</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>numeric_std</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>out_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>out_dat</name></member>
       <member refid="de/d7e/classcommon__add__sub_1a9c774474d4c9f39a467caa59f4f95058" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>result</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae9b5070dc93368d71f49ae554bc2de22" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>common_add_sub_tb</scope><name>rst</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae9b5070dc93368d71f49ae554bc2de22" prot="public" virt="non-virtual" ambiguityscope="common_add_sub."><scope>common_add_sub_tb</scope><name>rst</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1a5aedd21f81a3d972d8a0a2086defd815" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>runner_cfg</name></member>
+      <member refid="dc/df9/classcommon__add__sub__tb_1aad6246ffb14158ef27e4b9a4f3a54e89" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>s_sel_add</name></member>
       <member refid="de/d7e/classcommon__add__sub_1a4fa755f20b2745b4c3484938582e1c3a" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>sel_add</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>std_logic_1164</name></member>
       <member refid="dc/df9/classcommon__add__sub__tb_1ad360e05ab5caa7085fa63b54ec67b7a2" prot="public" virt="non-virtual"><scope>common_add_sub_tb</scope><name>vunit_lib</name></member>

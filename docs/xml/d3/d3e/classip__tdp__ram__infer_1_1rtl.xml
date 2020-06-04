@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d3/d3e/classip__tdp__ram__infer_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>ip_tdp_ram_infer::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1ad6432823d3b1b0b41b18ed41287f30cf" prot="public" static="no" mutable="no">
+        <type>( 2**   <ref refid="df/d38/classip__tdp__ram__infer_1ae4b025a998de7b92b2c59bdec26058c2" kindref="member">addressWidth</ref>- 1 downto  0)  std_logic_vector(   <ref refid="df/d38/classip__tdp__ram__infer_1a2ae7134253ad361b6efbba2f65b5bc84" kindref="member">dataWidth</ref>- 1 downto  0)</type>
+        <definition>( 2**   addressWidth- 1 downto  0)  std_logic_vector(   dataWidth- 1 downto  0) ramType1</definition>
+        <argsstring></argsstring>
+        <name>ramType1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="63" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1ac0bda280de2f6eb86a0b05fb89b81793" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1ad6432823d3b1b0b41b18ed41287f30cf" kindref="member">ramType1</ref> :=( others =&gt;( others =&gt; &apos;0&apos;))</type>
+        <definition>ramType1 :=( others =&gt;( others =&gt; &apos;0&apos;)) ram</definition>
+        <argsstring></argsstring>
+        <name>ram</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="64" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a260f17ca23816a8d5f3a80612ee3994e" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="df/d38/classip__tdp__ram__infer_1a2ae7134253ad361b6efbba2f65b5bc84" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) readA</definition>
+        <argsstring></argsstring>
+        <name>readA</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="66" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a44bb09157ea7e5f499f1837fb8021b37" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="df/d38/classip__tdp__ram__infer_1a2ae7134253ad361b6efbba2f65b5bc84" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) readB</definition>
+        <argsstring></argsstring>
+        <name>readB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="67" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a08a9f03478f15489c88348dc116ec150" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="df/d38/classip__tdp__ram__infer_1a2ae7134253ad361b6efbba2f65b5bc84" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) regA</definition>
+        <argsstring></argsstring>
+        <name>regA</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="68" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a5e8cc465dd36208336fd383ee1a0f5eb" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="df/d38/classip__tdp__ram__infer_1a2ae7134253ad361b6efbba2f65b5bc84" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) regB</definition>
+        <argsstring></argsstring>
+        <name>regB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a73db26229b4418a01e01ccab86575c13" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>PROCESS_6</definition>
+        <argsstring>clockA,clockB</argsstring>
+        <name>PROCESS_6</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="76" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="76" bodyend="96"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" bodystart="62" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a73db26229b4418a01e01ccab86575c13" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>PROCESS_6</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1ac0bda280de2f6eb86a0b05fb89b81793" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>ram</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1ad6432823d3b1b0b41b18ed41287f30cf" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>ramType1</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a260f17ca23816a8d5f3a80612ee3994e" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>readA</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a44bb09157ea7e5f499f1837fb8021b37" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>readB</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a08a9f03478f15489c88348dc116ec150" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>regA</name></member>
+      <member refid="d3/d3e/classip__tdp__ram__infer_1_1rtl_1a5e8cc465dd36208336fd383ee1a0f5eb" prot="public" virt="non-virtual"><scope>ip_tdp_ram_infer::rtl</scope><name>regB</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

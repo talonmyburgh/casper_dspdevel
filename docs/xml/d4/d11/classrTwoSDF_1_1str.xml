@@ -1,0 +1,267 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d4/d11/classrTwoSDF_1_1str" kind="class" language="VHDL" prot="private">
+    <compoundname>rTwoSDF::str</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ad1ebd29419471e54020548507c1caf57" prot="public" static="no" mutable="no">
+        <type>natural :=   ceil_log2( <ref refid="da/d05/classrTwoSDF_1a2f4db2216ac6d5b5811117d229e32f9a" kindref="member">g_nof_points</ref> )</type>
+        <definition>natural :=   ceil_log2( g_nof_points ) c_nof_stages</definition>
+        <argsstring></argsstring>
+        <name>c_nof_stages</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="86" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="86" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a9abb1953aa66171853d14e4988028d5c" prot="public" static="no" mutable="no">
+        <type>natural := 0</type>
+        <definition>natural := 0 c_stage_offset</definition>
+        <argsstring></argsstring>
+        <name>c_stage_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="87" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1adf8cd2ca433e2be76715d1f30328d634" prot="public" static="no" mutable="no">
+        <type>natural := 0</type>
+        <definition>natural := 0 c_twiddle_offset</definition>
+        <argsstring></argsstring>
+        <name>c_twiddle_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="88" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ae551d583e2d6d731b5ee7b20d68ce323" prot="public" static="no" mutable="no">
+        <type>integer :=   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>-   <ref refid="da/d05/classrTwoSDF_1abd37b30d2940525d48f52a06e39a86b2" kindref="member">g_out_dat_w</ref></type>
+        <definition>integer :=   g_stage_dat_w-   g_out_dat_w c_out_scale_w</definition>
+        <argsstring></argsstring>
+        <name>c_out_scale_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="91" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a9cc90ecde1ba43dc80f1fc934dba91a9" prot="public" static="no" mutable="no">
+        <type>natural :=   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>-   <ref refid="da/d05/classrTwoSDF_1ab55a097189c3940834ed66ebcaa4b7f5" kindref="member">g_guard_w</ref>-   <ref refid="da/d05/classrTwoSDF_1a1f787196a65e5e219bbd52ffbd7b94d9" kindref="member">g_in_dat_w</ref></type>
+        <definition>natural :=   g_stage_dat_w-   g_guard_w-   g_in_dat_w c_in_scale_w</definition>
+        <argsstring></argsstring>
+        <name>c_in_scale_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="94" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1afe9e05f4b202d24633ec98748dfb734b" prot="public" static="no" mutable="no">
+        <type>(   <ref refid="d4/d11/classrTwoSDF_1_1str_1ad1ebd29419471e54020548507c1caf57" kindref="member">c_nof_stages</ref> downto  0)  std_logic_vector(   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>- 1 downto  0)</type>
+        <definition>(   c_nof_stages downto  0)  std_logic_vector(   g_stage_dat_w- 1 downto  0) t_data_arr</definition>
+        <argsstring></argsstring>
+        <name>t_data_arr</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="99" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a784d3c5b99d08f243701ca2cd6c86d68" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/d11/classrTwoSDF_1_1str_1afe9e05f4b202d24633ec98748dfb734b" kindref="member">t_data_arr</ref></type>
+        <definition>t_data_arr data_re</definition>
+        <argsstring></argsstring>
+        <name>data_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="101" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a3ba8260c5262a412bc49c2fee919a49f" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/d11/classrTwoSDF_1_1str_1afe9e05f4b202d24633ec98748dfb734b" kindref="member">t_data_arr</ref></type>
+        <definition>t_data_arr data_im</definition>
+        <argsstring></argsstring>
+        <name>data_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="102" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1aa58fe0b8e2e88e6e726563463bd6d1e5" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="d4/d11/classrTwoSDF_1_1str_1ad1ebd29419471e54020548507c1caf57" kindref="member">c_nof_stages</ref> downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   c_nof_stages downto  0) :=( others =&gt; &apos;0&apos;) data_val</definition>
+        <argsstring></argsstring>
+        <name>data_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="103" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ad4287f2bef88e0739c08e130caa8f33f" prot="public" static="no" mutable="no">
+        <type>std_logic_vector( 2*   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector( 2*   g_stage_dat_w- 1 downto  0) out_cplx</definition>
+        <argsstring></argsstring>
+        <name>out_cplx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="105" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a662bac930fcefeb118c0fb493ac4fc0a" prot="public" static="no" mutable="no">
+        <type>std_logic_vector( 2*   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector( 2*   g_stage_dat_w- 1 downto  0) raw_out_cplx</definition>
+        <argsstring></argsstring>
+        <name>raw_out_cplx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="106" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a9df28461224dd2d6bc9b25f31d89b9b7" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector(   g_stage_dat_w- 1 downto  0) raw_out_re</definition>
+        <argsstring></argsstring>
+        <name>raw_out_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="107" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1a2a838b5e532cba24da723eae99c4b575" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" kindref="member">g_stage_dat_w</ref>- 1 downto  0)</type>
+        <definition>std_logic_vector(   g_stage_dat_w- 1 downto  0) raw_out_im</definition>
+        <argsstring></argsstring>
+        <name>raw_out_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="108" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ab3428e93549388685bbf9e5ee32851c5" prot="public" static="no" mutable="no">
+        <type>std_logic</type>
+        <definition>std_logic raw_out_val</definition>
+        <argsstring></argsstring>
+        <name>raw_out_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="109" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1acaf06d471418f1b713ce4888bd55dc5b" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/da3/classrTwoSDFStage" kindref="compound">rTwoSDFStage</ref></type>
+        <definition></definition>
+        <argsstring>u_stage</argsstring>
+        <name>u_stage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="142" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="142" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ad99a1c9e1a924e1132f98200640deef0" prot="public" static="no" mutable="no">
+        <type><ref refid="de/d39/classrTwoOrder" kindref="compound">rTwoOrder</ref></type>
+        <definition></definition>
+        <argsstring>u_cplx</argsstring>
+        <name>u_cplx</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="173" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="173" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1af156bf7aefd380f6192213a0f3e13b88" prot="public" static="no" mutable="no">
+        <type>common_requantize</type>
+        <definition></definition>
+        <argsstring>u_requantize_re</argsstring>
+        <name>u_requantize_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="197" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="197" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d4/d11/classrTwoSDF_1_1str_1ac2155197423dcd602351792b9ed642fd" prot="public" static="no" mutable="no">
+        <type>common_requantize</type>
+        <definition></definition>
+        <argsstring>u_requantize_im</argsstring>
+        <name>u_requantize_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="218" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="218" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="84" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="84" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a9cc90ecde1ba43dc80f1fc934dba91a9" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>c_in_scale_w</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ad1ebd29419471e54020548507c1caf57" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>c_nof_stages</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ae551d583e2d6d731b5ee7b20d68ce323" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>c_out_scale_w</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a9abb1953aa66171853d14e4988028d5c" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>c_stage_offset</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1adf8cd2ca433e2be76715d1f30328d634" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>c_twiddle_offset</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a3ba8260c5262a412bc49c2fee919a49f" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>data_im</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a784d3c5b99d08f243701ca2cd6c86d68" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>data_re</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1aa58fe0b8e2e88e6e726563463bd6d1e5" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>data_val</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ad4287f2bef88e0739c08e130caa8f33f" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>out_cplx</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a662bac930fcefeb118c0fb493ac4fc0a" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>raw_out_cplx</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a2a838b5e532cba24da723eae99c4b575" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>raw_out_im</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1a9df28461224dd2d6bc9b25f31d89b9b7" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>raw_out_re</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ab3428e93549388685bbf9e5ee32851c5" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>raw_out_val</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1afe9e05f4b202d24633ec98748dfb734b" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>t_data_arr</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ad99a1c9e1a924e1132f98200640deef0" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>u_cplx</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1ac2155197423dcd602351792b9ed642fd" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>u_requantize_im</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1af156bf7aefd380f6192213a0f3e13b88" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>u_requantize_re</name></member>
+      <member refid="d4/d11/classrTwoSDF_1_1str_1acaf06d471418f1b713ce4888bd55dc5b" prot="public" virt="non-virtual"><scope>rTwoSDF::str</scope><name>u_stage</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

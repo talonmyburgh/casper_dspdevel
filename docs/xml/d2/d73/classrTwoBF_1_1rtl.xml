@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d2/d73/classrTwoBF_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>rTwoBF::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d2/d73/classrTwoBF_1_1rtl_1a1a32806c1c096bbfb6316b187ffaa3aa" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="dc/d77/classrTwoBF_1a80d94276e404738c398b66d2b7ed0931" kindref="member">in_a</ref>)</type>
+        <definition>std_logic_vector(in_a) in_a_dly</definition>
+        <argsstring></argsstring>
+        <name>in_a_dly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="92" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/d73/classrTwoBF_1_1rtl_1a2d0cb57a739688e25ae4c73c08133da0" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(<ref refid="dc/d77/classrTwoBF_1adb63c560713267c64637a10e1627a5a7" kindref="member">out_d</ref>)</type>
+        <definition>std_logic_vector(out_d) out_d_ely</definition>
+        <argsstring></argsstring>
+        <name>out_d_ely</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="93" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/d73/classrTwoBF_1_1rtl_1a956f45adbd8cabc2fcc98bee9db2a616" prot="public" static="no" mutable="no">
+        <type><ref refid="d6/ddb/classcommon__delay" kindref="compound">common_delay</ref></type>
+        <definition></definition>
+        <argsstring>u_in_dly</argsstring>
+        <name>u_in_dly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="108" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d2/d73/classrTwoBF_1_1rtl_1aea445d041d10f6e5da4a3a443a456499" prot="public" static="no" mutable="no">
+        <type><ref refid="d6/ddb/classcommon__delay" kindref="compound">common_delay</ref></type>
+        <definition></definition>
+        <argsstring>u_out_dly</argsstring>
+        <name>u_out_dly</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="120" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" line="90" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoBF.vhd" bodystart="90" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d2/d73/classrTwoBF_1_1rtl_1a1a32806c1c096bbfb6316b187ffaa3aa" prot="public" virt="non-virtual"><scope>rTwoBF::rtl</scope><name>in_a_dly</name></member>
+      <member refid="d2/d73/classrTwoBF_1_1rtl_1a2d0cb57a739688e25ae4c73c08133da0" prot="public" virt="non-virtual"><scope>rTwoBF::rtl</scope><name>out_d_ely</name></member>
+      <member refid="d2/d73/classrTwoBF_1_1rtl_1a956f45adbd8cabc2fcc98bee9db2a616" prot="public" virt="non-virtual"><scope>rTwoBF::rtl</scope><name>u_in_dly</name></member>
+      <member refid="d2/d73/classrTwoBF_1_1rtl_1aea445d041d10f6e5da4a3a443a456499" prot="public" virt="non-virtual"><scope>rTwoBF::rtl</scope><name>u_out_dly</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

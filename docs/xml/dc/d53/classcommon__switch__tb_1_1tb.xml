@@ -1,0 +1,325 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dc/d53/classcommon__switch__tb_1_1tb" kind="class" language="VHDL" prot="private">
+    <compoundname>common_switch_tb::tb</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a8d0648b9cff0f4c2684d4213cbae7384" prot="public" static="no" mutable="no">
+        <type>TIME :=  10 ns</type>
+        <definition>TIME :=  10 ns clk_period</definition>
+        <argsstring></argsstring>
+        <name>clk_period</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="45" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1ac099158d0d58f4d148d4c70a215b1511" prot="public" static="no" mutable="no">
+        <type>NATURAL := 3</type>
+        <definition>NATURAL := 3 c_nof_generics</definition>
+        <argsstring></argsstring>
+        <name>c_nof_generics</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="47" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1add8c56baf9e51ba35b213542d1d60ce7" prot="public" static="no" mutable="no">
+        <type>NATURAL := 2**   <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1ac099158d0d58f4d148d4c70a215b1511" kindref="member">c_nof_generics</ref></type>
+        <definition>NATURAL := 2**   c_nof_generics c_nof_dut</definition>
+        <argsstring></argsstring>
+        <name>c_nof_dut</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="49" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1aeea8d8c6951f14177e2d72cddc8d6ad3" prot="public" static="no" mutable="no">
+        <type>t_boolean_matrix ( 0 TO    <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1add8c56baf9e51ba35b213542d1d60ce7" kindref="member">c_nof_dut</ref>- 1, 0 TO    <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1ac099158d0d58f4d148d4c70a215b1511" kindref="member">c_nof_generics</ref>- 1):=((   FALSE,   FALSE,   FALSE),(   FALSE,   FALSE,   TRUE),(   FALSE,   TRUE,   FALSE),(   FALSE,   TRUE,   TRUE),(   TRUE,   FALSE,   FALSE),(   TRUE,   FALSE,   TRUE),(   TRUE,   TRUE,   FALSE),(   TRUE,   TRUE,   TRUE))</type>
+        <definition>t_boolean_matrix ( 0 TO    c_nof_dut- 1, 0 TO    c_nof_generics- 1):=((   FALSE,   FALSE,   FALSE),(   FALSE,   FALSE,   TRUE),(   FALSE,   TRUE,   FALSE),(   FALSE,   TRUE,   TRUE),(   TRUE,   FALSE,   FALSE),(   TRUE,   FALSE,   TRUE),(   TRUE,   TRUE,   FALSE),(   TRUE,   TRUE,   TRUE)) c_generics_matrix</definition>
+        <argsstring></argsstring>
+        <name>c_generics_matrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="50" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a21eaefcfa176d9684410d3f89d05b1fa" prot="public" static="no" mutable="no">
+        <type>t_boolean_matrix ( 0 TO    <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1add8c56baf9e51ba35b213542d1d60ce7" kindref="member">c_nof_dut</ref>- 1, 0 TO    <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1ac099158d0d58f4d148d4c70a215b1511" kindref="member">c_nof_generics</ref>- 1):=   <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1aeea8d8c6951f14177e2d72cddc8d6ad3" kindref="member">c_generics_matrix</ref></type>
+        <definition>t_boolean_matrix ( 0 TO    c_nof_dut- 1, 0 TO    c_nof_generics- 1):=   c_generics_matrix dbg_c_generics_matrix</definition>
+        <argsstring></argsstring>
+        <name>dbg_c_generics_matrix</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a2b0a796fb1c746aa00910302148fd0c0" prot="public" static="no" mutable="no">
+        <type>NATURAL</type>
+        <definition>NATURAL dbg_state</definition>
+        <argsstring></argsstring>
+        <name>dbg_state</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="60" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a81d0496ef2e04edfff0e21e41a634abb" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC rst</definition>
+        <argsstring></argsstring>
+        <name>rst</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a45f35ecd038d40b5b8d246fc3ad590cd" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;0&apos;</type>
+        <definition>STD_LOGIC := &apos;0&apos; clk</definition>
+        <argsstring></argsstring>
+        <name>clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="63" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a77e8ea7e92be5c22d0e935c5046cf9af" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;0&apos;</type>
+        <definition>STD_LOGIC := &apos;0&apos; tb_end</definition>
+        <argsstring></argsstring>
+        <name>tb_end</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="64" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1adece2389124d26364779c4c193492fa7" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC in_hi</definition>
+        <argsstring></argsstring>
+        <name>in_hi</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="65" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a606144224053e0d1836ddc3896a66b11" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC in_lo</definition>
+        <argsstring></argsstring>
+        <name>in_lo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="66" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a8df4476b0a3d01a5c28cf1b90f13dbd0" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_lo</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_lo</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="68" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a7e56aa7a8b4fa3efc1bc7b16a06b4290" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_lo_and</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_lo_and</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a9098073a2242bec0f118f79739e43466" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_lo_or</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_lo_or</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="70" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a3b720426b82d690ef452411be1b7be9d" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_lo_or_and</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_lo_or_and</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="71" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a2b5344d7ff00f37065f89df4788fac1e" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_hi</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_hi</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="73" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a608a83e037b9c82c7bc5e129844cc208" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_hi_and</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_hi_and</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="74" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a3606ea5f2b5c958374ca1d1f7a132cd7" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_hi_or</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_hi_or</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="75" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1ad1afde27ecb6e8f4db36ee84d765a988" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC dbg_prio_hi_or_and</definition>
+        <argsstring></argsstring>
+        <name>dbg_prio_hi_or_and</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="76" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a12e149498d17cdc169be23d5ae5b2c8d" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR( 0 TO    <ref refid="dc/d53/classcommon__switch__tb_1_1tb_1add8c56baf9e51ba35b213542d1d60ce7" kindref="member">c_nof_dut</ref>- 1)</type>
+        <definition>STD_LOGIC_VECTOR( 0 TO    c_nof_dut- 1) out_level</definition>
+        <argsstring></argsstring>
+        <name>out_level</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dc/d53/classcommon__switch__tb_1_1tb_1a0f55c7ebbfe1fa534bda329a2af7ab81" prot="public" static="no" mutable="no">
+        <type><ref refid="d4/d0e/classcommon__switch" kindref="compound">common_switch</ref></type>
+        <definition></definition>
+        <argsstring>u_switch</argsstring>
+        <name>u_switch</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="242" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="242" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="dc/d53/classcommon__switch__tb_1_1tb_1ae4b8a37d9ffc9d5e2137bfb1ff835b36" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_in_stimuli</definition>
+        <argsstring></argsstring>
+        <name>p_in_stimuli</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="84" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="84" bodyend="214"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" line="43" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_switch_tb.vhd" bodystart="43" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1aeea8d8c6951f14177e2d72cddc8d6ad3" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>c_generics_matrix</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1add8c56baf9e51ba35b213542d1d60ce7" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>c_nof_dut</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1ac099158d0d58f4d148d4c70a215b1511" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>c_nof_generics</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a45f35ecd038d40b5b8d246fc3ad590cd" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>clk</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a8d0648b9cff0f4c2684d4213cbae7384" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>clk_period</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a21eaefcfa176d9684410d3f89d05b1fa" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_c_generics_matrix</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a2b5344d7ff00f37065f89df4788fac1e" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_hi</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a608a83e037b9c82c7bc5e129844cc208" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_hi_and</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a3606ea5f2b5c958374ca1d1f7a132cd7" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_hi_or</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1ad1afde27ecb6e8f4db36ee84d765a988" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_hi_or_and</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a8df4476b0a3d01a5c28cf1b90f13dbd0" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_lo</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a7e56aa7a8b4fa3efc1bc7b16a06b4290" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_lo_and</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a9098073a2242bec0f118f79739e43466" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_lo_or</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a3b720426b82d690ef452411be1b7be9d" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_prio_lo_or_and</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a2b0a796fb1c746aa00910302148fd0c0" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>dbg_state</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1adece2389124d26364779c4c193492fa7" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>in_hi</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a606144224053e0d1836ddc3896a66b11" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>in_lo</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a12e149498d17cdc169be23d5ae5b2c8d" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>out_level</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1ae4b8a37d9ffc9d5e2137bfb1ff835b36" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>p_in_stimuli</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a81d0496ef2e04edfff0e21e41a634abb" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>rst</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a77e8ea7e92be5c22d0e935c5046cf9af" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>tb_end</name></member>
+      <member refid="dc/d53/classcommon__switch__tb_1_1tb_1a0f55c7ebbfe1fa534bda329a2af7ab81" prot="public" virt="non-virtual"><scope>common_switch_tb::tb</scope><name>u_switch</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

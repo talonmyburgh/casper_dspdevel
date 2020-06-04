@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d8/d27/classcommon__async_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>common_async::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d8/d27/classcommon__async_1_1rtl_1a02f7fdd5a05848fa7dae1b09c8619351" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR( 0 TO    <ref refid="db/d85/classcommon__async_1adbbcd2ecd27ad0696657eda1adea07b8" kindref="member">g_delay_len</ref>- 1) :=( others =&gt;   <ref refid="db/d85/classcommon__async_1ad088a737dcdcda7c6bce84fbd7cbc424" kindref="member">g_rst_level</ref>)</type>
+        <definition>STD_LOGIC_VECTOR( 0 TO    g_delay_len- 1) :=( others =&gt;   g_rst_level) din_meta</definition>
+        <argsstring></argsstring>
+        <name>din_meta</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" line="45" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d27/classcommon__async_1_1rtl_1a681004e793c458d2035efd54ef8fa187" prot="public" static="no" mutable="no">
+        <type>boolean</type>
+        <definition>boolean preserve</definition>
+        <argsstring></argsstring>
+        <name>preserve</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d8/d27/classcommon__async_1_1rtl_1a917e594c7796ac0dc61410ceaf45fc85" prot="public" static="no" mutable="no">
+        <type>:signal is    true</type>
+        <definition>:signal is    true preserve</definition>
+        <argsstring></argsstring>
+        <name>preserve</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" line="49" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" bodystart="49" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="d8/d27/classcommon__async_1_1rtl_1a0d670458f9e7fcc4703d9e63418e573f" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_clk</definition>
+        <argsstring>rst,clk</argsstring>
+        <name>p_clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" bodystart="53" bodyend="70"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" line="43" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_async.vhd" bodystart="43" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d8/d27/classcommon__async_1_1rtl_1a02f7fdd5a05848fa7dae1b09c8619351" prot="public" virt="non-virtual"><scope>common_async::rtl</scope><name>din_meta</name></member>
+      <member refid="d8/d27/classcommon__async_1_1rtl_1a0d670458f9e7fcc4703d9e63418e573f" prot="public" virt="non-virtual"><scope>common_async::rtl</scope><name>p_clk</name></member>
+      <member refid="d8/d27/classcommon__async_1_1rtl_1a681004e793c458d2035efd54ef8fa187" prot="public" virt="non-virtual"><scope>common_async::rtl</scope><name>preserve</name></member>
+      <member refid="d8/d27/classcommon__async_1_1rtl_1a917e594c7796ac0dc61410ceaf45fc85" prot="public" virt="non-virtual"><scope>common_async::rtl</scope><name>preserve</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

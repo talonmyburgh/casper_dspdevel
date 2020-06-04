@@ -35,24 +35,51 @@ LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
 
+--! @dot 
+--! digraph common_counter {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! common_counter;
+--! node [shape=plaintext];
+--! rst;
+--! clk;
+--! clken;
+--! cnt_clr;
+--! cnt_ld;
+--! cnt_en;
+--! cnt_max;
+--! load;
+--! count;
+--! clk -> common_counter;
+--! clken -> common_counter;
+--! cnt_clr -> common_counter;
+--! cnt_ld -> common_counter;
+--! cnt_max -> common_counter;
+--! cnt_en -> common_counter;
+--! load -> common_counter;
+--! rst -> common_counter;
+--! common_counter -> count;
+--!}
+--! @enddot
+
 ENTITY common_counter IS
 	GENERIC(
 		g_latency   : NATURAL := 1;     --! default 1 for registered count output, use 0 for immediate combinatorial count output
-		g_init      : INTEGER := 0;
-		g_width     : NATURAL := 32;
+		g_init      : INTEGER := 0;		--! counter initial value
+		g_width     : NATURAL := 32;	--! width of counter value
 		g_max       : NATURAL := 0;     --! default 0 to disable the g_max setting. 
 		g_step_size : INTEGER := 1      --! counting in steps of g_step_size, can be + or -
 	);
 	PORT(
 		rst     : IN  STD_LOGIC                              := '0'; --! either use asynchronous rst or synchronous cnt_clr
-		clk     : IN  STD_LOGIC;
-		clken   : IN  STD_LOGIC                              := '1';
+		clk     : IN  STD_LOGIC; --! Clock signal
+		clken   : IN  STD_LOGIC                              := '1'; --! clock enable
 		cnt_clr : IN  STD_LOGIC                              := '0'; --! synchronous cnt_clr is only interpreted when clken is active
 		cnt_ld  : IN  STD_LOGIC                              := '0'; --! cnt_ld loads the output count with the input load value, independent of cnt_en
-		cnt_en  : IN  STD_LOGIC                              := '1';
-		cnt_max : IN  STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0) := TO_UVEC(sel_a_b(ceil_log2(g_max + 1) > g_width, 0, g_max), g_width); -- see remarks
-		load    : IN  STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0) := TO_SVEC(g_init, g_width);
-		count   : OUT STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0)
+		cnt_en  : IN  STD_LOGIC                              := '1'; --! count enable
+		cnt_max : IN  STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0) := TO_UVEC(sel_a_b(ceil_log2(g_max + 1) > g_width, 0, g_max), g_width); --! set maximum value for counter
+		load    : IN  STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0) := TO_SVEC(g_init, g_width); --! Load counter with init value
+		count   : OUT STD_LOGIC_VECTOR(g_width - 1 DOWNTO 0) --! Counter value
 	);
 END common_counter;
 

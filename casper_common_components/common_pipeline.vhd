@@ -24,20 +24,20 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_pipeline IS
 	GENERIC(
-		g_representation : STRING  := "SIGNED"; -- or "UNSIGNED"
-		g_pipeline       : NATURAL := 1; -- 0 for wires, > 0 for registers, 
+		g_representation : STRING  := "SIGNED"; --! or "UNSIGNED"
+		g_pipeline       : NATURAL := 1; --! 0 for wires, > 0 for registers, 
 		g_reset_value    : INTEGER := 0;
 		g_in_dat_w       : NATURAL := 8;
 		g_out_dat_w      : NATURAL := 9
 	);
 	PORT(
-		rst     : IN  STD_LOGIC := '0';
-		clk     : IN  STD_LOGIC;
-		clken   : IN  STD_LOGIC := '1';
-		in_clr  : IN  STD_LOGIC := '0';
-		in_en   : IN  STD_LOGIC := '1';
-		in_dat  : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
-		out_dat : OUT STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0)
+		rst     : IN  STD_LOGIC := '0'; --! Reset signal
+		clk     : IN  STD_LOGIC; --! Input clock signal
+		clken   : IN  STD_LOGIC := '1'; --! Enable clock
+		in_clr  : IN  STD_LOGIC := '0'; --! Clear input
+		in_en   : IN  STD_LOGIC := '1'; --! Enable input
+		in_dat  : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0); --! Input data
+		out_dat : OUT STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0) --! Output data
 	);
 END common_pipeline;
 

@@ -1,0 +1,666 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="da/d05/classrTwoSDF" kind="class" language="VHDL" prot="public">
+    <compoundname>rTwoSDF</compoundname>
+    <basecompoundref refid="d3/da3/classrTwoSDFStage" prot="public" virt="non-virtual">rTwoSDFStage</basecompoundref>
+    <basecompoundref refid="de/d39/classrTwoOrder" prot="public" virt="non-virtual">rTwoOrder</basecompoundref>
+    <derivedcompoundref refid="d0/d99/classtb__rTwoSDF" prot="public" virt="non-virtual">tb_rTwoSDF</derivedcompoundref>
+    <innerclass refid="d4/d11/classrTwoSDF_1_1str" prot="private">rTwoSDF::str</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1ad423f7e95f137aee4ab8cbcd6c4ce189" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_nof_chan natural := 0</definition>
+        <argsstring> natural := 0</argsstring>
+        <name>g_nof_chan</name>
+        <briefdescription>
+<para>Exponent of nr of subbands (0 means 1 subband) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="62" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1aa182cae2be2be96964e274af8d0df948" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_use_reorder boolean :=   true</definition>
+        <argsstring> boolean :=   true</argsstring>
+        <name>g_use_reorder</name>
+        <briefdescription>
+<para>Reorder output. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="63" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a1f787196a65e5e219bbd52ffbd7b94d9" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_in_dat_w natural := 8</definition>
+        <argsstring> natural := 8</argsstring>
+        <name>g_in_dat_w</name>
+        <briefdescription>
+<para>Number of input bits. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="64" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1abd37b30d2940525d48f52a06e39a86b2" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_out_dat_w natural := 14</definition>
+        <argsstring> natural := 14</argsstring>
+        <name>g_out_dat_w</name>
+        <briefdescription>
+<para>Number of output bits. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="65" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="65" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_stage_dat_w natural := 18</definition>
+        <argsstring> natural := 18</argsstring>
+        <name>g_stage_dat_w</name>
+        <briefdescription>
+<para>Number of bits used between the stages. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="66" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1ab55a097189c3940834ed66ebcaa4b7f5" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_guard_w natural := 2</definition>
+        <argsstring> natural := 2</argsstring>
+        <name>g_guard_w</name>
+        <briefdescription>
+<para>Guard bits are used to avoid overflow in single FFT stage. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="67" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a2f4db2216ac6d5b5811117d229e32f9a" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_nof_points natural := 1024</definition>
+        <argsstring> natural := 1024</argsstring>
+        <name>g_nof_points</name>
+        <briefdescription>
+<para>N point FFT. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="68" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1aa7fc6e8cf9f8f625a4e6537ceb1dddb1" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_pipeline t_fft_pipeline :=   c_fft_pipeline</definition>
+        <argsstring> t_fft_pipeline :=   c_fft_pipeline</argsstring>
+        <name>g_pipeline</name>
+        <briefdescription>
+<para>Pipeline specification. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="71" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a50da91b765765ac486df1b41692e962f" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clk std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clk</name>
+        <briefdescription>
+<para>Clock input. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="73" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="73" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a0ebcfc65d6083066c6dd98dc8b3f093c" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in rst std_logic := &apos;0&apos;</definition>
+        <argsstring> std_logic := &apos;0&apos;</argsstring>
+        <name>rst</name>
+        <briefdescription>
+<para>Reset input (resets on high) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="74" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="74" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1ac9332bbeace083ee5c1892a0bb9651fe" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_re std_logic_vector(   g_in_dat_w- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   g_in_dat_w- 1 downto  0) </argsstring>
+        <name>in_re</name>
+        <briefdescription>
+<para>Real input (data width = g_in_dat_w) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="75" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="75" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a436612ceef9dc3833b7776f1e4d344ee" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_im std_logic_vector(   g_in_dat_w- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   g_in_dat_w- 1 downto  0) </argsstring>
+        <name>in_im</name>
+        <briefdescription>
+<para>Imag input (data width = g_in_dat_w) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="76" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="76" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a97aa1e13903f3136639f5e372d290144" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_val std_logic := &apos;1&apos;</definition>
+        <argsstring> std_logic := &apos;1&apos;</argsstring>
+        <name>in_val</name>
+        <briefdescription>
+<para>Input select for delay component (i.e. accept input to delay) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="77" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a82c0c7a12fa44ed6ab64e2a22f250c50" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_re std_logic_vector(   g_out_dat_w- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   g_out_dat_w- 1 downto  0) </argsstring>
+        <name>out_re</name>
+        <briefdescription>
+<para>Output real value (data width = g_out_dat_w) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a9a3d8e5e79d47f6a8340779ee6835937" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_im std_logic_vector(   g_out_dat_w- 1 downto  0) </definition>
+        <argsstring> std_logic_vector(   g_out_dat_w- 1 downto  0) </argsstring>
+        <name>out_im</name>
+        <briefdescription>
+<para>Output imag value (data width = g_out_dat_w) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="79" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="79" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a871c6adc4a6cfa475a6396d52e927bec" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_val std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>out_val</name>
+        <briefdescription>
+<para>Output valid signal (valid when high) </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="81" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="81" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a71fd695a879e8d1c983af2ebb1a595fd" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee,common_pkg_lib,casper_requantize_lib</definition>
+        <argsstring>ieee,common_pkg_lib,casper_requantize_lib</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+<para>Purpose: Pipelined radix 2 FFT Description: CASPER R2SDF FFT implementation </para>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a7bdb4c3b27f248858265d97006a5a6a6" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libieee,common_pkg_lib,casper_requantize_lib</definition>
+        <argsstring>ieee,common_pkg_lib,casper_requantize_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+<para>Library: IEEE, common_pkg_lib, casper_requantize_lib. </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1ac1fb7943b50a953ee3881aa5f93e2614" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ casper_requantize_libieee,common_pkg_lib,casper_requantize_lib</definition>
+        <argsstring>ieee,common_pkg_lib,casper_requantize_lib</argsstring>
+        <name>casper_requantize_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1aca3467e353047d1bfb77916ebc24c58f" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ twiddlesPkgtwiddlesPkg</definition>
+        <argsstring>twiddlesPkg</argsstring>
+        <name>twiddlesPkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="32" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d05/classrTwoSDF_1a56178a47ab10b9666c96d87b0c5cabe5" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ rTwoSDFPkgrTwoSDFPkg</definition>
+        <argsstring>rTwoSDFPkg</argsstring>
+        <name>rTwoSDFPkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="33" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><dot>
+ digraph rTwoSDF {
+    rankdir=&quot;LR&quot;;
+ node [shape=box, fontname=Helvetica, fontsize=12,color=&quot;black&quot;];
+ rTwoSDF;
+ node [shape=plaintext];
+ clk;
+ rst;
+ in_re;
+ in_im;
+ in_val;
+ out_re;
+ out_im;
+ out_val;
+ clk -&gt; rTwoSDF;
+ in_re -&gt; rTwoSDF;
+ in_im -&gt; rTwoSDF;
+ in_val -&gt; rTwoSDF;
+ rst -&gt; rTwoSDF;
+ rTwoSDF -&gt; out_re;
+ rTwoSDF -&gt; out_im;
+ rTwoSDF -&gt; out_val;
+}
+ </dot>
+ </para>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>rTwoSDF</label>
+        <link refid="da/d05/classrTwoSDF"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="13" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>rTwoBFStage</label>
+        <link refid="dd/dc9/classrTwoBFStage"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+        <childnode refid="8" relation="public-inheritance">
+        </childnode>
+        <childnode refid="9" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>rTwoSDFStage</label>
+        <link refid="d3/da3/classrTwoSDFStage"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+        <childnode refid="10" relation="public-inheritance">
+        </childnode>
+        <childnode refid="11" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>common_counter</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="14">
+        <label>common_counter(2)</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="8">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="9">
+        <label>common_pipeline_sl(2)</label>
+        <link refid="d5/dc5/classcommon__pipeline__sl"/>
+        <childnode refid="8" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rTwoBF(2)</label>
+        <link refid="dc/d77/classrTwoBF"/>
+        <childnode refid="6" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>rTwoWeights</label>
+        <link refid="d4/d46/classrTwoWeights"/>
+      </node>
+      <node id="12">
+        <label>common_pipeline(2)</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="6">
+        <label>common_delay(2)</label>
+        <link refid="d6/ddb/classcommon__delay"/>
+      </node>
+      <node id="7">
+        <label>common_bit_delay(2)</label>
+        <link refid="d5/dd7/classcommon__bit__delay"/>
+      </node>
+      <node id="15">
+        <label>tb_rTwoSDF</label>
+        <link refid="d0/d99/classtb__rTwoSDF"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="11">
+        <label>rTwoWMul</label>
+        <link refid="d1/d60/classrTwoWMul"/>
+        <childnode refid="12" relation="public-inheritance">
+        </childnode>
+        <childnode refid="9" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>rTwoOrder</label>
+        <link refid="de/d39/classrTwoOrder"/>
+        <childnode refid="14" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>rTwoSDF</label>
+        <link refid="da/d05/classrTwoSDF"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="13" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>rTwoBFStage</label>
+        <link refid="dd/dc9/classrTwoBFStage"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+        <childnode refid="7" relation="public-inheritance">
+        </childnode>
+        <childnode refid="8" relation="public-inheritance">
+        </childnode>
+        <childnode refid="9" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>rTwoSDFStage</label>
+        <link refid="d3/da3/classrTwoSDFStage"/>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+        <childnode refid="10" relation="public-inheritance">
+        </childnode>
+        <childnode refid="11" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>common_counter</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="14">
+        <label>common_counter(2)</label>
+        <link refid="d1/dc3/classcommon__counter"/>
+      </node>
+      <node id="8">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="9">
+        <label>common_pipeline_sl(2)</label>
+        <link refid="d5/dc5/classcommon__pipeline__sl"/>
+        <childnode refid="8" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rTwoBF(2)</label>
+        <link refid="dc/d77/classrTwoBF"/>
+        <childnode refid="6" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>rTwoWeights</label>
+        <link refid="d4/d46/classrTwoWeights"/>
+      </node>
+      <node id="12">
+        <label>common_pipeline(2)</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="6">
+        <label>common_delay(2)</label>
+        <link refid="d6/ddb/classcommon__delay"/>
+      </node>
+      <node id="7">
+        <label>common_bit_delay(2)</label>
+        <link refid="d5/dd7/classcommon__bit__delay"/>
+      </node>
+      <node id="11">
+        <label>rTwoWMul</label>
+        <link refid="d1/d60/classrTwoWMul"/>
+        <childnode refid="12" relation="public-inheritance">
+        </childnode>
+        <childnode refid="9" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="13">
+        <label>rTwoOrder</label>
+        <link refid="de/d39/classrTwoOrder"/>
+        <childnode refid="14" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDF.vhd" bodystart="59" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d3/da3/classrTwoSDFStage_1a3a5387d8bdb604b99cef7b5e9891d7bf" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>casper_counter_lib</name></member>
+      <member refid="de/d39/classrTwoOrder_1a01e470443a4e689fdc7a86425a85f71d" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>casper_counter_lib</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a5bf46adf69f4d0442e18b711d5609255" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>casper_multiplier_lib</name></member>
+      <member refid="de/d39/classrTwoOrder_1a83ba63fd29ffef509abec872def3e22f" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>casper_ram_lib</name></member>
+      <member refid="da/d05/classrTwoSDF_1ac1fb7943b50a953ee3881aa5f93e2614" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>casper_requantize_lib</name></member>
+      <member refid="da/d05/classrTwoSDF_1a50da91b765765ac486df1b41692e962f" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>clk</name></member>
+      <member refid="d1/dc3/classcommon__counter_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="common_counter.rTwoSDFStage."><scope>rTwoSDF</scope><name>clken</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline."><scope>rTwoSDF</scope><name>clken</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline_sl."><scope>rTwoSDF</scope><name>clken</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>clken</name></member>
+      <member refid="d1/dc3/classcommon__counter_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>clken</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a03f0c3c8f88e895a0f1f834861098cd1" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>cnt_clr</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a03f0c3c8f88e895a0f1f834861098cd1" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>cnt_clr</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ad2fe0513aa4e4f5326093ca63fbb48a9" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>cnt_en</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ad2fe0513aa4e4f5326093ca63fbb48a9" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>cnt_en</name></member>
+      <member refid="d1/dc3/classcommon__counter_1abcd7f3d11869760f1b845b0afd555992" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>cnt_ld</name></member>
+      <member refid="d1/dc3/classcommon__counter_1abcd7f3d11869760f1b845b0afd555992" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>cnt_ld</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aa38183da72b80ccbc5d3d04930f0a172" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>cnt_max</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aa38183da72b80ccbc5d3d04930f0a172" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>cnt_max</name></member>
+      <member refid="d3/da3/classrTwoSDFStage_1a06eb423a71ecff939f3e52c45070047d" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>common_components_lib</name></member>
+      <member refid="da/d05/classrTwoSDF_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>common_pkg</name></member>
+      <member refid="da/d05/classrTwoSDF_1a7bdb4c3b27f248858265d97006a5a6a6" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>common_pkg_lib</name></member>
+      <member refid="de/d39/classrTwoOrder_1a13b713e2d01354f970bdea6031d1f3c4" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>common_ram_pkg</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a40e3ef614f1f55b88b0ed16a2ac5b186" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>count</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a40e3ef614f1f55b88b0ed16a2ac5b186" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>count</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1a29fc58e2ba44ddecb5e0342175b42059" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_bf_in_a_zdly</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1a777e800c179f1ee26ac6952c1c684f8b" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_bf_lat</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1a1ced56f1871afd46ad2d5a547af1e278" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_bf_out_d_zdly</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1a5a437908622f62e023dba86934b67f46" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_bf_use_zdly</name></member>
+      <member refid="de/d39/classrTwoOrder_1abf3bb74f2a420dd08a5c95103a190138" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_bit_flip</name></member>
+      <member refid="d6/ddb/classcommon__delay_1aa606d3c5f84e6a3856b0c58c5e8f3f26" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_dat_w</name></member>
+      <member refid="d6/ddb/classcommon__delay_1ad003b1a7231a119f6e0c31bd22a78d55" prot="public" virt="non-virtual" ambiguityscope="rTwoBF."><scope>rTwoSDF</scope><name>g_depth</name></member>
+      <member refid="d5/dd7/classcommon__bit__delay_1ad003b1a7231a119f6e0c31bd22a78d55" prot="public" virt="non-virtual" ambiguityscope="common_bit_delay."><scope>rTwoSDF</scope><name>g_depth</name></member>
+      <member refid="da/d05/classrTwoSDF_1ab55a097189c3940834ed66ebcaa4b7f5" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_guard_w</name></member>
+      <member refid="dc/d77/classrTwoBF_1a302a62069272b57ab8f157ddd0f2ff43" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_in_a_zdly</name></member>
+      <member refid="da/d05/classrTwoSDF_1a1f787196a65e5e219bbd52ffbd7b94d9" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_in_dat_w</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a3fcaac0a20358eef8f48e94fd4933c5e" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>g_init</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a3fcaac0a20358eef8f48e94fd4933c5e" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>g_init</name></member>
+      <member refid="d4/d46/classrTwoWeights_1a563729f050b1d59a7a54b937eba67e78" prot="public" virt="non-virtual" ambiguityscope="rTwoWeights."><scope>rTwoSDF</scope><name>g_lat</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a3851b67a7cd050e3cbef555be5f7c1ec" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul."><scope>rTwoSDF</scope><name>g_lat</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a95ec3a363599c003a78ad4400301979b" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>g_latency</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a95ec3a363599c003a78ad4400301979b" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>g_latency</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a2f30a68feb488c6a19c92610629a2ae8" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>g_max</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a2f30a68feb488c6a19c92610629a2ae8" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>g_max</name></member>
+      <member refid="da/d05/classrTwoSDF_1ad423f7e95f137aee4ab8cbcd6c4ce189" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_nof_chan</name></member>
+      <member refid="da/d05/classrTwoSDF_1a2f4db2216ac6d5b5811117d229e32f9a" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_nof_points</name></member>
+      <member refid="dc/d77/classrTwoBF_1af8616f560a2b1b61561ad9ae8a1d3a73" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_out_d_zdly</name></member>
+      <member refid="da/d05/classrTwoSDF_1abd37b30d2940525d48f52a06e39a86b2" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_out_dat_w</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a23c9e7003e5efed0b5e5d5885945a2e8" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage."><scope>rTwoSDF</scope><name>g_out_invert</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a23c9e7003e5efed0b5e5d5885945a2e8" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul."><scope>rTwoSDF</scope><name>g_out_invert</name></member>
+      <member refid="da/d05/classrTwoSDF_1aa7fc6e8cf9f8f625a4e6537ceb1dddb1" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_pipeline</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_pipeline.rTwoBFStage.rTwoBFStage."><scope>rTwoSDF</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl.rTwoBFStage.rTwoBFStage."><scope>rTwoSDF</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul.common_pipeline."><scope>rTwoSDF</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a0ec5e20f76ff8bf8ccfd48eae760b5b3" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage.common_pipeline.rTwoBFStage."><scope>rTwoSDF</scope><name>g_reset_value</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1af3d6d64cf127136072f764ec0b099e78" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl.rTwoBFStage."><scope>rTwoSDF</scope><name>g_reset_value</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1af3d6d64cf127136072f764ec0b099e78" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>g_reset_value</name></member>
+      <member refid="d3/da3/classrTwoSDFStage_1ad80d447a9ed606ff017bba63ff88b4ab" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_scale_enable</name></member>
+      <member refid="d3/da3/classrTwoSDFStage_1adeada663318b680fbfa08e8728e79beb" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_stage</name></member>
+      <member refid="da/d05/classrTwoSDF_1a6822fc6452580e64b4855c1a8dbca870" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_stage_dat_w</name></member>
+      <member refid="d3/da3/classrTwoSDFStage_1ac37b19138d7b2a84978f10ba6e9ec356" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_stage_offset</name></member>
+      <member refid="d1/dc3/classcommon__counter_1afcf494de0e8842fb27fac7831e89c632" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>g_step_size</name></member>
+      <member refid="d1/dc3/classcommon__counter_1afcf494de0e8842fb27fac7831e89c632" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>g_step_size</name></member>
+      <member refid="d1/d60/classrTwoWMul_1afb19cb516dd92cdeea0f33d84edbdfef" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_technology</name></member>
+      <member refid="d3/da3/classrTwoSDFStage_1a6e832a0eee63eaa224160e023fa695db" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_twiddle_offset</name></member>
+      <member refid="da/d05/classrTwoSDF_1aa182cae2be2be96964e274af8d0df948" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>g_use_reorder</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a44bcdee410b3f40aadd6cf9c5e4bddfa" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>g_width</name></member>
+      <member refid="d1/dc3/classcommon__counter_1a44bcdee410b3f40aadd6cf9c5e4bddfa" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>g_width</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="common_counter.rTwoSDFStage."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="d5/dd7/classcommon__bit__delay_1ae4f03c286607f3181e16b9aa12d0c6d4" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_bit_delay."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline_sl."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="d1/dc3/classcommon__counter_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>IEEE</name></member>
+      <member refid="da/d05/classrTwoSDF_1a71fd695a879e8d1c983af2ebb1a595fd" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>ieee</name></member>
+      <member refid="dc/d77/classrTwoBF_1a80d94276e404738c398b66d2b7ed0931" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_a</name></member>
+      <member refid="dc/d77/classrTwoBF_1a7ffc176a1117052c28cd6b3b53179f6d" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_b</name></member>
+      <member refid="d5/dd7/classcommon__bit__delay_1aa70978d49f341a8de33c7e341882f41e" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_bit</name></member>
+      <member refid="d5/dd7/classcommon__bit__delay_1aa42d87caaed7cf76d96659c79fd08320" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage.common_bit_delay."><scope>rTwoSDF</scope><name>in_clr</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage.common_pipeline.rTwoBFStage."><scope>rTwoSDF</scope><name>in_clr</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl.rTwoBFStage."><scope>rTwoSDF</scope><name>in_clr</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>in_clr</name></member>
+      <member refid="d6/ddb/classcommon__delay_1a9e162f717010fc6c9a484616acf2a8db" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.rTwoBF."><scope>rTwoSDF</scope><name>in_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1adc27c695c03d5f1a657bc84366825eac" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline.rTwoBFStage."><scope>rTwoSDF</scope><name>in_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a509609b8402062d61e95d9387345ec3b" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.common_pipeline_sl.rTwoBFStage."><scope>rTwoSDF</scope><name>in_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a509609b8402062d61e95d9387345ec3b" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>in_dat</name></member>
+      <member refid="de/d39/classrTwoOrder_1a7806d18db1fd1fb38f586f20e6d14b44" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>in_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage.common_pipeline.rTwoBFStage."><scope>rTwoSDF</scope><name>in_en</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl.rTwoBFStage."><scope>rTwoSDF</scope><name>in_en</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>in_en</name></member>
+      <member refid="da/d05/classrTwoSDF_1a436612ceef9dc3833b7776f1e4d344ee" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_im</name></member>
+      <member refid="da/d05/classrTwoSDF_1ac9332bbeace083ee5c1892a0bb9651fe" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_re</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" virt="non-virtual" ambiguityscope="rTwoBFStage."><scope>rTwoSDF</scope><name>in_sel</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul."><scope>rTwoSDF</scope><name>in_sel</name></member>
+      <member refid="da/d05/classrTwoSDF_1a97aa1e13903f3136639f5e372d290144" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_val</name></member>
+      <member refid="d4/d46/classrTwoWeights_1a37e71ab63e6adb340580ca5e43620d74" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>in_wAdr</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aba16565fa2695fb0cd920da67afe5c86" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage."><scope>rTwoSDF</scope><name>load</name></member>
+      <member refid="d1/dc3/classcommon__counter_1aba16565fa2695fb0cd920da67afe5c86" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>load</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage."><scope>rTwoSDF</scope><name>numeric_std</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoWMul."><scope>rTwoSDF</scope><name>numeric_std</name></member>
+      <member refid="de/d39/classrTwoOrder_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>numeric_std</name></member>
+      <member refid="d5/dd7/classcommon__bit__delay_1af3182dc9f8bd091d2c696849a37bcec3" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_bit</name></member>
+      <member refid="dc/d77/classrTwoBF_1ad982d697f803c222f9255b1ae24758e8" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_c</name></member>
+      <member refid="dc/d77/classrTwoBF_1adb63c560713267c64637a10e1627a5a7" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_d</name></member>
+      <member refid="d6/ddb/classcommon__delay_1a15eab8d2ac228eee18fb64b2aba83e28" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.rTwoBF."><scope>rTwoSDF</scope><name>out_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoBFStage.common_pipeline.rTwoBFStage."><scope>rTwoSDF</scope><name>out_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1abc31e929f1ff9ec19e9400b234d29897" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.common_pipeline_sl.rTwoBFStage."><scope>rTwoSDF</scope><name>out_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1abc31e929f1ff9ec19e9400b234d29897" prot="public" virt="non-virtual" ambiguityscope="rTwoSDFStage.rTwoWMul.common_pipeline_sl."><scope>rTwoSDF</scope><name>out_dat</name></member>
+      <member refid="de/d39/classrTwoOrder_1ae461aac71e83c9a9181981573a1fbade" prot="public" virt="non-virtual" ambiguityscope="rTwoOrder."><scope>rTwoSDF</scope><name>out_dat</name></member>
+      <member refid="da/d05/classrTwoSDF_1a9a3d8e5e79d47f6a8340779ee6835937" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_im</name></member>
+      <member refid="da/d05/classrTwoSDF_1a82c0c7a12fa44ed6ab64e2a22f250c50" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_re</name></member>
+      <member refid="dd/dc9/classrTwoBFStage_1ac23bdaa9a8dea11633a8918475ccff54" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_sel</name></member>
+      <member refid="da/d05/classrTwoSDF_1a871c6adc4a6cfa475a6396d52e927bec" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>out_val</name></member>
+      <member refid="da/d05/classrTwoSDF_1a0ebcfc65d6083066c6dd98dc8b3f093c" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>rst</name></member>
+      <member refid="da/d05/classrTwoSDF_1a56178a47ab10b9666c96d87b0c5cabe5" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>rTwoSDFPkg</name></member>
+      <member refid="d6/ddb/classcommon__delay_1aa4b2b25246a821511120e3149b003563" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>STD_LOGIC_1164</name></member>
+      <member refid="da/d05/classrTwoSDF_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>std_logic_1164</name></member>
+      <member refid="da/d05/classrTwoSDF_1aca3467e353047d1bfb77916ebc24c58f" prot="public" virt="non-virtual"><scope>rTwoSDF</scope><name>twiddlesPkg</name></member>
+      <member refid="d4/d46/classrTwoWeights_1a54427fdf523d29853600fffbd4a2bf16" prot="public" virt="non-virtual" ambiguityscope="rTwoWeights."><scope>rTwoSDF</scope><name>weight_im</name></member>
+      <member refid="d1/d60/classrTwoWMul_1ad8dd84f113c593b46423c0bc69c65234" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul."><scope>rTwoSDF</scope><name>weight_im</name></member>
+      <member refid="d4/d46/classrTwoWeights_1abf34eaeff5f3e984e42e00404c70e41a" prot="public" virt="non-virtual" ambiguityscope="rTwoWeights."><scope>rTwoSDF</scope><name>weight_re</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a004af977b1a33eeb33101a34645714c3" prot="public" virt="non-virtual" ambiguityscope="rTwoWMul."><scope>rTwoSDF</scope><name>weight_re</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

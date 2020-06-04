@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d3/d18/namespacerTwoSDFPkg" kind="namespace" language="VHDL">
+    <compoundname>rTwoSDFPkg</compoundname>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoSDFPkg.vhd" line="24" column="1"/>
+  </compounddef>
+</doxygen>

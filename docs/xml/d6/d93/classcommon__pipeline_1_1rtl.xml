@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d6/d93/classcommon__pipeline_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>common_pipeline::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d6/d93/classcommon__pipeline_1_1rtl_1a1ec32932d2da806c66a284a7514ba2ef" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(<ref refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" kindref="member">out_dat</ref>) :=   TO_SVEC(   <ref refid="d3/d5d/classcommon__pipeline_1a0ec5e20f76ff8bf8ccfd48eae760b5b3" kindref="member">g_reset_value</ref>,   <ref refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" kindref="member">out_dat</ref>&apos;LENGTH)</type>
+        <definition>STD_LOGIC_VECTOR(out_dat) :=   TO_SVEC(   g_reset_value,   out_dat&apos;LENGTH) c_reset_value</definition>
+        <argsstring></argsstring>
+        <name>c_reset_value</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d93/classcommon__pipeline_1_1rtl_1a778c6123d3dc5eba8ddf6b776ca5bbc0" prot="public" static="no" mutable="no">
+        <type>array(NATURAL range &lt;&gt; ) of  STD_LOGIC_VECTOR(<ref refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" kindref="member">out_dat</ref>)</type>
+        <definition>array(NATURAL range &lt;&gt; ) of  STD_LOGIC_VECTOR(out_dat) t_out_dat</definition>
+        <argsstring></argsstring>
+        <name>t_out_dat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" line="48" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d6/d93/classcommon__pipeline_1_1rtl_1a61db8dc80b671a7bd2132d0d6867a7c4" prot="public" static="no" mutable="no">
+        <type><ref refid="d6/d93/classcommon__pipeline_1_1rtl_1a778c6123d3dc5eba8ddf6b776ca5bbc0" kindref="member">t_out_dat</ref>( 0 TO    <ref refid="d3/d5d/classcommon__pipeline_1ae0677aa1031770c217381bdb170498dc" kindref="member">g_pipeline</ref>) :=( others =&gt;   <ref refid="d6/d93/classcommon__pipeline_1_1rtl_1a1ec32932d2da806c66a284a7514ba2ef" kindref="member">c_reset_value</ref>)</type>
+        <definition>t_out_dat( 0 TO    g_pipeline) :=( others =&gt;   c_reset_value) out_dat_p</definition>
+        <argsstring></argsstring>
+        <name>out_dat_p</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" line="50" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" bodystart="50" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="d6/d93/classcommon__pipeline_1_1rtl_1ae94cd510f6b79c3cac0ccd7465a4d412" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_clk</definition>
+        <argsstring>clk,rst</argsstring>
+        <name>p_clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" bodystart="69" bodyend="69"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" line="44" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_pipeline.vhd" bodystart="44" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d6/d93/classcommon__pipeline_1_1rtl_1a1ec32932d2da806c66a284a7514ba2ef" prot="public" virt="non-virtual"><scope>common_pipeline::rtl</scope><name>c_reset_value</name></member>
+      <member refid="d6/d93/classcommon__pipeline_1_1rtl_1a61db8dc80b671a7bd2132d0d6867a7c4" prot="public" virt="non-virtual"><scope>common_pipeline::rtl</scope><name>out_dat_p</name></member>
+      <member refid="d6/d93/classcommon__pipeline_1_1rtl_1ae94cd510f6b79c3cac0ccd7465a4d412" prot="public" virt="non-virtual"><scope>common_pipeline::rtl</scope><name>p_clk</name></member>
+      <member refid="d6/d93/classcommon__pipeline_1_1rtl_1a778c6123d3dc5eba8ddf6b776ca5bbc0" prot="public" virt="non-virtual"><scope>common_pipeline::rtl</scope><name>t_out_dat</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

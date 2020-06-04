@@ -23,7 +23,7 @@ USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 --USE work.common_mem_pkg.ALL;
 
--- Purpose: Component declarations to check positional mapping
+--! Purpose: Component declarations to check positional mapping
 -- Description:
 -- Remarks:
 

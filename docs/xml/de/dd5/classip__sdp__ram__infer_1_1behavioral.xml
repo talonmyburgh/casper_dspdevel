@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="de/dd5/classip__sdp__ram__infer_1_1behavioral" kind="class" language="VHDL" prot="private">
+    <compoundname>ip_sdp_ram_infer::behavioral</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="de/dd5/classip__sdp__ram__infer_1_1behavioral_1ad6432823d3b1b0b41b18ed41287f30cf" prot="public" static="no" mutable="no">
+        <type>( 2**   <ref refid="d9/d94/classip__sdp__ram__infer_1a6dc229ff11f564bd831621a5cafc007b" kindref="member">addressWidth</ref>- 1 downto  0)  std_logic_vector(   <ref refid="d9/d94/classip__sdp__ram__infer_1ad567103b35620d5e45bdfd2d4074851d" kindref="member">dataWidth</ref>- 1 downto  0)</type>
+        <definition>( 2**   addressWidth- 1 downto  0)  std_logic_vector(   dataWidth- 1 downto  0) ramType1</definition>
+        <argsstring></argsstring>
+        <name>ramType1</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="68" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="68" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/dd5/classip__sdp__ram__infer_1_1behavioral_1ac0bda280de2f6eb86a0b05fb89b81793" prot="public" static="no" mutable="no">
+        <type><ref refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1ad6432823d3b1b0b41b18ed41287f30cf" kindref="member">ramType1</ref> :=( others =&gt;( others =&gt; &apos;0&apos;))</type>
+        <definition>ramType1 :=( others =&gt;( others =&gt; &apos;0&apos;)) ram</definition>
+        <argsstring></argsstring>
+        <name>ram</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/dd5/classip__sdp__ram__infer_1_1behavioral_1a44bb09157ea7e5f499f1837fb8021b37" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="d9/d94/classip__sdp__ram__infer_1ad567103b35620d5e45bdfd2d4074851d" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) readB</definition>
+        <argsstring></argsstring>
+        <name>readB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="71" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="71" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="de/dd5/classip__sdp__ram__infer_1_1behavioral_1a5e8cc465dd36208336fd383ee1a0f5eb" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="d9/d94/classip__sdp__ram__infer_1ad567103b35620d5e45bdfd2d4074851d" kindref="member">dataWidth</ref>- 1 downto  0) :=( others =&gt; &apos;0&apos;)</type>
+        <definition>std_logic_vector(   dataWidth- 1 downto  0) :=( others =&gt; &apos;0&apos;) regB</definition>
+        <argsstring></argsstring>
+        <name>regB</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="72" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="de/dd5/classip__sdp__ram__infer_1_1behavioral_1abbdf4625db1ff7d0c552bf322c07b91c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>rw</definition>
+        <argsstring>clkA,clkB</argsstring>
+        <name>rw</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="78" bodyend="93"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" line="66" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" bodystart="66" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1ac0bda280de2f6eb86a0b05fb89b81793" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer::behavioral</scope><name>ram</name></member>
+      <member refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1ad6432823d3b1b0b41b18ed41287f30cf" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer::behavioral</scope><name>ramType1</name></member>
+      <member refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1a44bb09157ea7e5f499f1837fb8021b37" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer::behavioral</scope><name>readB</name></member>
+      <member refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1a5e8cc465dd36208336fd383ee1a0f5eb" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer::behavioral</scope><name>regB</name></member>
+      <member refid="de/dd5/classip__sdp__ram__infer_1_1behavioral_1abbdf4625db1ff7d0c552bf322c07b91c" prot="public" virt="non-virtual"><scope>ip_sdp_ram_infer::behavioral</scope><name>rw</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

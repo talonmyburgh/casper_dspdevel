@@ -4,7 +4,6 @@
     <compoundname>casper_adder</compoundname>
     <innerfile refid="d2/df6/casper__common__add__sub_8vhd">casper_common_add_sub.vhd</innerfile>
     <innerfile refid="df/d9f/casper__common__add__sub__tb_8vhd">casper_common_add_sub_tb.vhd</innerfile>
-    <innerfile refid="d3/d45/casper__common__add__sub__tb__tb_8vhd">casper_common_add_sub_tb_tb.vhd</innerfile>
     <briefdescription>
     </briefdescription>
     <detaileddescription>

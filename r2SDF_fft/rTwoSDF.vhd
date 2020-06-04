@@ -1,3 +1,6 @@
+--! @file
+--! @brief r2SDF pipelined FFT implementation
+
 --------------------------------------------------------------------------------
 --
 -- Copyright 2020
@@ -18,38 +21,64 @@
 --
 --------------------------------------------------------------------------------
 
--- Purpose: Pipelined radix 2 FFT
--- Description: ASTRON-RP-755
+--! Purpose: Pipelined radix 2 FFT
+--! Description: CASPER R2SDF FFT implementation
 -- Remarks: doc/readme.txt
 
+--! Library: IEEE, common_pkg_lib, casper_requantize_lib
 library ieee, common_pkg_lib, casper_requantize_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 use work.twiddlesPkg.all;
 use work.rTwoSDFPkg.all;
 
+--! @dot 
+--! digraph rTwoSDF {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! rTwoSDF;
+--! node [shape=plaintext];
+--! clk;
+--! rst;
+--! in_re;
+--! in_im;
+--! in_val;
+--! out_re;
+--! out_im;
+--! out_val;
+--! clk -> rTwoSDF;
+--! in_re -> rTwoSDF;
+--! in_im -> rTwoSDF;
+--! in_val -> rTwoSDF;
+--! rst -> rTwoSDF;
+--! rTwoSDF -> out_re;
+--! rTwoSDF -> out_im;
+--! rTwoSDF -> out_val;
+--!}
+--! @enddot
+
 entity rTwoSDF is
 	generic(
 		-- generics for the FFT    
-		g_nof_chan    : natural        := 0; -- Exponent of nr of subbands (0 means 1 subband)
-		g_use_reorder : boolean        := true;
-		g_in_dat_w    : natural        := 8; -- number of input bits
-		g_out_dat_w   : natural        := 14; -- number of output bits
-		g_stage_dat_w : natural        := 18; -- number of bits used between the stages
-		g_guard_w     : natural        := 2; -- guard bits are used to avoid overflow in single FFT stage.   
-		g_nof_points  : natural        := 1024; -- N point FFT
+		g_nof_chan    : natural        := 0; --! Exponent of nr of subbands (0 means 1 subband)
+		g_use_reorder : boolean        := true; --! Reorder output
+		g_in_dat_w    : natural        := 8; --! Number of input bits
+		g_out_dat_w   : natural        := 14; --! Number of output bits
+		g_stage_dat_w : natural        := 18; --! Number of bits used between the stages
+		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
+		g_nof_points  : natural        := 1024; --! N point FFT
 		-- generics for rTwoSDFStage
-		g_pipeline    : t_fft_pipeline := c_fft_pipeline
+		g_pipeline    : t_fft_pipeline := c_fft_pipeline --! Pipeline specification
 	);
 	port(
-		clk     : in  std_logic;
-		rst     : in  std_logic := '0';
-		in_re   : in  std_logic_vector(g_in_dat_w - 1 downto 0);
-		in_im   : in  std_logic_vector(g_in_dat_w - 1 downto 0);
-		in_val  : in  std_logic := '1';
-		out_re  : out std_logic_vector(g_out_dat_w - 1 downto 0);
-		out_im  : out std_logic_vector(g_out_dat_w - 1 downto 0);
-		out_val : out std_logic
+		clk     : in  std_logic; --! Clock input
+		rst     : in  std_logic := '0'; --! Reset input (resets on high)
+		in_re   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Real input (data width = g_in_dat_w)
+		in_im   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Imag input (data width = g_in_dat_w)
+		in_val  : in  std_logic := '1'; --! Input select for delay component (i.e. accept input to delay)
+		out_re  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output real value (data width = g_out_dat_w)
+		out_im  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output imag value (data width = g_out_dat_w)
+		out_val : out std_logic --!Output valid signal (valid when high)
 	);
 end entity rTwoSDF;
 

@@ -74,14 +74,18 @@ $(function() {
 <div class="contents">
 
 <p><div class="dotgraph">
-<iframe scrolling="no" frameborder="0" src="../../dot_inline_dotgraph_2.svg" width="179" height="255"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<iframe scrolling="no" frameborder="0" src="../../dot_inline_dotgraph_9.svg" width="398" height="587"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
   
  <a href="../../de/d7e/classcommon__add__sub.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for common_add_sub:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/dc9/classcommon__add__sub__inherit__graph.svg" width="179" height="191"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/dc9/classcommon__add__sub__inherit__graph.svg" width="160" height="191"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for common_add_sub:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/def/classcommon__add__sub__coll__graph.svg" width="142" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 <center><span class="legend">[<a href="../../graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -92,7 +96,7 @@ Entities</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="Libraries"></a>
 Libraries</h2></td></tr>
  <tr class="memitem:ac1ebcc4faa34f687aecd1f2ffe111199"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../de/d7e/classcommon__add__sub.html#ac1ebcc4faa34f687aecd1f2ffe111199">IEEE</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
-<tr class="memdesc:ac1ebcc4faa34f687aecd1f2ffe111199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use standard library logic elements, common_pkg_lib and common_components_lib.  <a href="#ac1ebcc4faa34f687aecd1f2ffe111199"></a><br /></td></tr>
+<tr class="memdesc:ac1ebcc4faa34f687aecd1f2ffe111199"><td class="mdescLeft">&#160;</td><td class="mdescRight">Libraries: IEEE, common_pkg_lib and common_components_lib.  <a href="#ac1ebcc4faa34f687aecd1f2ffe111199"></a><br /></td></tr>
 <tr class="memitem:a4d579720ff86c6e8a625fcaadd27246a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../de/d7e/classcommon__add__sub.html#a4d579720ff86c6e8a625fcaadd27246a">common_pkg_lib</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="memitem:ace3420cca9c70b48a5bc4ead1b2be3cd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../de/d7e/classcommon__add__sub.html#ace3420cca9c70b48a5bc4ead1b2be3cd">common_components_lib</a>&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 </table><table class="memberdecls">
@@ -133,12 +137,15 @@ Ports</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="dotgraph">
-<iframe scrolling="no" frameborder="0" src="../../dot_inline_dotgraph_3.svg" width="179" height="255"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<iframe scrolling="no" frameborder="0" src="../../dot_inline_dotgraph_10.svg" width="398" height="587"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
  <p>Purpose : Adder with extra functionality Description:</p><ul>
 <li>Allow for function select (subtract or add) with sel_add signal</li>
 <li>Specify input and output widths</li>
 <li>Enable/disable option</li>
-<li>Sum signed or unsigned values </li>
+<li>Sum signed or unsigned values Remarks:</li>
+</ul>
+<p>Currently only support for g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1</p><ul>
+<li>Specifying signed or unsiged is only important if g_out_dat_w &gt; g_in_dat_w. It is not relevant if g_out_dat_w = g_in_dat_w </li>
 </ul>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a70120f1e8cec2d88609e7ce3c4d8f941"></a>
@@ -419,7 +426,7 @@ Ports</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Use standard library logic elements, common_pkg_lib and common_components_lib. </p>
+<p>Libraries: IEEE, common_pkg_lib and common_components_lib. </p>
 
 </div>
 </div>

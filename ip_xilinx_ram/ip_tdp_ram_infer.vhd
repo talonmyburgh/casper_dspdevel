@@ -1,19 +1,61 @@
+--! @file
+--! @brief Simple dual port symmetric ram
+
+--! IEEE library
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--! True dual port symmetric ram:
+--! 	+Port A is a write/read port
+--! 	+Port B is a wrtie/read port
+
+--! @dot 
+--! digraph ip_sdp_ram_infer {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! PortA;
+--! PortB;
+--! node [shape=plaintext];
+--! clkA;
+--! clkB;
+--! enA;
+--! enB;
+--! weA;
+--! weB;
+--! addrA;
+--! addrB;
+--! qB;
+--! qA;
+--! clkA -> PortA;
+--! clkB -> PortB;
+--! enA -> PortA;
+--! enB -> PortB;
+--! weA -> PortA;
+--! weB -> PortB;
+--! addrA -> PortA;
+--! addrB -> PortB;
+--! PortA -> qA;
+--! PortB -> qB;
+--! subgraph sdp_ram {
+--! {rank=same PortA PortB}
+--! PortA -> PortB [color=grey arrowhead=none];
+--!}
+--!}
+--! @enddot
+
 entity ip_tdp_ram_infer is
 	generic(
-		addressWidth : natural := 8;
-		dataWidth    : natural := 8
+		addressWidth : natural := 8;--! Address width dictates RAM size
+		dataWidth    : natural := 8--! Width of data to be stored/fetched
 	);
 	port(
-		addressA, addressB : in  std_logic_vector(addressWidth - 1 downto 0);
-		clockA, clockB     : in  std_logic;
-		dataA, dataB       : in  std_logic_vector(dataWidth - 1 downto 0);
-		enableA, enableB   : in  std_logic := '1';
-		wrenA, wrenB       : in  std_logic := '0';
-		qA, qB             : out std_logic_vector(dataWidth - 1 downto 0)
+		addressA, addressB : in  std_logic_vector(addressWidth - 1 downto 0); --! Write/Read address for port A and B
+		clockA, clockB     : in  std_logic; --! Clock input for port A and B
+		dataA, dataB       : in  std_logic_vector(dataWidth - 1 downto 0); --! Write data for port A and B
+		enA, enB   : in  std_logic := '1'; --! Enable signals for Port A and B
+		weA, weB       : in  std_logic := '0'; --! Write enable signals for Port A and B
+		qA, qB             : out std_logic_vector(dataWidth - 1 downto 0) --! Output signals from Port A and B
 	);
 end ip_tdp_ram_infer;
 
@@ -34,18 +76,18 @@ begin
 	process(clockA, clockB)
 	begin
 		if rising_edge(clockA) then
-			if (enableA = '1') then
+			if (enA = '1') then
 				readA <= ram(to_integer(unsigned(addressA)));
-				if (wrenA = '1') then
+				if (weA = '1') then
 					ram(to_integer(unsigned(addressA))) <= dataA;
 				end if;
 				regA  <= readA;
 			end if;
 		end if;
 		if rising_edge(clockB) then
-			if (enableB = '1') then
+			if (enB = '1') then
 				readB <= ram(to_integer(unsigned(addressB)));
-				if (wrenB = '1') then
+				if (weB = '1') then
 					ram(to_integer(unsigned(addressB))) <= dataB;
 				end if;
 				regB  <= readB;

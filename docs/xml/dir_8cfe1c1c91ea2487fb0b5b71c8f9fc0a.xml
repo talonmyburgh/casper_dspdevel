@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dir_8cfe1c1c91ea2487fb0b5b71c8f9fc0a" kind="dir">
+    <compoundname>ip_xilinx_mult</compoundname>
+    <innerfile refid="db/d4b/ip__cmult__infer_8vhd">ip_cmult_infer.vhd</innerfile>
+    <innerfile refid="d8/d50/ip__cmult__infer__tb_8vhd">ip_cmult_infer_tb.vhd</innerfile>
+    <innerfile refid="d2/dcd/ip__cmult__rtl_8vhd">ip_cmult_rtl.vhd</innerfile>
+    <innerfile refid="db/d21/ip__cmult__rtl__tb_8vhd">ip_cmult_rtl_tb.vhd</innerfile>
+    <innerfile refid="d7/dfa/ip__mult__infer_8vhd">ip_mult_infer.vhd</innerfile>
+    <innerfile refid="dd/d70/ip__mult__rtl_8vhd">ip_mult_rtl.vhd</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_mult/"/>
+  </compounddef>
+</doxygen>

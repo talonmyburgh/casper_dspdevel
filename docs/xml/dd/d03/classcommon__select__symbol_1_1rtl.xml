@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dd/d03/classcommon__select__symbol_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>common_select_symbol::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a84624c570deef8404bd4d87dcb17a210" prot="public" static="no" mutable="no">
+        <type>NATURAL :=   <ref refid="dd/d43/classcommon__select__symbol_1ad41e917a5e60725f3a3fce637b752725" kindref="member">g_pipeline_in</ref>+   <ref refid="dd/d43/classcommon__select__symbol_1a8a3eccd43f0ac16f34ce180e8ee0c425" kindref="member">g_pipeline_out</ref></type>
+        <definition>NATURAL :=   g_pipeline_in+   g_pipeline_out c_pipeline</definition>
+        <argsstring></argsstring>
+        <name>c_pipeline</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="67" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1aa7da13bc98f98c3322a50f40ff32b338" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(<ref refid="dd/d43/classcommon__select__symbol_1a80a8e7e37c3f6de29db94c5f4e4f0ef2" kindref="member">in_data</ref>)</type>
+        <definition>STD_LOGIC_VECTOR(in_data) in_data_reg</definition>
+        <argsstring></argsstring>
+        <name>in_data_reg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="69" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="69" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a2a929285767badb2a1592e07da5d8c74" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(<ref refid="dd/d43/classcommon__select__symbol_1a01a5b22a30aedbdb3a7f919f555590f7" kindref="member">in_sel</ref>)</type>
+        <definition>STD_LOGIC_VECTOR(in_sel) in_sel_reg</definition>
+        <argsstring></argsstring>
+        <name>in_sel_reg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="70" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="70" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a34abf71569a8d21363213d81a46e9fb5" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(   <ref refid="dd/d43/classcommon__select__symbol_1a605be97543411ffeab32968c101938de" kindref="member">g_symbol_w</ref>- 1 DOWNTO  0)</type>
+        <definition>STD_LOGIC_VECTOR(   g_symbol_w- 1 DOWNTO  0) sel_symbol</definition>
+        <argsstring></argsstring>
+        <name>sel_symbol</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="72" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="72" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a0a3f959b6cce5857aa6c4ecaafdace20" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_in_data</argsstring>
+        <name>u_pipe_in_data</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="77" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="77" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a9072d4a7aa5798b714102acf235ab838" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_in_sel</argsstring>
+        <name>u_pipe_in_sel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="78" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="78" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a3f22e3a823a677f166947c2df417a635" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_symbol</argsstring>
+        <name>u_pipe_out_symbol</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="99" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1aaebb3b404163d9fac3f75e0a0c117190" prot="public" static="no" mutable="no">
+        <type><ref refid="d3/d5d/classcommon__pipeline" kindref="compound">common_pipeline</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_sel</argsstring>
+        <name>u_pipe_out_sel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="100" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a8787d2ee1c0b4ca6d3f39523a212103f" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_val</argsstring>
+        <name>u_pipe_out_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="102" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1ac2ea81826475662b484a4c326d689a76" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_sop</argsstring>
+        <name>u_pipe_out_sop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="103" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="103" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a2523675a2904493286afe354929759cd" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_eop</argsstring>
+        <name>u_pipe_out_eop</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="104" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="104" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="dd/d03/classcommon__select__symbol_1_1rtl_1a44181c89817f18751ec885c68f48ac03" prot="public" static="no" mutable="no">
+        <type><ref refid="d5/dc5/classcommon__pipeline__sl" kindref="compound">common_pipeline_sl</ref></type>
+        <definition></definition>
+        <argsstring>u_pipe_out_sync</argsstring>
+        <name>u_pipe_out_sync</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="105" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="dd/d03/classcommon__select__symbol_1_1rtl_1a7cf6d5dc6d8e7cafb3e02a72324b2df2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_sel</definition>
+        <argsstring>in_sel_reg,in_data_reg</argsstring>
+        <name>p_sel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="" line="96" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="96" bodyend="96"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" line="65" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_common_components/common_select_symbol.vhd" bodystart="65" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a84624c570deef8404bd4d87dcb17a210" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>c_pipeline</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1aa7da13bc98f98c3322a50f40ff32b338" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>in_data_reg</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a2a929285767badb2a1592e07da5d8c74" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>in_sel_reg</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a7cf6d5dc6d8e7cafb3e02a72324b2df2" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>p_sel</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a34abf71569a8d21363213d81a46e9fb5" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>sel_symbol</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a0a3f959b6cce5857aa6c4ecaafdace20" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_in_data</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a9072d4a7aa5798b714102acf235ab838" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_in_sel</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a2523675a2904493286afe354929759cd" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_eop</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1aaebb3b404163d9fac3f75e0a0c117190" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_sel</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1ac2ea81826475662b484a4c326d689a76" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_sop</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a3f22e3a823a677f166947c2df417a635" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_symbol</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a44181c89817f18751ec885c68f48ac03" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_sync</name></member>
+      <member refid="dd/d03/classcommon__select__symbol_1_1rtl_1a8787d2ee1c0b4ca6d3f39523a212103f" prot="public" virt="non-virtual"><scope>common_select_symbol::rtl</scope><name>u_pipe_out_val</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

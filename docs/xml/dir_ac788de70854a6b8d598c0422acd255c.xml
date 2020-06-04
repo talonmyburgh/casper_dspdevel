@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="dir_ac788de70854a6b8d598c0422acd255c" kind="dir">
+    <compoundname>r2SDF_fft</compoundname>
+    <innerfile refid="d9/d3d/rTwoBF_8vhd">rTwoBF.vhd</innerfile>
+    <innerfile refid="d2/d14/rTwoBFStage_8vhd">rTwoBFStage.vhd</innerfile>
+    <innerfile refid="d0/ddf/rTwoOrder_8vhd">rTwoOrder.vhd</innerfile>
+    <innerfile refid="de/d6e/rTwoOrder__tb_8vhd">rTwoOrder_tb.vhd</innerfile>
+    <innerfile refid="d3/d36/rTwoSDF_8vhd">rTwoSDF.vhd</innerfile>
+    <innerfile refid="db/d78/rTwoSDF__tb_8vhd">rTwoSDF_tb.vhd</innerfile>
+    <innerfile refid="d6/d98/rTwoSDFPkg_8vhd">rTwoSDFPkg.vhd</innerfile>
+    <innerfile refid="d1/d7f/rTwoSDFStage_8vhd">rTwoSDFStage.vhd</innerfile>
+    <innerfile refid="d1/d5a/rTwoWeights_8vhd">rTwoWeights.vhd</innerfile>
+    <innerfile refid="dd/da4/rTwoWMul_8vhd">rTwoWMul.vhd</innerfile>
+    <innerfile refid="df/de1/twiddlesPkg_8vhd">twiddlesPkg.vhd</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/"/>
+  </compounddef>
+</doxygen>

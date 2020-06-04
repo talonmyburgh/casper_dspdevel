@@ -1,9 +1,0 @@
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:89:16:warning: instance "u0" of component "ip_cmult_infer" is not bound [-Wbinding]
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:113:16:warning: instance "u1" of component "ip_cmult_rtl" is not bound [-Wbinding]
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
-       [22;96;49m115000000 fs[0m - [1;37;49mcheck[0m                -   [1;31;49mERROR[0m - Error: RE wrong RTL result. Expected 00 but got XX
-/home/talon/anaconda3/lib/python3.7/site-packages/vunit_hdl-4.4.0-py3.7.egg/vunit/vhdl/core/src/core_pkg.vhd:84:7:@115ns:(report failure): Stop simulation on log level error
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.all_9425d077c366fedc8f774dda38bc8832a60a7ba0/ghdl/common_complex_mult_tb-tb:error: report failed
-in process .common_complex_mult_tb(tb).p_verify
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.all_9425d077c366fedc8f774dda38bc8832a60a7ba0/ghdl/common_complex_mult_tb-tb:error: simulation failed

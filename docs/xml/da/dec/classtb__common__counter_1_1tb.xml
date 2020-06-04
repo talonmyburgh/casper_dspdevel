@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="da/dec/classtb__common__counter_1_1tb" kind="class" language="VHDL" prot="private">
+    <compoundname>tb_common_counter::tb</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a8d0648b9cff0f4c2684d4213cbae7384" prot="public" static="no" mutable="no">
+        <type>TIME :=  10 ns</type>
+        <definition>TIME :=  10 ns clk_period</definition>
+        <argsstring></argsstring>
+        <name>clk_period</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="32" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1abadb11f731c34e1cc02504289a961407" prot="public" static="no" mutable="no">
+        <type>NATURAL := 3</type>
+        <definition>NATURAL := 3 c_cnt_init</definition>
+        <argsstring></argsstring>
+        <name>c_cnt_init</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="34" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" prot="public" static="no" mutable="no">
+        <type>NATURAL := 5</type>
+        <definition>NATURAL := 5 c_cnt_w</definition>
+        <argsstring></argsstring>
+        <name>c_cnt_w</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="35" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a81d0496ef2e04edfff0e21e41a634abb" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC</type>
+        <definition>STD_LOGIC rst</definition>
+        <argsstring></argsstring>
+        <name>rst</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="37" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a45f35ecd038d40b5b8d246fc3ad590cd" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;0&apos;</type>
+        <definition>STD_LOGIC := &apos;0&apos; clk</definition>
+        <argsstring></argsstring>
+        <name>clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="38" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a2831ab634a31c5f3143ce74fe27b2d4f" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;0&apos;</type>
+        <definition>STD_LOGIC := &apos;0&apos; cnt_clr</definition>
+        <argsstring></argsstring>
+        <name>cnt_clr</name>
+        <briefdescription>
+<para>synchronous cnt_clr is only interpreted when clken is active </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="40" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a6a7832336cc2c9cdfce9268e9e9b322e" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;0&apos;</type>
+        <definition>STD_LOGIC := &apos;0&apos; cnt_ld</definition>
+        <argsstring></argsstring>
+        <name>cnt_ld</name>
+        <briefdescription>
+<para>cnt_ld loads the output count with the input load value, independent of cnt_en </para>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="41" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1ae5ed90aae634c3c8a8e4ec54248afb80" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC := &apos;1&apos;</type>
+        <definition>STD_LOGIC := &apos;1&apos; cnt_en</definition>
+        <argsstring></argsstring>
+        <name>cnt_en</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="42" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1ac577087b5bbd7a9c114d73df36a97804" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(   <ref refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" kindref="member">c_cnt_w</ref>- 1 DOWNTO  0) :=   TO_UVEC(   <ref refid="da/dec/classtb__common__counter_1_1tb_1abadb11f731c34e1cc02504289a961407" kindref="member">c_cnt_init</ref>,   <ref refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" kindref="member">c_cnt_w</ref>)</type>
+        <definition>STD_LOGIC_VECTOR(   c_cnt_w- 1 DOWNTO  0) :=   TO_UVEC(   c_cnt_init,   c_cnt_w) load</definition>
+        <argsstring></argsstring>
+        <name>load</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="43" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a89fe3ad863ffd6097fd67fafb8c16148" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(   <ref refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" kindref="member">c_cnt_w</ref>- 1 DOWNTO  0)</type>
+        <definition>STD_LOGIC_VECTOR(   c_cnt_w- 1 DOWNTO  0) count</definition>
+        <argsstring></argsstring>
+        <name>count</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="44" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a11859362ba029532b34c9ad95031dd03" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(   <ref refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" kindref="member">c_cnt_w</ref>- 1 DOWNTO  0)</type>
+        <definition>STD_LOGIC_VECTOR(   c_cnt_w- 1 DOWNTO  0) cnt_max</definition>
+        <argsstring></argsstring>
+        <name>cnt_max</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="45" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1af6ce184bf0cae190d8e88269de4adf4e" prot="public" static="no" mutable="no">
+        <type>STD_LOGIC_VECTOR(   <ref refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" kindref="member">c_cnt_w</ref>- 1 downto  0) :=   &quot;01100&quot;</type>
+        <definition>STD_LOGIC_VECTOR(   c_cnt_w- 1 downto  0) :=   &quot;01100&quot; stdcheck</definition>
+        <argsstring></argsstring>
+        <name>stdcheck</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="46" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/dec/classtb__common__counter_1_1tb_1a2f9333439ecfca6e01e6d54e70886539" prot="public" static="no" mutable="no">
+        <type><ref refid="d1/dc3/classcommon__counter" kindref="compound">common_counter</ref></type>
+        <definition></definition>
+        <argsstring>u_dut</argsstring>
+        <name>u_dut</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="109" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="da/dec/classtb__common__counter_1_1tb_1ae4b8a37d9ffc9d5e2137bfb1ff835b36" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_in_stimuli</definition>
+        <argsstring></argsstring>
+        <name>p_in_stimuli</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="53" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="53" bodyend="91"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" line="30" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_counter/common_counter_tb.vhd" bodystart="30" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1abadb11f731c34e1cc02504289a961407" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>c_cnt_init</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a160317a889146afca164887bcad29643" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>c_cnt_w</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a45f35ecd038d40b5b8d246fc3ad590cd" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>clk</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a8d0648b9cff0f4c2684d4213cbae7384" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>clk_period</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a2831ab634a31c5f3143ce74fe27b2d4f" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>cnt_clr</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1ae5ed90aae634c3c8a8e4ec54248afb80" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>cnt_en</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a6a7832336cc2c9cdfce9268e9e9b322e" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>cnt_ld</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a11859362ba029532b34c9ad95031dd03" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>cnt_max</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a89fe3ad863ffd6097fd67fafb8c16148" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>count</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1ac577087b5bbd7a9c114d73df36a97804" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>load</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1ae4b8a37d9ffc9d5e2137bfb1ff835b36" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>p_in_stimuli</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a81d0496ef2e04edfff0e21e41a634abb" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>rst</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1af6ce184bf0cae190d8e88269de4adf4e" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>stdcheck</name></member>
+      <member refid="da/dec/classtb__common__counter_1_1tb_1a2f9333439ecfca6e01e6d54e70886539" prot="public" virt="non-virtual"><scope>tb_common_counter::tb</scope><name>u_dut</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

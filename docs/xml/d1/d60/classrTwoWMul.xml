@@ -1,0 +1,389 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="d1/d60/classrTwoWMul" kind="class" language="VHDL" prot="public">
+    <compoundname>rTwoWMul</compoundname>
+    <basecompoundref refid="d3/d5d/classcommon__pipeline" prot="public" virt="non-virtual">common_pipeline</basecompoundref>
+    <basecompoundref refid="d5/dc5/classcommon__pipeline__sl" prot="public" virt="non-virtual">common_pipeline_sl</basecompoundref>
+    <derivedcompoundref refid="d3/da3/classrTwoSDFStage" prot="public" virt="non-virtual">rTwoSDFStage</derivedcompoundref>
+    <innerclass refid="d6/d49/classrTwoWMul_1_1str" prot="private">rTwoWMul::str</innerclass>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1afb19cb516dd92cdeea0f33d84edbdfef" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_technology NATURAL := 0</definition>
+        <argsstring> NATURAL := 0</argsstring>
+        <name>g_technology</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="28" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a5b5e8b1d21b90d9df7d6ed8725e59399" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_stage natural := 1</definition>
+        <argsstring> natural := 1</argsstring>
+        <name>g_stage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="29" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a3851b67a7cd050e3cbef555be5f7c1ec" prot="public" static="no" mutable="no">
+        <type></type>
+        <definition>g_lat natural := 3+ 1</definition>
+        <argsstring> natural := 3+ 1</argsstring>
+        <name>g_lat</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="31" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a50da91b765765ac486df1b41692e962f" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in clk std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="33" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1ae106f17a2b73445119c8eb039d3e102e" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in rst std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>rst</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="34" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a004af977b1a33eeb33101a34645714c3" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in weight_re std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>weight_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="35" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="35" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1ad8dd84f113c593b46423c0bc69c65234" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in weight_im std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>weight_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="36" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a49a562993216f997b21d6a881c0f72ad" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_re std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>in_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="37" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a3b3b91975d79b33245caaa02ecc51959" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_im std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>in_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="38" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a3be166bb31449a4e95b74d5f66e28dd3" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_val std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>in_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="39" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" static="no" mutable="no">
+        <type>in</type>
+        <definition>in in_sel std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>in_sel</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="40" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a77c3a2ae46a92a6048e561c8e0a834f1" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_re std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>out_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="41" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a4dc77f30871b5e20cfa926396d780375" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_im std_logic_vector </definition>
+        <argsstring> std_logic_vector </argsstring>
+        <name>out_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="42" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a871c6adc4a6cfa475a6396d52e927bec" prot="public" static="no" mutable="no">
+        <type>out</type>
+        <definition>out out_val std_logic </definition>
+        <argsstring> std_logic </argsstring>
+        <name>out_val</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="44" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a8c3ec8c76f081612540afb17490667f2" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ ieeeieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</argsstring>
+        <name>ieee</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a9f653a29e8aec399cd7e9c022fcca5df" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_pkg_libieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</argsstring>
+        <name>common_pkg_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a94b81f9fa13221baf46b97b11369c035" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ common_components_libieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</argsstring>
+        <name>common_components_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a5bf46adf69f4d0442e18b711d5609255" prot="public" static="no" mutable="no">
+        <type>_library_</type>
+        <definition>_library_ casper_multiplier_libieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</definition>
+        <argsstring>ieee,common_pkg_lib,common_components_lib,casper_multiplier_lib</argsstring>
+        <name>casper_multiplier_lib</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="21" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1acd03516902501cd1c7296a98e22c6fcb" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ std_logic_1164std_logic_1164</definition>
+        <argsstring>std_logic_1164</argsstring>
+        <name>std_logic_1164</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="22" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="d1/d60/classrTwoWMul_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" static="no" mutable="no">
+        <type>_use_</type>
+        <definition>_use_ common_pkgcommon_pkg</definition>
+        <argsstring>common_pkg</argsstring>
+        <name>common_pkg</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="24" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="6">
+        <label>rTwoSDF</label>
+        <link refid="da/d05/classrTwoSDF"/>
+        <childnode refid="5" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="5">
+        <label>rTwoSDFStage</label>
+        <link refid="d3/da3/classrTwoSDFStage"/>
+        <childnode refid="1" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="3">
+        <label>common_pipeline_sl(2)</label>
+        <link refid="d5/dc5/classcommon__pipeline__sl"/>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>common_pipeline(2)</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="7">
+        <label>tb_rTwoSDF</label>
+        <link refid="d0/d99/classtb__rTwoSDF"/>
+        <childnode refid="6" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="1">
+        <label>rTwoWMul</label>
+        <link refid="d1/d60/classrTwoWMul"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="4">
+        <label>common_pipeline</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="3">
+        <label>common_pipeline_sl(2)</label>
+        <link refid="d5/dc5/classcommon__pipeline__sl"/>
+        <childnode refid="4" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>common_pipeline(2)</label>
+        <link refid="d3/d5d/classcommon__pipeline"/>
+      </node>
+      <node id="1">
+        <label>rTwoWMul</label>
+        <link refid="d1/d60/classrTwoWMul"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+        <childnode refid="3" relation="public-inheritance">
+        </childnode>
+      </node>
+    </collaborationgraph>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" line="26" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWMul.vhd" bodystart="26" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="d1/d60/classrTwoWMul_1a5bf46adf69f4d0442e18b711d5609255" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>casper_multiplier_lib</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a50da91b765765ac486df1b41692e962f" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>clk</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>clken</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1acea3987784765b87fe360c8ece3c7587" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>clken</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a94b81f9fa13221baf46b97b11369c035" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>common_components_lib</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a2ab0f5c2024b78be223a07febed70b0b" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>common_pkg</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a9f653a29e8aec399cd7e9c022fcca5df" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>common_pkg_lib</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a2a9792e15af50383bf6156af163d2ae6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>g_in_dat_w</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a2a9792e15af50383bf6156af163d2ae6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>g_in_dat_w</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a3851b67a7cd050e3cbef555be5f7c1ec" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>g_lat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a702f1fa3d48604774c322fd2e8130b96" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>g_out_dat_w</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a702f1fa3d48604774c322fd2e8130b96" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>g_out_dat_w</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a23c9e7003e5efed0b5e5d5885945a2e8" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>g_out_invert</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae0677aa1031770c217381bdb170498dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>g_pipeline</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ae0677aa1031770c217381bdb170498dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>g_pipeline</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a64841845ee37710460b61b493d2f4979" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>g_representation</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a0ec5e20f76ff8bf8ccfd48eae760b5b3" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>g_reset_value</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1af3d6d64cf127136072f764ec0b099e78" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>g_reset_value</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a5b5e8b1d21b90d9df7d6ed8725e59399" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>g_stage</name></member>
+      <member refid="d1/d60/classrTwoWMul_1afb19cb516dd92cdeea0f33d84edbdfef" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>g_technology</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a8c3ec8c76f081612540afb17490667f2" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>ieee</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>IEEE</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ac14da77d3d5ded18977de50569862ad6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>IEEE</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>in_clr</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a41f3efcff4abd2f36ea9d2b6cbc945dc" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>in_clr</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1adc27c695c03d5f1a657bc84366825eac" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>in_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a509609b8402062d61e95d9387345ec3b" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>in_dat</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>in_en</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1ae4648608ee6a0891d117e5b7c6955ce6" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>in_en</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a3b3b91975d79b33245caaa02ecc51959" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>in_im</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a49a562993216f997b21d6a881c0f72ad" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>in_re</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a8bdb8114f5697b1b7a502ecbe641cc37" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>in_sel</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a3be166bb31449a4e95b74d5f66e28dd3" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>in_val</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1a2edc34402b573437d5f25fa90ba4013e" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>numeric_std</name></member>
+      <member refid="d3/d5d/classcommon__pipeline_1ad227931aff3b2b721b0c0dd832970031" prot="public" virt="non-virtual" ambiguityscope="common_pipeline."><scope>rTwoWMul</scope><name>out_dat</name></member>
+      <member refid="d5/dc5/classcommon__pipeline__sl_1abc31e929f1ff9ec19e9400b234d29897" prot="public" virt="non-virtual" ambiguityscope="common_pipeline_sl."><scope>rTwoWMul</scope><name>out_dat</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a4dc77f30871b5e20cfa926396d780375" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>out_im</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a77c3a2ae46a92a6048e561c8e0a834f1" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>out_re</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a871c6adc4a6cfa475a6396d52e927bec" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>out_val</name></member>
+      <member refid="d1/d60/classrTwoWMul_1ae106f17a2b73445119c8eb039d3e102e" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>rst</name></member>
+      <member refid="d1/d60/classrTwoWMul_1acd03516902501cd1c7296a98e22c6fcb" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>std_logic_1164</name></member>
+      <member refid="d1/d60/classrTwoWMul_1ad8dd84f113c593b46423c0bc69c65234" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>weight_im</name></member>
+      <member refid="d1/d60/classrTwoWMul_1a004af977b1a33eeb33101a34645714c3" prot="public" virt="non-virtual"><scope>rTwoWMul</scope><name>weight_re</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

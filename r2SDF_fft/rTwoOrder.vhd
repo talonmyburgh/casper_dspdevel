@@ -1,3 +1,6 @@
+--! @file
+--! @brief Pipelined FFT reorder module
+
 --------------------------------------------------------------------------------
 --
 -- Copyright 2020
@@ -18,25 +21,47 @@
 --
 --------------------------------------------------------------------------------
 
+--! Libraries: IEEE, common_pkg_lib, casper_counter_lib, casper_ram_lib
 library ieee, common_pkg_lib, casper_counter_lib, casper_ram_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
 use casper_ram_lib.common_ram_pkg.all;
 
+--! @dot 
+--! digraph rTwoOrder {
+--!	rankdir="LR";
+--! node [shape=box, fontname=Helvetica, fontsize=12,color="black"];
+--! rTwoOrder;
+--! node [shape=plaintext];
+--! clk;
+--! rst;
+--! in_dat;
+--! in_val;
+--! out_dat;
+--! out_val;
+--! clk -> rTwoOrder;
+--! rst -> rTwoOrder;
+--! in_dat -> rTwoOrder;
+--! in_val -> rTwoOrder;
+--! rTwoOrder -> out_dat;
+--! rTwoOrder -> out_val;
+--!}
+--! @enddot
+
 entity rTwoOrder is
 	generic(
-		g_nof_points : natural := 8;
-		g_bit_flip   : boolean := true;
-		g_nof_chan   : natural := 0
+		g_nof_points : natural := 8; --! Number of FFT points
+		g_bit_flip   : boolean := true; --! Flip bits
+		g_nof_chan   : natural := 0 --! Number of FFT channels
 	);
 	port(
-		clk     : in  std_logic;
-		rst     : in  std_logic;
-		in_dat  : in  std_logic_vector;
-		in_val  : in  std_logic;
-		out_dat : out std_logic_vector;
-		out_val : out std_logic
+		clk     : in  std_logic; --! Input clock source
+		rst     : in  std_logic; --! Reset signal
+		in_dat  : in  std_logic_vector; --! Input data signal
+		in_val  : in  std_logic; --! In val (for delay)
+		out_dat : out std_logic_vector; --! Output data
+		out_val : out std_logic --! Out value valid
 	);
 end entity rTwoOrder;
 

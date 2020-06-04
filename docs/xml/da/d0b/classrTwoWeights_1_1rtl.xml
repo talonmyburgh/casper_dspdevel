@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.19">
+  <compounddef id="da/d0b/classrTwoWeights_1_1rtl" kind="class" language="VHDL" prot="private">
+    <compoundname>rTwoWeights::rtl</compoundname>
+      <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1ae15d7857d404376627dc799839fe4e0a" prot="public" static="no" mutable="no">
+        <type>integer :=   <ref refid="d4/d46/classrTwoWeights_1a81ddc309783af40e75039c5946a39d8c" kindref="member">g_stage</ref>+   <ref refid="d4/d46/classrTwoWeights_1ac37b19138d7b2a84978f10ba6e9ec356" kindref="member">g_stage_offset</ref></type>
+        <definition>integer :=   g_stage+   g_stage_offset c_virtual_stage</definition>
+        <argsstring></argsstring>
+        <name>c_virtual_stage</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="54" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1aa8b84acc227fbe418ed5161c6aa90dcb" prot="public" static="no" mutable="no">
+        <type>integer :=- 1*   <ref refid="d4/d46/classrTwoWeights_1ac37b19138d7b2a84978f10ba6e9ec356" kindref="member">g_stage_offset</ref></type>
+        <definition>integer :=- 1*   g_stage_offset c_nof_shifts</definition>
+        <argsstring></argsstring>
+        <name>c_nof_shifts</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="55" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1aeb41579486b0ab248c35e784516d09bc" prot="public" static="no" mutable="no">
+        <type>wTyp</type>
+        <definition>wTyp nxt_weight_re</definition>
+        <argsstring></argsstring>
+        <name>nxt_weight_re</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="57" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1ab5e6b6f86cdbf6bc46b106fbcc0c7115" prot="public" static="no" mutable="no">
+        <type>wTyp</type>
+        <definition>wTyp nxt_weight_im</definition>
+        <argsstring></argsstring>
+        <name>nxt_weight_im</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="58" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1a01fe0a358f89877c0c2faf80ae76d136" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="da/d0b/classrTwoWeights_1_1rtl_1ae15d7857d404376627dc799839fe4e0a" kindref="member">c_virtual_stage</ref>- 1 downto  1)</type>
+        <definition>std_logic_vector(   c_virtual_stage- 1 downto  1) wAdr_shift</definition>
+        <argsstring></argsstring>
+        <name>wAdr_shift</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="59" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1a828cc64d4d39b813a6b5db7272f20b44" prot="public" static="no" mutable="no">
+        <type>std_logic_vector(   <ref refid="da/d0b/classrTwoWeights_1_1rtl_1ae15d7857d404376627dc799839fe4e0a" kindref="member">c_virtual_stage</ref>- 1 downto  1)</type>
+        <definition>std_logic_vector(   c_virtual_stage- 1 downto  1) wAdr_unshift</definition>
+        <argsstring></argsstring>
+        <name>wAdr_unshift</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="60" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="da/d0b/classrTwoWeights_1_1rtl_1aabdb8078f17e8729f14b10300d39a4f0" prot="public" static="no" mutable="no">
+        <type>integer := 0</type>
+        <definition>integer := 0 wAdr_tw_offset</definition>
+        <argsstring></argsstring>
+        <name>wAdr_tw_offset</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="61" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      </sectiondef>
+      <sectiondef kind="public-func">
+      <memberdef kind="function" id="da/d0b/classrTwoWeights_1_1rtl_1a9d96ed7401f669189becaff3dffc5307" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_get_weights</definition>
+        <argsstring>wAdr_tw_offset</argsstring>
+        <name>p_get_weights</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="72" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="72" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="da/d0b/classrTwoWeights_1_1rtl_1a18b9432b9025513f5ab36937dcfdb8bb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type></type>
+        <definition>p_clk</definition>
+        <argsstring>clk</argsstring>
+        <name>p_clk</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="97" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="97" bodyend="97"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" line="52" column="1" bodyfile="/home/talon/Documents/CASPERWORK/casper_dspdevel/r2SDF_fft/rTwoWeights.vhd" bodystart="52" bodyend="-1"/>
+    <listofallmembers>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1aa8b84acc227fbe418ed5161c6aa90dcb" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>c_nof_shifts</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1ae15d7857d404376627dc799839fe4e0a" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>c_virtual_stage</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1ab5e6b6f86cdbf6bc46b106fbcc0c7115" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>nxt_weight_im</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1aeb41579486b0ab248c35e784516d09bc" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>nxt_weight_re</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1a18b9432b9025513f5ab36937dcfdb8bb" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>p_clk</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1a9d96ed7401f669189becaff3dffc5307" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>p_get_weights</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1a01fe0a358f89877c0c2faf80ae76d136" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>wAdr_shift</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1aabdb8078f17e8729f14b10300d39a4f0" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>wAdr_tw_offset</name></member>
+      <member refid="da/d0b/classrTwoWeights_1_1rtl_1a828cc64d4d39b813a6b5db7272f20b44" prot="public" virt="non-virtual"><scope>rTwoWeights::rtl</scope><name>wAdr_unshift</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>
