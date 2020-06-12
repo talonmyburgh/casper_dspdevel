@@ -108,7 +108,7 @@ BEGIN
 		br <= std_logic_vector(to_signed(13, b_wd));
 		bi <= std_logic_vector(to_signed(4, b_wd));
 
-		wait for clk_period * 6;
+		wait for clk_period;
 
 		check(to_integer(signed(pr)) = 185, "Real multiplication incorrectly performed. Expected 185 but got " & to_hstring(pr));
 		check(to_integer(signed(pi)) = 0, "Imaginary multiplication incorrectly performed. Exepected 0 but got " & to_hstring(pr));

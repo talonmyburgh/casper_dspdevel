@@ -18,7 +18,7 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib,ip_xilinx_mult_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
@@ -103,7 +103,6 @@ begin
 				pi    => mult_im
 			);
 		-- Back to true input widths and then resize for output width
-		
 		
 		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
 		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
