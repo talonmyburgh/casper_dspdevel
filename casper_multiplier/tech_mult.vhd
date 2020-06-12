@@ -1,5 +1,5 @@
 
-LIBRARY IEEE, common_pkg_lib, ip_xilinx_mult_lib;
+LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
@@ -42,7 +42,7 @@ ARCHITECTURE str of tech_mult is
 	SIGNAL result_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 	begin
 	
-	gen_xilinx_mult: entity ip_xilinx_mult_lib.ip_mult_infer
+	gen_xilinx_mult: ip_mult_rtl
 		generic map(
 			AWIDTH => g_in_a_w,
 			BWIDTH => g_in_b_w

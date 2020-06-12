@@ -18,7 +18,7 @@
 --
 -------------------------------------------------------------------------------
 --! @file
---! @brief RTL Complex Multiplier
+--! @brief RTL Complex Multiplier using 4 mults and 2 adds -> 4 dsp48 chips
 
 --! Library IEEE
 LIBRARY IEEE;
