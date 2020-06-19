@@ -49,7 +49,7 @@ ENTITY common_complex_mult IS
 		g_sim              : BOOLEAN := TRUE;
 		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
-		g_variant          : STRING  := "RTL";
+		g_variant          : STRING  := "4DSP";
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;
 		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w

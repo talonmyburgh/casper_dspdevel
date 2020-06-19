@@ -17,30 +17,28 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
--- Purpose: Verify different architectures of common_complex_mult
--- Description:
---   p_verify verifies that the instances of common_complex_mult all yield the
---   expected results and ASSERTs an ERROR in case they differ.
--- Usage:
--- > as 10
--- > run -all  -- signal tb_end will stop the simulation by stopping the clk
+--! Purpose: Verify different architectures of common_complex_mult
+--! Description:
+--!   p_verify verifies that the instances of common_complex_mult all yield the
+--!   expected results and ASSERTs an ERROR in case they differ.
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib, vunit_lib; --, ip_stratixiv_mult_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, vunit_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 USE common_pkg_lib.tb_common_pkg.ALL;
+USE common_pkg_lib.common_str_pkg.ALL;
 context vunit_lib.vunit_context;
 
 
 ENTITY common_complex_mult_tb IS
 	GENERIC (
 	runner_cfg: string;
-    g_in_dat_w         : NATURAL := 4;
-    g_out_dat_w        : NATURAL := 8;       -- g_in_dat_w*2 for multiply and +1 for adder
-    g_conjugate_b      : BOOLEAN := FALSE;   -- When FALSE p = a * b, else p = a * conj(b)
+    g_in_dat_w         : NATURAL := 4;       --! input data width
+    g_out_dat_w        : NATURAL := 9;       --! g_in_dat_w*2 for multiply and +1 for add
+    g_conjugate_b      : BOOLEAN := FALSE;   --! When FALSE p = a * b, when TRUE p = a * conj(b)
     g_pipeline_input   : NATURAL := 1;
     g_pipeline_product : NATURAL := 0;
     g_pipeline_adder   : NATURAL := 1;
@@ -72,17 +70,17 @@ ARCHITECTURE tb OF common_complex_mult_tb IS
 
   SIGNAL in_val              : STD_LOGIC;  -- in_val is only passed on to out_val
   SIGNAL result_val_expected : STD_LOGIC;
-  SIGNAL result_val_rtl      : STD_LOGIC;
-  SIGNAL result_val_ip       : STD_LOGIC;
+  SIGNAL result_val_4dsp      : STD_LOGIC;
+  SIGNAL result_val_3dsp       : STD_LOGIC;
 
   SIGNAL out_result_re       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);  -- combinatorial result
   SIGNAL out_result_im       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
   SIGNAL result_re_expected  : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);  -- pipelined results
-  SIGNAL result_re_rtl       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
-  SIGNAL result_re_ip        : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
+  SIGNAL result_re_4dsp       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
+  SIGNAL result_re_3dsp        : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
   SIGNAL result_im_expected  : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
-  SIGNAL result_im_rtl       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
-  SIGNAL result_im_ip        : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
+  SIGNAL result_im_4dsp       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
+  SIGNAL result_im_3dsp        : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
   signal in_clr : STD_LOGIC := '0';
   signal in_en : STD_LOGIC := '1';
 
@@ -232,7 +230,7 @@ BEGIN
     g_sim => TRUE,
     g_sim_level => 0,
     g_technology       => c_technology,
-    g_variant          => "RTL",
+    g_variant          => "4DSP",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,
     g_out_p_w          => g_out_dat_w,
@@ -251,9 +249,9 @@ BEGIN
     in_br      => in_br,
     in_bi      => in_bi,
     in_val     => in_val,
-    out_pr     => result_re_rtl,
-    out_pi     => result_im_rtl,
-    out_val    => result_val_rtl
+    out_pr     => result_re_4dsp,
+    out_pi     => result_im_4dsp,
+    out_val    => result_val_4dsp
   );
 
   u_dut_ip : ENTITY work.common_complex_mult
@@ -261,7 +259,7 @@ BEGIN
     g_sim => True,
     g_sim_level => 0,
     g_technology       => c_technology,
-    g_variant          => "IP",
+    g_variant          => "3DSP",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,
     g_out_p_w          => g_out_dat_w,
@@ -280,20 +278,22 @@ BEGIN
     in_br      => in_br,
     in_bi      => in_bi,
     in_val     => in_val,
-    out_pr     => result_re_ip,
-    out_pi     => result_im_ip,
-    out_val    => result_val_ip
+    out_pr     => result_re_3dsp,
+    out_pi     => result_im_3dsp,
+    out_val    => result_val_3dsp
   );
 
  p_verify : PROCESS(rst, clk)
  BEGIN
    IF rst='0' THEN
      IF rising_edge(clk) THEN
-       check(result_re_rtl  = result_re_expected ,"Error: RE wrong RTL result. Expected "&to_hstring(result_re_expected)&" but got " & to_hstring(result_re_rtl));
-       check(result_im_rtl  = result_im_expected ,"Error: IM wrong RTL result. Expected "&to_hstring(result_im_expected)&" but got " & to_hstring(result_im_rtl));
+       check(result_re_4dsp  = result_re_expected ,"Error: RE wrong 4DSP result. Expected "&slv_to_str(result_re_expected)&" but got " & slv_to_str(result_re_4dsp));
+       check(result_im_4dsp  = result_im_expected ,"Error: IM wrong 4DSP result. Expected "&slv_to_str(result_im_expected)&" but got " & slv_to_str(result_im_4dsp));
+       check(result_val_4dsp  = result_val_expected ,"Error: IM wrong 4DSP result. Expected "&sl_to_str(result_val_expected)&" but got " & sl_to_str(result_val_4dsp));
 
-       check(result_re_ip  = result_re_expected ,"Error: RE wrong IP result. Expected "&to_hstring(result_re_expected)&" but got " & to_hstring(result_re_ip));
-       check(result_im_ip  = result_im_expected ,"Error: IM wrong IP result. Expected "&to_hstring(result_im_expected)&" but got " & to_hstring(result_im_ip));
+       check(result_re_3dsp  = result_re_expected ,"Error: RE wrong 3DSP result. Expected "&slv_to_str(result_re_expected)&" but got " & slv_to_str(result_re_3dsp));
+       check(result_im_3dsp  = result_im_expected ,"Error: IM wrong 3DSP result. Expected "&slv_to_str(result_im_expected)&" but got " & slv_to_str(result_im_3dsp));
+       check(result_val_3dsp  = result_val_expected ,"Error: IM wrong 3DSP result. Expected "&sl_to_str(result_val_expected)&" but got " & sl_to_str(result_val_3dsp));
      END IF;
    END IF;
  END PROCESS;

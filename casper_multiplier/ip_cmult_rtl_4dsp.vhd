@@ -63,10 +63,10 @@ USE IEEE.numeric_std.ALL;
 --!}
 --! @enddot
 
-ENTITY ip_cmult_rtl IS
+ENTITY ip_cmult_rtl_4dsp IS
 	GENERIC(
-		g_in_a_w           : POSITIVE; --! A input bit width
-		g_in_b_w           : POSITIVE; --! B input bit width
+		g_in_a_w           : POSITIVE;  --! A input bit width
+		g_in_b_w           : POSITIVE;  --! B input bit width
 		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
 		g_conjugate_b      : BOOLEAN := FALSE; --! Whether or not to conjugate B value
 		g_pipeline_input   : NATURAL := 1; --! 0 or 1
@@ -76,7 +76,7 @@ ENTITY ip_cmult_rtl IS
 	);
 	PORT(
 		rst       : IN  STD_LOGIC := '0'; --! Reset signal
-		clk       : IN  STD_LOGIC; --! Input clock signal
+		clk       : IN  STD_LOGIC;      --! Input clock signal
 		clken     : IN  STD_LOGIC := '1'; --! Clock enable
 		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Real input A
 		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Imaginary input A
@@ -85,9 +85,9 @@ ENTITY ip_cmult_rtl IS
 		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Real result
 		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0) --! Imaginary result
 	);
-END ip_cmult_rtl;
+END ip_cmult_rtl_4dsp;
 
-ARCHITECTURE str OF ip_cmult_rtl IS
+ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 
 	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
 	BEGIN

@@ -28,15 +28,13 @@ vu = VUnit.from_argv()
 
 lib1 = vu.add_library("casper_adder_lib",allow_duplicate=True)
 lib1.add_source_files("*.vhd")
+TB_GENERATED = lib1.test_bench("common_add_sub_tb")
+generate_tests(TB_GENERATED, ["ADD","SUB","BOTH"], ["1","0"], [0,1],5, [4,5,6,7,8])
 
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)
 lib2.add_source_files("../casper_common_components/*.vhd")
 
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
 lib3.add_source_files("../casper_common_pkg/*.vhd")
-
-TB_GENERATED = lib1.test_bench("common_add_sub_tb")
-
-generate_tests(TB_GENERATED, ["ADD","SUB","BOTH"], ["1","0"], [0,1],5, [4,5,6,7,8])
 
 vu.main()
