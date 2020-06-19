@@ -28,7 +28,7 @@ PACKAGE tech_mult_component_pkg IS
 	-- Xilinx 7 Series Mults
 	-- ---------------------------------------------------------------------------
 	-- ! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not necessarily translate to DSP element.
-	component ip_cmult_rtl
+	component ip_cmult_rtl_4dsp
 		generic(
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
@@ -50,29 +50,38 @@ PACKAGE tech_mult_component_pkg IS
 			result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
 			result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
 		);
-	end component ip_cmult_rtl;
+	end component ip_cmult_rtl_4dsp;
 
 	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
-	component ip_cmult_infer
+	component ip_cmult_rtl_3dsp
 		generic(
-			AWIDTH : natural;
-			BWIDTH : natural
+			g_in_a_w           : POSITIVE;
+			g_in_b_w           : POSITIVE;
+			g_out_p_w          : POSITIVE;
+			g_conjugate_b      : BOOLEAN := FALSE;
+			g_pipeline_input   : NATURAL:=1;
+			g_pipeline_product : NATURAL:=0;
+			g_pipeline_adder   : NATURAL:=1;
+			g_pipeline_output  : NATURAL:=1
 		);
 		port(
-			clk    : in  std_logic;
-			ar, ai : in  std_logic_vector(AWIDTH - 1 downto 0);
-			br, bi : in  std_logic_vector(BWIDTH - 1 downto 0);
-			rst    : in  std_logic;
-			clken  : in  std_logic;
-			pr, pi : out std_logic_vector(AWIDTH + BWIDTH downto 0)
+			rst       : IN  STD_LOGIC;
+			clk       : IN  STD_LOGIC;
+			clken     : IN  STD_LOGIC;
+			in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+			in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+			in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+			in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+			result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
+			result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
 		);
-	end component ip_cmult_infer;
+	end component ip_cmult_rtl_3dsp;
 
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
 	component ip_mult_rtl
 		generic(
-			AWIDTH : natural;
-			BWIDTH : natural
+			AWIDTH : natural := 16; --! Bitwidth of A input
+	        BWIDTH : natural := 16
 		);
 		port(
 			a   : in  std_logic_vector(AWIDTH - 1 downto 0);

@@ -44,6 +44,7 @@ PACKAGE common_str_pkg IS
 	FUNCTION time_to_str(in_time : TIME) RETURN STRING;
 	FUNCTION str_to_time(in_str : STRING) RETURN TIME;
 	FUNCTION slv_to_str(slv : STD_LOGIC_VECTOR) RETURN STRING;
+	FUNCTION sl_to_str(sl : STD_LOGIC) RETURN STRING;
 	FUNCTION str_to_hex(str : STRING) RETURN STRING;
 	FUNCTION slv_to_hex(slv : STD_LOGIC_VECTOR) RETURN STRING;
 	FUNCTION hex_to_slv(str : STRING) RETURN STD_LOGIC_VECTOR;
@@ -122,6 +123,16 @@ PACKAGE BODY common_str_pkg IS
 		VARIABLE v_str  : STRING(1 TO slv'LENGTH) := (OTHERS => ' ');
 	BEGIN
 		write(v_line, slv);
+		v_str(v_line.ALL'RANGE) := v_line.ALL;
+		deallocate(v_line);
+		RETURN v_str;
+	END;
+	
+	FUNCTION sl_to_str(sl : STD_LOGIC) RETURN STRING IS
+		VARIABLE v_line : LINE;
+		VARIABLE v_str  : STRING(1 TO 2) := (OTHERS => ' ');
+	BEGIN
+		write(v_line, sl);
 		v_str(v_line.ALL'RANGE) := v_line.ALL;
 		deallocate(v_line);
 		RETURN v_str;

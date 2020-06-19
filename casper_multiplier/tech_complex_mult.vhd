@@ -63,15 +63,6 @@ ARCHITECTURE str of tech_complex_mult is
 	--! . if both inputs > 18b then another IP needs to be regenerated and that will use 16 real multipliers and some extra LUTs and registers
 	--! . if the output is set to 18b+18b + 1b =37b to account for the sum then another IP needs to be regenerated and that will use some extra registers
 	--! ==> for inputs <= 18b this ip_complex_mult is appropriate and it can not be made parametrisable to fit also inputs > 18b.
-	CONSTANT c_dsp_dat_w  : NATURAL := 18;
-	CONSTANT c_dsp_prod_w : NATURAL := 2 * c_dsp_dat_w;
-
-	SIGNAL ar      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
-	SIGNAL ai      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
-	SIGNAL br      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
-	SIGNAL bi      : STD_LOGIC_VECTOR(c_dsp_dat_w - 1 DOWNTO 0);
-	SIGNAL mult_re : STD_LOGIC_VECTOR(c_dsp_prod_w DOWNTO 0);
-	SIGNAL mult_im : STD_LOGIC_VECTOR(c_dsp_prod_w DOWNTO 0);
 
 	-- sim_model=1
 	SIGNAL result_re_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
@@ -79,37 +70,34 @@ ARCHITECTURE str of tech_complex_mult is
 
 begin
 	
-	gen_xilinx_cmult_ip_infer : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "IP") generate -- @suppress "Redundant boolean equality check with true"
-		-- Adapt DSP input widths
-		ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
-		ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
-		br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
-		bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b = FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
+	gen_xilinx_cmult_ip_infer : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "4DSP") generate -- @suppress "Redundant boolean equality check with true"
 
-		u0 : ip_cmult_infer
+			u1 : ip_cmult_rtl_4dsp
 			generic map(
-				AWIDTH => c_dsp_dat_w,
-				BWIDTH => c_dsp_dat_w
+				g_in_a_w           => g_in_a_w,
+				g_in_b_w           => g_in_b_w,
+				g_out_p_w          => g_out_p_w,
+				g_conjugate_b      => g_conjugate_b,
+				g_pipeline_input   => g_pipeline_input,
+				g_pipeline_product => g_pipeline_product,
+				g_pipeline_adder   => g_pipeline_adder,
+				g_pipeline_output  => g_pipeline_output
 			)
 			port map(
-				clk   => clk,
-				ar    => ar,
-				ai    => ai,
-				br    => br,
-				bi    => bi,
-				rst   => rst,
-				clken => clken,
-				pr    => mult_re,
-				pi    => mult_im
+				rst       => rst,
+				clk       => clk,
+				clken     => clken,
+				in_ar     => in_ar,
+				in_ai     => in_ai,
+				in_br     => in_br,
+				in_bi     => in_bi,
+				result_re => result_re,
+				result_im => result_im
 			);
-		-- Back to true input widths and then resize for output width
-		
-		result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
-		result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
 	end generate;
 
-	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "RTL") GENERATE -- @suppress "Redundant boolean equality check with true"
-		u1 : ip_cmult_rtl
+	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "3DSP") GENERATE -- @suppress "Redundant boolean equality check with true"
+		u1 : ip_cmult_rtl_3dsp
 			generic map(
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
