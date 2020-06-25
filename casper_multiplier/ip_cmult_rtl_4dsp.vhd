@@ -65,6 +65,7 @@ USE IEEE.numeric_std.ALL;
 
 ENTITY ip_cmult_rtl_4dsp IS
 	GENERIC(
+		g_use_dsp		   : STRING := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;  --! A input bit width
 		g_in_b_w           : POSITIVE;  --! B input bit width
 		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
@@ -85,10 +86,15 @@ ENTITY ip_cmult_rtl_4dsp IS
 		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Real result
 		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0) --! Imaginary result
 	);
+	attribute use_dsp : string;
+	attribute use_dsp of ip_cmult_rtl_4dsp : entity is g_use_dsp;
 END ip_cmult_rtl_4dsp;
 
 ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
-
+	
+	------------------------------------------------------------------------------
+	-- Functions
+	------------------------------------------------------------------------------
 	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
 	BEGIN
 		-- extend sign bit or keep LS part
@@ -98,13 +104,16 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
 		END IF;
 	END;
-
+	
+	------------------------------------------------------------------------------
+	-- Constants
+	------------------------------------------------------------------------------
 	CONSTANT c_prod_w : NATURAL := g_in_a_w + g_in_b_w;
 	CONSTANT c_sum_w  : NATURAL := c_prod_w + 1;
 
-	--  CONSTANT c_re_add_sub : STRING := sel_a_b(g_conjugate_b, "ADD", "SUB");
-	--  CONSTANT c_im_add_sub : STRING := sel_a_b(g_conjugate_b, "SUB", "ADD");
-
+	------------------------------------------------------------------------------
+	-- Signals
+	------------------------------------------------------------------------------
 	-- registers
 	SIGNAL reg_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
 	SIGNAL reg_ai         : SIGNED(g_in_a_w - 1 DOWNTO 0);

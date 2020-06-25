@@ -15,24 +15,24 @@ def generate_tests(obj, in_dat_w, conjugate_b, pipeline_in,pipeline_product, pip
         pipeline_adder : {0,1}
         pipeline_product : {0,1}
     """
-    for i_d_w in in_dat_w:
-        o_d_w = (2*i_d_w) + 1
-        config_name1 = "i_d_w=%i, o_d_w=%i, conj_b=%r, i_pipe=%i, o_pipe=%i, add_pipe=%i, prod_pipe=%i" % (i_d_w,o_d_w,conjugate_b,pipeline_in,pipeline_out,pipeline_adder,pipeline_product)
+    for i_d_w, conj_b in product(in_dat_w, conjugate_b):
+        o_d_w = (2*i_d_w) +1
+        config_name1 = "i_d_w=%i, o_d_w=%i, conj_b=%r, i_pipe=%i, o_pipe=%i, add_pipe=%i, prod_pipe=%i" % (i_d_w,o_d_w,conj_b,pipeline_in,pipeline_out,pipeline_adder,pipeline_product)
         obj.add_config(
             name = config_name1,
-            generics=dict(g_in_dat_w=i_d_w,g_out_dat_w=o_d_w,g_conjugate_b=conjugate_b, g_pipeline_input=pipeline_in, g_pipeline_product=pipeline_product,g_pipeline_adder=pipeline_adder, g_pipeline_output=pipeline_out)
+            generics=dict(g_in_dat_w=i_d_w,g_out_dat_w=o_d_w,g_conjugate_b=conj_b, g_pipeline_input=pipeline_in, g_pipeline_product=pipeline_product,g_pipeline_adder=pipeline_adder, g_pipeline_output=pipeline_out)
         )
 
 # Create library 'casper_multiplier_lib'
 lib1 = vu.add_library("casper_multiplier_lib")
 lib1.add_source_files("*.vhd")
 TB_GENERATED = lib1.test_bench("common_complex_mult_tb")
-config_name1 = "i_d_w=%i, o_d_w=%i, conj_b=%r, i_pipe=%i, o_pipe=%i, add_pipe=%i, prod_pipe=%i" % (4,9,False,1,1,1,0)
+# config_name1 = "i_d_w=%i, o_d_w=%i, conj_b=%r, i_pipe=%i, o_pipe=%i, add_pipe=%i, prod_pipe=%i" % (4,8,False,1,1,1,0)
 # TB_GENERATED.add_config(
 #     name = config_name1,
-#     generics=dict(g_in_dat_w=4,g_out_dat_w=9,g_conjugate_b=False, g_pipeline_input=1, g_pipeline_product=0,g_pipeline_adder=1, g_pipeline_output=1)
+#     generics=dict(g_in_dat_w=4,g_out_dat_w=8,g_conjugate_b=False, g_pipeline_input=1, g_pipeline_product=0,g_pipeline_adder=1, g_pipeline_output=1)
 # )
-generate_tests(TB_GENERATED, [4,5], False, 1,0, 1, 1)
+generate_tests(TB_GENERATED, [3,4], [False,True], 1,0, 1, 1)
 
 # Create library 'common_components_lib'
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)

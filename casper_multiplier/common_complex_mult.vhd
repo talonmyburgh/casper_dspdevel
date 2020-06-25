@@ -47,30 +47,30 @@ USE common_pkg_lib.common_pkg.ALL;
 ENTITY common_complex_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
+		g_sim_level        : NATURAL := 0; --! 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
-		g_variant          : STRING  := "4DSP";
-		g_in_a_w           : POSITIVE;
-		g_in_b_w           : POSITIVE;
-		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
-		g_conjugate_b      : BOOLEAN := FALSE;
-		g_pipeline_input   : NATURAL := 1; -- 0 or 1
-		g_pipeline_product : NATURAL := 0; -- 0 or 1
-		g_pipeline_adder   : NATURAL := 1; -- 0 or 1
-		g_pipeline_output  : NATURAL := 1 -- >= 0
+		g_variant          : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
+		g_in_a_w           : POSITIVE; --! Input A-bitwidth
+		g_in_b_w           : POSITIVE; --! Input B-bitwidth
+		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
+		g_conjugate_b      : BOOLEAN := FALSE; --! Conjugate b value prior to cmult
+		g_pipeline_input   : NATURAL := 1; --! 0 or 1
+		g_pipeline_product : NATURAL := 0; --! 0 or 1
+		g_pipeline_adder   : NATURAL := 1; --! 0 or 1
+		g_pipeline_output  : NATURAL := 1 --! >= 0
 	);
 	PORT(
-		rst     : IN  STD_LOGIC := '0';
-		clk     : IN  STD_LOGIC;
-		clken   : IN  STD_LOGIC := '1';
-		in_ar   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
-		in_ai   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
-		in_br   : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-		in_bi   : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-		in_val  : IN  STD_LOGIC := '1';
-		out_pr  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-		out_pi  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-		out_val : OUT STD_LOGIC
+		rst     : IN  STD_LOGIC := '0'; --! Reset port, active high
+		clk     : IN  STD_LOGIC; --! Clock signal
+		clken   : IN  STD_LOGIC := '1'; --! Clock enable
+		in_ar   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Input real A value
+		in_ai   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Input imag A value
+		in_br   : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Input real B value
+		in_bi   : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Input imag B value
+		in_val  : IN  STD_LOGIC := '1'; --! Sync pulse
+		out_pr  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Output real value
+		out_pi  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Output imag value
+		out_val : OUT STD_LOGIC --! Output sync
 	);
 END common_complex_mult;
 

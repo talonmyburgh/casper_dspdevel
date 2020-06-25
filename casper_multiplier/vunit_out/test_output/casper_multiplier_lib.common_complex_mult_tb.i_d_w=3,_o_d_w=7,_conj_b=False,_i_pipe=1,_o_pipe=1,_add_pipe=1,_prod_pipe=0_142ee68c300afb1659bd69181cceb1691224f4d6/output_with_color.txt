@@ -1,0 +1,3 @@
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@205ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@205ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+simulation stopped @25275ns with status 0

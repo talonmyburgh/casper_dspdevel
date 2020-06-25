@@ -1,5 +1,0 @@
-       265000000 fs - check                -   ERROR - Error: IM wrong 3DSP result. Expected 00000000000 but got 01000000000
-/home/talon/anaconda3/lib/python3.7/site-packages/vunit_hdl-4.4.0-py3.7.egg/vunit/vhdl/core/src/core_pkg.vhd:84:7:@265ns:(report failure): Stop simulation on log level error
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.i_d_w=5,_o_d_w=11,_conj_b=True,_i_pipe=1,_o_pipe=1,_add_pipe=1,_prod_pipe=0_1e0397d8aa5babb2cc2916b9303cc0e8a90163d6/ghdl/common_complex_mult_tb-tb:error: report failed
-in process .common_complex_mult_tb(tb).p_verify
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.i_d_w=5,_o_d_w=11,_conj_b=True,_i_pipe=1,_o_pipe=1,_add_pipe=1,_prod_pipe=0_1e0397d8aa5babb2cc2916b9303cc0e8a90163d6/ghdl/common_complex_mult_tb-tb:error: simulation failed
