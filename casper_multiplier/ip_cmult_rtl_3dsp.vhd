@@ -4,6 +4,7 @@ USE IEEE.numeric_std.ALL;
 
 entity ip_cmult_rtl_3dsp is
 	GENERIC(
+		g_use_dsp		   : STRING := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w            : POSITIVE := 8; --! A input bit width
 		g_in_b_w            : POSITIVE := 8; --! B input bit width
 		g_out_p_w           : POSITIVE := 16; --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
@@ -25,6 +26,7 @@ entity ip_cmult_rtl_3dsp is
 		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0) --! Imaginary result
 	);
 	attribute use_dsp : string;
+	attribute use_dsp of ip_cmult_rtl_3dsp : entity is g_use_dsp;
 end entity ip_cmult_rtl_3dsp;
 
 architecture RTL of ip_cmult_rtl_3dsp is
@@ -81,9 +83,9 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	SIGNAL sum_im : SIGNED(c_sum_w - 1 DOWNTO 0);
 
 	--enforce dsp usage
-	attribute use_dsp of k1 : signal is "yes";
-	attribute use_dsp of k2 : signal is "yes";
-	attribute use_dsp of k3 : signal is "yes";
+--	attribute use_dsp of k1 : signal is "yes";
+--	attribute use_dsp of k2 : signal is "yes";
+--	attribute use_dsp of k3 : signal is "yes";
 
 begin
 

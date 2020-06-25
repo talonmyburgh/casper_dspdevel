@@ -1,0 +1,7 @@
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@205ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+../../src/ieee2008/numeric_std-body.vhdl:3117:7:@205ns:(assertion warning): NUMERIC_STD.TO_SIGNED: vector truncated
+       [22;96;49m265000000 fs[0m - [1;37;49mcheck[0m                -   [1;31;49mERROR[0m - Error: 3DSP IM wrong IP result. Expected: 0000000 but got: 0100000
+/home/talon/anaconda3/lib/python3.7/site-packages/vunit_hdl-4.4.0-py3.7.egg/vunit/vhdl/core/src/core_pkg.vhd:84:7:@265ns:(report failure): Stop simulation on log level error
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.i_d_w=3,_o_d_w=7,_conj_b=True,_i_pipe=1,_o_pipe=1,_add_pipe=1,_prod_pipe=0_29e361f05adb048d58349ed95761d71aa42a3f96/ghdl/common_complex_mult_tb-tb:error: report failed
+in process .common_complex_mult_tb(tb).p_verify
+/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/vunit_out/test_output/casper_multiplier_lib.common_complex_mult_tb.i_d_w=3,_o_d_w=7,_conj_b=True,_i_pipe=1,_o_pipe=1,_add_pipe=1,_prod_pipe=0_29e361f05adb048d58349ed95761d71aa42a3f96/ghdl/common_complex_mult_tb-tb:error: simulation failed

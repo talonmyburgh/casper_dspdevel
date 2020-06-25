@@ -33,6 +33,7 @@ ENTITY tech_complex_mult IS
 		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
 		g_variant          : STRING  := "IP";
+		g_use_dsp		   :STRING := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;
 		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
@@ -74,6 +75,7 @@ begin
 
 			u1 : ip_cmult_rtl_4dsp
 			generic map(
+				g_use_dsp		   => g_use_dsp,
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
 				g_out_p_w          => g_out_p_w,
@@ -99,6 +101,7 @@ begin
 	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "3DSP") GENERATE -- @suppress "Redundant boolean equality check with true"
 		u1 : ip_cmult_rtl_3dsp
 			generic map(
+				g_use_dsp		   => g_use_dsp,
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
 				g_out_p_w          => g_out_p_w,

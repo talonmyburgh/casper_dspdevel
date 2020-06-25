@@ -1,2 +1,0 @@
-[33;1mskip[0m[m (P=1 S=1 F=0 T=2) casper_multiplier_lib.common_complex_mult_tb.i_d_w=5, o_d_w=11, conj_b=False, i_pipe=1, o_pipe=1, add_pipe=1, prod_pipe=0 (7.6 seconds)
-[0m

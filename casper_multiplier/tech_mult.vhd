@@ -9,14 +9,12 @@ ENTITY tech_mult IS
 		g_sim              : BOOLEAN := TRUE;
 		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
-		g_variant          : STRING  := "IP";
+		g_use_dsp		   : STRING := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;
 		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
-		g_conjugate_b      : BOOLEAN := FALSE;
 		g_pipeline_input   : NATURAL := 1; -- 0 or 1
 		g_pipeline_product : NATURAL := 0; -- 0 or 1
-		g_pipeline_adder   : NATURAL := 1; -- 0 or 1
 		g_pipeline_output  : NATURAL := 1 -- >= 0
 	);
 	PORT(
@@ -42,18 +40,23 @@ ARCHITECTURE str of tech_mult is
 	SIGNAL result_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 	begin
 	
-	gen_xilinx_mult: ip_mult_rtl
+	gen_xilinx_mult : ip_mult_infer
 		generic map(
-			AWIDTH => g_in_a_w,
-			BWIDTH => g_in_b_w
+			g_use_dsp          => g_use_dsp,
+			g_in_a_w           => g_in_a_w,
+			g_in_b_w           => g_in_b_w,
+			g_out_p_w          => g_out_p_w,
+			g_pipeline_input   => g_pipeline_input,
+			g_pipeline_product => g_pipeline_product,
+			g_pipeline_output  => g_pipeline_output
 		)
 		port map(
-			a   => in_a,
-			b   => in_b,
-			clk => clk,
-			rst => rst,
-			ce  => clken,
-			p   => result
+			in_a  => in_a,
+			in_b  => in_b,
+			clk   => clk,
+			rst   => rst,
+			ce    => clken,
+			out_p => result
 		);
 	
 	end str;

@@ -30,6 +30,7 @@ PACKAGE tech_mult_component_pkg IS
 	-- ! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not necessarily translate to DSP element.
 	component ip_cmult_rtl_4dsp
 		generic(
+			g_use_dsp 		   : STRING;
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
@@ -55,6 +56,7 @@ PACKAGE tech_mult_component_pkg IS
 	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
 	component ip_cmult_rtl_3dsp
 		generic(
+			g_use_dsp		   : STRING;
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
@@ -78,18 +80,23 @@ PACKAGE tech_mult_component_pkg IS
 	end component ip_cmult_rtl_3dsp;
 
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
-	component ip_mult_rtl
+	component ip_mult_infer
 		generic(
-			AWIDTH : natural := 16; --! Bitwidth of A input
-	        BWIDTH : natural := 16
+			g_use_dsp          : STRING;
+			g_in_a_w           : POSITIVE;
+			g_in_b_w           : POSITIVE;
+			g_out_p_w          : POSITIVE;
+			g_pipeline_input   : NATURAL;
+			g_pipeline_product : NATURAL;
+			g_pipeline_output  : NATURAL
 		);
 		port(
-			a   : in  std_logic_vector(AWIDTH - 1 downto 0);
-			b   : in  std_logic_vector(BWIDTH - 1 downto 0);
-			clk : in  std_logic;
-			rst : in  std_logic;
-			ce  : in  std_logic;
-			p   : out std_logic_vector(AWIDTH + BWIDTH - 1 downto 0)
+			in_a  : in  std_logic_vector(g_in_a_w - 1 downto 0);
+			in_b  : in  std_logic_vector(g_in_b_w - 1 downto 0);
+			clk   : in  std_logic;
+			rst   : in  std_logic;
+			ce    : in  std_logic;
+			out_p : out std_logic_vector(g_out_p_w - 1 downto 0)
 		);
-	end component ip_mult_rtl;
+	end component ip_mult_infer;
 END tech_mult_component_pkg;
