@@ -68,17 +68,18 @@ entity rTwoSDF is
 		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
 		g_nof_points  : natural        := 1024; --! N point FFT
 		-- generics for rTwoSDFStage
+		g_use_dsp     : string         := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_pipeline    : t_fft_pipeline := c_fft_pipeline --! Pipeline specification
 	);
 	port(
-		clk     : in  std_logic; --! Clock input
+		clk     : in  std_logic;        --! Clock input
 		rst     : in  std_logic := '0'; --! Reset input (resets on high)
 		in_re   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Real input (data width = g_in_dat_w)
 		in_im   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Imag input (data width = g_in_dat_w)
 		in_val  : in  std_logic := '1'; --! Input select for delay component (i.e. accept input to delay)
 		out_re  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output real value (data width = g_out_dat_w)
 		out_im  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output imag value (data width = g_out_dat_w)
-		out_val : out std_logic --!Output valid signal (valid when high)
+		out_val : out std_logic         --!Output valid signal (valid when high)
 	);
 end entity rTwoSDF;
 
@@ -128,6 +129,7 @@ begin
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
 				g_scale_enable   => sel_a_b(stage <= g_guard_w, FALSE, TRUE), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
+				g_use_dsp        => g_use_dsp,
 				g_pipeline       => g_pipeline
 			)
 			port map(

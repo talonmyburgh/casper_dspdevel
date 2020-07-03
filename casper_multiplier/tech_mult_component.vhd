@@ -30,7 +30,7 @@ PACKAGE tech_mult_component_pkg IS
 	-- ! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not necessarily translate to DSP element.
 	component ip_cmult_rtl_4dsp
 		generic(
-			g_use_dsp 		   : STRING;
+			g_use_dsp 		   : STRING:="yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
@@ -56,7 +56,7 @@ PACKAGE tech_mult_component_pkg IS
 	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
 	component ip_cmult_rtl_3dsp
 		generic(
-			g_use_dsp		   : STRING;
+			g_use_dsp		   : STRING := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
@@ -82,7 +82,7 @@ PACKAGE tech_mult_component_pkg IS
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
 	component ip_mult_infer
 		generic(
-			g_use_dsp          : STRING;
+			g_use_dsp          : STRING := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;

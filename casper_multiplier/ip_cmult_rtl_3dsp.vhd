@@ -1,6 +1,7 @@
-library ieee;
+library ieee, common_pkg_lib;
 USE ieee.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
+USE common_pkg_lib.common_str_pkg.ALL;
 
 entity ip_cmult_rtl_3dsp is
 	GENERIC(
@@ -35,8 +36,11 @@ architecture RTL of ip_cmult_rtl_3dsp is
 		-- extend sign bit or keep LS part
 		IF w > s'LENGTH THEN
 			RETURN RESIZE(s, w);        -- extend sign bit
+		ELSIF w =s'LENGTH THEN
+			RETURN s;
 		ELSE
 			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
+		
 		END IF;
 	END;
 
@@ -122,6 +126,10 @@ begin
 				reg_sum_im    <= nxt_sum_im;
 				reg_result_re <= nxt_result_re; -- result sum after optional register stage
 				reg_result_im <= nxt_result_im;
+				report(int_to_str(to_integer(nxt_k1))&" "&int_to_str(to_integer(nxt_k2))&" "&int_to_str(to_integer(nxt_k3)));
+				report("k1 terms: ar "&int_to_str(to_integer(nxt_ar))&" ai "&int_to_str(to_integer(nxt_ai))&" br "&int_to_str(to_integer(nxt_br)));
+				report("nxt_sum_re: "&int_to_str(to_integer(nxt_sum_re)));
+				report("nxt_sum_im: "&int_to_str(to_integer(nxt_sum_im)));
 			END IF;
 		END IF;
 	END PROCESS;
@@ -154,15 +162,15 @@ begin
 	------------------------------------------------------------------------------
 
 	gen_k_mult : IF NOT g_conjugate_b GENERATE
-		nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_b_sum_w));
-		nxt_k2 <= ar * (resize(bi, c_a_sum_w) - resize(br, c_b_sum_w));
-		nxt_k3 <= ai * (resize(br, c_a_sum_w) + resize(bi, c_b_sum_w));
+		nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_a_sum_w));
+		nxt_k2 <= ar * (resize(bi, c_b_sum_w) - resize(br, c_b_sum_w));
+		nxt_k3 <= ai * (resize(br, c_b_sum_w) + resize(bi, c_b_sum_w));
 	END GENERATE;
 
 	gen_k_mult_conj_b : IF g_conjugate_b GENERATE
-		nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_b_sum_w));
-		nxt_k2 <= ar * (resize(-bi, c_a_sum_w) - resize(br, c_b_sum_w));
-		nxt_k3 <= ai * (resize(br, c_a_sum_w) - resize(bi, c_b_sum_w));
+	nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_a_sum_w));
+	nxt_k2 <= resize(ar * (- resize(bi, c_prod_w) - resize(br, c_prod_w)),c_prod_w);
+	nxt_k3 <= resize(ai * (resize(br, c_prod_w) - resize(bi, c_prod_w)), c_prod_w);
 	END GENERATE;
 
 	no_product_reg : IF g_pipeline_product = 0 GENERATE -- wired

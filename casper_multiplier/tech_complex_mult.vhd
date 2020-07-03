@@ -23,17 +23,13 @@ USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
 
----- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_xilinx_mult_lib;
---USE ip_xilinx_mult_lib.all;
-
 ENTITY tech_complex_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
 		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
 		g_variant          : STRING  := "IP";
-		g_use_dsp		   :STRING := "YES"; --! Implement multiplications in DSP48 or not
+		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;
 		g_out_p_w          : POSITIVE;  -- default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
@@ -70,12 +66,12 @@ ARCHITECTURE str of tech_complex_mult is
 	SIGNAL result_im_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 
 begin
-	
+
 	gen_xilinx_cmult_ip_infer : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "4DSP") generate -- @suppress "Redundant boolean equality check with true"
 
-			u1 : ip_cmult_rtl_4dsp
+		u1 : ip_cmult_rtl_4dsp
 			generic map(
-				g_use_dsp		   => g_use_dsp,
+				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
 				g_out_p_w          => g_out_p_w,
@@ -101,7 +97,7 @@ begin
 	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_variant = "3DSP") GENERATE -- @suppress "Redundant boolean equality check with true"
 		u1 : ip_cmult_rtl_3dsp
 			generic map(
-				g_use_dsp		   => g_use_dsp,
+				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => g_in_a_w,
 				g_in_b_w           => g_in_b_w,
 				g_out_p_w          => g_out_p_w,
@@ -131,7 +127,7 @@ begin
 	--                                    ______ 
 	-- Input B.real (in_br) = 0x1111 --> |      |
 	--        .imag (in_bi) = 0xBBBB --> |      |
-	--                                   | mult | --> Output result.real = 0x00000000
+	--                                   | mult | --> Output result.real = 0x11110000
 	-- Input A.real (in_ar) = 0x0000 --> |      |                  .imag = 0xBBBBAAAA
 	--        .imag (in_ai) = 0xAAAA --> |______|
 	-- 
