@@ -30,18 +30,19 @@ entity rTwoSDFStage is
 		g_stage          : natural        := 8; --! Stage number
 		g_stage_offset   : natural        := 0; --! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; --! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_scale_enable   : boolean        := TRUE; --! Enable scaling 
+		g_scale_enable   : boolean        := TRUE; --! Enable scaling
+		g_use_dsp        : string         := "yes";
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
 	port(
-		clk     : in  std_logic; --! Input clock
-		rst     : in  std_logic; --! Input reset
+		clk     : in  std_logic;        --! Input clock
+		rst     : in  std_logic;        --! Input reset
 		in_re   : in  std_logic_vector; --! Real input value
 		in_im   : in  std_logic_vector; --! Imaginary input value
-		in_val  : in  std_logic; --! Input value select
+		in_val  : in  std_logic;        --! Input value select
 		out_re  : out std_logic_vector; --! Output real value
 		out_im  : out std_logic_vector; --! Output imaginary value
-		out_val : out std_logic --! Output value select
+		out_val : out std_logic         --! Output value select
 	);
 end entity rTwoSDFStage;
 
@@ -145,8 +146,9 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
-			g_stage => g_stage,
-			g_lat   => g_pipeline.mul_lat
+			g_stage   => g_stage,
+			g_use_dsp => g_use_dsp,
+			g_lat     => g_pipeline.mul_lat
 		)
 		port map(
 			clk       => clk,

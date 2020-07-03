@@ -22,16 +22,6 @@ LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 
---! Purpose : Adder with extra functionality
---! Description:
---!   + Allow for function select (subtract or add) with sel_add signal
---!   + Specify input and output widths
---!   + Enable/disable option
---!   + Sum signed or unsigned values
---! Remarks:
---!  + Currently only support for g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1
---!  + Specifying signed or unsiged is only important if g_out_dat_w > g_in_dat_w. It is not relevant if g_out_dat_w = g_in_dat_w
-
 --! @dot 
 --! digraph common_add_sub {
 --!	rankdir="LR";
@@ -53,6 +43,15 @@ USE common_pkg_lib.common_pkg.ALL;
 --!}
 --! @enddot
 
+--! Purpose : Adder with extra functionality
+--! Description:
+--!   + Allow for function select (subtract or add) with sel_add signal
+--!   + Specify input and output widths
+--!   + Enable/disable option
+--!   + Sum signed or unsigned values
+--! Remarks:
+--!  + Currently only support for g_out_dat_w=g_in_dat_w and g_out_dat_w=g_in_dat_w+1
+--!  + Specifying signed or unsiged is only important if g_out_dat_w > g_in_dat_w. It is not relevant if g_out_dat_w = g_in_dat_w
 ENTITY common_add_sub IS
 	GENERIC(
 		g_direction       : STRING  := "ADD"; --! "ADD", "SUB" or "BOTH" and use sel_add to pick

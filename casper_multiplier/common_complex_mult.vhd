@@ -50,8 +50,9 @@ ENTITY common_complex_mult IS
 		g_sim_level        : NATURAL := 0; --! 0: Simulate variant passed via g_variant for given g_technology
 		g_technology       : NATURAL := 0;
 		g_variant          : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
-		g_in_a_w           : POSITIVE; --! Input A-bitwidth
-		g_in_b_w           : POSITIVE; --! Input B-bitwidth
+		g_use_dsp          : STRING  := "YES";
+		g_in_a_w           : POSITIVE;  --! Input A-bitwidth
+		g_in_b_w           : POSITIVE;  --! Input B-bitwidth
 		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
 		g_conjugate_b      : BOOLEAN := FALSE; --! Conjugate b value prior to cmult
 		g_pipeline_input   : NATURAL := 1; --! 0 or 1
@@ -61,7 +62,7 @@ ENTITY common_complex_mult IS
 	);
 	PORT(
 		rst     : IN  STD_LOGIC := '0'; --! Reset port, active high
-		clk     : IN  STD_LOGIC; --! Clock signal
+		clk     : IN  STD_LOGIC;        --! Clock signal
 		clken   : IN  STD_LOGIC := '1'; --! Clock enable
 		in_ar   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Input real A value
 		in_ai   : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Input imag A value
@@ -70,7 +71,7 @@ ENTITY common_complex_mult IS
 		in_val  : IN  STD_LOGIC := '1'; --! Sync pulse
 		out_pr  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Output real value
 		out_pi  : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Output imag value
-		out_val : OUT STD_LOGIC --! Output sync
+		out_val : OUT STD_LOGIC         --! Output sync
 	);
 END common_complex_mult;
 
@@ -86,8 +87,8 @@ ARCHITECTURE str OF common_complex_mult IS
 
 	SIGNAL result_re : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
 	SIGNAL result_im : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-	signal in_clr : STD_LOGIC := '0';
-	signal in_en : STD_LOGIC := '1';
+	signal in_clr    : STD_LOGIC := '0';
+	signal in_en     : STD_LOGIC := '1';
 
 BEGIN
 	-- User specificied latency must be >= MegaWizard IP dsp_mult_add2 latency
@@ -101,12 +102,12 @@ BEGIN
 			g_pipeline => c_pipeline
 		)
 		PORT MAP(
-			rst => rst,
-			clk => clk,
-			clken => clken,
-			in_clr => in_clr,
-			in_en => in_en,
-			in_dat => in_val,
+			rst     => rst,
+			clk     => clk,
+			clken   => clken,
+			in_clr  => in_clr,
+			in_en   => in_en,
+			in_dat  => in_val,
 			out_dat => out_val
 		);
 
@@ -116,6 +117,7 @@ BEGIN
 			g_sim_level        => g_sim_level,
 			g_technology       => g_technology,
 			g_variant          => g_variant,
+			g_use_dsp          => g_use_dsp,
 			g_in_a_w           => g_in_a_w,
 			g_in_b_w           => g_in_b_w,
 			g_out_p_w          => g_out_p_w,
@@ -149,12 +151,12 @@ BEGIN
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
-			rst => rst,
-			clk => clk,
-			clken => clken,
-			in_clr => in_clr,
-			in_en => in_en,
-			in_dat => STD_LOGIC_VECTOR(result_re),
+			rst     => rst,
+			clk     => clk,
+			clken   => clken,
+			in_clr  => in_clr,
+			in_en   => in_en,
+			in_dat  => STD_LOGIC_VECTOR(result_re),
 			out_dat => out_pr
 		);
 
@@ -166,12 +168,12 @@ BEGIN
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
-			rst => rst,
-			clk => clk,
-			clken => clken,
-			in_clr => in_clr,
-			in_en => in_en,
-			in_dat => STD_LOGIC_VECTOR(result_im),
+			rst     => rst,
+			clk     => clk,
+			clken   => clken,
+			in_clr  => in_clr,
+			in_en   => in_en,
+			in_dat  => STD_LOGIC_VECTOR(result_im),
 			out_dat => out_pi
 		);
 

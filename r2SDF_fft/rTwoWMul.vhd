@@ -26,6 +26,7 @@ use common_pkg_lib.common_pkg.all;
 entity rTwoWMul is
 	generic(
 		g_technology : NATURAL := 0;
+		g_use_dsp    : STRING  := "YES";
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
 	);
@@ -110,6 +111,7 @@ begin
 			generic map(
 				g_technology       => g_technology,
 				g_variant          => "IP",
+				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => c_in_dat_w,
 				g_in_b_w           => c_weight_w,
 				g_out_p_w          => c_prod_w,

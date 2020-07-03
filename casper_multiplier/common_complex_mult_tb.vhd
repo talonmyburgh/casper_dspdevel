@@ -277,13 +277,15 @@ BEGIN
   BEGIN
     IF rst='0' THEN
       IF rising_edge(clk) THEN
-        -- check(result_re_4dsp  = result_re_expected,"Error: 4DSP RE wrong RTL result. Expected: "&slv_to_str(result_re_expected)&" but got: "&slv_to_str(result_re_4dsp));
-        -- check(result_im_4dsp  = result_im_expected,"Error: 4DSP IM wrong RTL result. Expected: "&slv_to_str(result_im_expected)&" but got: "&slv_to_str(result_im_4dsp));
-        -- check(result_val_4dsp = result_val_expected,"Error: 4DSP VAL wrong RTL result. Expected: "&sl_to_str(result_val_expected)&" but got: "&sl_to_str(result_val_4dsp));
+        check(result_re_4dsp  = result_re_expected,"Error: 4DSP RE wrong RTL result. Expected: "&slv_to_str(result_re_expected)&" but got: "&slv_to_str(result_re_4dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
+        report(int_to_str(to_integer(signed(result_re_4dsp))));
+        check(result_im_4dsp  = result_im_expected,"Error: 4DSP IM wrong RTL result. Expected: "&slv_to_str(result_im_expected)&" but got: "&slv_to_str(result_im_4dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
+        check(result_val_4dsp = result_val_expected,"Error: 4DSP VAL wrong RTL result. Expected: "&sl_to_str(result_val_expected)&" but got: "&sl_to_str(result_val_4dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
 
-       check(result_re_3dsp   = result_re_expected,"Error: 3DSP RE wrong IP result. Expected: "&slv_to_str(result_re_expected)&" but got: "&slv_to_str(result_re_3dsp));
-       check(result_im_3dsp   = result_im_expected , "Error: 3DSP IM wrong IP result. Expected: "&slv_to_str(result_im_expected)&" but got: "&slv_to_str(result_im_3dsp));
-       check(result_val_3dsp  = result_val_expected, "Error: 3DSP VAL wrong IP result. Expected: "&sl_to_str(result_val_expected)&" but got: "&sl_to_str(result_val_3dsp));
+       check(result_re_3dsp   = result_re_expected,"Error: 3DSP RE wrong IP result. Expected: "&slv_to_str(result_re_expected)&" but got: "&slv_to_str(result_re_3dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
+       report(int_to_str(to_integer(signed(result_re_3dsp))));
+       check(result_im_3dsp   = result_im_expected , "Error: 3DSP IM wrong IP result. Expected: "&slv_to_str(result_im_expected)&" but got: "&slv_to_str(result_im_3dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
+       check(result_val_3dsp  = result_val_expected, "Error: 3DSP VAL wrong IP result. Expected: "&sl_to_str(result_val_expected)&" but got: "&sl_to_str(result_val_3dsp)&" ar = "&slv_to_str(in_ar)&" and ai = "&slv_to_str(in_ai)&" br = "&slv_to_str(in_br)&" and bi = "&slv_to_str(in_bi));
 
       END IF;
     END IF;
