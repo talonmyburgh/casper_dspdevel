@@ -68,6 +68,7 @@ entity rTwoSDF is
 		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
 		g_nof_points  : natural        := 1024; --! N point FFT
 		-- generics for rTwoSDFStage
+		g_variant	  : string			:= "4DSP"; --Use 3dsp or 4dsp for multiplication
 		g_use_dsp     : string         := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_pipeline    : t_fft_pipeline := c_fft_pipeline --! Pipeline specification
 	);
@@ -124,6 +125,7 @@ begin
 	gen_fft : for stage in c_nof_stages downto 1 generate
 		u_stage : entity work.rTwoSDFStage
 			generic map(
+				g_variant => g_variant,
 				g_nof_chan       => g_nof_chan,
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,

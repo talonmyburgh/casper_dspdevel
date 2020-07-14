@@ -27,6 +27,7 @@ entity rTwoWMul is
 	generic(
 		g_technology : NATURAL := 0;
 		g_use_dsp    : STRING  := "YES";
+		g_variant    : STRING  := "4DSP";
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
 	);
@@ -110,18 +111,19 @@ begin
 		u_CmplxMul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
 				g_technology       => g_technology,
-				g_variant          => "IP",
+				g_variant          => g_variant,
 				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => c_in_dat_w,
 				g_in_b_w           => c_weight_w,
 				g_out_p_w          => c_prod_w,
-				g_conjugate_b      => false,
+				g_conjugate_b      => False,
 				g_pipeline_input   => c_mult_input_lat,
 				g_pipeline_product => c_mult_product_lat,
 				g_pipeline_adder   => c_mult_adder_lat,
 				g_pipeline_output  => c_mult_output_lat
 			)
 			port map(
+				clken   => '1',
 				rst     => rst,
 				clk     => clk,
 				in_ar   => in_re,
@@ -138,8 +140,9 @@ begin
 	gen_ip : if g_stage > 1 and c_in_dat_w <= c_dsp_mult_w and c_lat >= c_dsp_mult_lat generate
 		u_cmplx_mul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
+				g_use_dsp          => g_use_dsp,
 				g_technology       => g_technology,
-				g_variant          => "IP",
+				g_variant          => g_variant,
 				g_in_a_w           => in_re'length,
 				g_in_b_w           => weight_re'length,
 				g_out_p_w          => product_re'length,
@@ -150,6 +153,7 @@ begin
 				g_pipeline_output  => c_mult_output_lat
 			)
 			port map(
+				clken   => '1',
 				rst     => rst,
 				clk     => clk,
 				in_ar   => in_re,

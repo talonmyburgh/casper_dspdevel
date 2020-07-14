@@ -43,7 +43,7 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_paged_ram_crw_crw IS
   GENERIC (
-    g_technology     : NATURAL := 4;
+    g_technology     : NATURAL := 0;
     g_str            : STRING := "use_adr";
     g_data_w         : NATURAL;
     g_nof_pages      : NATURAL := 2;  -- >= 2
@@ -233,24 +233,24 @@ BEGIN
         g_true_dual_port => g_true_dual_port
       )
       PORT MAP (
-        rst_a => rst_a,
-        rst_b => rst_b,
-        clk_a => clk_a,
-        clk_b => clk_b,
-        clken_a => clken_a,
-        clken_b => clken_b,
-        wr_en_a => page_wr_en_a(I),
-        wr_en_b => page_wr_en_b(I),
-        wr_dat_a => wr_dat_a,
-        wr_dat_b => wr_dat_b,
-        adr_a => adr_a,
-        adr_b => adr_b,
-        rd_en_a => page_rd_en_a(I),
-        rd_en_b => page_rd_en_b(I),
-        rd_dat_a => page_rd_dat_a(I),
-        rd_dat_b => page_rd_dat_b(I),
-        rd_val_a => page_rd_val_a(I),
-        rd_val_b => page_rd_val_b(I)
+        rst_a     => rst_a,
+        rst_b     => rst_b,
+        clk_a     => clk_a,
+        clk_b     => clk_b,
+        clken_a   => clken_a,
+        clken_b   => clken_b,
+        adr_a     => adr_a,
+        wr_en_a   => page_wr_en_a(I),
+        wr_dat_a  => wr_dat_a,
+        rd_en_a   => page_rd_en_a(I),
+        rd_dat_a  => page_rd_dat_a(I),
+        rd_val_a  => page_rd_val_a(I),
+        adr_b     => adr_b,
+        wr_en_b   => page_wr_en_b(I),
+        wr_dat_b  => wr_dat_b,
+        rd_en_b   => page_rd_en_b(I),
+        rd_dat_b  => page_rd_dat_b(I),
+        rd_val_b  => page_rd_val_b(I)
       );
     END GENERATE;
     
@@ -284,24 +284,24 @@ BEGIN
       g_true_dual_port => g_true_dual_port
     )
     PORT MAP (
-      rst_a => rst_a,
-      rst_b => rst_b,
-      clk_a => clk_a,
-      clk_b => clk_b,
-      clken_a => clken_a,
-      clken_b => clken_b,
-      wr_en_a => wr_en_a,
-      wr_en_b => wr_en_b,
-      wr_dat_a => wr_dat_a,
-      wr_dat_b => wr_dat_b,
-      adr_a => mem_adr_a,
-      adr_b => mem_adr_b,
-      rd_en_a => rd_en_a,
-      rd_en_b => rd_en_b,
-      rd_dat_a => rd_dat_a,
-      rd_dat_b => rd_dat_b,
-      rd_val_a => rd_val_a,
-      rd_val_b => rd_val_b
+      rst_a     => rst_a,
+      rst_b     => rst_b,
+      clk_a     => clk_a,
+      clk_b     => clk_b,
+      clken_a   => clken_a,
+      clken_b   => clken_b,
+      adr_a     => mem_adr_a,
+      wr_en_a   => wr_en_a,
+      wr_dat_a  => wr_dat_a,
+      rd_en_a   => rd_en_a,
+      rd_dat_a  => rd_dat_a,
+      rd_val_a  => rd_val_a,
+      adr_b     => mem_adr_b,
+      wr_en_b   => wr_en_b,
+      wr_dat_b  => wr_dat_b,
+      rd_en_b   => rd_en_b,
+      rd_dat_b  => rd_dat_b,
+      rd_val_b  => rd_val_b
     );
     
     mem_adr_a <= TO_UVEC(page_sel_a, c_mem_nof_pages_w) & adr_a;
@@ -318,24 +318,24 @@ BEGIN
       g_true_dual_port => g_true_dual_port
     )
     PORT MAP (
-      rst_a => rst_a,
-      rst_b => rst_b,
-      clk_a => clk_a,
-      clk_b => clk_b,
-      clken_a => clken_a,
-      clken_b => clken_b,
-      wr_en_a => wr_en_a,
-      wr_en_b => wr_en_b,
-      wr_dat_a => wr_dat_a,
-      wr_dat_b => wr_dat_b,
-      adr_a => buf_adr_a,
-      adr_b => buf_adr_b,
-      rd_en_a => rd_en_a,
-      rd_en_b => rd_en_b,
-      rd_dat_a => rd_dat_a,
-      rd_dat_b => rd_dat_b,
-      rd_val_a => rd_val_a,
-      rd_val_b => rd_val_b
+      rst_a     => rst_a,
+      rst_b     => rst_b,
+      clk_a     => clk_a,
+      clk_b     => clk_b,
+      clken_a   => clken_a,
+      clken_b   => clken_b,
+      adr_a     => buf_adr_a,
+      wr_en_a   => wr_en_a,
+      wr_dat_a  => wr_dat_a,
+      rd_en_a   => rd_en_a,
+      rd_dat_a  => rd_dat_a,
+      rd_val_a  => rd_val_a,
+      adr_b     => buf_adr_b,
+      wr_en_b   => wr_en_b,
+      wr_dat_b  => wr_dat_b,
+      rd_en_b   => rd_en_b,
+      rd_dat_b  => rd_dat_b,
+      rd_val_b  => rd_val_b
     );
     
     buf_adr_a <= INCR_UVEC(RESIZE_UVEC(adr_a, c_buf_addr_w), page_ofs_a);
