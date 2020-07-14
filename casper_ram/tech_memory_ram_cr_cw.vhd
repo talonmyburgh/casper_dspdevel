@@ -32,7 +32,7 @@ USE work.tech_memory_component_pkg.ALL;
 
 ENTITY tech_memory_ram_cr_cw IS
   GENERIC (
-    g_technology : NATURAL := 4; --c_tech_select_default;
+    g_technology : NATURAL := 0; --c_tech_select_default;
     g_adr_w      : NATURAL := 5;
     g_dat_w      : NATURAL := 8;
     g_nof_words  : NATURAL := 2**5;
@@ -56,46 +56,11 @@ END tech_memory_ram_cr_cw;
 ARCHITECTURE str OF tech_memory_ram_cr_cw IS
 BEGIN
 
---  gen_ip_stratixiv : IF g_technology=0 GENERATE
---    u0 : ip_stratixiv_ram_cr_cw
---    GENERIC MAP (
---    	g_adr_w => g_adr_w,
---    	g_dat_w => g_dat_w,
---    	g_nof_words => g_nof_words,
---    	g_rd_latency => g_rd_latency,
---    	g_init_file => g_init_file
---    )
---    PORT MAP (
---    	data => data,
---    	rdaddress => rdaddress,
---    	rdclock => rdclock,
---    	rdclocken => rdclocken,
---    	wraddress => wraddress,
---    	wrclock => wrclock,
---    	wrclocken => wrclocken,
---    	wren => wren,
---    	q => q
---    );
---END GENERATE;
--- Generate XILINX SDP RAM block where port A is read port and port B is write port
-	gen_ip_xilinx_sdp : IF g_technology = 4 generate
-		u2 : ip_sdp_ram_infer
-			generic map(
-				addressWidth => g_adr_w,
-				dataWidth    => g_dat_w
-			)
-			port map(
-				clkA  => wrclock,
-				clkB  => rdclock,
-				enA   => wrclocken,
-				enB   => rdclocken,
-				weA   => wren,
-				addrA => wraddress,
-				addrB => rdaddress,
-				diA   => data,
-				doB   => q
-			);
-	END GENERATE;
+  gen_ip_stratixiv : IF g_technology=0 GENERATE
+    u0 : ip_stratixiv_ram_cr_cw
+    GENERIC MAP (g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
+    PORT MAP (data, rdaddress, rdclock, rdclocken, wraddress, wrclock, wrclocken, wren, q);
+  END GENERATE;
    
 --  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
 --    u0 : ip_arria10_ram_cr_cw

@@ -4,4 +4,6 @@
 # Compiled source #
 .library_mapping.xml
 .project
+./casper_ram/altera_*.vhd
+./casper_ram/BRAM_*Macro.vhd
 
