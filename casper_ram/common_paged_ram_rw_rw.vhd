@@ -34,14 +34,16 @@ USE common_pkg_lib.common_pkg.ALL;
 ENTITY common_paged_ram_rw_rw IS
   GENERIC (
     g_technology      : NATURAL := 0;
-    g_str             : STRING := "use_adr";
-    g_data_w          : NATURAL;
+    g_str             : STRING := "use_ofs";
+    g_data_w          : NATURAL :=17;
     g_nof_pages       : NATURAL := 2;  -- >= 2
-    g_page_sz         : NATURAL;
+    g_page_sz         : NATURAL := 1024;
     g_start_page_a    : NATURAL := 0;
     g_start_page_b    : NATURAL := 0;
     g_rd_latency      : NATURAL := 1;
-    g_true_dual_port  : BOOLEAN := TRUE
+    g_true_dual_port  : BOOLEAN := FALSE;
+    g_bram_size       : STRING := "36Kb";
+    g_device          : STRING := "7SERIES"
   );
   PORT (
     rst         : IN  STD_LOGIC;
@@ -79,7 +81,9 @@ BEGIN
     g_start_page_a   => g_start_page_a,
     g_start_page_b   => g_start_page_b,
     g_rd_latency     => g_rd_latency,
-    g_true_dual_port => g_true_dual_port
+    g_true_dual_port => g_true_dual_port,
+    g_bram_size      => g_bram_size,
+    g_device         => g_device
   )
   PORT MAP (
     rst_a       => rst,

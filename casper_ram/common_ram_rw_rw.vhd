@@ -28,7 +28,9 @@ ENTITY common_ram_rw_rw IS
     g_technology : NATURAL := 0;
     g_ram        : t_c_mem := c_mem_ram;
     g_init_file  : STRING := "UNUSED";
-    g_true_dual_port : BOOLEAN := TRUE
+    g_true_dual_port : BOOLEAN := TRUE;
+    g_device        : STRING := "7SERIES";
+    g_bram_size     : STRING := "18Kb"
   );
   PORT (
     rst       : IN  STD_LOGIC := '0';
@@ -61,7 +63,9 @@ BEGIN
     g_technology => g_technology,
     g_ram        => g_ram,
     g_init_file  => g_init_file,
-    g_true_dual_port => g_true_dual_port
+    g_true_dual_port => g_true_dual_port,
+    g_device    => g_device,
+    g_bram_size => g_bram_size
   )
   PORT MAP (
     rst_a     => rst,

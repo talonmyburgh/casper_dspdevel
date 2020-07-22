@@ -22,14 +22,15 @@ LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.common_ram_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
 
 ENTITY common_ram_crw_crw IS
   GENERIC (
-    g_technology     : NATURAL := 0;
+    g_technology     : NATURAL := 0; --0 for Xilinx, 1 for Alterra
     g_ram            : t_c_mem := c_mem_ram;
     g_init_file      : STRING  := "UNUSED";
-    g_true_dual_port : BOOLEAN := TRUE
+    g_true_dual_port : BOOLEAN := TRUE;
+    g_bram_size     : STRING := "18Kb";
+    g_device        : STRING := "7SERIES"
   );
   PORT (
     rst_a     : IN  STD_LOGIC := '0';
@@ -83,8 +84,10 @@ BEGIN
       g_adr_w      => g_ram.adr_w,
       g_dat_w      => g_ram.dat_w,
       g_nof_words  => g_ram.nof_dat,
+      g_bram_size => g_bram_size,
       g_rd_latency => c_rd_latency,
-      g_init_file  => g_init_file
+      g_init_file  => g_init_file,
+      g_device      => g_device
     )
     PORT MAP (
       clock_a     => clk_a,
@@ -109,8 +112,9 @@ BEGIN
       g_adr_w      => g_ram.adr_w,
       g_dat_w      => g_ram.dat_w,
       g_nof_words  => g_ram.nof_dat,
-      g_rd_latency => c_rd_latency,
-      g_init_file  => g_init_file
+	  g_bram_size => g_bram_size,
+      g_init_file  => g_init_file,
+      g_device     => g_device
     )
     PORT MAP
     (

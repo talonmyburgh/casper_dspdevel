@@ -20,6 +20,7 @@
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.all;
+USE work.tech_memory_component_pkg.ALL;
 --USE technology_lib.technology_pkg.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
 
@@ -32,14 +33,16 @@ USE ieee.std_logic_1164.all;
 ENTITY tech_memory_ram_crwk_crw IS  -- support different port data widths and corresponding address ranges
   GENERIC (
     g_technology  : NATURAL := 0; --c_tech_select_default;
-    g_adr_a_w     : NATURAL := 5;
-    g_dat_a_w     : NATURAL := 32;
-    g_adr_b_w     : NATURAL := 7;
-    g_dat_b_w     : NATURAL := 8;
+    g_adr_a_w     : NATURAL := 11;
+    g_dat_a_w     : NATURAL := 18;
+    g_adr_b_w     : NATURAL := 11;
+    g_dat_b_w     : NATURAL := 14;
     g_nof_words_a : NATURAL := 2**5;
     g_nof_words_b : NATURAL := 2**7;
+    g_bram_size : STRING := "36Kb";
     g_rd_latency  : NATURAL := 2;     -- choose 1 or 2
-    g_init_file   : STRING  := "UNUSED"
+    g_init_file   : STRING  := "UNUSED";
+    g_device		: STRING := "7SERIES"
   );
   PORT
   (
@@ -64,14 +67,42 @@ END tech_memory_ram_crwk_crw;
 ARCHITECTURE str OF tech_memory_ram_crwk_crw IS
 BEGIN
 
-  gen_ip_stratixiv : IF g_technology=0 GENERATE
-    u0 : ip_stratixiv_ram_crwk_crw
-    GENERIC MAP (g_adr_a_w, g_dat_a_w, g_adr_b_w, g_dat_b_w, g_nof_words_a, g_nof_words_b, g_rd_latency, g_init_file)
-    PORT MAP (address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
+  gen_ip_xilinx : IF g_technology=0 GENERATE
+    u0 : ip_xilinx_ram_crwk_crw
+    	generic map(
+    		g_adr_a_w    => g_adr_a_w,
+    		g_dat_a_w    => g_dat_a_w,
+    		g_adr_b_w    => g_adr_b_w,
+    		g_dat_b_w    => g_dat_b_w,
+    		g_bram_size  => g_bram_size,
+    		g_rd_latency => g_rd_latency,
+    		g_init_file  => g_init_file,
+    		g_device     => g_device
+    	)
+    	port map(
+    		address_a => address_a,
+    		address_b => address_b,
+    		clock_a   => clock_a,
+    		clock_b   => clock_b,
+    		data_a    => data_a,
+    		data_b    => data_b,
+    		enable_a  => enable_a,
+    		enable_b  => enable_b,
+    		rden_a    => rden_a,
+    		rden_b    => rden_b,
+    		wren_a    => wren_a,
+    		wren_b    => wren_b,
+    		q_a       => q_a,
+    		q_b       => q_b
+    	);
 END GENERATE;
 
-gen_ip_sevenseries : IF g_technology = 1 GENERATE
-	u1: 
+--  gen_ip_stratixiv : IF g_technology=0 GENERATE
+--    u0 : ip_stratixiv_ram_crwk_crw
+--    GENERIC MAP (g_adr_a_w, g_dat_a_w, g_adr_b_w, g_dat_b_w, g_nof_words_a, g_nof_words_b, g_rd_latency, g_init_file)
+--    PORT MAP (address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
+--END GENERATE;
+
    
 --  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
 --    u0 : ip_arria10_ram_crwk_crw

@@ -35,12 +35,14 @@ ENTITY common_paged_ram_r_w IS
   GENERIC (
     g_technology      : NATURAL := 0;
     g_str             : STRING := "use_adr";
-    g_data_w          : NATURAL;
+    g_data_w          : NATURAL := 60;
     g_nof_pages       : NATURAL := 2;  -- >= 2
-    g_page_sz         : NATURAL;
+    g_page_sz         : NATURAL := 256;
     g_wr_start_page   : NATURAL := 0;
     g_rd_start_page   : NATURAL := 0;
-    g_rd_latency      : NATURAL := 1
+    g_rd_latency      : NATURAL := 1;
+    g_bram_size       : STRING := "36Kb";
+    g_device           : STRING := "7SERIES"
   );
   PORT (
     rst          : IN  STD_LOGIC;
@@ -73,7 +75,9 @@ BEGIN
     g_start_page_a   => g_wr_start_page,
     g_start_page_b   => g_rd_start_page,
     g_rd_latency     => g_rd_latency,
-    g_true_dual_port => FALSE
+    g_true_dual_port => FALSE,
+    g_bram_size      => g_bram_size,
+    g_device         => g_device
   )
   PORT MAP (
     rst         => rst,
