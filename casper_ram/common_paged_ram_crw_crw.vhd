@@ -44,13 +44,15 @@ USE work.common_ram_pkg.ALL;
 ENTITY common_paged_ram_crw_crw IS
   GENERIC (
     g_technology     : NATURAL := 0;
-    g_str            : STRING := "use_adr";
-    g_data_w         : NATURAL;
-    g_nof_pages      : NATURAL := 2;  -- >= 2
-    g_page_sz        : NATURAL;
+    g_str            : STRING := "use_ofs";
+    g_data_w         : NATURAL := 12;
+    g_nof_pages      : NATURAL := 3;  -- >= 2
+    g_page_sz        : NATURAL := 256;
     g_start_page_a   : NATURAL := 0;
     g_start_page_b   : NATURAL := 0;
-    g_rd_latency     : NATURAL := 1;
+    g_bram_size		: STRING := "18Kb";
+    g_device        : STRING := "7SERIES";
+    g_rd_latency     : NATURAL := 2;
     g_true_dual_port : BOOLEAN := TRUE
   );
   PORT (
@@ -82,9 +84,9 @@ ARCHITECTURE rtl OF common_paged_ram_crw_crw IS
 
   TYPE t_page_sel_arr IS ARRAY (INTEGER RANGE <>) OF NATURAL RANGE 0 TO g_nof_pages-1;
   
-  CONSTANT c_page_addr_w      : NATURAL := ceil_log2(g_page_sz);
+  CONSTANT c_page_addr_w      : NATURAL := ceil_log2(g_page_sz); --10
   
-  -- g_str = "use_mux" :
+  -- g_str = "use_mux" : per page ram 
   CONSTANT c_page_ram         : t_c_mem := (latency  => g_rd_latency,
                                             adr_w    => c_page_addr_w,
                                             dat_w    => g_data_w,
@@ -230,7 +232,9 @@ BEGIN
         g_technology     => g_technology,
         g_ram            => c_page_ram,
         g_init_file      => "UNUSED",
-        g_true_dual_port => g_true_dual_port
+        g_true_dual_port => g_true_dual_port,
+        g_bram_size      => g_bram_size,
+        g_device         => g_device
       )
       PORT MAP (
         rst_a     => rst_a,
@@ -281,7 +285,9 @@ BEGIN
       g_technology     => g_technology,
       g_ram            => c_mem_ram,
       g_init_file      => "UNUSED",
-      g_true_dual_port => g_true_dual_port
+      g_true_dual_port => g_true_dual_port,
+      g_bram_size      => g_bram_size,
+      g_device          => g_device
     )
     PORT MAP (
       rst_a     => rst_a,
@@ -315,7 +321,9 @@ BEGIN
       g_technology     => g_technology,
       g_ram            => c_buf_ram,
       g_init_file      => "UNUSED",
-      g_true_dual_port => g_true_dual_port
+      g_true_dual_port => g_true_dual_port,
+      g_bram_size      => g_bram_size,
+      g_device          => g_device
     )
     PORT MAP (
       rst_a     => rst_a,

@@ -35,7 +35,8 @@
 
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
-USE work.altera_mf.all;
+LIBRARY altera_mf;
+USE altera_mf.all;
 USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY ip_stratixiv_ram_crwk_crw IS  -- support different port data widths and corresponding address ranges
