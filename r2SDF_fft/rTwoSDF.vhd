@@ -66,11 +66,14 @@ entity rTwoSDF is
 		g_out_dat_w   : natural        := 14; --! Number of output bits
 		g_stage_dat_w : natural        := 18; --! Number of bits used between the stages
 		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
-		g_nof_points  : natural        := 1024; --! N point FFT
+		g_nof_points  : natural        := 512; --! N point FFT
 		-- generics for rTwoSDFStage
-		g_variant	  : string			:= "4DSP"; --Use 3dsp or 4dsp for multiplication
+		g_variant     : string         := "3DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp     : string         := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
-		g_pipeline    : t_fft_pipeline := c_fft_pipeline --! Pipeline specification
+		g_pipeline    : t_fft_pipeline := c_fft_pipeline; --! Pipeline specification
+		--generics for rTwoOrder
+		g_technology  : natural        := 0; --! 0 for Xilinx products, 1 for Alterra 
+		g_device      : string         := "7SERIES" --! Specify product series, 7SERIES is for the 7th gen xilinx family
 	);
 	port(
 		clk     : in  std_logic;        --! Clock input
@@ -125,7 +128,7 @@ begin
 	gen_fft : for stage in c_nof_stages downto 1 generate
 		u_stage : entity work.rTwoSDFStage
 			generic map(
-				g_variant => g_variant,
+				g_variant        => g_variant,
 				g_nof_chan       => g_nof_chan,
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,
@@ -164,8 +167,11 @@ begin
 
 		u_cplx : entity work.rTwoOrder
 			generic map(
+				g_device     => g_device,
+				g_technology => g_technology,
 				g_nof_points => g_nof_points,
-				g_nof_chan   => g_nof_chan
+				g_nof_chan   => g_nof_chan,
+				g_dat_w      => 2 * g_stage_dat_w
 			)
 			port map(
 				clk     => clk,

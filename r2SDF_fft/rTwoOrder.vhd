@@ -51,17 +51,20 @@ use casper_ram_lib.common_ram_pkg.all;
 
 entity rTwoOrder is
 	generic(
-		g_nof_points : natural := 8; --! Number of FFT points
+		g_device     : string  := "7SERIES"; --! Specify product series, 7SERIES is default
+		g_technology : natural := 0;    --! 0 for Xilinx products, 1 for Alterra 
+		g_nof_points : natural := 1024; --! Number of FFT points
 		g_bit_flip   : boolean := true; --! Flip bits
-		g_nof_chan   : natural := 0 --! Number of FFT channels
+		g_nof_chan   : natural := 0;    --! Number of FFT channels
+		g_dat_w      : natural := 36    --! Data width
 	);
 	port(
-		clk     : in  std_logic; --! Input clock source
-		rst     : in  std_logic; --! Reset signal
-		in_dat  : in  std_logic_vector; --! Input data signal
-		in_val  : in  std_logic; --! In val (for delay)
-		out_dat : out std_logic_vector; --! Output data
-		out_val : out std_logic --! Out value valid
+		clk     : in  std_logic;        --! Input clock source
+		rst     : in  std_logic;        --! Reset signal
+		in_dat  : in  std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Input data signal
+		in_val  : in  std_logic;        --! In val (for delay)
+		out_dat : out std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Output data
+		out_val : out std_logic         --! Out value valid
 	);
 end entity rTwoOrder;
 
@@ -163,29 +166,66 @@ begin
 			cnt_en => in_val,
 			count  => adr_chan_cnt
 		);
+	g36 : if ((c_dat_w <= 72) and (37 <= c_dat_w) and (c_adr_tot_w = 9)) or ((c_dat_w <= 36) and (19 <= c_dat_w) and (c_adr_tot_w = 10)) or ((c_dat_w <= 18) and (10 <= c_dat_w) and (c_adr_tot_w = 11)) or ((c_dat_w <= 9) and (5 <= c_dat_w) and (c_adr_tot_w = 12)) or (((c_dat_w = 3) or (c_dat_w = 4)) and (c_adr_tot_w = 13)) or (c_dat_w = 2 and c_adr_tot_w = 14) or (c_dat_w = 1 and c_adr_tot_w = 15) generate
+	begin
+		u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
+			GENERIC MAP(
+				g_technology    => 0,
+				g_str           => "use_mux",
+				g_data_w        => c_dat_w,
+				g_nof_pages     => 2,
+				g_page_sz       => c_page_size,
+				g_wr_start_page => 0,
+				g_rd_start_page => 1,
+				g_rd_latency    => 1,
+				g_bram_size     => "36Kb",
+				g_device        => g_device
+			)
+			PORT MAP(
+				rst          => rst,
+				clk          => clk,
+				clken        => '1',
+				wr_next_page => next_page,
+				wr_adr       => wr_adr,
+				wr_en        => wr_en,
+				wr_dat       => wr_dat,
+				rd_next_page => next_page,
+				rd_adr       => rd_adr,
+				rd_en        => rd_en,
+				rd_dat       => rd_dat,
+				rd_val       => rd_val
+			);
+	end generate;
 
-	u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
-		GENERIC MAP(
-			g_str           => "use_adr",
-			g_data_w        => c_dat_w,
-			g_nof_pages     => 2,
-			g_page_sz       => c_page_size,
-			g_wr_start_page => 0,
-			g_rd_start_page => 1,
-			g_rd_latency    => 1
-		)
-		PORT MAP(
-			rst          => rst,
-			clk          => clk,
-			wr_next_page => next_page,
-			wr_adr       => wr_adr,
-			wr_en        => wr_en,
-			wr_dat       => wr_dat,
-			rd_next_page => next_page,
-			rd_adr       => rd_adr,
-			rd_en        => rd_en,
-			rd_dat       => rd_dat,
-			rd_val       => rd_val
-		);
+	g18 : if ((c_dat_w <= 36) and (19 <= c_dat_w) and (c_adr_tot_w = 9)) or ((c_dat_w <= 18) and (10 <= c_dat_w) and (c_adr_tot_w = 10)) or ((c_dat_w <= 9) and (5 <= c_dat_w) and (c_adr_tot_w = 11)) or (((c_dat_w = 3) or (c_dat_w = 4)) and (c_adr_tot_w = 12)) or (c_dat_w = 2 and c_adr_tot_w = 13) or (c_dat_w = 1 and c_adr_tot_w = 14) generate
+	begin
+		u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
+			GENERIC MAP(
+				g_technology    => 0,
+				g_str           => "use_mux",
+				g_data_w        => c_dat_w,
+				g_nof_pages     => 2,
+				g_page_sz       => c_page_size,
+				g_wr_start_page => 0,
+				g_rd_start_page => 1,
+				g_rd_latency    => 1,
+				g_bram_size     => "18Kb",
+				g_device        => g_device
+			)
+			PORT MAP(
+				rst          => rst,
+				clk          => clk,
+				clken        => '1',
+				wr_next_page => next_page,
+				wr_adr       => wr_adr,
+				wr_en        => wr_en,
+				wr_dat       => wr_dat,
+				rd_next_page => next_page,
+				rd_adr       => rd_adr,
+				rd_en        => rd_en,
+				rd_dat       => rd_dat,
+				rd_val       => rd_val
+			);
+	end generate;
 
 end rtl;

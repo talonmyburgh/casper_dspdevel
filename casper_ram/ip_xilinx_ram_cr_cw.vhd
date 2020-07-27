@@ -3,6 +3,8 @@ USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
 LIBRARY UNIMACRO;
 USE UNIMACRO.VComponents.all;
+LIBRARY UNISIM;
+USE UNISIM.VComponents.all;
 
 ENTITY ip_xilinx_ram_cr_cw IS
   GENERIC (
@@ -47,7 +49,7 @@ architecture syn of ip_xilinx_ram_cr_cw is
 	
 	SIGNAL c_outdata_reg_b : STD_LOGIC := sel_a_b(g_rd_latency-1=0, '0', '1');
 	
-	CONSTANT initfile : STRING := sel_a_b(g_init_file="UNUSED", "None", g_init_file);
+	CONSTANT initfile : STRING := sel_a_b(g_init_file="UNUSED", "NONE", g_init_file);
   
   	SIGNAL sub_wire0  : STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
   	
