@@ -1,9 +1,10 @@
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
-
 LIBRARY UNIMACRO;
 USE UNIMACRO.VComponents.ALL;
+LIBRARY UNISIM;
+USE UNISIM.VComponents.all;
 
 
 ENTITY ip_xilinx_ram_crwk_crw IS        -- support different port data widths and corresponding address ranges
@@ -88,7 +89,7 @@ architecture syn of ip_xilinx_ram_crwk_crw is
 	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(g_dat_a_w - 1 DOWNTO 0);
 	SIGNAL sub_wire1 : STD_LOGIC_VECTOR(g_dat_b_w - 1 DOWNTO 0);
 
-	CONSTANT initfile : STRING := sel_a_b(g_init_file = "UNUSED", "None", g_init_file);
+	CONSTANT initfile : STRING := sel_a_b(g_init_file = "UNUSED", "NONE", g_init_file);
 	
 	CONSTANT welength : INTEGER:= we_length_calc(g_dat_a_w, g_dat_b_w);
 	                   

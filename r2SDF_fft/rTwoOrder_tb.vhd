@@ -97,8 +97,11 @@ BEGIN
 	-- device under test
 	u_dut : ENTITY work.rTwoOrder
 		GENERIC MAP(
+			g_device	=> "7SERIES",
+			g_technology => 0,
 			g_nof_points => c_nof_points,
-			g_bit_flip   => false
+			g_bit_flip   => false,
+			g_nof_chan   => 7
 		)
 		port map(
 			clk     => clk,
