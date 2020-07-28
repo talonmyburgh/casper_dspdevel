@@ -70,7 +70,14 @@ entity rTwoSDF is
 		-- generics for rTwoSDFStage
 		g_variant     : string         := "3DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp     : string         := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
-		g_pipeline    : t_fft_pipeline := c_fft_pipeline; --! Pipeline specification
+		-- pipeline generics
+		g_stage_lat  :  natural        := 1; --! stage latencies
+		g_weight_lat : natural         := 1;
+		g_mult_lat    :natural            := 4;
+		g_bf_lat      : natural       := 1;
+		g_bf_use_zdly : natural       := 1;
+		g_bf_in_a_zdly : natural      := 0;
+		g_bf_out_d_zdly : natural     := 0;
 		--generics for rTwoOrder
 		g_technology  : natural        := 0; --! 0 for Xilinx products, 1 for Alterra 
 		g_device      : string         := "7SERIES" --! Specify product series, 7SERIES is for the 7th gen xilinx family
@@ -113,9 +120,10 @@ architecture str of rTwoSDF is
 	signal raw_out_re   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_im   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_val  : std_logic;
+	constant pipeline :    t_fft_pipeline :=   (g_stage_lat,g_weight_lat,g_mult_lat,g_bf_lat,g_bf_use_zdly,g_bf_in_a_zdly,g_bf_out_d_zdly);
 
 begin
-
+    
 	-- Inputs
 	data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_stage_dat_w);
 	data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_stage_dat_w);
@@ -135,7 +143,7 @@ begin
 				g_twiddle_offset => c_twiddle_offset,
 				g_scale_enable   => sel_a_b(stage <= g_guard_w, FALSE, TRUE), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
 				g_use_dsp        => g_use_dsp,
-				g_pipeline       => g_pipeline
+				g_pipeline       => pipeline
 			)
 			port map(
 				clk     => clk,
