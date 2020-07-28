@@ -95,6 +95,10 @@ function rTwoSDF_config(this_block)
   this_block.addGeneric('g_guard_w','natural','2');
   this_block.addGeneric('g_nof_points','natural','1024');
   this_block.addGeneric('g_pipeline','t_fft_pipeline','c_fft_pipeline');
+  this_block.addGeneric('g_technology','natural','0');
+  this_block.addGeneric('g_device','string','7SERIES');
+  this_block.addGeneric('g_variant','string','4DSP');
+  this_block.addGeneric('g_use_dsp','string','yes');
 
   % Add addtional source files as needed.
   %  |-------------
