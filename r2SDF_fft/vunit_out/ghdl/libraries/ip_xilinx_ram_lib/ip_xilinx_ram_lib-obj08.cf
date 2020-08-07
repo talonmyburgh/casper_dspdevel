@@ -1,7 +1,0 @@
-v 4
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_sdp_ram_infer.vhd" "e29c5d90d208a9eb58c1ee65a034aa533a619826" "20200604203705.211":
-  entity ip_sdp_ram_infer at 5( 70) + 0 on 13;
-  architecture behavioral of ip_sdp_ram_infer at 66( 1579) + 0 on 14;
-file / "/home/talon/Documents/CASPERWORK/casper_dspdevel/ip_xilinx_ram/ip_tdp_ram_infer.vhd" "c60692cbe7ca5b8203db781758f915477e773dce" "20200604203705.147":
-  entity ip_tdp_ram_infer at 5( 70) + 0 on 11;
-  architecture rtl of ip_tdp_ram_infer at 62( 1575) + 0 on 12;

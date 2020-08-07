@@ -28,6 +28,49 @@ USE common_pkg_lib.common_pkg.ALL;
 PACKAGE tech_fifo_component_pkg IS
 
   -----------------------------------------------------------------------------
+  -- ip_xilinx
+  -----------------------------------------------------------------------------
+	COMPONENT ip_xilinx_fifo_sc IS
+	generic(
+		g_device    : string  := "7SERIES";
+		g_dat_w     : natural := 18;
+		g_nof_words : natural := 1024
+	);
+	port(
+		clock   : in  std_logic;
+		aclr    : in  std_logic;
+		data    : in  std_logic_vector;
+		rdreq   : in  std_logic;
+		wrreq   : in  std_logic;
+		q       : out std_logic_vector;
+		empty : out std_logic;
+		usedw : out std_logic_vector;
+		full  : out std_logic
+	);
+END COMPONENT;
+
+COMPONENT ip_xilinx_fifo_dc is 
+	generic(
+		g_device    : string  := "7SERIES";
+		g_dat_w     : natural := 18;
+		g_nof_words : natural := 1024
+	);
+	port(
+		rdclk   : in  std_logic;
+		wrclk   : in  std_logic;
+		aclr    : in  std_logic;
+		data    : in  std_logic_vector;
+		rdreq   : in  std_logic;
+		wrreq   : in  std_logic;
+		q       : out std_logic_vector;
+		rdempty : out std_logic;
+		rdusedw : out std_logic_vector;
+		wrfull  : out std_logic;
+		wrusedw : out std_logic_vector
+	);
+	END COMPONENT;
+
+  -----------------------------------------------------------------------------
   -- ip_stratixiv
   -----------------------------------------------------------------------------
   

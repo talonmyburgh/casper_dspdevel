@@ -1,10 +1,10 @@
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
-LIBRARY UNIMACRO;
-USE UNIMACRO.VComponents.ALL;
-LIBRARY UNISIM;
-USE UNISIM.VComponents.all;
+-- LIBRARY UNIMACRO;
+-- USE UNIMACRO.VComponents.ALL;
+-- LIBRARY UNISIM;
+-- USE UNISIM.VComponents.all;
 
 
 ENTITY ip_xilinx_ram_crwk_crw IS        -- support different port data widths and corresponding address ranges

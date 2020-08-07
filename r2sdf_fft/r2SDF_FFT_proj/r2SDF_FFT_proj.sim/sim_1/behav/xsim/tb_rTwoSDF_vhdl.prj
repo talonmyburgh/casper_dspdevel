@@ -1,0 +1,67 @@
+# compile vhdl design source files
+vhdl common_components_lib  \
+"../../../../../../common_components/common_bit_delay.vhd" \
+
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_pkg.vhd" \
+
+vhdl common_components_lib  \
+"../../../../../../common_components/common_pipeline.vhd" \
+"../../../../../../common_components/common_pipeline_sl.vhd" \
+
+vhdl casper_multiplier_lib  \
+"../../../../../../casper_multiplier/tech_mult_component.vhd" \
+"../../../../../../casper_multiplier/tech_complex_mult.vhd" \
+"../../../../../../casper_multiplier/common_complex_mult.vhd" \
+
+vhdl casper_counter_lib  \
+"../../../../../../casper_counter/common_counter.vhd" \
+
+vhdl common_components_lib  \
+"../../../../../../common_components/common_delay.vhd" \
+
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_lfsr_sequences_pkg.vhd" \
+
+vhdl casper_ram_lib  \
+"../../../../../../casper_ram/common_ram_pkg.vhd" \
+"../../../../../../casper_ram/tech_memory_component_pkg.vhd" \
+"../../../../../../casper_ram/tech_memory_ram_crw_crw.vhd" \
+"../../../../../../casper_ram/tech_memory_ram_cr_cw.vhd" \
+"../../../../../../casper_ram/common_ram_crw_crw.vhd" \
+"../../../../../../casper_ram/common_paged_ram_crw_crw.vhd" \
+"../../../../../../casper_ram/common_paged_ram_rw_rw.vhd" \
+"../../../../../../casper_ram/common_paged_ram_r_w.vhd" \
+
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_pkg_tb.vhd" \
+
+vhdl casper_requantize_lib  \
+"../../../../../../casper_requantize/common_round.vhd" \
+"../../../../../../casper_requantize/common_resize.vhd" \
+"../../../../../../casper_requantize/common_requantize.vhd" \
+
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_str_pkg.vhd" \
+
+vhdl casper_multiplier_lib  \
+"../../../../../../casper_multiplier/ip_cmult_rtl_3dsp.vhd" \
+"../../../../../../casper_multiplier/ip_cmult_rtl_4dsp.vhd" \
+
+vhdl casper_ram_lib  \
+"../../../../../../casper_ram/ip_xilinx_ram_cr_cw.vhd" \
+
+vhdl r2sdf_fft_lib  \
+"../../../../../rTwoBF.vhd" \
+"../../../../../rTwoBFStage.vhd" \
+"../../../../../rTwoOrder.vhd" \
+"../../../../../twiddlesPkg.vhd" \
+"../../../../../rTwoSDFPkg.vhd" \
+"../../../../../rTwoWeights.vhd" \
+"../../../../../rTwoWMul.vhd" \
+"../../../../../rTwoSDFStage.vhd" \
+"../../../../../rTwoSDF.vhd" \
+"../../../../../rTwoSDF_tb.vhd" \
+
+# Do not sort compile order
+nosort
