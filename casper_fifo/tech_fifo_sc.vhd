@@ -33,52 +33,71 @@ USE common_pkg_lib.common_pkg.ALL;
 --LIBRARY ip_arria10_e1sg_fifo_lib;
 
 ENTITY tech_fifo_sc IS
-  GENERIC (
-    g_technology : NATURAL := 0; --c_tech_select_default;
-    g_use_eab    : STRING := "ON";
-    g_dat_w      : NATURAL;
-    g_nof_words  : NATURAL
-  );
-  PORT (
-    aclr  : IN STD_LOGIC;
-    clock : IN STD_LOGIC;
-    data  : IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-    rdreq : IN STD_LOGIC;
-    wrreq : IN STD_LOGIC;
-    empty : OUT STD_LOGIC;
-    full  : OUT STD_LOGIC;
-    q     : OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-    usedw : OUT STD_LOGIC_VECTOR (ceil_log2(g_nof_words)-1 DOWNTO 0)
-  );
+	GENERIC(
+		g_technology : NATURAL := 0;    --c_tech_select_default;
+		g_use_eab    : STRING  := "NO";
+		g_dat_w      : NATURAL;
+		g_nof_words  : NATURAL;
+		g_device     : STRING  := "7SERIES"
+	);
+	PORT(
+		aclr  : IN  STD_LOGIC;
+		clock : IN  STD_LOGIC;
+		data  : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rdreq : IN  STD_LOGIC;
+		wrreq : IN  STD_LOGIC;
+		empty : OUT STD_LOGIC;
+		full  : OUT STD_LOGIC;
+		q     : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		usedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
+	);
 END tech_fifo_sc;
-
 
 ARCHITECTURE str OF tech_fifo_sc IS
 
 BEGIN
+	gen_ip_xilinx : IF g_technology = 0 GENERATE
+		u0 : ip_xilinx_fifo_sc
+			generic map(
+				g_device    => g_device,
+				g_dat_w     => g_dat_w,
+				g_nof_words => g_nof_words
+			)
+			port map(
+				clock => clock,
+				aclr  => aclr,
+				data  => data,
+				rdreq => rdreq,
+				wrreq => wrreq,
+				q     => q,
+				empty => empty,
+				usedw => usedw,
+				full  => full
+			);
 
-  gen_ip_stratixiv : IF g_technology=0 GENERATE
-    u0 : ip_stratixiv_fifo_sc
-    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
-    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
-  END GENERATE;
-  
---  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
---    u0 : ip_arria10_fifo_sc
---    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
---    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
---  END GENERATE;
---
---  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
---    u0 : ip_arria10_e3sge3_fifo_sc
---    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
---    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
---  END GENERATE;
---
---  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
---    u0 : ip_arria10_e1sg_fifo_sc
---    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
---    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
---  END GENERATE;
-  
+	end generate;
+	gen_ip_stratixiv : IF g_technology = 1 GENERATE
+		u0 : ip_stratixiv_fifo_sc
+			GENERIC MAP(g_use_eab, g_dat_w, g_nof_words)
+			PORT MAP(aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
+	END GENERATE;
+
+	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
+	--    u0 : ip_arria10_fifo_sc
+	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
+	--    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
+	--  END GENERATE;
+	--
+	--  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
+	--    u0 : ip_arria10_e3sge3_fifo_sc
+	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
+	--    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
+	--  END GENERATE;
+	--
+	--  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
+	--    u0 : ip_arria10_e1sg_fifo_sc
+	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
+	--    PORT MAP (aclr, clock, data, rdreq, wrreq, empty, full, q, usedw);
+	--  END GENERATE;
+
 END ARCHITECTURE;

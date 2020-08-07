@@ -1,0 +1,332 @@
+Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version     : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
+| Date             : Thu Aug  6 16:02:12 2020
+| Host             : talonpc running 64-bit Pop!_OS 18.04 LTS
+| Command          : report_power -file rTwoSDF_power_routed.rpt -pb rTwoSDF_power_summary_routed.pb -rpx rTwoSDF_power_routed.rpx
+| Design           : rTwoSDF
+| Device           : xc7vx690tffg1927-2
+| Design State     : routed
+| Grade            : commercial
+| Process          : typical
+| Characterization : Production
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Power Report
+
+Table of Contents
+-----------------
+1. Summary
+1.1 On-Chip Components
+1.2 Power Supply Summary
+1.3 Confidence Level
+2. Settings
+2.1 Environment
+2.2 Clock Constraints
+3. Detailed Reports
+3.1 By Hierarchy
+
+1. Summary
+----------
+
++--------------------------+-----------------------------------+
+| Total On-Chip Power (W)  | 114.190 (Junction temp exceeded!) |
+| Design Power Budget (W)  | Unspecified*                      |
+| Power Budget Margin (W)  | NA                                |
+| Dynamic (W)              | 105.792                           |
+| Device Static (W)        | 8.397                             |
+| Effective TJA (C/W)      | 0.8                               |
+| Max Ambient (C)          | 0.0                               |
+| Junction Temperature (C) | 121.7                             |
+| Confidence Level         | Low                               |
+| Setting File             | ---                               |
+| Simulation Activity File | ---                               |
+| Design Nets Matched      | NA                                |
++--------------------------+-----------------------------------+
+* Specify Design Power Budget using, set_operating_conditions -design_power_budget <value in Watts>
+
+
+1.1 On-Chip Components
+----------------------
+
++-------------------------+-----------+----------+-----------+-----------------+
+| On-Chip                 | Power (W) | Used     | Available | Utilization (%) |
++-------------------------+-----------+----------+-----------+-----------------+
+| Slice Logic             |    23.638 |     6340 |       --- |             --- |
+|   LUT as Logic          |    14.792 |     1685 |    433200 |            0.39 |
+|   LUT as Shift Register |     5.339 |      834 |    174200 |            0.48 |
+|   Register              |     1.887 |     2653 |    866400 |            0.31 |
+|   CARRY4                |     1.614 |      264 |    108300 |            0.24 |
+|   BUFG                  |     0.006 |        1 |        32 |            3.13 |
+|   Others                |     0.000 |      340 |       --- |             --- |
+| Signals                 |    33.087 |     5602 |       --- |             --- |
+| Block RAM               |     3.366 |       17 |      1470 |            1.16 |
+| DSPs                    |    33.624 |       27 |      3600 |            0.75 |
+| I/O                     |    12.077 |       48 |       600 |            8.00 |
+| Static Power            |     8.397 |          |           |                 |
+| Total                   |   114.190 |          |           |                 |
++-------------------------+-----------+----------+-----------+-----------------+
+
+
+1.2 Power Supply Summary
+------------------------
+
++-----------+-------------+-----------+-------------+------------+
+| Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
++-----------+-------------+-----------+-------------+------------+
+| Vccint    |       1.000 |   100.909 |      93.526 |      7.383 |
+| Vccaux    |       1.800 |     1.381 |       0.979 |      0.402 |
+| Vcco33    |       3.300 |     0.000 |       0.000 |      0.000 |
+| Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
+| Vcco18    |       1.800 |     5.693 |       5.692 |      0.001 |
+| Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |
+| Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |
+| Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |
+| Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccbram   |       1.000 |     0.511 |       0.258 |      0.253 |
+| MGTAVcc   |       1.000 |     0.000 |       0.000 |      0.000 |
+| MGTAVtt   |       1.200 |     0.000 |       0.000 |      0.000 |
+| MGTVccaux |       1.800 |     0.000 |       0.000 |      0.000 |
+| MGTZVccl  |       1.075 |     0.000 |       0.000 |      0.000 |
+| MGTZAVcc  |       1.075 |     0.000 |       0.000 |      0.000 |
+| MGTZVcch  |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccadc    |       1.800 |     0.020 |       0.000 |      0.020 |
++-----------+-------------+-----------+-------------+------------+
+
+
+1.3 Confidence Level
+--------------------
+
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+| User Input Data             | Confidence | Details                                                | Action                                                                                                             |
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+| Design implementation state | High       | Design is routed                                       |                                                                                                                    |
+| Clock nodes activity        | Low        | User specified less than 75% of clocks                 | Provide missing clock activity with a constraint file, simulation results or by editing the "By Clock Domain" view |
+| I/O nodes activity          | Low        | More than 75% of inputs are missing user specification | Provide missing input activity with simulation results or by editing the "By Resource Type -> I/Os" view           |
+| Internal nodes activity     | Medium     | User specified less than 25% of internal nodes         | Provide missing internal nodes activity with simulation results or by editing the "By Resource Type" views         |
+| Device models               | High       | Device models are Production                           |                                                                                                                    |
+|                             |            |                                                        |                                                                                                                    |
+| Overall confidence level    | Low        |                                                        |                                                                                                                    |
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+
+
+2. Settings
+-----------
+
+2.1 Environment
+---------------
+
++-----------------------+--------------------------+
+| Ambient Temp (C)      | 25.0                     |
+| ThetaJA (C/W)         | 0.8                      |
+| Airflow (LFM)         | 250                      |
+| Heat Sink             | medium (Medium Profile)  |
+| ThetaSA (C/W)         | 1.2                      |
+| Board Selection       | medium (10"x10")         |
+| # of Board Layers     | 12to15 (12 to 15 Layers) |
+| Board Temperature (C) | 25.0                     |
++-----------------------+--------------------------+
+
+
+2.2 Clock Constraints
+---------------------
+
++-------+--------+-----------------+
+| Clock | Domain | Constraint (ns) |
++-------+--------+-----------------+
+
+
+3. Detailed Reports
+-------------------
+
+3.1 By Hierarchy
+----------------
+
++--------------------------+-----------+
+| Name                     | Power (W) |
++--------------------------+-----------+
+| rTwoSDF                  |   105.792 |
+|   gen_fft[1].u_stage     |     6.846 |
+|     u_TwiddleMult        |     4.970 |
+|       gen_rtl.u_CmplxMul |     4.218 |
+|       u_im_lat           |     0.248 |
+|       u_pipeline_out_val |     0.002 |
+|       u_re_lat           |     0.251 |
+|       u_sel_lat          |     0.007 |
+|     u_butterfly          |     1.507 |
+|       u_bf_im            |     0.213 |
+|       u_bf_re            |     0.232 |
+|       u_feedback         |     0.482 |
+|       u_pipeline_out     |     0.578 |
+|     u_control            |     0.013 |
+|     u_im_lat             |     0.168 |
+|     u_re_lat             |     0.183 |
+|     u_val_lat            |     0.005 |
+|       u_sl               |     0.005 |
+|   gen_fft[2].u_stage     |     7.588 |
+|     u_TwiddleMult        |     5.099 |
+|       gen_ip.u_cmplx_mul |     4.238 |
+|       u_im_lat           |     0.303 |
+|       u_pipeline_out_val |     0.002 |
+|       u_re_lat           |     0.297 |
+|       u_sel_lat          |     0.014 |
+|     u_butterfly          |     1.907 |
+|       u_bf_im            |     0.202 |
+|       u_bf_re            |     0.235 |
+|       u_feedback         |     0.698 |
+|       u_out_sel          |     0.002 |
+|       u_pipeline_out     |     0.765 |
+|       u_stage_sel        |     0.004 |
+|     u_control            |     0.040 |
+|     u_im_lat             |     0.281 |
+|     u_re_lat             |     0.256 |
+|     u_val_lat            |     0.005 |
+|       u_sl               |     0.005 |
+|   gen_fft[3].u_stage     |     9.605 |
+|     u_TwiddleMult        |     5.591 |
+|       gen_ip.u_cmplx_mul |     4.370 |
+|       u_im_lat           |     0.294 |
+|       u_pipeline_out_val |     0.006 |
+|       u_re_lat           |     0.320 |
+|       u_sel_lat          |     0.017 |
+|     u_butterfly          |     2.210 |
+|       u_bf_im            |     0.215 |
+|       u_bf_re            |     0.225 |
+|       u_feedback         |     0.934 |
+|       u_out_val          |     0.002 |
+|       u_pipeline_out     |     0.829 |
+|       u_stage_sel        |     0.003 |
+|       u_stage_val        |     0.002 |
+|     u_control            |     0.079 |
+|     u_im_lat             |     0.319 |
+|     u_re_lat             |     0.283 |
+|     u_val_lat            |     0.018 |
+|       u_sl               |     0.018 |
+|     u_weights            |     1.106 |
+|   gen_fft[4].u_stage     |     8.852 |
+|     u_TwiddleMult        |     5.553 |
+|       gen_ip.u_cmplx_mul |     4.254 |
+|       u_im_lat           |     0.337 |
+|       u_pipeline_out_val |     0.009 |
+|       u_re_lat           |     0.338 |
+|       u_sel_lat          |     0.017 |
+|     u_butterfly          |     2.497 |
+|       u_bf_im            |     0.222 |
+|       u_bf_re            |     0.204 |
+|       u_feedback         |     1.190 |
+|       u_out_val          |     0.001 |
+|       u_pipeline_out     |     0.872 |
+|       u_stage_sel        |     0.004 |
+|       u_stage_val        |     0.004 |
+|     u_control            |     0.113 |
+|     u_im_lat             |     0.348 |
+|     u_re_lat             |     0.323 |
+|     u_val_lat            |     0.017 |
+|       u_sl               |     0.017 |
+|   gen_fft[5].u_stage     |    11.546 |
+|     u_TwiddleMult        |     5.668 |
+|       gen_ip.u_cmplx_mul |     4.288 |
+|       u_im_lat           |     0.354 |
+|       u_pipeline_out_val |     0.009 |
+|       u_re_lat           |     0.372 |
+|       u_sel_lat          |     0.012 |
+|     u_butterfly          |     2.815 |
+|       u_bf_im            |     0.231 |
+|       u_bf_re            |     0.234 |
+|       u_feedback         |     1.356 |
+|       u_out_val          |     0.003 |
+|       u_pipeline_out     |     0.984 |
+|       u_stage_sel        |     0.003 |
+|       u_stage_val        |     0.004 |
+|     u_control            |     0.120 |
+|     u_im_lat             |     0.377 |
+|     u_re_lat             |     0.369 |
+|     u_val_lat            |     0.020 |
+|       u_sl               |     0.020 |
+|     u_weights            |     2.176 |
+|   gen_fft[6].u_stage     |     9.952 |
+|     u_TwiddleMult        |     5.979 |
+|       gen_ip.u_cmplx_mul |     4.360 |
+|       u_im_lat           |     0.418 |
+|       u_pipeline_out_val |     0.005 |
+|       u_re_lat           |     0.480 |
+|       u_sel_lat          |     0.007 |
+|     u_butterfly          |     2.955 |
+|       u_bf_im            |     0.216 |
+|       u_bf_re            |     0.239 |
+|       u_feedback         |     1.511 |
+|       u_out_val          |     0.001 |
+|       u_pipeline_out     |     0.983 |
+|       u_stage_sel        |     0.001 |
+|       u_stage_val        |     0.003 |
+|     u_control            |     0.169 |
+|     u_im_lat             |     0.402 |
+|     u_re_lat             |     0.432 |
+|     u_val_lat            |     0.015 |
+|       u_sl               |     0.015 |
+|   gen_fft[7].u_stage     |    12.525 |
+|     u_TwiddleMult        |     5.733 |
+|       gen_ip.u_cmplx_mul |     4.321 |
+|       u_im_lat           |     0.396 |
+|       u_pipeline_out_val |     0.004 |
+|       u_re_lat           |     0.419 |
+|       u_sel_lat          |     0.004 |
+|     u_butterfly          |     3.346 |
+|       u_bf_im            |     0.247 |
+|       u_bf_re            |     0.263 |
+|       u_feedback         |     2.087 |
+|       u_pipeline_out     |     0.745 |
+|       u_stage_val        |     0.002 |
+|     u_control            |     0.173 |
+|     u_im_lat             |     0.383 |
+|     u_re_lat             |     0.371 |
+|     u_val_lat            |     0.011 |
+|       u_sl               |     0.011 |
+|     u_weights            |     2.508 |
+|   gen_fft[8].u_stage     |    10.680 |
+|     u_TwiddleMult        |     5.779 |
+|       gen_ip.u_cmplx_mul |     4.401 |
+|       u_im_lat           |     0.370 |
+|       u_pipeline_out_val |     0.002 |
+|       u_re_lat           |     0.393 |
+|       u_sel_lat          |     0.002 |
+|     u_butterfly          |     3.883 |
+|       u_bf_im            |     0.252 |
+|       u_bf_re            |     0.248 |
+|       u_feedback         |     2.567 |
+|       u_pipeline_out     |     0.813 |
+|       u_stage_val        |     0.002 |
+|     u_control            |     0.196 |
+|     u_im_lat             |     0.423 |
+|     u_re_lat             |     0.389 |
+|     u_val_lat            |     0.011 |
+|       u_sl               |     0.011 |
+|   gen_fft[9].u_stage     |    12.060 |
+|     u_TwiddleMult        |     5.612 |
+|       gen_ip.u_cmplx_mul |     4.340 |
+|       u_im_lat           |     0.362 |
+|       u_pipeline_out_val |     0.001 |
+|       u_re_lat           |     0.321 |
+|     u_butterfly          |     2.864 |
+|       u_bf_im            |     0.211 |
+|       u_bf_re            |     0.211 |
+|       u_feedback         |     1.914 |
+|       u_pipeline_out     |     0.526 |
+|       u_stage_val        |     0.002 |
+|     u_control            |     0.186 |
+|     u_im_lat             |     0.369 |
+|     u_re_lat             |     0.360 |
+|     u_val_lat            |     0.009 |
+|       u_sl               |     0.009 |
+|     u_weights            |     2.660 |
+|   gen_reorder.u_cplx     |     0.805 |
+|     g18.u_buff           |     0.792 |
+|       u_rw_rw            |     0.792 |
+|     u_adr_point_cnt      |     0.013 |
+|   u_requantize_im        |     1.484 |
+|     u_remove_lsb         |     1.484 |
+|   u_requantize_re        |     1.479 |
+|     u_remove_lsb         |     1.479 |
++--------------------------+-----------+
+
+
