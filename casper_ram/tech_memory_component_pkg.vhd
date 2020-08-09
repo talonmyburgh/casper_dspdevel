@@ -141,16 +141,17 @@ PACKAGE tech_memory_component_pkg IS
 	-----------------------------------------------------------------------------
 	-- ip_xilinx
 	-----------------------------------------------------------------------------
-	component ip_xilinx_ram_cr_cw
+	component ip_xpm_ram_cr_cw
 		generic(
-			g_adr_w      : NATURAL;
-			g_dat_w      : NATURAL;
-			g_bram_size  : STRING;
-			g_rd_latency : NATURAL;
-			g_init_file  : STRING;
-			g_device     : STRING
+			g_adr_w         : NATURAL;
+			g_dat_w         : NATURAL;
+			g_nof_words     : NATURAL;
+			g_rd_latency    : NATURAL;
+			g_init_file     : STRING;
+			g_ram_primitive : STRING
 		);
 		port(
+			rst       : IN  STD_LOGIC;
 			data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 			rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			rdclock   : IN  STD_LOGIC;
@@ -161,18 +162,20 @@ PACKAGE tech_memory_component_pkg IS
 			wren      : IN  STD_LOGIC;
 			q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 		);
-	end component ip_xilinx_ram_cr_cw;
+	end component ip_xpm_ram_cr_cw;
 
-	component ip_xilinx_ram_crw_crw
+	component ip_xpm_ram_crw_crw
 		generic(
-			g_adr_w      : NATURAL;
-			g_dat_w      : NATURAL;
-			g_bram_size  : STRING;
-			g_rd_latency : NATURAL;
-			g_init_file  : STRING;
-			g_device     : STRING
+			g_adr_w         : NATURAL;
+			g_dat_w         : NATURAL;
+			g_nof_words     : NATURAL;
+			g_rd_latency    : NATURAL;
+			g_init_file     : STRING;
+			g_ram_primitive : STRING
 		);
 		port(
+			rst_a     : IN  STD_LOGIC;
+			rst_b     : IN  STD_LOGIC;
 			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			clock_a   : IN  STD_LOGIC;
@@ -188,20 +191,23 @@ PACKAGE tech_memory_component_pkg IS
 			q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 			q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 		);
-	end component ip_xilinx_ram_crw_crw;
+	end component ip_xpm_ram_crw_crw;
 
-	component ip_xilinx_ram_crwk_crw
+	component ip_xpm_ram_crwk_crw
 		generic(
-			g_adr_a_w    : NATURAL;
-			g_dat_a_w    : NATURAL;
-			g_adr_b_w    : NATURAL;
-			g_dat_b_w    : NATURAL;
-			g_bram_size  : STRING;
-			g_rd_latency : NATURAL;
-			g_init_file  : STRING;
-			g_device     : STRING
+			g_adr_a_w       : NATURAL;
+			g_dat_a_w       : NATURAL;
+			g_adr_b_w       : NATURAL;
+			g_dat_b_w       : NATURAL;
+			g_nof_words_a   : NATURAL;
+			g_nof_words_b   : NATURAL;
+			g_rd_latency    : NATURAL;
+			g_init_file     : STRING;
+			g_ram_primitive : STRING
 		);
 		port(
+			rst_a     : IN  STD_LOGIC;
+			rst_b     : IN  STD_LOGIC;
 			address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
 			address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
 			clock_a   : IN  STD_LOGIC;
@@ -217,7 +223,85 @@ PACKAGE tech_memory_component_pkg IS
 			q_a       : OUT STD_LOGIC_VECTOR(g_dat_a_w - 1 DOWNTO 0);
 			q_b       : OUT STD_LOGIC_VECTOR(g_dat_b_w - 1 DOWNTO 0)
 		);
-	end component ip_xilinx_ram_crwk_crw;
+	end component ip_xpm_ram_crwk_crw;
+
+	--	component ip_xilinx_ram_cr_cw
+	--		generic(
+	--			g_adr_w      : NATURAL;
+	--			g_dat_w      : NATURAL;
+	--			g_bram_size  : STRING;
+	--			g_rd_latency : NATURAL;
+	--			g_init_file  : STRING;
+	--			g_device     : STRING
+	--		);
+	--		port(
+	--			data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	--			rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+	--			rdclock   : IN  STD_LOGIC;
+	--			rdclocken : IN  STD_LOGIC;
+	--			wraddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+	--			wrclock   : IN  STD_LOGIC;
+	--			wrclocken : IN  STD_LOGIC;
+	--			wren      : IN  STD_LOGIC;
+	--			q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+	--		);
+	--	end component ip_xilinx_ram_cr_cw;
+	--
+	--	component ip_xilinx_ram_crw_crw
+	--		generic(
+	--			g_adr_w      : NATURAL;
+	--			g_dat_w      : NATURAL;
+	--			g_bram_size  : STRING;
+	--			g_rd_latency : NATURAL;
+	--			g_init_file  : STRING;
+	--			g_device     : STRING
+	--		);
+	--		port(
+	--			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+	--			address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+	--			clock_a   : IN  STD_LOGIC;
+	--			clock_b   : IN  STD_LOGIC;
+	--			data_a    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	--			data_b    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	--			enable_a  : IN  STD_LOGIC;
+	--			enable_b  : IN  STD_LOGIC;
+	--			rden_a    : IN  STD_LOGIC;
+	--			rden_b    : IN  STD_LOGIC;
+	--			wren_a    : IN  STD_LOGIC;
+	--			wren_b    : IN  STD_LOGIC;
+	--			q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	--			q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+	--		);
+	--	end component ip_xilinx_ram_crw_crw;
+	--
+	--	component ip_xilinx_ram_crwk_crw
+	--		generic(
+	--			g_adr_a_w    : NATURAL;
+	--			g_dat_a_w    : NATURAL;
+	--			g_adr_b_w    : NATURAL;
+	--			g_dat_b_w    : NATURAL;
+	--			g_bram_size  : STRING;
+	--			g_rd_latency : NATURAL;
+	--			g_init_file  : STRING;
+	--			g_device     : STRING
+	--		);
+	--		port(
+	--			address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
+	--			address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
+	--			clock_a   : IN  STD_LOGIC;
+	--			clock_b   : IN  STD_LOGIC;
+	--			data_a    : IN  STD_LOGIC_VECTOR(g_dat_a_w - 1 DOWNTO 0);
+	--			data_b    : IN  STD_LOGIC_VECTOR(g_dat_b_w - 1 DOWNTO 0);
+	--			enable_a  : IN  STD_LOGIC;
+	--			enable_b  : IN  STD_LOGIC;
+	--			rden_a    : IN  STD_LOGIC;
+	--			rden_b    : IN  STD_LOGIC;
+	--			wren_a    : IN  STD_LOGIC;
+	--			wren_b    : IN  STD_LOGIC;
+	--			q_a       : OUT STD_LOGIC_VECTOR(g_dat_a_w - 1 DOWNTO 0);
+	--			q_b       : OUT STD_LOGIC_VECTOR(g_dat_b_w - 1 DOWNTO 0)
+	--		);
+	--	end component ip_xilinx_ram_crwk_crw;
 
 	-----------------------------------------------------------------------------
 	-- ip_arria10
