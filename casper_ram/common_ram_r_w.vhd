@@ -29,8 +29,7 @@ ENTITY common_ram_r_w IS
     g_ram        : t_c_mem := c_mem_ram;
     g_init_file  : STRING := "UNUSED";
     g_true_dual_port : BOOLEAN := TRUE;
-    g_device        : STRING := "7SERIES";
-    g_bram_size     : STRING := "18Kb"
+		g_ram_primitive  : STRING  := "auto"
   );
   PORT (
     rst       : IN  STD_LOGIC := '0';
@@ -60,8 +59,7 @@ BEGIN
     g_ram        => g_ram,
     g_init_file  => g_init_file,
     g_true_dual_port => g_true_dual_port,
-    g_device        => g_device,
-    g_bram_size     => g_bram_size
+	g_ram_primitive => g_ram_primitive
   )
   PORT MAP (
     rst       => rst,

@@ -32,16 +32,17 @@ USE work.tech_memory_component_pkg.ALL;
 
 ENTITY tech_memory_ram_crw_crw IS
 	GENERIC(
-		g_technology : NATURAL := 0;    --c_tech_select_default;
-		g_adr_w      : NATURAL := 10;
-		g_dat_w      : NATURAL := 18;
-		g_nof_words  : NATURAL := 2**5;
-		g_bram_size  : STRING  := "18Kb";
-		g_rd_latency : NATURAL := 2;    -- choose 1 or 2
-		g_init_file  : STRING  := "UNUSED";
-		g_device     : STRING  := "7SERIES"
+		g_technology    : NATURAL := 0; --c_tech_select_default;
+		g_adr_w         : NATURAL := 10;
+		g_dat_w         : NATURAL := 18;
+		g_nof_words     : NATURAL := 2**5;
+		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
+		g_init_file     : STRING  := "UNUSED";
+		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
+		rst_a     : IN  STD_LOGIC;
+		rst_b     : IN  STD_LOGIC;
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		clock_a   : IN  STD_LOGIC := '1';
@@ -63,16 +64,18 @@ ARCHITECTURE str OF tech_memory_ram_crw_crw IS
 
 BEGIN
 	gen_ip_xilinx : IF g_technology = 0 GENERATE
-		u0 : component ip_xilinx_ram_crw_crw
+		u1 : ip_xpm_ram_crw_crw
 			generic map(
-				g_adr_w      => g_adr_w,
-				g_dat_w      => g_dat_w,
-				g_bram_size  => g_bram_size,
-				g_rd_latency => g_rd_latency,
-				g_init_file  => g_init_file,
-				g_device     => g_device
+				g_adr_w         => g_adr_w,
+				g_dat_w         => g_dat_w,
+				g_nof_words     => g_nof_words,
+				g_rd_latency    => g_rd_latency,
+				g_init_file     => g_init_file,
+				g_ram_primitive => g_ram_primitive
 			)
 			port map(
+				rst_a     => rst_a,
+				rst_b     => rst_b,
 				address_a => address_a,
 				address_b => address_b,
 				clock_a   => clock_a,

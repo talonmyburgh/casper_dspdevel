@@ -194,7 +194,6 @@ BEGIN
     g_data_w        => c_data_w,
     g_nof_pages     => c_nof_pages,
     g_page_sz       => c_page_sz,
-    g_bram_size		=> "18kb",
     g_start_page_a  => c_start_page_a,
     g_start_page_b  => c_start_page_b
   )

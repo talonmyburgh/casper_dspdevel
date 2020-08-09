@@ -24,68 +24,65 @@ USE work.common_ram_pkg.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
 
 ENTITY common_ram_rw_rw IS
-  GENERIC (
-    g_technology : NATURAL := 0;
-    g_ram        : t_c_mem := c_mem_ram;
-    g_init_file  : STRING := "UNUSED";
-    g_true_dual_port : BOOLEAN := TRUE;
-    g_device        : STRING := "7SERIES";
-    g_bram_size     : STRING := "18Kb"
-  );
-  PORT (
-    rst       : IN  STD_LOGIC := '0';
-    clk       : IN  STD_LOGIC;
-    clken     : IN  STD_LOGIC := '1';
-    wr_en_a   : IN  STD_LOGIC := '0';
-    wr_en_b   : IN  STD_LOGIC := '0';
-    wr_dat_a  : IN  STD_LOGIC_VECTOR(g_ram.dat_w-1 DOWNTO 0) := (OTHERS=>'0');
-    wr_dat_b  : IN  STD_LOGIC_VECTOR(g_ram.dat_w-1 DOWNTO 0) := (OTHERS=>'0');
-    adr_a     : IN  STD_LOGIC_VECTOR(g_ram.adr_w-1 DOWNTO 0) := (OTHERS=>'0');
-    adr_b     : IN  STD_LOGIC_VECTOR(g_ram.adr_w-1 DOWNTO 0) := (OTHERS=>'0');
-    rd_en_a   : IN  STD_LOGIC := '1';
-    rd_en_b   : IN  STD_LOGIC := '1';
-    rd_dat_a  : OUT STD_LOGIC_VECTOR(g_ram.dat_w-1 DOWNTO 0);
-    rd_dat_b  : OUT STD_LOGIC_VECTOR(g_ram.dat_w-1 DOWNTO 0);
-    rd_val_a  : OUT STD_LOGIC;
-    rd_val_b  : OUT STD_LOGIC
-  );
+	GENERIC(
+		g_technology     : NATURAL := 0;
+		g_ram            : t_c_mem := c_mem_ram;
+		g_init_file      : STRING  := "UNUSED";
+		g_true_dual_port : BOOLEAN := TRUE;
+		g_ram_primitive  : STRING  := "auto"
+	);
+	PORT(
+		rst      : IN  STD_LOGIC                                  := '0';
+		clk      : IN  STD_LOGIC;
+		clken    : IN  STD_LOGIC                                  := '1';
+		wr_en_a  : IN  STD_LOGIC                                  := '0';
+		wr_en_b  : IN  STD_LOGIC                                  := '0';
+		wr_dat_a : IN  STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0) := (OTHERS => '0');
+		wr_dat_b : IN  STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0) := (OTHERS => '0');
+		adr_a    : IN  STD_LOGIC_VECTOR(g_ram.adr_w - 1 DOWNTO 0) := (OTHERS => '0');
+		adr_b    : IN  STD_LOGIC_VECTOR(g_ram.adr_w - 1 DOWNTO 0) := (OTHERS => '0');
+		rd_en_a  : IN  STD_LOGIC                                  := '1';
+		rd_en_b  : IN  STD_LOGIC                                  := '1';
+		rd_dat_a : OUT STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0);
+		rd_dat_b : OUT STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0);
+		rd_val_a : OUT STD_LOGIC;
+		rd_val_b : OUT STD_LOGIC
+	);
 END common_ram_rw_rw;
-
 
 ARCHITECTURE str OF common_ram_rw_rw IS
 
 BEGIN
 
-  -- Use only one clock domain
-  
-  u_crw_crw : ENTITY work.common_ram_crw_crw
-  GENERIC MAP (
-    g_technology => g_technology,
-    g_ram        => g_ram,
-    g_init_file  => g_init_file,
-    g_true_dual_port => g_true_dual_port,
-    g_device    => g_device,
-    g_bram_size => g_bram_size
-  )
-  PORT MAP (
-    rst_a     => rst,
-    rst_b     => rst,
-    clk_a     => clk,
-    clk_b     => clk,
-    clken_a   => clken,
-    clken_b   => clken,
-    wr_en_a   => wr_en_a,
-    wr_en_b   => wr_en_b,
-    wr_dat_a  => wr_dat_a,
-    wr_dat_b  => wr_dat_b,
-    adr_a     => adr_a,
-    adr_b     => adr_b,
-    rd_en_a   => rd_en_a,
-    rd_en_b   => rd_en_b,
-    rd_dat_a  => rd_dat_a,
-    rd_dat_b  => rd_dat_b,
-    rd_val_a  => rd_val_a,
-    rd_val_b  => rd_val_b
-  );
-  
+	-- Use only one clock domain
+
+	u_crw_crw : ENTITY work.common_ram_crw_crw
+		GENERIC MAP(
+			g_technology     => g_technology,
+			g_ram            => g_ram,
+			g_init_file      => g_init_file,
+			g_true_dual_port => g_true_dual_port,
+			g_ram_primitive  => g_ram_primitive
+		)
+		PORT MAP(
+			rst_a    => rst,
+			rst_b    => rst,
+			clk_a    => clk,
+			clk_b    => clk,
+			clken_a  => clken,
+			clken_b  => clken,
+			wr_en_a  => wr_en_a,
+			wr_en_b  => wr_en_b,
+			wr_dat_a => wr_dat_a,
+			wr_dat_b => wr_dat_b,
+			adr_a    => adr_a,
+			adr_b    => adr_b,
+			rd_en_a  => rd_en_a,
+			rd_en_b  => rd_en_b,
+			rd_dat_a => rd_dat_a,
+			rd_dat_b => rd_dat_b,
+			rd_val_a => rd_val_a,
+			rd_val_b => rd_val_b
+		);
+
 END str;

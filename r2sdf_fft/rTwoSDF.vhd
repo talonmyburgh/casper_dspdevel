@@ -62,9 +62,9 @@ entity rTwoSDF is
 		-- generics for the FFT    
 		g_nof_chan    : natural        := 0; --! Exponent of nr of subbands (0 means 1 subband)
 		g_use_reorder : boolean        := true; --! Reorder output
-		g_in_dat_w    : natural        := 8; --! Number of input bits
-		g_out_dat_w   : natural        := 14; --! Number of output bits
-		g_stage_dat_w : natural        := 18; --! Number of bits used between the stages
+		g_in_dat_w    : natural        := 18; --! Number of input bits
+		g_out_dat_w   : natural        := 18; --! Number of output bits
+		g_stage_dat_w : natural        := 40; --! Number of bits used between the stages
 		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
 		g_nof_points  : natural        := 512; --! N point FFT
 		-- generics for rTwoSDFStage
