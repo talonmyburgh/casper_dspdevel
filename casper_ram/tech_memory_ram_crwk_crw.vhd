@@ -44,8 +44,6 @@ ENTITY tech_memory_ram_crwk_crw IS      -- support different port data widths an
 		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
-		rst_a     : IN  STD_LOGIC;
-		rst_b     : IN  STD_LOGIC;
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
 		address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
 		clock_a   : IN  STD_LOGIC := '1';
@@ -80,8 +78,6 @@ BEGIN
 				g_ram_primitive => g_ram_primitive
 			)
 			port map(
-				rst_a     => rst_a,
-				rst_b     => rst_b,
 				address_a => address_a,
 				address_b => address_b,
 				clock_a   => clock_a,

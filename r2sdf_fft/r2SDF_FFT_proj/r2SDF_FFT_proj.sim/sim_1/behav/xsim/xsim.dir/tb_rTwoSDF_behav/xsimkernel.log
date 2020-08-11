@@ -1,7 +1,7 @@
-Running: xsim.dir/tb_rTwoSDF_behav/xsimk -simmode gui -wdb tb_rTwoSDF_behav.wdb -simrunnum 0 -socket 48937
+Running: xsim.dir/tb_rTwoSDF_behav/xsimk -simmode gui -wdb tb_rTwoSDF_behav.wdb -simrunnum 0 -socket 34677
 Design successfully loaded
 Design Loading Memory Usage: 48488 KB (Peak: 48488 KB)
-Design Loading CPU Usage: 30 ms
+Design Loading CPU Usage: 20 ms
 Simulation completed
 Simulation Memory Usage: 139320 KB (Peak: 187756 KB)
 Simulation CPU Usage: 70 ms

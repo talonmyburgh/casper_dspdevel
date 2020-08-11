@@ -150,10 +150,10 @@ PACKAGE common_ram_pkg IS
   END RECORD;
   
   CONSTANT c_mem_ram_rd_latency : NATURAL := 2;  -- note common_ram_crw_crw(stratix4) now also supports read latency 1
-  CONSTANT c_mem_ram            : t_c_mem := (c_mem_ram_rd_latency, 10,  10, 2**10,'X');  -- 1 M9K
+  CONSTANT c_mem_ram            : t_c_mem := (c_mem_ram_rd_latency, 10,  9, 2**10, 'X');  -- 1 M9K
   
   CONSTANT c_mem_reg_rd_latency : NATURAL := 1;
-  CONSTANT c_mem_reg            : t_c_mem := (c_mem_reg_rd_latency,  10, 32,     1, 'X');
+  CONSTANT c_mem_reg            : t_c_mem := (c_mem_reg_rd_latency,  1, 32,     1, 'X');
   
   CONSTANT c_mem_reg_init_w     : NATURAL := 1*256*32;  -- >= largest expected value of dat_w*nof_dat (256 * 32 bit = 1k byte)
   

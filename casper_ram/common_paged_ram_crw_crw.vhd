@@ -55,10 +55,10 @@ ENTITY common_paged_ram_crw_crw IS
 		g_ram_primitive  : STRING  := "auto"
 	);
 	PORT(
-		rst_a       : IN  STD_LOGIC;
-		rst_b       : IN  STD_LOGIC;
-		clk_a       : IN  STD_LOGIC;
-		clk_b       : IN  STD_LOGIC;
+		rst_a       : IN  STD_LOGIC := '0';
+		rst_b       : IN  STD_LOGIC := '0';
+		clk_a       : IN  STD_LOGIC := '1';
+		clk_b       : IN  STD_LOGIC := '1';
 		clken_a     : IN  STD_LOGIC                                           := '1';
 		clken_b     : IN  STD_LOGIC                                           := '1';
 		next_page_a : IN  STD_LOGIC;
@@ -233,8 +233,6 @@ BEGIN
 					g_ram_primitive  => g_ram_primitive
 				)
 				PORT MAP(
-					rst_a    => rst_a,
-					rst_b    => rst_b,
 					clk_a    => clk_a,
 					clk_b    => clk_b,
 					clken_a  => clken_a,
@@ -284,8 +282,6 @@ BEGIN
 				g_ram_primitive  => g_ram_primitive
 			)
 			PORT MAP(
-				rst_a    => rst_a,
-				rst_b    => rst_b,
 				clk_a    => clk_a,
 				clk_b    => clk_b,
 				clken_a  => clken_a,
@@ -318,8 +314,6 @@ BEGIN
 				g_ram_primitive  => g_ram_primitive
 			)
 			PORT MAP(
-				rst_a    => rst_a,
-				rst_b    => rst_b,
 				clk_a    => clk_a,
 				clk_b    => clk_b,
 				clken_a  => clken_a,

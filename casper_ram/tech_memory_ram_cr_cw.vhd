@@ -42,7 +42,6 @@ ENTITY tech_memory_ram_cr_cw IS
 		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
-		rst       : IN  STD_LOGIC;
 		data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 		rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		rdclock   : IN  STD_LOGIC;
@@ -70,7 +69,6 @@ BEGIN
 				g_ram_primitive => g_ram_primitive
 			)
 			port map(
-				rst       => rst,
 				data      => data,
 				rdaddress => rdaddress,
 				rdclock   => rdclock,

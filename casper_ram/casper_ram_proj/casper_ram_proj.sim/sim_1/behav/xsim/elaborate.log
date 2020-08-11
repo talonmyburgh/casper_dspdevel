@@ -1,0 +1,38 @@
+Vivado Simulator 2019.1
+Copyright 1986-1999, 2001-2019 Xilinx, Inc. All Rights Reserved.
+Running: /opt/Vivado/2019.1/bin/unwrapped/lnx64.o/xelab -wto 6056f71df73a47be873e49aa656d4c01 --incr --debug typical --relax --mt 8 -L common_pkg_lib -L casper_ram_lib -L common_components_lib -L secureip -L xpm --snapshot tb_common_paged_ram_crw_crw_behav casper_ram_lib.tb_common_paged_ram_crw_crw -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package ieee.math_real
+Compiling package common_pkg_lib.common_pkg
+Compiling package ieee.std_logic_textio
+Compiling package common_pkg_lib.tb_common_pkg
+Compiling package casper_ram_lib.common_ram_pkg
+Compiling package casper_ram_lib.tech_memory_component_pkg
+Compiling package xpm.vcomponents
+Compiling package vl.vl_types
+Compiling module xpm.xpm_memory_base(MEMORY_SIZE=64,M...
+Compiling module xpm.xpm_memory_tdpram(MEMORY_SIZE=64...
+Compiling architecture behavioral of entity casper_ram_lib.ip_xpm_ram_crw_crw [\ip_xpm_ram_crw_crw(g_adr_w=3,g_...]
+Compiling architecture str of entity casper_ram_lib.tech_memory_ram_crw_crw [\tech_memory_ram_crw_crw(g_adr_w...]
+Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_pipeline=0,g_...]
+Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_pipeline=2,g_...]
+Compiling architecture str of entity casper_ram_lib.common_ram_crw_crw [\common_ram_crw_crw(g_ram=(2,3,8...]
+Compiling architecture rtl of entity casper_ram_lib.common_paged_ram_crw_crw [\common_paged_ram_crw_crw(g_str=...]
+Compiling module xpm.xpm_memory_base(MEMORY_SIZE=128,...
+Compiling module xpm.xpm_memory_tdpram(MEMORY_SIZE=12...
+Compiling architecture behavioral of entity casper_ram_lib.ip_xpm_ram_crw_crw [\ip_xpm_ram_crw_crw(g_adr_w=4,g_...]
+Compiling architecture str of entity casper_ram_lib.tech_memory_ram_crw_crw [\tech_memory_ram_crw_crw(g_adr_w...]
+Compiling architecture str of entity casper_ram_lib.common_ram_crw_crw [\common_ram_crw_crw(g_ram=(2,4,8...]
+Compiling architecture rtl of entity casper_ram_lib.common_paged_ram_crw_crw [\common_paged_ram_crw_crw(g_str=...]
+Compiling architecture rtl of entity casper_ram_lib.common_paged_ram_crw_crw [\common_paged_ram_crw_crw(g_data...]
+Compiling architecture tb of entity casper_ram_lib.tb_common_paged_ram_crw_crw
+Built simulation snapshot tb_common_paged_ram_crw_crw_behav

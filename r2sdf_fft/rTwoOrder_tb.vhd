@@ -48,6 +48,7 @@ ARCHITECTURE tb OF tb_rTwoOrder IS
 	SIGNAL tb_end : STD_LOGIC := '0';
 	SIGNAL rst    : STD_LOGIC;
 	SIGNAL clk    : STD_LOGIC := '1';
+	SIGNAL ce : STD_LOGIC := '1';
 
 	SIGNAL random_0 : STD_LOGIC_VECTOR(14 DOWNTO 0) := (OTHERS => '0'); -- use different lengths to have different random sequences
 
@@ -97,7 +98,6 @@ BEGIN
 	-- device under test
 	u_dut : ENTITY work.rTwoOrder
 		GENERIC MAP(
-			g_device	=> "7SERIES",
 			g_technology => 0,
 			g_nof_points => c_nof_points,
 			g_bit_flip   => false,
@@ -105,6 +105,7 @@ BEGIN
 		)
 		port map(
 			clk     => clk,
+			ce		=> ce,
 			rst     => rst,
 			in_dat  => in_dat,
 			in_val  => in_val,

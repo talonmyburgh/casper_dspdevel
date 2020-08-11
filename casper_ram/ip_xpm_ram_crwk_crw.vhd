@@ -24,8 +24,6 @@ ENTITY ip_xpm_ram_crwk_crw IS
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
-		rst_a     : IN  STD_LOGIC;
-		rst_b     : IN  STD_LOGIC;
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
 		address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
 		clock_a   : IN  STD_LOGIC := '1';
@@ -76,8 +74,8 @@ begin
 			MESSAGE_CONTROL         => 0, -- DECIMAL
 			READ_DATA_WIDTH_A       => g_dat_a_w, -- DECIMAL
 			READ_DATA_WIDTH_B       => g_dat_b_w, -- DECIMAL
-			READ_LATENCY_A          => g_rd_latency - 1, -- DECIMAL
-			READ_LATENCY_B          => g_rd_latency - 1, -- DECIMAL
+			READ_LATENCY_A          => g_rd_latency, -- DECIMAL
+			READ_LATENCY_B          => g_rd_latency, -- DECIMAL
 			READ_RESET_VALUE_A      => "0", -- String
 			READ_RESET_VALUE_B      => "0", -- String
 			RST_MODE_A              => "SYNC", -- String
@@ -87,8 +85,8 @@ begin
 			WAKEUP_TIME             => "disable_sleep", --STRING
 			WRITE_DATA_WIDTH_A      => g_dat_a_w, --DECIMAL
 			WRITE_DATA_WIDTH_B      => g_dat_b_w, --DECIMAL
-			WRITE_MODE_A            => "no_change", --STRING
-			WRITE_MODE_B            => "no_change" --STRING
+			WRITE_MODE_A            => "write_first", --STRING
+			WRITE_MODE_B            => "write_first" --STRING
 		)
 		port map(
 			dbiterra       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence
@@ -133,10 +131,10 @@ begin
 			-- data path.
 			regceb         => '1',      -- 1-bit input: Clock Enable for the last register stage on the output
 			-- data path.
-			rsta           => rst_a,    -- 1-bit input: Reset signal for the final port A output register
+			rsta           => '0',    -- 1-bit input: Reset signal for the final port A output register
 			-- stage. Synchronously resets output port douta to the value specified
 			-- by parameter READ_RESET_VALUE_B.
-			rstb           => rst_b,
+			rstb           => '0',
 			-- 1-bit input: Reset signal for the final port B output register
 			-- stage. Synchronously resets output port doutb to the value specified
 			-- by parameter READ_RESET_VALUE_B.

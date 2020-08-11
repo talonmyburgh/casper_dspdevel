@@ -49,7 +49,8 @@ vhdl casper_multiplier_lib  \
 "../../../../../../casper_multiplier/ip_cmult_rtl_4dsp.vhd" \
 
 vhdl casper_ram_lib  \
-"../../../../../../casper_ram/ip_xilinx_ram_cr_cw.vhd" \
+"../../../../../../casper_ram/ip_xpm_ram_cr_cw.vhd" \
+"../../../../../../casper_ram/ip_xpm_ram_crw_crw.vhd" \
 
 vhdl r2sdf_fft_lib  \
 "../../../../../rTwoBF.vhd" \
