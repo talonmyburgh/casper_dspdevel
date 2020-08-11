@@ -11,7 +11,7 @@ cntlib.add_source_files("*.vhd")
 
 pkglib = vu.add_library("common_pkg_lib")
 
-pkglib.add_source_files("../casper_common_pkg/*.vhd")
+pkglib.add_source_files("../common_pkg/*.vhd")
 
 # Run vunit function
 vu.main()

@@ -32,8 +32,6 @@ ENTITY common_ram_crw_crw IS
 		g_ram_primitive  : STRING  := "auto"
 	);
 	PORT(
-		rst_a    : IN  STD_LOGIC                                  := '0';
-		rst_b    : IN  STD_LOGIC                                  := '0';
 		clk_a    : IN  STD_LOGIC;
 		clk_b    : IN  STD_LOGIC;
 		clken_a  : IN  STD_LOGIC                                  := '1';
@@ -87,8 +85,6 @@ BEGIN
 				g_ram_primitive => g_ram_primitive
 			)
 			PORT MAP(
-				rst_a     => rst_a,
-				rst_b     => rst_b,
 				clock_a   => clk_a,
 				clock_b   => clk_b,
 				enable_a  => clken_a,
@@ -115,7 +111,6 @@ BEGIN
 				g_ram_primitive => g_ram_primitive
 			)
 			PORT MAP(
-				rst       => rst_b,
 				wrclock   => clk_a,
 				wrclocken => clken_a,
 				wren      => wr_en_a,

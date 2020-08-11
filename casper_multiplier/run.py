@@ -38,11 +38,11 @@ generate_tests(TB_GENERATED, [4,8], [False,True],1, 0, 1, 1)
 
 # Create library 'common_components_lib'
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)
-lib2.add_source_files("../casper_common_components/*.vhd")
+lib2.add_source_files("../common_components/*.vhd")
 
 # Create library 'casper_common_pkg_lib'
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
-lib3.add_source_files("../casper_common_pkg/*.vhd")
+lib3.add_source_files("../common_pkg/*.vhd")
        
 # Run vunit function
 vu.set_compile_option("ghdl.flags", ["-frelaxed"])

@@ -151,7 +151,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_ram_primitive : STRING
 		);
 		port(
-			rst       : IN  STD_LOGIC;
 			data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 			rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			rdclock   : IN  STD_LOGIC;
@@ -174,8 +173,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_ram_primitive : STRING
 		);
 		port(
-			rst_a     : IN  STD_LOGIC;
-			rst_b     : IN  STD_LOGIC;
 			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			clock_a   : IN  STD_LOGIC;
@@ -206,8 +203,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_ram_primitive : STRING
 		);
 		port(
-			rst_a     : IN  STD_LOGIC;
-			rst_b     : IN  STD_LOGIC;
 			address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
 			address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
 			clock_a   : IN  STD_LOGIC;

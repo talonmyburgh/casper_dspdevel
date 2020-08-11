@@ -24,6 +24,7 @@ set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_property webtalk.parent_dir /home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/r2SDF_FFT_proj/r2SDF_FFT_proj.cache/wt [current_project]
 set_property parent.project_path /home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/r2SDF_FFT_proj/r2SDF_FFT_proj.xpr [current_project]
+set_property XPM_LIBRARIES XPM_MEMORY [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
 set_property ip_output_repo /home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/r2SDF_FFT_proj/r2SDF_FFT_proj.cache/ip [current_project]
@@ -55,7 +56,8 @@ read_vhdl -library casper_ram_lib {
   /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/common_paged_ram_crw_crw.vhd
   /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/common_paged_ram_rw_rw.vhd
   /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/common_paged_ram_r_w.vhd
-  /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/ip_xilinx_ram_cr_cw.vhd
+  /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/ip_xpm_ram_cr_cw.vhd
+  /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_ram/ip_xpm_ram_crw_crw.vhd
 }
 read_vhdl -library casper_requantize_lib {
   /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_requantize/common_round.vhd

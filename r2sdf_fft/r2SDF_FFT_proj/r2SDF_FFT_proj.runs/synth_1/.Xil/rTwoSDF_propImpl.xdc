@@ -1,0 +1,4 @@
+set_property SRC_FILE_INFO {cfile:/opt/Vivado/2019.1/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl rfile:../../../../../../../../../../opt/Vivado/2019.1/data/ip/xpm/xpm_memory/tcl/xpm_memory_xdc.tcl id:1 order:LATE scoped_inst:gen_reorder.u_cplx/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst unmanaged:yes} [current_design]
+current_instance gen_reorder.u_cplx/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst
+set_property src_info {type:SCOPED_XDC file:1 line:3 export:INPUT save:NONE read:READ} [current_design]
+set my_var [get_property dram_emb_xdc [get_cells -hier  -filter {PRIMITIVE_SUBGROUP==LUTRAM || PRIMITIVE_SUBGROUP==dram || PRIMITIVE_SUBGROUP==uram || PRIMITIVE_SUBGROUP==BRAM}]]

@@ -21,8 +21,6 @@ ENTITY ip_xpm_ram_crw_crw IS
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
-		rst_a     : IN  STD_LOGIC;
-		rst_b     : IN  STD_LOGIC;
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		clock_a   : IN  STD_LOGIC := '1';
@@ -46,13 +44,16 @@ architecture Behavioral of ip_xpm_ram_crw_crw is
 
 	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	SIGNAL sub_wire1 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
-	SIGNAL we_a      : STD_LOGIC_VECTOR(0 DOWNTO 0) := (others => wren_a);
-	SIGNAL we_b      : STD_LOGIC_VECTOR(0 DOWNTO 0) := (others => wren_b);
+	SIGNAL we_a      : STD_LOGIC_VECTOR(1 DOWNTO 1);
+	SIGNAL we_b      : STD_LOGIC_VECTOR(1 DOWNTO 1);
 
 begin
 
-	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0) when rden_a = '1' else (others => 'X');
-	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0) when rden_b = '1' else (others => 'X');
+    we_a <= (others=>wren_a);
+    we_b <= (others=>wren_b);
+
+	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);-- when rden_a = '1' else (others => 'X');
+	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0);-- when rden_b = '1' else (others => 'X');
 
 	xpm_memory_tdpram_inst : xpm_memory_tdpram
 		generic map(
@@ -71,8 +72,8 @@ begin
 			MESSAGE_CONTROL         => 0, -- DECIMAL
 			READ_DATA_WIDTH_A       => g_dat_w, -- DECIMAL
 			READ_DATA_WIDTH_B       => g_dat_w, -- DECIMAL
-			READ_LATENCY_A          => g_rd_latency - 1, -- DECIMAL
-			READ_LATENCY_B          => g_rd_latency - 1, -- DECIMAL
+			READ_LATENCY_A          => g_rd_latency, -- DECIMAL
+			READ_LATENCY_B          => g_rd_latency, -- DECIMAL
 			READ_RESET_VALUE_A      => "0", -- String
 			READ_RESET_VALUE_B      => "0", -- String
 			RST_MODE_A              => "SYNC", -- String
@@ -82,8 +83,8 @@ begin
 			WAKEUP_TIME             => "disable_sleep", --STRING
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
 			WRITE_DATA_WIDTH_B      => g_dat_w, --DECIMAL
-			WRITE_MODE_A            => "no_change", --STRING
-			WRITE_MODE_B            => "no_change" --STRING
+			WRITE_MODE_A            => "write_first", --STRING
+			WRITE_MODE_B            => "write_first" --STRING
 		)
 		port map(
 			dbiterra       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence
@@ -128,20 +129,20 @@ begin
 			-- data path.
 			regceb         => '1',      -- 1-bit input: Clock Enable for the last register stage on the output
 			-- data path.
-			rsta           => rst_a,      -- 1-bit input: Reset signal for the final port A output register
+			rsta           => '0',      -- 1-bit input: Reset signal for the final port A output register
 			-- stage. Synchronously resets output port douta to the value specified
 			-- by parameter READ_RESET_VALUE_B.
-			rstb           => rst_b,
+			rstb           => '0',
 			-- 1-bit input: Reset signal for the final port B output register
 			-- stage. Synchronously resets output port doutb to the value specified
 			-- by parameter READ_RESET_VALUE_B.
-			sleep          => '0',      --1-bit input: sleep signal to enable the dynamic power saving feature.
 			wea            => we_a,     --WRITE_DATA_WIDTH_A/BYTE_WRITE_WIDTH_A-bit input: Write enable vector
 			--for port A input data port dina. 1 bit wide when word-wide writes
 			--are used. In byte-wide write configurations, each bit controls the
 			-- writing one byte of dina to address addra. For example, to
 			-- synchronously write only bits [15-8] of dina when WRITE_DATA_WIDTH_A
 			-- is 32, wea would be 4'b0010.
+			sleep          => '0',      --1-bit input: sleep signal to enable the dynamic power saving feature.
 			web            => we_b
 			-- WRITE_DATA_WIDTH_B/BYTE_WRITE_WIDTH_B-bit input: Write enable vector
 			-- for port B input data port dinb. 1 bit wide when word-wide writes

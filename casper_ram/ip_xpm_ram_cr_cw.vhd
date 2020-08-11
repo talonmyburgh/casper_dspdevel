@@ -31,7 +31,6 @@ entity ip_xpm_ram_cr_cw is
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
-		rst       : IN  STD_LOGIC;
 		data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 		rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 		rdclock   : IN  STD_LOGIC;
@@ -50,10 +49,10 @@ architecture Behavioral of ip_xpm_ram_cr_cw is
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
 	CONSTANT c_memsize  : NATURAL := g_nof_words * g_dat_w;
 
-	SIGNAL we_a : STD_LOGIC_VECTOR(0 DOWNTO 0) := (others => wren);
+	SIGNAL we_a : STD_LOGIC_VECTOR(0 DOWNTO 0);
 
 begin
-
+	we_a <= (others=>wren);
 	q <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 
 	xpm_memory_sdpram_inst : xpm_memory_sdpram
@@ -71,7 +70,7 @@ begin
 			MEMORY_SIZE             => c_memsize, -- DECIMAL
 			MESSAGE_CONTROL         => 0, -- DECIMAL
 			READ_DATA_WIDTH_B       => g_dat_w, -- DECIMAL
-			READ_LATENCY_B          => g_rd_latency - 1, -- DECIMAL
+			READ_LATENCY_B          => g_rd_latency, -- DECIMAL
 			READ_RESET_VALUE_B      => "0", -- String
 			RST_MODE_A              => "SYNC", -- String
 			RST_MODE_B              => "SYNC", -- String
@@ -79,7 +78,7 @@ begin
 			USE_MEM_INIT            => 1, --DECIMAL
 			WAKEUP_TIME             => "disable_sleep", --String
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
-			WRITE_MODE_B            => "no_change" --String
+			WRITE_MODE_B            => "write_first" --String
 		)
 		port map(
 			dbiterrb       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence
@@ -108,7 +107,7 @@ begin
 			-- "decode_only" mode).
 			regceb         => '1',      -- 1-bit input: Clock Enable for the last register stage on the output
 			-- data path.
-			rstb           => rst,      -- 1-bit input: Reset signal for the final port B output register
+			rstb           => '0',      -- 1-bit input: Reset signal for the final port B output register
 			-- stage. Synchronously resets output port doutb to the value specified
 			-- by parameter READ_RESET_VALUE_B.
 			sleep          => '0',      --1-bit input: sleep signal to enable the dynamic power saving feature.

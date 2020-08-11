@@ -12,10 +12,10 @@ for x in txt:
         lib1.add_source_files(s)
 
 lib2 = vu.add_library("common_components_lib")
-lib2.add_source_files("../casper_common_components/*.vhd")
+lib2.add_source_files("../common_components/*.vhd")
 
 lib3 = vu.add_library("common_pkg_lib")
-lib3.add_source_files("../casper_common_pkg/*.vhd")
+lib3.add_source_files("../common_pkg/*.vhd")
 
 # Run vunit function
 vu.main()
