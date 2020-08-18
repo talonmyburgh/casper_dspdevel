@@ -17,7 +17,6 @@
 -- 10.1 Build 197 01/19/2011 SP 1 SJ Full Version
 -- ************************************************************
 
-
 --Copyright (C) 1991-2011 Altera Corporation
 --Your use of Altera Corporation's design tools, logic functions 
 --and other software and tools, and its AMPP partner logic 
@@ -32,103 +31,95 @@
 --Altera or its authorized distributors.  Please refer to the 
 --applicable agreement for further details.
 
-
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.all;
-
 
 LIBRARY altera_mf;
 USE altera_mf.all;
 
 ENTITY ip_stratixiv_fifo_sc IS
-  GENERIC (
-    g_use_eab   : STRING := "ON";
-    g_dat_w     : NATURAL;
-    g_nof_words : NATURAL
-  );
-	PORT
-	(
-		aclr		: IN STD_LOGIC ;
-		clock		: IN STD_LOGIC ;
-		data		: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		rdreq		: IN STD_LOGIC ;
-		wrreq		: IN STD_LOGIC ;
-		empty		: OUT STD_LOGIC ;
-		full		: OUT STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0) ;
-		usedw		: OUT STD_LOGIC_VECTOR (ceil_log2(g_nof_words)-1 DOWNTO 0)
+	GENERIC(
+		g_use_eab   : STRING := "ON";
+		g_dat_w     : NATURAL;
+		g_nof_words : NATURAL
+	);
+	PORT(
+		aclr  : IN  STD_LOGIC;
+		clock : IN  STD_LOGIC;
+		data  : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rdreq : IN  STD_LOGIC;
+		wrreq : IN  STD_LOGIC;
+		empty : OUT STD_LOGIC;
+		full  : OUT STD_LOGIC;
+		q     : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		usedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
 	);
 END ip_stratixiv_fifo_sc;
 
-
 ARCHITECTURE SYN OF ip_stratixiv_fifo_sc IS
 
-	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (usedw'RANGE);
-	SIGNAL sub_wire1	: STD_LOGIC ;
-	SIGNAL sub_wire2	: STD_LOGIC ;
-	SIGNAL sub_wire3	: STD_LOGIC_VECTOR (data'RANGE);
-
-
+	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(usedw'RANGE);
+	SIGNAL sub_wire1 : STD_LOGIC;
+	SIGNAL sub_wire2 : STD_LOGIC;
+	SIGNAL sub_wire3 : STD_LOGIC_VECTOR(data'RANGE);
 
 	COMPONENT scfifo
-	GENERIC (
-		add_ram_output_register		: STRING;
-		intended_device_family		: STRING;
-		lpm_numwords		: NATURAL;
-		lpm_showahead		: STRING;
-		lpm_type		: STRING;
-		lpm_width		: NATURAL;
-		lpm_widthu		: NATURAL;
-		overflow_checking		: STRING;
-		underflow_checking		: STRING;
-		use_eab		: STRING
-	);
-	PORT (
-			clock	: IN STD_LOGIC ;
-			usedw	: OUT STD_LOGIC_VECTOR (ceil_log2(g_nof_words)-1 DOWNTO 0);
-			empty	: OUT STD_LOGIC ;
-			full	: OUT STD_LOGIC ;
-			q	: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			wrreq	: IN STD_LOGIC ;
-			aclr	: IN STD_LOGIC ;
-			data	: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			rdreq	: IN STD_LOGIC 
-	);
+		GENERIC(
+			add_ram_output_register : STRING;
+			intended_device_family  : STRING;
+			lpm_numwords            : NATURAL;
+			lpm_showahead           : STRING;
+			lpm_type                : STRING;
+			lpm_width               : NATURAL;
+			lpm_widthu              : NATURAL;
+			overflow_checking       : STRING;
+			underflow_checking      : STRING;
+			use_eab                 : STRING
+		);
+		PORT(
+			clock : IN  STD_LOGIC;
+			usedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0);
+			empty : OUT STD_LOGIC;
+			full  : OUT STD_LOGIC;
+			q     : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			wrreq : IN  STD_LOGIC;
+			aclr  : IN  STD_LOGIC;
+			data  : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			rdreq : IN  STD_LOGIC
+		);
 	END COMPONENT;
 
 BEGIN
-	usedw    <= sub_wire0;
-	empty    <= sub_wire1;
-	full    <= sub_wire2;
-	q    <= sub_wire3;
+	usedw <= sub_wire0;
+	empty <= sub_wire1;
+	full  <= sub_wire2;
+	q     <= sub_wire3;
 
 	scfifo_component : scfifo
-	GENERIC MAP (
-		add_ram_output_register => "ON",
-		intended_device_family => "Stratix IV",
-		lpm_numwords => g_nof_words,
-		lpm_showahead => "OFF",
-		lpm_type => "scfifo",
-		lpm_width => g_dat_w,
-		lpm_widthu => ceil_log2(g_nof_words),
-		overflow_checking => "ON",
-		underflow_checking => "ON",
-		use_eab => g_use_eab
-	)
-	PORT MAP (
-		clock => clock,
-		wrreq => wrreq,
-		aclr => aclr,
-		data => data,
-		rdreq => rdreq,
-		usedw => sub_wire0,
-		empty => sub_wire1,
-		full => sub_wire2,
-		q => sub_wire3
-	);
-
-
+		GENERIC MAP(
+			add_ram_output_register => "ON",
+			intended_device_family  => "Stratix IV",
+			lpm_numwords            => g_nof_words,
+			lpm_showahead           => "OFF",
+			lpm_type                => "scfifo",
+			lpm_width               => g_dat_w,
+			lpm_widthu              => ceil_log2(g_nof_words),
+			overflow_checking       => "ON",
+			underflow_checking      => "ON",
+			use_eab                 => g_use_eab
+		)
+		PORT MAP(
+			clock => clock,
+			wrreq => wrreq,
+			aclr  => aclr,
+			data  => data,
+			rdreq => rdreq,
+			usedw => sub_wire0,
+			empty => sub_wire1,
+			full  => sub_wire2,
+			q     => sub_wire3
+		);
 
 END SYN;
 

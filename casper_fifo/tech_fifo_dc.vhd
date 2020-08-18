@@ -34,11 +34,11 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY tech_fifo_dc IS
 	GENERIC(
-		g_technology : NATURAL := 0;    --c_tech_select_default;
-		g_use_eab    : STRING  := "ON";
-		g_dat_w      : NATURAL;
-		g_nof_words  : NATURAL;
-		g_device     : STRING  := "7SERIES"
+		g_technology     : NATURAL := 0; --c_tech_select_default;
+		g_use_eab        : STRING  := "ON";
+		g_dat_w          : NATURAL;
+		g_nof_words      : NATURAL;
+		g_fifo_primitive : STRING  := "auto"
 	);
 	PORT(
 		aclr    : IN  STD_LOGIC := '0';
@@ -59,28 +59,28 @@ ARCHITECTURE str OF tech_fifo_dc IS
 
 BEGIN
 
-gen_ip_xilinx : IF g_technology = 0 GENERATE
-	u0 : ip_xilinx_fifo_dc
-		generic map(
-			g_device    => g_device,
-			g_dat_w     => g_dat_w,
-			g_nof_words => g_nof_words
-		)
-		port map(
-			rdclk   => rdclk,
-			wrclk   => wrclk,
-			aclr    => aclr,
-			data    => data,
-			rdreq   => rdreq,
-			wrreq   => wrreq,
-			q       => q,
-			rdempty => rdempty,
-			rdusedw => rdusedw,
-			wrfull  => wrfull,
-			wrusedw => wrusedw
-		);
-	END GENERATE;
-	
+	gen_ip_xilinx : IF g_technology = 0 GENERATE
+		u1 : ip_xilinx_fifo_dc
+			generic map(
+				g_dat_w          => g_dat_w,
+				g_nof_words      => g_nof_words,
+				g_fifo_primitive => g_fifo_primitive
+			)
+			port map(
+				aclr    => aclr,
+				data    => data,
+				rdclk   => rdclk,
+				rdreq   => rdreq,
+				wrclk   => wrclk,
+				wrreq   => wrreq,
+				q       => q,
+				rdempty => rdempty,
+				rdusedw => rdusedw,
+				wrfull  => wrfull,
+				wrusedw => wrusedw
+			);
+	end generate;
+
 	gen_ip_stratixiv : IF g_technology = 1 GENERATE
 		u0 : ip_stratixiv_fifo_dc
 			GENERIC MAP(g_dat_w, g_nof_words)

@@ -1,0 +1,941 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Fri Aug 14 12:53:32 2020
+# Process ID: 1451
+# Current directory: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/casper_fifo_proj/casper_fifo_proj.runs/synth_1
+# Command line: vivado -log dp_fifo_fill.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source dp_fifo_fill.tcl
+# Log file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/casper_fifo_proj/casper_fifo_proj.runs/synth_1/dp_fifo_fill.vds
+# Journal file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/casper_fifo_proj/casper_fifo_proj.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source dp_fifo_fill.tcl -notrace
+Command: synth_design -top dp_fifo_fill -part xc7vx690tffg1927-2
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7vx690t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7vx690t'
+INFO: [Common 17-1540] The version limit for your license is '2019.07' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
+INFO: [Device 21-403] Loading part xc7vx690tffg1927-2
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 1482 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1955.023 ; gain = 150.684 ; free physical = 7068 ; free virtual = 14085
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-2048] function split_w does not always return a value [/home/talon/Documents/CASPERWORK/casper_dspdevel/common_pkg/common_pkg.vhd:2326]
+INFO: [Synth 8-638] synthesizing module 'dp_fifo_fill' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill.vhd:73]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_data_w bound to: 16 - type: integer 
+	Parameter g_bsn_w bound to: 1 - type: integer 
+	Parameter g_empty_w bound to: 1 - type: integer 
+	Parameter g_channel_w bound to: 1 - type: integer 
+	Parameter g_error_w bound to: 1 - type: integer 
+	Parameter g_use_bsn bound to: 0 - type: bool 
+	Parameter g_use_empty bound to: 0 - type: bool 
+	Parameter g_use_channel bound to: 0 - type: bool 
+	Parameter g_use_error bound to: 0 - type: bool 
+	Parameter g_use_sync bound to: 0 - type: bool 
+	Parameter g_use_complex bound to: 0 - type: bool 
+	Parameter g_fifo_fill bound to: 0 - type: integer 
+	Parameter g_fifo_size bound to: 256 - type: integer 
+	Parameter g_fifo_af_margin bound to: 4 - type: integer 
+	Parameter g_fifo_rl bound to: 1 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'dp_fifo_fill_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill_sc.vhd:71]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_data_w bound to: 16 - type: integer 
+	Parameter g_bsn_w bound to: 1 - type: integer 
+	Parameter g_empty_w bound to: 1 - type: integer 
+	Parameter g_channel_w bound to: 1 - type: integer 
+	Parameter g_error_w bound to: 1 - type: integer 
+	Parameter g_use_bsn bound to: 0 - type: bool 
+	Parameter g_use_empty bound to: 0 - type: bool 
+	Parameter g_use_channel bound to: 0 - type: bool 
+	Parameter g_use_error bound to: 0 - type: bool 
+	Parameter g_use_sync bound to: 0 - type: bool 
+	Parameter g_use_complex bound to: 0 - type: bool 
+	Parameter g_fifo_fill bound to: 0 - type: integer 
+	Parameter g_fifo_size bound to: 256 - type: integer 
+	Parameter g_fifo_af_margin bound to: 4 - type: integer 
+	Parameter g_fifo_rl bound to: 1 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'dp_fifo_fill_core' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill_core.vhd:108]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_use_dual_clock bound to: 0 - type: bool 
+	Parameter g_data_w bound to: 16 - type: integer 
+	Parameter g_bsn_w bound to: 1 - type: integer 
+	Parameter g_empty_w bound to: 1 - type: integer 
+	Parameter g_channel_w bound to: 1 - type: integer 
+	Parameter g_error_w bound to: 1 - type: integer 
+	Parameter g_use_bsn bound to: 0 - type: bool 
+	Parameter g_use_empty bound to: 0 - type: bool 
+	Parameter g_use_channel bound to: 0 - type: bool 
+	Parameter g_use_error bound to: 0 - type: bool 
+	Parameter g_use_sync bound to: 0 - type: bool 
+	Parameter g_use_complex bound to: 0 - type: bool 
+	Parameter g_fifo_fill bound to: 0 - type: integer 
+	Parameter g_fifo_size bound to: 256 - type: integer 
+	Parameter g_fifo_af_margin bound to: 4 - type: integer 
+	Parameter g_fifo_rl bound to: 1 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'dp_fifo_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_sc.vhd:68]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_note_is_ful bound to: 1 - type: bool 
+	Parameter g_use_lut bound to: 0 - type: bool 
+	Parameter g_data_w bound to: 16 - type: integer 
+	Parameter g_bsn_w bound to: 1 - type: integer 
+	Parameter g_empty_w bound to: 1 - type: integer 
+	Parameter g_channel_w bound to: 1 - type: integer 
+	Parameter g_error_w bound to: 1 - type: integer 
+	Parameter g_use_bsn bound to: 0 - type: bool 
+	Parameter g_use_empty bound to: 0 - type: bool 
+	Parameter g_use_channel bound to: 0 - type: bool 
+	Parameter g_use_error bound to: 0 - type: bool 
+	Parameter g_use_sync bound to: 0 - type: bool 
+	Parameter g_use_ctrl bound to: 1 - type: bool 
+	Parameter g_use_complex bound to: 0 - type: bool 
+	Parameter g_fifo_size bound to: 256 - type: integer 
+	Parameter g_fifo_af_margin bound to: 4 - type: integer 
+	Parameter g_fifo_rl bound to: 1 - type: integer 
+INFO: [Synth 8-638] synthesizing module 'dp_fifo_core' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_core.vhd:91]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_note_is_ful bound to: 1 - type: bool 
+	Parameter g_use_dual_clock bound to: 0 - type: bool 
+	Parameter g_use_lut_sc bound to: 0 - type: bool 
+	Parameter g_data_w bound to: 16 - type: integer 
+	Parameter g_data_signed bound to: 0 - type: bool 
+	Parameter g_bsn_w bound to: 1 - type: integer 
+	Parameter g_empty_w bound to: 1 - type: integer 
+	Parameter g_channel_w bound to: 1 - type: integer 
+	Parameter g_error_w bound to: 1 - type: integer 
+	Parameter g_use_bsn bound to: 0 - type: bool 
+	Parameter g_use_empty bound to: 0 - type: bool 
+	Parameter g_use_channel bound to: 0 - type: bool 
+	Parameter g_use_error bound to: 0 - type: bool 
+	Parameter g_use_sync bound to: 0 - type: bool 
+	Parameter g_use_ctrl bound to: 1 - type: bool 
+	Parameter g_use_complex bound to: 0 - type: bool 
+	Parameter g_fifo_size bound to: 256 - type: integer 
+	Parameter g_fifo_af_margin bound to: 4 - type: integer 
+	Parameter g_fifo_rl bound to: 1 - type: integer 
+	Parameter g_fifo_primitive bound to: auto - type: string 
+INFO: [Synth 8-638] synthesizing module 'common_fifo_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/common_fifo_sc.vhd:58]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_note_is_ful bound to: 1 - type: bool 
+	Parameter g_fail_rd_emp bound to: 0 - type: bool 
+	Parameter g_use_lut bound to: 0 - type: bool 
+	Parameter g_reset bound to: 0 - type: bool 
+	Parameter g_init bound to: 0 - type: bool 
+	Parameter g_dat_w bound to: 18 - type: integer 
+	Parameter g_nof_words bound to: 256 - type: integer 
+	Parameter g_af_margin bound to: 0 - type: integer 
+	Parameter g_fifo_primitive bound to: auto - type: string 
+INFO: [Synth 8-638] synthesizing module 'tech_fifo_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/tech_fifo_sc.vhd:53]
+	Parameter g_technology bound to: 0 - type: integer 
+	Parameter g_use_eab bound to: ON - type: string 
+	Parameter g_dat_w bound to: 18 - type: integer 
+	Parameter g_nof_words bound to: 256 - type: integer 
+	Parameter g_fifo_primitive bound to: auto - type: string 
+	Parameter g_use_eab bound to: ON - type: string 
+	Parameter g_dat_w bound to: 18 - type: integer 
+	Parameter g_nof_words bound to: 256 - type: integer 
+	Parameter g_fifo_primitive bound to: auto - type: string 
+INFO: [Synth 8-3491] module 'ip_xilinx_fifo_sc' declared at '/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd:7' bound to instance 'u1' of component 'ip_xilinx_fifo_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/tech_fifo_sc.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'ip_xilinx_fifo_sc' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd:27]
+	Parameter g_use_eab bound to: ON - type: string 
+	Parameter g_dat_w bound to: 18 - type: integer 
+	Parameter g_nof_words bound to: 256 - type: integer 
+	Parameter g_fifo_primitive bound to: auto - type: string 
+	Parameter FIFO_MEMORY_TYPE bound to: auto - type: string 
+	Parameter FIFO_WRITE_DEPTH bound to: 256 - type: integer 
+	Parameter WRITE_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter READ_MODE bound to: std - type: string 
+	Parameter FIFO_READ_LATENCY bound to: 1 - type: integer 
+	Parameter FULL_RESET_VALUE bound to: 0 - type: integer 
+	Parameter USE_ADV_FEATURES bound to: 0707 - type: string 
+	Parameter READ_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter WR_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_FULL_THRESH bound to: 10 - type: integer 
+	Parameter RD_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_EMPTY_THRESH bound to: 10 - type: integer 
+	Parameter DOUT_RESET_VALUE bound to: 0 - type: string 
+	Parameter ECC_MODE bound to: no_ecc - type: string 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter WAKEUP_TIME bound to: 0 - type: integer 
+INFO: [Synth 8-3491] module 'xpm_fifo_sync' declared at '/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1833' bound to instance 'xpm_fifo_sync_inst' of component 'xpm_fifo_sync' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd:47]
+INFO: [Synth 8-6157] synthesizing module 'xpm_fifo_sync' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1833]
+	Parameter FIFO_MEMORY_TYPE bound to: auto - type: string 
+	Parameter ECC_MODE bound to: no_ecc - type: string 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter FIFO_WRITE_DEPTH bound to: 256 - type: integer 
+	Parameter WRITE_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter WR_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_FULL_THRESH bound to: 10 - type: integer 
+	Parameter FULL_RESET_VALUE bound to: 0 - type: integer 
+	Parameter USE_ADV_FEATURES bound to: 0707 - type: string 
+	Parameter READ_MODE bound to: std - type: string 
+	Parameter FIFO_READ_LATENCY bound to: 1 - type: integer 
+	Parameter READ_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter RD_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_EMPTY_THRESH bound to: 10 - type: integer 
+	Parameter DOUT_RESET_VALUE bound to: 0 - type: string 
+	Parameter WAKEUP_TIME bound to: 0 - type: integer 
+	Parameter EN_ADV_FEATURE_SYNC bound to: 16'b0000011100000111 
+	Parameter P_FIFO_MEMORY_TYPE bound to: 0 - type: integer 
+	Parameter P_COMMON_CLOCK bound to: 1 - type: integer 
+	Parameter P_ECC_MODE bound to: 0 - type: integer 
+	Parameter P_READ_MODE bound to: 0 - type: integer 
+	Parameter P_WAKEUP_TIME bound to: 2 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'xpm_fifo_base' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:56]
+	Parameter COMMON_CLOCK bound to: 1 - type: integer 
+	Parameter RELATED_CLOCKS bound to: 0 - type: integer 
+	Parameter FIFO_MEMORY_TYPE bound to: 0 - type: integer 
+	Parameter ECC_MODE bound to: 0 - type: integer 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter FIFO_WRITE_DEPTH bound to: 256 - type: integer 
+	Parameter WRITE_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter WR_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_FULL_THRESH bound to: 10 - type: integer 
+	Parameter USE_ADV_FEATURES bound to: 0707 - type: string 
+	Parameter READ_MODE bound to: 0 - type: integer 
+	Parameter FIFO_READ_LATENCY bound to: 1 - type: integer 
+	Parameter READ_DATA_WIDTH bound to: 18 - type: integer 
+	Parameter RD_DATA_COUNT_WIDTH bound to: 9 - type: integer 
+	Parameter PROG_EMPTY_THRESH bound to: 10 - type: integer 
+	Parameter DOUT_RESET_VALUE bound to: 0 - type: string 
+	Parameter CDC_DEST_SYNC_FF bound to: 2 - type: integer 
+	Parameter FULL_RESET_VALUE bound to: 0 - type: integer 
+	Parameter REMOVE_WR_RD_PROT_LOGIC bound to: 0 - type: integer 
+	Parameter WAKEUP_TIME bound to: 0 - type: integer 
+	Parameter VERSION bound to: 0 - type: integer 
+	Parameter invalid bound to: 0 - type: integer 
+	Parameter stage1_valid bound to: 2 - type: integer 
+	Parameter stage2_valid bound to: 1 - type: integer 
+	Parameter both_stages_valid bound to: 3 - type: integer 
+	Parameter FIFO_MEM_TYPE bound to: 0 - type: integer 
+	Parameter RD_MODE bound to: 0 - type: integer 
+	Parameter ENABLE_ECC bound to: 0 - type: integer 
+	Parameter FIFO_READ_DEPTH bound to: 256 - type: integer 
+	Parameter FIFO_SIZE bound to: 4608 - type: integer 
+	Parameter WR_WIDTH_LOG bound to: 5 - type: integer 
+	Parameter WR_DEPTH_LOG bound to: 8 - type: integer 
+	Parameter WR_PNTR_WIDTH bound to: 8 - type: integer 
+	Parameter RD_PNTR_WIDTH bound to: 8 - type: integer 
+	Parameter FULL_RST_VAL bound to: 1'b0 
+	Parameter WR_RD_RATIO bound to: 0 - type: integer 
+	Parameter PF_THRESH_ADJ bound to: 10 - type: integer 
+	Parameter PE_THRESH_ADJ bound to: 10 - type: integer 
+	Parameter PF_THRESH_MIN bound to: 3 - type: integer 
+	Parameter PF_THRESH_MAX bound to: 253 - type: integer 
+	Parameter PE_THRESH_MIN bound to: 3 - type: integer 
+	Parameter PE_THRESH_MAX bound to: 253 - type: integer 
+	Parameter WR_DC_WIDTH_EXT bound to: 9 - type: integer 
+	Parameter RD_DC_WIDTH_EXT bound to: 9 - type: integer 
+	Parameter RD_LATENCY bound to: 1 - type: integer 
+	Parameter WIDTH_RATIO bound to: 1 - type: integer 
+	Parameter EN_ADV_FEATURE bound to: 16'b0000011100000111 
+	Parameter EN_OF bound to: 1'b1 
+	Parameter EN_PF bound to: 1'b1 
+	Parameter EN_WDC bound to: 1'b1 
+	Parameter EN_AF bound to: 1'b0 
+	Parameter EN_WACK bound to: 1'b0 
+	Parameter FG_EQ_ASYM_DOUT bound to: 1'b0 
+	Parameter EN_UF bound to: 1'b1 
+	Parameter EN_PE bound to: 1'b1 
+	Parameter EN_RDC bound to: 1'b1 
+	Parameter EN_AE bound to: 1'b0 
+	Parameter EN_DVLD bound to: 1'b0 
+INFO: [Synth 8-6157] synthesizing module 'xpm_memory_base' [/opt/Vivado/2019.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv:57]
+	Parameter MEMORY_TYPE bound to: 1 - type: integer 
+	Parameter MEMORY_SIZE bound to: 4608 - type: integer 
+	Parameter MEMORY_PRIMITIVE bound to: 0 - type: integer 
+	Parameter CLOCKING_MODE bound to: 0 - type: integer 
+	Parameter ECC_MODE bound to: 0 - type: integer 
+	Parameter MEMORY_INIT_FILE bound to: none - type: string 
+	Parameter MEMORY_INIT_PARAM bound to: (null) - type: string 
+	Parameter USE_MEM_INIT bound to: 0 - type: integer 
+	Parameter MEMORY_OPTIMIZATION bound to: true - type: string 
+	Parameter WAKEUP_TIME bound to: 0 - type: integer 
+	Parameter AUTO_SLEEP_TIME bound to: 0 - type: integer 
+	Parameter MESSAGE_CONTROL bound to: 0 - type: integer 
+	Parameter VERSION bound to: 0 - type: integer 
+	Parameter USE_EMBEDDED_CONSTRAINT bound to: 0 - type: integer 
+	Parameter CASCADE_HEIGHT bound to: 0 - type: integer 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+	Parameter WRITE_DATA_WIDTH_A bound to: 18 - type: integer 
+	Parameter READ_DATA_WIDTH_A bound to: 18 - type: integer 
+	Parameter BYTE_WRITE_WIDTH_A bound to: 18 - type: integer 
+	Parameter ADDR_WIDTH_A bound to: 8 - type: integer 
+	Parameter READ_RESET_VALUE_A bound to: 0 - type: string 
+	Parameter READ_LATENCY_A bound to: 2 - type: integer 
+	Parameter WRITE_MODE_A bound to: 2 - type: integer 
+	Parameter RST_MODE_A bound to: SYNC - type: string 
+	Parameter WRITE_DATA_WIDTH_B bound to: 18 - type: integer 
+	Parameter READ_DATA_WIDTH_B bound to: 18 - type: integer 
+	Parameter BYTE_WRITE_WIDTH_B bound to: 18 - type: integer 
+	Parameter ADDR_WIDTH_B bound to: 8 - type: integer 
+	Parameter READ_RESET_VALUE_B bound to: 0 - type: string 
+	Parameter READ_LATENCY_B bound to: 1 - type: integer 
+	Parameter WRITE_MODE_B bound to: 2 - type: integer 
+	Parameter RST_MODE_B bound to: SYNC - type: string 
+	Parameter P_MEMORY_PRIMITIVE bound to: auto - type: string 
+	Parameter P_MIN_WIDTH_DATA_A bound to: 18 - type: integer 
+	Parameter P_MIN_WIDTH_DATA_B bound to: 18 - type: integer 
+	Parameter P_MIN_WIDTH_DATA bound to: 18 - type: integer 
+	Parameter P_MIN_WIDTH_DATA_ECC bound to: 18 - type: integer 
+	Parameter P_MAX_DEPTH_DATA bound to: 256 - type: integer 
+	Parameter P_ECC_MODE bound to: no_ecc - type: string 
+	Parameter P_MEMORY_OPT bound to: yes - type: string 
+	Parameter P_WIDTH_COL_WRITE_A bound to: 18 - type: integer 
+	Parameter P_WIDTH_COL_WRITE_B bound to: 18 - type: integer 
+	Parameter P_NUM_COLS_WRITE_A bound to: 1 - type: integer 
+	Parameter P_NUM_COLS_WRITE_B bound to: 1 - type: integer 
+	Parameter P_NUM_ROWS_WRITE_A bound to: 1 - type: integer 
+	Parameter P_NUM_ROWS_WRITE_B bound to: 1 - type: integer 
+	Parameter P_NUM_ROWS_READ_A bound to: 1 - type: integer 
+	Parameter P_NUM_ROWS_READ_B bound to: 1 - type: integer 
+	Parameter P_WIDTH_ADDR_WRITE_A bound to: 8 - type: integer 
+	Parameter P_WIDTH_ADDR_WRITE_B bound to: 8 - type: integer 
+	Parameter P_WIDTH_ADDR_READ_A bound to: 8 - type: integer 
+	Parameter P_WIDTH_ADDR_READ_B bound to: 8 - type: integer 
+	Parameter P_WIDTH_ADDR_LSB_WRITE_A bound to: 0 - type: integer 
+	Parameter P_WIDTH_ADDR_LSB_WRITE_B bound to: 0 - type: integer 
+	Parameter P_WIDTH_ADDR_LSB_READ_A bound to: 0 - type: integer 
+	Parameter P_WIDTH_ADDR_LSB_READ_B bound to: 0 - type: integer 
+	Parameter P_ENABLE_BYTE_WRITE_A bound to: 0 - type: integer 
+	Parameter P_ENABLE_BYTE_WRITE_B bound to: 0 - type: integer 
+	Parameter P_SDP_WRITE_MODE bound to: yes - type: string 
+	Parameter rsta_loop_iter bound to: 20 - type: integer 
+	Parameter rstb_loop_iter bound to: 20 - type: integer 
+	Parameter NUM_CHAR_LOC bound to: 0 - type: integer 
+	Parameter MAX_NUM_CHAR bound to: 0 - type: integer 
+	Parameter P_MIN_WIDTH_DATA_SHFT bound to: 18 - type: integer 
+	Parameter P_MIN_WIDTH_DATA_LDW bound to: 4 - type: integer 
+INFO: [Synth 8-6059] Synth Info: [XPM_MEMORY 20-1] MEMORY_PRIMITIVE (0) instructs Vivado Synthesis to choose the memory primitive type. Depending on their values, other XPM_MEMORY parameters may preclude the choice of certain memory primitive types. Review XPM_MEMORY documentation and parameter values to understand any limitations, or set MEMORY_PRIMITIVE to a different value.   [/opt/Vivado/2019.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv:486]
+INFO: [Synth 8-5772] Detected attribute (* ram_ecc = "no_ecc" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_memory_base' (1#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv:57]
+INFO: [Synth 8-6157] synthesizing module 'xpm_fifo_rst' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1504]
+	Parameter COMMON_CLOCK bound to: 1 - type: integer 
+	Parameter CDC_DEST_SYNC_FF bound to: 2 - type: integer 
+	Parameter SIM_ASSERT_CHK bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_fifo_rst' (2#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1504]
+INFO: [Synth 8-6157] synthesizing module 'xpm_fifo_reg_bit' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1788]
+	Parameter RST_VALUE bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_fifo_reg_bit' (3#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1788]
+INFO: [Synth 8-6157] synthesizing module 'xpm_counter_updn' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+	Parameter COUNTER_WIDTH bound to: 9 - type: integer 
+	Parameter RESET_VALUE bound to: 0 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_counter_updn' (4#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+INFO: [Synth 8-6157] synthesizing module 'xpm_counter_updn__parameterized0' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+	Parameter COUNTER_WIDTH bound to: 8 - type: integer 
+	Parameter RESET_VALUE bound to: 1 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_counter_updn__parameterized0' (4#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+INFO: [Synth 8-6157] synthesizing module 'xpm_counter_updn__parameterized1' [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+	Parameter COUNTER_WIDTH bound to: 8 - type: integer 
+	Parameter RESET_VALUE bound to: 2 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_counter_updn__parameterized1' (4#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1740]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_fifo_base' (5#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:56]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-6155] done synthesizing module 'xpm_fifo_sync' (6#1) [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1833]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+WARNING: [Synth 8-3848] Net sub_wire0 in module/entity ip_xilinx_fifo_sc does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd:30]
+INFO: [Synth 8-256] done synthesizing module 'ip_xilinx_fifo_sc' (7#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd:27]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'tech_fifo_sc' (8#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/tech_fifo_sc.vhd:53]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'common_fifo_sc' (9#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/common_fifo_sc.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'dp_latency_adapter' [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_dp_components/dp_latency_adapter.vhd:69]
+	Parameter g_in_latency bound to: 1 - type: integer 
+	Parameter g_out_latency bound to: 1 - type: integer 
+WARNING: [Synth 8-3848] Net fifo_usedw in module/entity dp_latency_adapter does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_dp_components/dp_latency_adapter.vhd:56]
+WARNING: [Synth 8-3848] Net fifo_ful in module/entity dp_latency_adapter does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_dp_components/dp_latency_adapter.vhd:57]
+WARNING: [Synth 8-3848] Net fifo_emp in module/entity dp_latency_adapter does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_dp_components/dp_latency_adapter.vhd:58]
+INFO: [Synth 8-256] done synthesizing module 'dp_latency_adapter' (10#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_dp_components/dp_latency_adapter.vhd:69]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'dp_fifo_core' (11#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_core.vhd:91]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'dp_fifo_sc' (12#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_sc.vhd:68]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'dp_fifo_fill_core' (13#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill_core.vhd:108]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'dp_fifo_fill_sc' (14#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill_sc.vhd:71]
+INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
+INFO: [Synth 8-256] done synthesizing module 'dp_fifo_fill' (15#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/dp_fifo_fill.vhd:73]
+WARNING: [Synth 8-3331] design xpm_fifo_rst has unconnected port rd_clk
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port sleep
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port rsta
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port regcea
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port injectsbiterra
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port injectdbiterra
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port clkb
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port regceb
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[17]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[16]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[15]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[14]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[13]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[12]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[11]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[10]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[9]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[8]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[7]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[6]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[5]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[4]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[3]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[2]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[1]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port dinb[0]
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port injectsbiterrb
+WARNING: [Synth 8-3331] design xpm_memory_base has unconnected port injectdbiterrb
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[7]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[6]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[5]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[4]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[3]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[2]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[1]
+WARNING: [Synth 8-3331] design ip_xilinx_fifo_sc has unconnected port usedw[0]
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port fifo_usedw[1]
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port fifo_usedw[0]
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port fifo_ful
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port fifo_emp
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port rst
+WARNING: [Synth 8-3331] design dp_latency_adapter has unconnected port clk
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[sync]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][63]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][62]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][61]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][60]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][59]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][58]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][57]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][56]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][55]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][54]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][53]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][52]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][51]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][50]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][49]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][48]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][47]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][46]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][45]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][44]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][43]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][42]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][41]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][40]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][39]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][38]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][37]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][36]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][35]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][34]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][33]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][32]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][31]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][30]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][29]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][28]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][27]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][26]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][25]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][24]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][23]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][22]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][21]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][20]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][19]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][18]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][17]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][16]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][15]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][14]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][13]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][12]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][11]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][10]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][9]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][8]
+WARNING: [Synth 8-3331] design dp_fifo_core has unconnected port snk_in[bsn][7]
+INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2012.742 ; gain = 208.402 ; free physical = 7091 ; free virtual = 14108
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2018.680 ; gain = 214.340 ; free physical = 7088 ; free virtual = 14106
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2018.680 ; gain = 214.340 ; free physical = 7088 ; free virtual = 14106
+---------------------------------------------------------------------------------
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Sourcing Tcl File [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/tcl/xpm_fifo_rst.tcl] for cell 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst'
+Finished Sourcing Tcl File [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/tcl/xpm_fifo_rst.tcl] for cell 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst'
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/tcl/xpm_fifo_rst.tcl]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/dp_fifo_fill_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/dp_fifo_fill_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2211.211 ; gain = 0.000 ; free physical = 6979 ; free virtual = 13997
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2211.211 ; gain = 0.000 ; free physical = 6979 ; free virtual = 13997
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6975 ; free virtual = 13993
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7vx690tffg1927-2
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6975 ; free virtual = 13993
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property DONT_TOUCH = true for u_dp_fifo_fill_sc/u_dp_fifo_fill_core/\gen_dp_fifo_sc.u_dp_fifo_sc /u_dp_fifo_core/\gen_common_fifo_sc.u_common_fifo_sc /u_fifo/\gen_ip_xilinx.u1 /xpm_fifo_sync_inst. (constraint file  auto generated constraint, line ).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6975 ; free virtual = 13993
+---------------------------------------------------------------------------------
+INFO: [Synth 8-5818] HDL ADVISOR - The operator resource <adder> is shared. To prevent sharing consider applying a KEEP on the output of the operator [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1056]
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:10 ; elapsed = 00:00:12 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6967 ; free virtual = 13985
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input      9 Bit       Adders := 2     
+	   2 Input      9 Bit       Adders := 1     
+	   3 Input      9 Bit       Adders := 2     
+	   4 Input      8 Bit       Adders := 3     
+	   3 Input      8 Bit       Adders := 1     
++---Registers : 
+	               18 Bit    Registers := 1     
+	                9 Bit    Registers := 5     
+	                8 Bit    Registers := 4     
+	                3 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 17    
++---RAMs : 
+	               4K Bit         RAMs := 1     
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 3     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module xpm_memory_base 
+Detailed RTL Component Info : 
++---Registers : 
+	               18 Bit    Registers := 1     
++---RAMs : 
+	               4K Bit         RAMs := 1     
+Module xpm_fifo_rst 
+Detailed RTL Component Info : 
++---Registers : 
+	                3 Bit    Registers := 1     
+	                2 Bit    Registers := 1     
+Module xpm_fifo_reg_bit 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+Module xpm_counter_updn 
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input      9 Bit       Adders := 1     
++---Registers : 
+	                9 Bit    Registers := 1     
+Module xpm_counter_updn__parameterized0 
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input      8 Bit       Adders := 1     
++---Registers : 
+	                8 Bit    Registers := 1     
+Module xpm_counter_updn__parameterized1 
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input      8 Bit       Adders := 1     
++---Registers : 
+	                8 Bit    Registers := 1     
+Module xpm_fifo_base 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input      9 Bit       Adders := 1     
+	   3 Input      9 Bit       Adders := 2     
+	   3 Input      8 Bit       Adders := 1     
++---Registers : 
+	                9 Bit    Registers := 3     
+	                8 Bit    Registers := 1     
+	                1 Bit    Registers := 11    
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 3     
+Module common_fifo_sc 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 2     
+Module dp_fifo_core 
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 2     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 3600 (col length:200)
+BRAMs: 2940 (col length: RAMB18 200 RAMB36 100)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[31] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[30] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[29] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[28] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[27] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[26] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[25] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[24] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[23] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[22] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[21] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[20] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[19] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[18] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[17] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[16] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[15] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[14] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[13] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[12] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[11] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[10] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[9] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port wr_usedw_32b[8] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[31] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[30] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[29] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[28] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[27] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[26] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[25] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[24] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[23] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[22] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[21] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[20] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[19] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[18] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[17] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[16] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[15] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[14] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[13] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[12] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[11] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[10] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[9] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port rd_usedw_32b[8] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[sync] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][63] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][62] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][61] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][60] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][59] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][58] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][57] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][56] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][55] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][54] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][53] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][52] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][51] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][50] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][49] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][48] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][47] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][46] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][45] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][44] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][43] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][42] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][41] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][40] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][39] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][38] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][37] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][36] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][35] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][34] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][33] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][32] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][31] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][30] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][29] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][28] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][27] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][26] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][25] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][24] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][23] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][22] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][21] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][20] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][19] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][18] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][17] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][16] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][15] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][14] driven by constant 0
+WARNING: [Synth 8-3917] design dp_fifo_fill has port src_out[bsn][13] driven by constant 0
+INFO: [Common 17-14] Message 'Synth 8-3917' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[0]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[0]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[1]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[1]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[2]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[2]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[3]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[3]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[4]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[4]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[5]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[5]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[6]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[6]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[7]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[7]'
+INFO: [Synth 8-3886] merging instance 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/grdc.rd_data_count_i_reg[8]' (FDR) to 'u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gwdc.wr_data_count_i_reg[8]'
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6954 ; free virtual = 13975
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Preliminary Mapping  Report (see note below)
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name      | RTL Object                       | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|xpm_memory_base: | gen_wr_a.gen_word_narrow.mem_reg | 256 x 18(READ_FIRST)   | W |   | 256 x 18(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+Note: The table above is a preliminary report that shows the Block RAMs at the current stage of the synthesis flow. Some Block RAMs may be reimplemented as non Block RAM primitives later in the synthesis flow. Multiple instantiated Block RAMs are reported only once. 
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6837] The timing for the instance u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/i_1/gen_wr_a.gen_word_narrow.mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6835 ; free virtual = 13858
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6835 ; free virtual = 13858
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Block RAM: Final Mapping  Report
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|Module Name      | RTL Object                       | PORT A (Depth x Width) | W | R | PORT B (Depth x Width) | W | R | Ports driving FF | RAMB18 | RAMB36 | 
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+|xpm_memory_base: | gen_wr_a.gen_word_narrow.mem_reg | 256 x 18(READ_FIRST)   | W |   | 256 x 18(WRITE_FIRST)  |   | R | Port A and B     | 1      | 0      | 
++-----------------+----------------------------------+------------------------+---+---+------------------------+---+---+------------------+--------+--------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6837] The timing for the instance u_dp_fifo_fill_sc/u_dp_fifo_fill_core/gen_dp_fifo_sc.u_dp_fifo_sc/u_dp_fifo_core/gen_common_fifo_sc.u_common_fifo_sc/u_fifo/gen_ip_xilinx.u1/xpm_fifo_sync_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13856
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+---------+------+
+|      |Cell     |Count |
++------+---------+------+
+|1     |BUFG     |     1|
+|2     |CARRY4   |     7|
+|3     |LUT1     |     4|
+|4     |LUT2     |    32|
+|5     |LUT3     |     7|
+|6     |LUT4     |    18|
+|7     |LUT5     |    17|
+|8     |LUT6     |    23|
+|9     |RAMB18E1 |     1|
+|10    |FDCE     |     3|
+|11    |FDRE     |    69|
+|12    |FDSE     |     6|
+|13    |IBUF     |    23|
+|14    |OBUF     |  1096|
+|15    |OBUFT    |    24|
++------+---------+------+
+
+Report Instance Areas: 
++------+------------------------------------------------------+-----------------------------------+------+
+|      |Instance                                              |Module                             |Cells |
++------+------------------------------------------------------+-----------------------------------+------+
+|1     |top                                                   |                                   |  1331|
+|2     |  u_dp_fifo_fill_sc                                   |dp_fifo_fill_sc                    |   187|
+|3     |    u_dp_fifo_fill_core                               |dp_fifo_fill_core                  |   187|
+|4     |      \gen_dp_fifo_sc.u_dp_fifo_sc                    |dp_fifo_sc                         |   187|
+|5     |        u_dp_fifo_core                                |dp_fifo_core                       |   187|
+|6     |          \gen_common_fifo_sc.u_common_fifo_sc        |common_fifo_sc                     |   185|
+|7     |            u_fifo                                    |tech_fifo_sc                       |   184|
+|8     |              \gen_ip_xilinx.u1                       |ip_xilinx_fifo_sc                  |   184|
+|9     |                xpm_fifo_sync_inst                    |xpm_fifo_sync                      |   181|
+|10    |                  xpm_fifo_base_inst                  |xpm_fifo_base                      |   181|
+|11    |                    \gen_sdpram.xpm_memory_base_inst  |xpm_memory_base                    |     2|
+|12    |                    rdp_inst                          |xpm_counter_updn                   |    41|
+|13    |                    rdpp1_inst                        |xpm_counter_updn__parameterized0   |    17|
+|14    |                    rst_d1_inst                       |xpm_fifo_reg_bit                   |     6|
+|15    |                    wrp_inst                          |xpm_counter_updn_0                 |    38|
+|16    |                    wrpp1_inst                        |xpm_counter_updn__parameterized0_1 |    27|
+|17    |                    xpm_fifo_rst_inst                 |xpm_fifo_rst                       |    11|
++------+------------------------------------------------------+-----------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6834 ; free virtual = 13857
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 2028 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:13 ; elapsed = 00:00:15 . Memory (MB): peak = 2211.211 ; gain = 214.340 ; free physical = 6887 ; free virtual = 13909
+Synthesis Optimization Complete : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 2211.211 ; gain = 406.871 ; free physical = 6887 ; free virtual = 13909
+INFO: [Project 1-571] Translating synthesized netlist
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+WARNING: [Netlist 29-101] Netlist 'dp_fifo_fill' is not ideal for floorplanning, since the cellview 'dp_fifo_fill' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2211.211 ; gain = 0.000 ; free physical = 6818 ; free virtual = 13840
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+75 Infos, 207 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:26 ; elapsed = 00:00:28 . Memory (MB): peak = 2211.211 ; gain = 808.348 ; free physical = 6914 ; free virtual = 13937
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2211.211 ; gain = 0.000 ; free physical = 6914 ; free virtual = 13937
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+INFO: [Common 17-1381] The checkpoint '/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/casper_fifo_proj/casper_fifo_proj.runs/synth_1/dp_fifo_fill.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file dp_fifo_fill_utilization_synth.rpt -pb dp_fifo_fill_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Fri Aug 14 12:54:09 2020...

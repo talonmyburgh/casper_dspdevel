@@ -23,9 +23,6 @@ USE ieee.std_logic_1164.all;
 USE work.tech_fifo_component_pkg.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 
---USE technology_lib.technology_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
-
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
 --LIBRARY ip_stratixiv_fifo_lib;
 --LIBRARY ip_arria10_fifo_lib;
@@ -34,11 +31,11 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY tech_fifo_sc IS
 	GENERIC(
-		g_technology : NATURAL := 0;    --c_tech_select_default;
-		g_use_eab    : STRING  := "NO";
-		g_dat_w      : NATURAL;
-		g_nof_words  : NATURAL;
-		g_device     : STRING  := "7SERIES"
+		g_technology     : NATURAL := 0; --c_tech_select_default;
+		g_use_eab        : STRING  := "NO";
+		g_dat_w          : NATURAL;
+		g_nof_words      : NATURAL;
+		g_fifo_primitive : STRING  := "auto"
 	);
 	PORT(
 		aclr  : IN  STD_LOGIC;
@@ -56,26 +53,28 @@ END tech_fifo_sc;
 ARCHITECTURE str OF tech_fifo_sc IS
 
 BEGIN
+
 	gen_ip_xilinx : IF g_technology = 0 GENERATE
-		u0 : ip_xilinx_fifo_sc
+		u1 : ip_xilinx_fifo_sc
 			generic map(
-				g_device    => g_device,
-				g_dat_w     => g_dat_w,
-				g_nof_words => g_nof_words
+				g_use_eab        => g_use_eab,
+				g_dat_w          => g_dat_w,
+				g_nof_words      => g_nof_words,
+				g_fifo_primitive => g_fifo_primitive
 			)
 			port map(
-				clock => clock,
 				aclr  => aclr,
+				clock => clock,
 				data  => data,
 				rdreq => rdreq,
 				wrreq => wrreq,
-				q     => q,
 				empty => empty,
-				usedw => usedw,
-				full  => full
+				full  => full,
+				q     => q,
+				usedw => usedw
 			);
+	END GENERATE;
 
-	end generate;
 	gen_ip_stratixiv : IF g_technology = 1 GENERATE
 		u0 : ip_stratixiv_fifo_sc
 			GENERIC MAP(g_use_eab, g_dat_w, g_nof_words)

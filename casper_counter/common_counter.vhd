@@ -1,17 +1,16 @@
 --! @file
 --! @brief Common counter with sync or async clear.
 
- 
 -- Copyright 2020
 -- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
 -- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
- 
+
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
 -- You may obtain a copy of the License at
- 
+
 --    http://www.apache.org/licenses/LICENSE-2.0
- 
+
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -65,14 +64,14 @@ USE common_pkg_lib.common_pkg.ALL;
 ENTITY common_counter IS
 	GENERIC(
 		g_latency   : NATURAL := 1;     --! default 1 for registered count output, use 0 for immediate combinatorial count output
-		g_init      : INTEGER := 0;		--! counter initial value
-		g_width     : NATURAL := 32;	--! width of counter value
+		g_init      : INTEGER := 0;     --! counter initial value
+		g_width     : NATURAL := 32;    --! width of counter value
 		g_max       : NATURAL := 0;     --! default 0 to disable the g_max setting. 
 		g_step_size : INTEGER := 1      --! counting in steps of g_step_size, can be + or -
 	);
 	PORT(
 		rst     : IN  STD_LOGIC                              := '0'; --! either use asynchronous rst or synchronous cnt_clr
-		clk     : IN  STD_LOGIC; --! Clock signal
+		clk     : IN  STD_LOGIC;        --! Clock signal
 		clken   : IN  STD_LOGIC                              := '1'; --! clock enable
 		cnt_clr : IN  STD_LOGIC                              := '0'; --! synchronous cnt_clr is only interpreted when clken is active
 		cnt_ld  : IN  STD_LOGIC                              := '0'; --! cnt_ld loads the output count with the input load value, independent of cnt_en

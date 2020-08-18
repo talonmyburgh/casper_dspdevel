@@ -35,57 +35,57 @@ END common_spulse_tb;
 
 ARCHITECTURE tb OF common_spulse_tb IS
 
-  CONSTANT c_meta_delay    : NATURAL := 2;
-  
-  --CONSTANT in_clk_period   : TIME := 10 ns;
-  CONSTANT in_clk_period   : TIME := 27 ns;
-  CONSTANT out_clk_period  : TIME := 17 ns;
+	CONSTANT c_meta_delay : NATURAL := 2;
 
-  SIGNAL in_rst    : STD_LOGIC;
-  SIGNAL out_rst   : STD_LOGIC;
-  SIGNAL in_clk    : STD_LOGIC := '0';
-  SIGNAL out_clk   : STD_LOGIC := '0';
-  SIGNAL in_pulse  : STD_LOGIC;
-  SIGNAL out_pulse : STD_LOGIC;
+	--CONSTANT in_clk_period   : TIME := 10 ns;
+	CONSTANT in_clk_period  : TIME := 27 ns;
+	CONSTANT out_clk_period : TIME := 17 ns;
+
+	SIGNAL in_rst    : STD_LOGIC;
+	SIGNAL out_rst   : STD_LOGIC;
+	SIGNAL in_clk    : STD_LOGIC := '0';
+	SIGNAL out_clk   : STD_LOGIC := '0';
+	SIGNAL in_pulse  : STD_LOGIC;
+	SIGNAL out_pulse : STD_LOGIC;
 
 BEGIN
 
-  in_clk  <= NOT in_clk  AFTER in_clk_period/2;
-  out_clk <= NOT out_clk AFTER out_clk_period/2;
-    
-  p_in_stimuli : PROCESS
-  BEGIN
-    in_rst <= '1';
-    in_pulse <= '0';
-    WAIT UNTIL rising_edge(in_clk);
-    in_rst <= '0';
-    FOR I IN 0 TO 9 LOOP
-      WAIT UNTIL rising_edge(in_clk);
-    END LOOP;
-    in_pulse <= '1';
-    WAIT UNTIL rising_edge(in_clk);
-    in_pulse <= '0';
-    WAIT;
-  END PROCESS;
+	in_clk  <= NOT in_clk AFTER in_clk_period / 2;
+	out_clk <= NOT out_clk AFTER out_clk_period / 2;
 
-  u_out_rst : ENTITY work.common_areset
-  PORT MAP (
-    in_rst   => in_rst,
-    clk      => out_clk,
-    out_rst  => out_rst
-  );
-  
-  u_spulse : ENTITY work.common_spulse
-  GENERIC MAP (
-    g_delay_len => c_meta_delay
-  )
-  PORT MAP (
-    in_clk     => in_clk,
-    in_rst     => in_rst,
-    in_pulse   => in_pulse,
-    out_clk    => out_clk,
-    out_rst    => out_rst,
-    out_pulse  => out_pulse
-  );
-      
+	p_in_stimuli : PROCESS
+	BEGIN
+		in_rst   <= '1';
+		in_pulse <= '0';
+		WAIT UNTIL rising_edge(in_clk);
+		in_rst   <= '0';
+		FOR I IN 0 TO 9 LOOP
+			WAIT UNTIL rising_edge(in_clk);
+		END LOOP;
+		in_pulse <= '1';
+		WAIT UNTIL rising_edge(in_clk);
+		in_pulse <= '0';
+		WAIT;
+	END PROCESS;
+
+	u_out_rst : ENTITY work.common_areset
+		PORT MAP(
+			in_rst  => in_rst,
+			clk     => out_clk,
+			out_rst => out_rst
+		);
+
+	u_spulse : ENTITY work.common_spulse
+		GENERIC MAP(
+			g_delay_len => c_meta_delay
+		)
+		PORT MAP(
+			in_clk    => in_clk,
+			in_rst    => in_rst,
+			in_pulse  => in_pulse,
+			out_clk   => out_clk,
+			out_rst   => out_rst,
+			out_pulse => out_pulse
+		);
+
 END tb;

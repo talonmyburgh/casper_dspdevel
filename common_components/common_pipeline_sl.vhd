@@ -32,12 +32,12 @@ ENTITY common_pipeline_sl IS
 	);
 	PORT(
 		rst     : IN  STD_LOGIC := '0'; --! Reset signal
-		clk     : IN  STD_LOGIC; --! Clock input
+		clk     : IN  STD_LOGIC;        --! Clock input
 		clken   : IN  STD_LOGIC := '1'; --! Clock enable signal
 		in_clr  : IN  STD_LOGIC := '0'; --! Clear input signal 
 		in_en   : IN  STD_LOGIC := '1'; --! Enable input
-		in_dat  : IN  STD_LOGIC; --! Signal used to pass data to common_pipeline
-		out_dat : OUT STD_LOGIC --! Output valid signal
+		in_dat  : IN  STD_LOGIC;        --! Signal used to pass data to common_pipeline
+		out_dat : OUT STD_LOGIC         --! Output valid signal
 	);
 END common_pipeline_sl;
 

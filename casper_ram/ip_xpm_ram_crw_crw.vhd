@@ -49,11 +49,11 @@ architecture Behavioral of ip_xpm_ram_crw_crw is
 
 begin
 
-    we_a <= (others=>wren_a);
-    we_b <= (others=>wren_b);
+	we_a <= (others => wren_a);
+	we_b <= (others => wren_b);
 
-	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);-- when rden_a = '1' else (others => 'X');
-	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0);-- when rden_b = '1' else (others => 'X');
+	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0); -- when rden_a = '1' else (others => 'X');
+	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0); -- when rden_b = '1' else (others => 'X');
 
 	xpm_memory_tdpram_inst : xpm_memory_tdpram
 		generic map(

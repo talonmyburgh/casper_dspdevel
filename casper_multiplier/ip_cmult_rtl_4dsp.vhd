@@ -65,7 +65,7 @@ USE IEEE.numeric_std.ALL;
 
 ENTITY ip_cmult_rtl_4dsp IS
 	GENERIC(
-		g_use_dsp		   : STRING := "YES"; --! Implement multiplications in DSP48 or not
+		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;  --! A input bit width
 		g_in_b_w           : POSITIVE;  --! B input bit width
 		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
@@ -91,7 +91,7 @@ ENTITY ip_cmult_rtl_4dsp IS
 END ip_cmult_rtl_4dsp;
 
 ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
-	
+
 	------------------------------------------------------------------------------
 	-- Functions
 	------------------------------------------------------------------------------
@@ -104,7 +104,7 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
 		END IF;
 	END;
-	
+
 	------------------------------------------------------------------------------
 	-- Constants
 	------------------------------------------------------------------------------

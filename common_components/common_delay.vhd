@@ -27,41 +27,41 @@ library ieee;
 use IEEE.STD_LOGIC_1164.all;
 
 entity common_delay is
-  generic (
-    g_dat_w    : NATURAL := 8;   --! need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
-    g_depth    : NATURAL := 16   --! Delay depth
-  );
-  port (
-    clk      : in  STD_LOGIC; --! Clock input
-    in_val   : in  STD_LOGIC := '1'; --! Select input value
-    in_dat   : in  STD_LOGIC_VECTOR(g_dat_w-1 downto 0); --! Input value
-    out_dat  : out STD_LOGIC_VECTOR(g_dat_w-1 downto 0) --! Output value
-  );
+	generic(
+		g_dat_w : NATURAL := 8;         --! need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
+		g_depth : NATURAL := 16         --! Delay depth
+	);
+	port(
+		clk     : in  STD_LOGIC;        --! Clock input
+		in_val  : in  STD_LOGIC := '1'; --! Select input value
+		in_dat  : in  STD_LOGIC_VECTOR(g_dat_w - 1 downto 0); --! Input value
+		out_dat : out STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) --! Output value
+	);
 end entity common_delay;
 
 architecture rtl of common_delay is
 
-  -- Use index (0) as combinatorial input and index(1:g_depth) for the shift
-  -- delay, in this way the t_dly_arr type can support all g_depth >= 0
-  type t_dly_arr is array (0 to g_depth) of STD_LOGIC_VECTOR(g_dat_w-1 downto 0);
+	-- Use index (0) as combinatorial input and index(1:g_depth) for the shift
+	-- delay, in this way the t_dly_arr type can support all g_depth >= 0
+	type t_dly_arr is array (0 to g_depth) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
 
-  signal shift_reg : t_dly_arr := (others=>(others=>'0'));
+	signal shift_reg : t_dly_arr := (others => (others => '0'));
 
 begin
 
-  shift_reg(0) <= in_dat;
-  
-  out_dat <= shift_reg(g_depth);
+	shift_reg(0) <= in_dat;
 
-  gen_reg : if g_depth>0 generate
-    p_clk : process(clk)
-    begin
-      if rising_edge(clk) then
-        if in_val='1' then
-          shift_reg(1 to g_depth) <= shift_reg(0 to g_depth-1);
-        end if;
-      end if;
-    end process;
-  end generate;
+	out_dat <= shift_reg(g_depth);
+
+	gen_reg : if g_depth > 0 generate
+		p_clk : process(clk)
+		begin
+			if rising_edge(clk) then
+				if in_val = '1' then
+					shift_reg(1 to g_depth) <= shift_reg(0 to g_depth - 1);
+				end if;
+			end if;
+		end process;
+	end generate;
 
 end rtl;

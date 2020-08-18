@@ -58,8 +58,9 @@ ENTITY st_calc IS
     g_in_dat_w     : NATURAL := 18;  -- = input data width
     g_out_dat_w    : NATURAL := 54;  -- = accumulator width for the input data products, so >> 2*g_in_dat_w
     g_out_adr_w    : NATURAL := 9;   -- = ceil_log2(g_nof_stat)
-    g_complex      : BOOLEAN := FALSE
-  );
+    g_complex      : BOOLEAN := FALSE;
+    g_ram_primitive : STRING := "auto"
+    );
   PORT (
     rst            : IN   STD_LOGIC;
     clk            : IN   STD_LOGIC;
@@ -236,10 +237,10 @@ BEGIN
   GENERIC MAP (
     g_technology => g_technology,
     g_ram        => c_mem_acc,
-    g_init_file  => "UNUSED"
+    g_init_file  => "UNUSED",
+    g_ram_primitive => g_ram_primitive
   )
   PORT MAP (
-    rst       => rst,
     clk       => clk,
     clken     => clken,
     wr_en     => wr_en,
@@ -282,10 +283,10 @@ BEGIN
     GENERIC MAP (
       g_technology => g_technology,
       g_ram        => c_mem_acc,
-      g_init_file  => "UNUSED"
+      g_init_file  => "UNUSED",
+      g_ram_primitive => g_ram_primitive
     )
     PORT MAP (
-      rst       => rst,
       clk       => clk,
       clken     => clken,
       wr_en     => wr_en,

@@ -52,8 +52,8 @@ architecture Behavioral of ip_xpm_ram_cr_cw is
 	SIGNAL we_a : STD_LOGIC_VECTOR(0 DOWNTO 0);
 
 begin
-	we_a <= (others=>wren);
-	q <= sub_wire0(g_dat_w - 1 DOWNTO 0);
+	we_a <= (others => wren);
+	q    <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 
 	xpm_memory_sdpram_inst : xpm_memory_sdpram
 		generic map(

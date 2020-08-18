@@ -65,7 +65,7 @@ BEGIN
 		FOR I IN 0 TO 9 LOOP
 			WAIT UNTIL rising_edge(clk);
 		END LOOP;
-		check(count = stdcheck, "Invalid count value. Expected: "&to_hstring(stdcheck)&" but got: "&to_hstring(count));
+		check(count = stdcheck, "Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count));
 
 		-- Reload counter
 		cnt_ld <= '1';
@@ -74,7 +74,7 @@ BEGIN
 		FOR I IN 0 TO 9 LOOP
 			WAIT UNTIL rising_edge(clk);
 		END LOOP;
-		check(count = stdcheck, "Invalid count value. Expected: "&to_hstring(stdcheck)&" but got: "&to_hstring(count));
+		check(count = stdcheck, "Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count));
 		-- briefly stop counting
 		cnt_en <= '0';
 		WAIT UNTIL rising_edge(clk);
@@ -86,7 +86,7 @@ BEGIN
 
 		-- set the cnt_max
 		cnt_max <= TO_UVEC(2**(c_cnt_w - 1), c_cnt_w);
-		wait for clk_period*5;
+		wait for clk_period * 5;
 		test_runner_cleanup(runner);
 	END PROCESS;
 

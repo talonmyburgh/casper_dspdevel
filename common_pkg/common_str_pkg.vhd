@@ -127,7 +127,7 @@ PACKAGE BODY common_str_pkg IS
 		deallocate(v_line);
 		RETURN v_str;
 	END;
-	
+
 	FUNCTION sl_to_str(sl : STD_LOGIC) RETURN STRING IS
 		VARIABLE v_line : LINE;
 		VARIABLE v_str  : STRING(1 TO 2) := (OTHERS => ' ');

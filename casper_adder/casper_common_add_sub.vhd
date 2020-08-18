@@ -1,16 +1,16 @@
 --! @file
 --! @brief Common adder/subtractor for signed/unsigned values.
- 
+
 -- Copyright 2020
 -- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
 -- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
- 
+
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
 -- You may obtain a copy of the License at
- 
+
 --    http://www.apache.org/licenses/LICENSE-2.0
- 
+
 -- Unless required by applicable law or agreed to in writing, software
 -- distributed under the License is distributed on an "AS IS" BASIS,
 -- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,7 +62,7 @@ ENTITY common_add_sub IS
 		g_out_dat_w       : NATURAL := 9 --! output data width. 
 	);
 	PORT(
-		clk     : IN  STD_LOGIC; --! input clock source
+		clk     : IN  STD_LOGIC;        --! input clock source
 		clken   : IN  STD_LOGIC := '1'; --! enable process triggering on clock rising edge
 		sel_add : IN  STD_LOGIC := '1'; --! decide whether to add or subtract (only used when g_direction is "BOTH")
 		in_a    : IN  STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0); --! input value A - must be width of g_in_dat_w

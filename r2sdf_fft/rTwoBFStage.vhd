@@ -34,16 +34,16 @@ entity rTwoBFStage is
 		g_bf_out_d_zdly : natural := 0  --! The stage z^(-1) delays are ..., 4, 2, 1.
 	);
 	port(
-		clk     : in  std_logic; --! Input clock source
-		rst     : in  std_logic; --! Reset signal
+		clk     : in  std_logic;        --! Input clock source
+		rst     : in  std_logic;        --! Reset signal
 		in_re   : in  std_logic_vector; --! Real input
 		in_im   : in  std_logic_vector; --! Imaginary input
-		in_val  : in  std_logic; --! Accept input value (for delay)
-		in_sel  : in  std_logic; --! Select input
+		in_val  : in  std_logic;        --! Accept input value (for delay)
+		in_sel  : in  std_logic;        --! Select input
 		out_re  : out std_logic_vector; --! Real output
 		out_im  : out std_logic_vector; --! Imaginary output
-		out_val : out std_logic; --! Output value valid signal
-		out_sel : out std_logic --! Select output
+		out_val : out std_logic;        --! Output value valid signal
+		out_sel : out std_logic         --! Select output
 	);
 end entity rTwoBFStage;
 

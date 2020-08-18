@@ -1,0 +1,2 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_fifo/tb_common_fifo_rd.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'tb_common_fifo_rd'

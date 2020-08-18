@@ -17,7 +17,6 @@
 -- 11.1 Build 259 01/25/2012 SP 2 SJ Full Version
 -- ************************************************************
 
-
 --Copyright (C) 1991-2011 Altera Corporation
 --Your use of Altera Corporation's design tools, logic functions 
 --and other software and tools, and its AMPP partner logic 
@@ -32,7 +31,6 @@
 --Altera or its authorized distributors.  Please refer to the 
 --applicable agreement for further details.
 
-
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
@@ -44,107 +42,101 @@ USE altera_mf.all;
 --USE technology_lib.technology_pkg.ALL;
 
 ENTITY ip_stratixiv_ram_cr_cw IS
-  GENERIC (
-    g_adr_w      : NATURAL := 5;
-    g_dat_w      : NATURAL := 8;
-    g_nof_words  : NATURAL := 2**5;
-    g_rd_latency : NATURAL := 2;  -- choose 1 or 2
-    g_init_file  : STRING  := "UNUSED"
-  );
-  PORT
-  (
-    data      : IN  STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-    rdaddress : IN  STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-    rdclock   : IN  STD_LOGIC ;
-    rdclocken : IN  STD_LOGIC  := '1';
-    wraddress : IN  STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-    wrclock   : IN  STD_LOGIC  := '1';
-    wrclocken : IN  STD_LOGIC  := '1';
-    wren      : IN  STD_LOGIC  := '0';
-    q         : OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0)
-  );
+	GENERIC(
+		g_adr_w      : NATURAL := 5;
+		g_dat_w      : NATURAL := 8;
+		g_nof_words  : NATURAL := 2**5;
+		g_rd_latency : NATURAL := 2;    -- choose 1 or 2
+		g_init_file  : STRING  := "UNUSED"
+	);
+	PORT(
+		data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		rdclock   : IN  STD_LOGIC;
+		rdclocken : IN  STD_LOGIC := '1';
+		wraddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		wrclock   : IN  STD_LOGIC := '1';
+		wrclocken : IN  STD_LOGIC := '1';
+		wren      : IN  STD_LOGIC := '0';
+		q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+	);
 END ip_stratixiv_ram_cr_cw;
-
 
 ARCHITECTURE SYN OF ip_stratixiv_ram_cr_cw IS
 
-  CONSTANT c_outdata_reg_b : STRING := sel_a_b(g_rd_latency=1, "UNREGISTERED", "CLOCK1");
-  
-  SIGNAL sub_wire0  : STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
+	CONSTANT c_outdata_reg_b : STRING := sel_a_b(g_rd_latency = 1, "UNREGISTERED", "CLOCK1");
 
+	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 
-
-  COMPONENT altsyncram
-  GENERIC (
-    address_aclr_b    : STRING;
-    address_reg_b   : STRING;
-    clock_enable_input_a    : STRING;
-    clock_enable_input_b    : STRING;
-    clock_enable_output_b   : STRING;
-    intended_device_family    : STRING;
-    lpm_type    : STRING;
-    numwords_a    : NATURAL;
-    numwords_b    : NATURAL;
-    operation_mode    : STRING;
-    outdata_aclr_b    : STRING;
-    outdata_reg_b   : STRING;
-    power_up_uninitialized    : STRING;
-    widthad_a   : NATURAL;
-    widthad_b   : NATURAL;
-    width_a   : NATURAL;
-    width_b   : NATURAL;
-    width_byteena_a   : NATURAL
-  );
-  PORT (
-      clock0    : IN  STD_LOGIC ;
-      clocken1  : IN  STD_LOGIC ;
-      wren_a    : IN  STD_LOGIC ;
-      address_b : IN  STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-      clock1    : IN  STD_LOGIC ;
-      clocken0  : IN  STD_LOGIC ;
-      address_a : IN  STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-      data_a    : IN  STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-      q_b       : OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0)
-  );
-  END COMPONENT;
+	COMPONENT altsyncram
+		GENERIC(
+			address_aclr_b         : STRING;
+			address_reg_b          : STRING;
+			clock_enable_input_a   : STRING;
+			clock_enable_input_b   : STRING;
+			clock_enable_output_b  : STRING;
+			intended_device_family : STRING;
+			lpm_type               : STRING;
+			numwords_a             : NATURAL;
+			numwords_b             : NATURAL;
+			operation_mode         : STRING;
+			outdata_aclr_b         : STRING;
+			outdata_reg_b          : STRING;
+			power_up_uninitialized : STRING;
+			widthad_a              : NATURAL;
+			widthad_b              : NATURAL;
+			width_a                : NATURAL;
+			width_b                : NATURAL;
+			width_byteena_a        : NATURAL
+		);
+		PORT(
+			clock0    : IN  STD_LOGIC;
+			clocken1  : IN  STD_LOGIC;
+			wren_a    : IN  STD_LOGIC;
+			address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+			clock1    : IN  STD_LOGIC;
+			clocken0  : IN  STD_LOGIC;
+			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+			data_a    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+		);
+	END COMPONENT;
 
 BEGIN
-  q    <= sub_wire0(g_dat_w-1 DOWNTO 0);
+	q <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 
-  altsyncram_component : altsyncram
-  GENERIC MAP (
-    address_aclr_b => "NONE",
-    address_reg_b => "CLOCK1",
-    clock_enable_input_a => "NORMAL",
-    clock_enable_input_b => "NORMAL",
-    clock_enable_output_b => "NORMAL",
-    intended_device_family => "Stratix IV",
-    lpm_type => "altsyncram",
-    numwords_a => g_nof_words,
-    numwords_b => g_nof_words,
-    operation_mode => "DUAL_PORT",
-    outdata_aclr_b => "NONE",
-    outdata_reg_b => c_outdata_reg_b,
-    power_up_uninitialized => "FALSE",
-    widthad_a => g_adr_w,
-    widthad_b => g_adr_w,
-    width_a => g_dat_w,
-    width_b => g_dat_w,
-    width_byteena_a => 1
-  )
-  PORT MAP (
-    clock0 => wrclock,
-    clocken1 => rdclocken,
-    wren_a => wren,
-    address_b => rdaddress,
-    clock1 => rdclock,
-    clocken0 => wrclocken,
-    address_a => wraddress,
-    data_a => data,
-    q_b => sub_wire0
-  );
-
-
+	altsyncram_component : altsyncram
+		GENERIC MAP(
+			address_aclr_b         => "NONE",
+			address_reg_b          => "CLOCK1",
+			clock_enable_input_a   => "NORMAL",
+			clock_enable_input_b   => "NORMAL",
+			clock_enable_output_b  => "NORMAL",
+			intended_device_family => "Stratix IV",
+			lpm_type               => "altsyncram",
+			numwords_a             => g_nof_words,
+			numwords_b             => g_nof_words,
+			operation_mode         => "DUAL_PORT",
+			outdata_aclr_b         => "NONE",
+			outdata_reg_b          => c_outdata_reg_b,
+			power_up_uninitialized => "FALSE",
+			widthad_a              => g_adr_w,
+			widthad_b              => g_adr_w,
+			width_a                => g_dat_w,
+			width_b                => g_dat_w,
+			width_byteena_a        => 1
+		)
+		PORT MAP(
+			clock0    => wrclock,
+			clocken1  => rdclocken,
+			wren_a    => wren,
+			address_b => rdaddress,
+			clock1    => rdclock,
+			clocken0  => wrclocken,
+			address_a => wraddress,
+			data_a    => data,
+			q_b       => sub_wire0
+		);
 
 END SYN;
 

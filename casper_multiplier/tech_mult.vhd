@@ -1,5 +1,5 @@
 
-LIBRARY IEEE, common_pkg_lib,common_components_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
@@ -25,7 +25,6 @@ ENTITY tech_mult IS
 		result : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
 	);
 END tech_mult;
-
 
 ARCHITECTURE str of tech_mult is
 
@@ -53,7 +52,6 @@ begin
 				out_p => result
 			);
 	end Generate;
-	
 
 	-------------------------------------------------------------------------------
 	-- Model: forward concatenated inputs to the 'result' output
@@ -69,7 +67,7 @@ begin
 	-------------------------------------------------------------------------------	
 	gen_sim_level_1 : IF g_sim = TRUE AND g_sim_level = 1 GENERATE
 		result_undelayed <= in_b & in_a;
-		
+
 		u_common_pipeline : entity common_components_lib.common_pipeline
 			generic map(
 				g_pipeline  => 3,

@@ -5,15 +5,15 @@ USE common_pkg_lib.common_str_pkg.ALL;
 
 entity ip_cmult_rtl_3dsp is
 	GENERIC(
-		g_use_dsp		   : STRING := "YES"; --! Implement multiplications in DSP48 or not
-		g_in_a_w            : POSITIVE := 8; --! A input bit width
-		g_in_b_w            : POSITIVE := 8; --! B input bit width
-		g_out_p_w           : POSITIVE := 16; --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
-		g_conjugate_b       : BOOLEAN  := FALSE; --! Whether or not to conjugate B value
-		g_pipeline_input    : NATURAL  := 1; --! 0 or 1
-		g_pipeline_product  : NATURAL  := 0; --! 0 or 1
-		g_pipeline_adder    : NATURAL  := 1; --! 0 or 1
-		g_pipeline_output   : NATURAL  := 1 --! >= 0
+		g_use_dsp          : STRING   := "YES"; --! Implement multiplications in DSP48 or not
+		g_in_a_w           : POSITIVE := 8; --! A input bit width
+		g_in_b_w           : POSITIVE := 8; --! B input bit width
+		g_out_p_w          : POSITIVE := 16; --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
+		g_conjugate_b      : BOOLEAN  := FALSE; --! Whether or not to conjugate B value
+		g_pipeline_input   : NATURAL  := 1; --! 0 or 1
+		g_pipeline_product : NATURAL  := 0; --! 0 or 1
+		g_pipeline_adder   : NATURAL  := 1; --! 0 or 1
+		g_pipeline_output  : NATURAL  := 1 --! >= 0
 	);
 	PORT(
 		rst       : IN  STD_LOGIC := '0'; --! Reset signal
@@ -36,11 +36,11 @@ architecture RTL of ip_cmult_rtl_3dsp is
 		-- extend sign bit or keep LS part
 		IF w > s'LENGTH THEN
 			RETURN RESIZE(s, w);        -- extend sign bit
-		ELSIF w =s'LENGTH THEN
+		ELSIF w = s'LENGTH THEN
 			RETURN s;
 		ELSE
 			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
-		
+
 		END IF;
 	END;
 
@@ -87,9 +87,9 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	SIGNAL sum_im : SIGNED(c_sum_w - 1 DOWNTO 0);
 
 	--enforce dsp usage
---	attribute use_dsp of k1 : signal is "yes";
---	attribute use_dsp of k2 : signal is "yes";
---	attribute use_dsp of k3 : signal is "yes";
+	--	attribute use_dsp of k1 : signal is "yes";
+	--	attribute use_dsp of k2 : signal is "yes";
+	--	attribute use_dsp of k3 : signal is "yes";
 
 begin
 
@@ -126,10 +126,10 @@ begin
 				reg_sum_im    <= nxt_sum_im;
 				reg_result_re <= nxt_result_re; -- result sum after optional register stage
 				reg_result_im <= nxt_result_im;
-				report(int_to_str(to_integer(nxt_k1))&" "&int_to_str(to_integer(nxt_k2))&" "&int_to_str(to_integer(nxt_k3)));
-				report("k1 terms: ar "&int_to_str(to_integer(nxt_ar))&" ai "&int_to_str(to_integer(nxt_ai))&" br "&int_to_str(to_integer(nxt_br)));
-				report("nxt_sum_re: "&int_to_str(to_integer(nxt_sum_re)));
-				report("nxt_sum_im: "&int_to_str(to_integer(nxt_sum_im)));
+				report (int_to_str(to_integer(nxt_k1))&" "&int_to_str(to_integer(nxt_k2))&" "&int_to_str(to_integer(nxt_k3)));
+				report ("k1 terms: ar "&int_to_str(to_integer(nxt_ar))&" ai "&int_to_str(to_integer(nxt_ai))&" br "&int_to_str(to_integer(nxt_br)));
+				report ("nxt_sum_re: "&int_to_str(to_integer(nxt_sum_re)));
+				report ("nxt_sum_im: "&int_to_str(to_integer(nxt_sum_im)));
 			END IF;
 		END IF;
 	END PROCESS;
@@ -168,9 +168,9 @@ begin
 	END GENERATE;
 
 	gen_k_mult_conj_b : IF g_conjugate_b GENERATE
-	nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_a_sum_w));
-	nxt_k2 <= resize(ar * (- resize(bi, c_prod_w) - resize(br, c_prod_w)),c_prod_w);
-	nxt_k3 <= resize(ai * (resize(br, c_prod_w) - resize(bi, c_prod_w)), c_prod_w);
+		nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_a_sum_w));
+		nxt_k2 <= resize(ar * (-resize(bi, c_prod_w) - resize(br, c_prod_w)), c_prod_w);
+		nxt_k3 <= resize(ai * (resize(br, c_prod_w) - resize(bi, c_prod_w)), c_prod_w);
 	END GENERATE;
 
 	no_product_reg : IF g_pipeline_product = 0 GENERATE -- wired

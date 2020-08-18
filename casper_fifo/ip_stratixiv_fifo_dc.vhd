@@ -17,7 +17,6 @@
 -- 9.1 Build 350 03/24/2010 SP 2 SJ Full Version
 -- ************************************************************
 
-
 --Copyright (C) 1991-2010 Altera Corporation
 --Your use of Altera Corporation's design tools, logic functions 
 --and other software and tools, and its AMPP partner logic 
@@ -32,115 +31,106 @@
 --Altera or its authorized distributors.  Please refer to the 
 --applicable agreement for further details.
 
-
-LIBRARY ieee;
+LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
-
-LIBRARY technology_lib;
-USE technology_lib.technology_pkg.ALL;
+USE common_pkg_lib.common_pkg.all;
 
 LIBRARY altera_mf;
 USE altera_mf.all;
 
 ENTITY ip_stratixiv_fifo_dc IS
-  GENERIC (
-    g_dat_w     : NATURAL;
-    g_nof_words : NATURAL
-  );
-	PORT
-	(
-		aclr		: IN STD_LOGIC  := '0';
-		data		: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		rdclk		: IN STD_LOGIC ;
-		rdreq		: IN STD_LOGIC ;
-		wrclk		: IN STD_LOGIC ;
-		wrreq		: IN STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		rdempty		: OUT STD_LOGIC ;
-		rdusedw		: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
-		wrfull		: OUT STD_LOGIC ;
-		wrusedw		: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0)
+	GENERIC(
+		g_dat_w     : NATURAL;
+		g_nof_words : NATURAL
+	);
+	PORT(
+		aclr    : IN  STD_LOGIC := '0';
+		data    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rdclk   : IN  STD_LOGIC;
+		rdreq   : IN  STD_LOGIC;
+		wrclk   : IN  STD_LOGIC;
+		wrreq   : IN  STD_LOGIC;
+		q       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rdempty : OUT STD_LOGIC;
+		rdusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0);
+		wrfull  : OUT STD_LOGIC;
+		wrusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
 	);
 END ip_stratixiv_fifo_dc;
 
-
 ARCHITECTURE SYN OF ip_stratixiv_fifo_dc IS
 
-	SIGNAL sub_wire0	: STD_LOGIC ;
-	SIGNAL sub_wire1	: STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
-	SIGNAL sub_wire2	: STD_LOGIC ;
-	SIGNAL sub_wire3	: STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-	SIGNAL sub_wire4	: STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
-
-
+	SIGNAL sub_wire0 : STD_LOGIC;
+	SIGNAL sub_wire1 : STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0);
+	SIGNAL sub_wire2 : STD_LOGIC;
+	SIGNAL sub_wire3 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	SIGNAL sub_wire4 : STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0);
 
 	COMPONENT dcfifo
-	GENERIC (
-		intended_device_family		: STRING;
-		lpm_numwords		: NATURAL;
-		lpm_showahead		: STRING;
-		lpm_type		: STRING;
-		lpm_width		: NATURAL;
-		lpm_widthu		: NATURAL;
-		overflow_checking		: STRING;
-		rdsync_delaypipe		: NATURAL;
-		underflow_checking		: STRING;
-		use_eab		: STRING;
-		write_aclr_synch		: STRING;
-		wrsync_delaypipe		: NATURAL
-	);
-	PORT (
-			wrclk	: IN STD_LOGIC ;
-			rdempty	: OUT STD_LOGIC ;
-			rdreq	: IN STD_LOGIC ;
-			wrusedw	: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
-			aclr	: IN STD_LOGIC ;
-			wrfull	: OUT STD_LOGIC ;
-			rdclk	: IN STD_LOGIC ;
-			q	: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			wrreq	: IN STD_LOGIC ;
-			data	: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			rdusedw	: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0)
-	);
+		GENERIC(
+			intended_device_family : STRING;
+			lpm_numwords           : NATURAL;
+			lpm_showahead          : STRING;
+			lpm_type               : STRING;
+			lpm_width              : NATURAL;
+			lpm_widthu             : NATURAL;
+			overflow_checking      : STRING;
+			rdsync_delaypipe       : NATURAL;
+			underflow_checking     : STRING;
+			use_eab                : STRING;
+			write_aclr_synch       : STRING;
+			wrsync_delaypipe       : NATURAL
+		);
+		PORT(
+			wrclk   : IN  STD_LOGIC;
+			rdempty : OUT STD_LOGIC;
+			rdreq   : IN  STD_LOGIC;
+			wrusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0);
+			aclr    : IN  STD_LOGIC;
+			wrfull  : OUT STD_LOGIC;
+			rdclk   : IN  STD_LOGIC;
+			q       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			wrreq   : IN  STD_LOGIC;
+			data    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			rdusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
+		);
 	END COMPONENT;
 
 BEGIN
-	rdempty    <= sub_wire0;
-	wrusedw    <= sub_wire1(tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
-	wrfull    <= sub_wire2;
-	q    <= sub_wire3(g_dat_w-1 DOWNTO 0);
-	rdusedw    <= sub_wire4(tech_ceil_log2(g_nof_words)-1 DOWNTO 0);
+	rdempty <= sub_wire0;
+	wrusedw <= sub_wire1(ceil_log2(g_nof_words) - 1 DOWNTO 0);
+	wrfull  <= sub_wire2;
+	q       <= sub_wire3(g_dat_w - 1 DOWNTO 0);
+	rdusedw <= sub_wire4(ceil_log2(g_nof_words) - 1 DOWNTO 0);
 
 	dcfifo_component : dcfifo
-	GENERIC MAP (
-		intended_device_family => "Stratix IV",
-		lpm_numwords => g_nof_words,
-		lpm_showahead => "OFF",
-		lpm_type => "dcfifo",
-		lpm_width => g_dat_w,
-		lpm_widthu => tech_ceil_log2(g_nof_words),
-		overflow_checking => "ON",
-		rdsync_delaypipe => 5,
-		underflow_checking => "ON",
-		use_eab => "ON",
-		write_aclr_synch => "ON",
-		wrsync_delaypipe => 5
-	)
-	PORT MAP (
-		wrclk => wrclk,
-		rdreq => rdreq,
-		aclr => aclr,
-		rdclk => rdclk,
-		wrreq => wrreq,
-		data => data,
-		rdempty => sub_wire0,
-		wrusedw => sub_wire1,
-		wrfull => sub_wire2,
-		q => sub_wire3,
-		rdusedw => sub_wire4
-	);
-
-
+		GENERIC MAP(
+			intended_device_family => "Stratix IV",
+			lpm_numwords           => g_nof_words,
+			lpm_showahead          => "OFF",
+			lpm_type               => "dcfifo",
+			lpm_width              => g_dat_w,
+			lpm_widthu             => ceil_log2(g_nof_words),
+			overflow_checking      => "ON",
+			rdsync_delaypipe       => 5,
+			underflow_checking     => "ON",
+			use_eab                => "ON",
+			write_aclr_synch       => "ON",
+			wrsync_delaypipe       => 5
+		)
+		PORT MAP(
+			wrclk   => wrclk,
+			rdreq   => rdreq,
+			aclr    => aclr,
+			rdclk   => rdclk,
+			wrreq   => wrreq,
+			data    => data,
+			rdempty => sub_wire0,
+			wrusedw => sub_wire1,
+			wrfull  => sub_wire2,
+			q       => sub_wire3,
+			rdusedw => sub_wire4
+		);
 
 END SYN;
 
