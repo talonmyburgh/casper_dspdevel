@@ -55,10 +55,10 @@ ENTITY common_paged_ram_crw_crw IS
 		g_ram_primitive  : STRING  := "auto"
 	);
 	PORT(
-		rst_a       : IN  STD_LOGIC := '0';
-		rst_b       : IN  STD_LOGIC := '0';
-		clk_a       : IN  STD_LOGIC := '1';
-		clk_b       : IN  STD_LOGIC := '1';
+		rst_a       : IN  STD_LOGIC                                           := '0';
+		rst_b       : IN  STD_LOGIC                                           := '0';
+		clk_a       : IN  STD_LOGIC                                           := '1';
+		clk_b       : IN  STD_LOGIC                                           := '1';
 		clken_a     : IN  STD_LOGIC                                           := '1';
 		clken_b     : IN  STD_LOGIC                                           := '1';
 		next_page_a : IN  STD_LOGIC;

@@ -30,47 +30,44 @@ USE common_pkg_lib.common_pkg.ALL;
 -- . There is no need for a rd_emp output signal, because a show ahead FIFO
 --   will have rd_val='0' when it is empty.
 
-
 ENTITY common_fifo_rd IS
-  GENERIC (
-    g_dat_w : NATURAL := 18
-  );
-  PORT (
-    rst        : IN  STD_LOGIC;
-    clk        : IN  STD_LOGIC;
-    -- ST sink: RL = 1
-    fifo_req   : OUT STD_LOGIC;
-    fifo_dat   : IN  STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
-    fifo_val   : IN  STD_LOGIC := '0';    
-    -- ST source: RL = 0
-    rd_req     : IN  STD_LOGIC;
-    rd_dat     : OUT STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
-    rd_val     : OUT STD_LOGIC
-  );
+	GENERIC(
+		g_dat_w : NATURAL := 18
+	);
+	PORT(
+		rst      : IN  STD_LOGIC;
+		clk      : IN  STD_LOGIC;
+		-- ST sink: RL = 1
+		fifo_req : OUT STD_LOGIC;
+		fifo_dat : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		fifo_val : IN  STD_LOGIC := '0';
+		-- ST source: RL = 0
+		rd_req   : IN  STD_LOGIC;
+		rd_dat   : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		rd_val   : OUT STD_LOGIC
+	);
 END common_fifo_rd;
-
 
 ARCHITECTURE wrap OF common_fifo_rd IS
 
-  
 BEGIN
 
-  u_rl0 : ENTITY work.common_rl_decrease
-  GENERIC MAP (
-    g_adapt       => TRUE,
-    g_dat_w       => g_dat_w
-  )
-  PORT MAP (
-    rst           => rst,
-    clk           => clk,
-    -- ST sink: RL = 1
-    snk_out_ready => fifo_req,
-    snk_in_dat    => fifo_dat,
-    snk_in_val    => fifo_val,
-    -- ST source: RL = 0
-    src_in_ready  => rd_req,
-    src_out_dat   => rd_dat,
-    src_out_val   => rd_val
-  );
-  
+	u_rl0 : ENTITY work.common_rl_decrease
+		GENERIC MAP(
+			g_adapt => TRUE,
+			g_dat_w => g_dat_w
+		)
+		PORT MAP(
+			rst           => rst,
+			clk           => clk,
+			-- ST sink: RL = 1
+			snk_out_ready => fifo_req,
+			snk_in_dat    => fifo_dat,
+			snk_in_val    => fifo_val,
+			-- ST source: RL = 0
+			src_in_ready  => rd_req,
+			src_out_dat   => rd_dat,
+			src_out_val   => rd_val
+		);
+
 END wrap;

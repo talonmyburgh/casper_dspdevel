@@ -97,7 +97,6 @@ BEGIN
       g_init_file => "UNUSED"
     )
     PORT MAP (
-      rst       => rst, 
       clk       => clk, 
       clken     => '1',
       wr_en     => mosi_arr(I).wr, 

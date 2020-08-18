@@ -51,16 +51,16 @@ use casper_ram_lib.common_ram_pkg.all;
 
 entity rTwoOrder is
 	generic(
-		g_technology : natural := 0;    --! 0 for Xilinx products, 1 for Alterra 
-		g_nof_points : natural := 1024; --! Number of FFT points
-		g_bit_flip   : boolean := true; --! Flip bits
-		g_nof_chan   : natural := 0;    --! Number of FFT channels
-		g_dat_w      : natural := 36;    --! Data width
-		g_ram_primitive : string := "auto" --! Which RAMs to use
+		g_technology    : natural := 0; --! 0 for Xilinx products, 1 for Alterra 
+		g_nof_points    : natural := 1024; --! Number of FFT points
+		g_bit_flip      : boolean := true; --! Flip bits
+		g_nof_chan      : natural := 0; --! Number of FFT channels
+		g_dat_w         : natural := 36; --! Data width
+		g_ram_primitive : string  := "auto" --! Which RAMs to use
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
-		ce 		: in std_logic;			--! Clock enable
+		ce      : in  std_logic;        --! Clock enable
 		rst     : in  std_logic;        --! Reset signal
 		in_dat  : in  std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Input data signal
 		in_val  : in  std_logic;        --! In val (for delay)
@@ -162,36 +162,36 @@ begin
 			g_width   => g_nof_chan
 		)
 		PORT MAP(
-			clken => ce,
+			clken  => ce,
 			rst    => rst,
 			clk    => clk,
 			cnt_en => in_val,
 			count  => adr_chan_cnt
 		);
-		u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
-			GENERIC MAP(
-				g_technology    => g_technology,
-				g_str           => "use_adr",
-				g_data_w        => c_dat_w,
-				g_nof_pages     => 2,
-				g_page_sz       => c_page_size,
-				g_wr_start_page => 0,
-				g_rd_start_page => 1,
-				g_rd_latency    => 1,
-				g_ram_primitive => g_ram_primitive
-			)
-			PORT MAP(
-				rst          => rst,
-				clk          => clk,
-				clken        => ce,
-				wr_next_page => next_page,
-				wr_adr       => wr_adr,
-				wr_en        => wr_en,
-				wr_dat       => wr_dat,
-				rd_next_page => next_page,
-				rd_adr       => rd_adr,
-				rd_en        => rd_en,
-				rd_dat       => rd_dat,
-				rd_val       => rd_val
-			);
+	u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
+		GENERIC MAP(
+			g_technology    => g_technology,
+			g_str           => "use_adr",
+			g_data_w        => c_dat_w,
+			g_nof_pages     => 2,
+			g_page_sz       => c_page_size,
+			g_wr_start_page => 0,
+			g_rd_start_page => 1,
+			g_rd_latency    => 1,
+			g_ram_primitive => g_ram_primitive
+		)
+		PORT MAP(
+			rst          => rst,
+			clk          => clk,
+			clken        => ce,
+			wr_next_page => next_page,
+			wr_adr       => wr_adr,
+			wr_en        => wr_en,
+			wr_dat       => wr_dat,
+			rd_next_page => next_page,
+			rd_adr       => rd_adr,
+			rd_en        => rd_en,
+			rd_dat       => rd_dat,
+			rd_val       => rd_val
+		);
 end rtl;

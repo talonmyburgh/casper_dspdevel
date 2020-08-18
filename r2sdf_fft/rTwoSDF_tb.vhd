@@ -120,7 +120,7 @@ architecture tb of tb_rTwoSDF is
 	signal enable : std_logic                     := '1';
 	signal random : std_logic_vector(15 downto 0) := (others => '0'); -- use different lengths to have different random sequences
 	signal in_en  : std_logic                     := '0';
-	
+
 	signal ce : std_logic := '1';
 
 	signal in_re   : std_logic_vector(g_in_dat_w - 1 downto 0);
@@ -233,7 +233,6 @@ begin
 						in_val  <= std_logic(in_file_val(in_index));
 					end if;
 
-
 					tb_end <= '1';
 				end if;
 			end if;
@@ -327,9 +326,8 @@ begin
 				assert TO_SINT(out_re) = gold_re report "Output real data error";
 				assert TO_SINT(out_im) = gold_im report "Output imag data error";
 			end if;
-		end if;	
+		end if;
 	end process;
-		
 
 	-- Write to default output file, this allows using command line diff or graphical diff viewer to compare it with the golden result file
 	p_write_output_file : process(clk)

@@ -1,0 +1,5 @@
+Vivado Simulator 2019.1
+Copyright 1986-1999, 2001-2019 Xilinx, Inc. All Rights Reserved.
+Running: /opt/Vivado/2019.1/bin/unwrapped/lnx64.o/xelab -wto f07e2515bea94ce989966c8f97bd7812 --incr --debug typical --relax --mt 8 -L common_pkg_lib -L casper_fifo_lib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot tb_common_fifo_rd_behav casper_fifo_lib.tb_common_fifo_rd casper_fifo_lib.glbl -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration

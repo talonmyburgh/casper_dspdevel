@@ -30,15 +30,15 @@ PACKAGE tech_mult_component_pkg IS
 	-- ! Complex multiplier allowing for signed/unsigned multiplication with option to conjugate b input. Does not necessarily translate to DSP element.
 	component ip_cmult_rtl_4dsp
 		generic(
-			g_use_dsp 		   : STRING:="yes";
+			g_use_dsp          : STRING  := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
 			g_conjugate_b      : BOOLEAN := FALSE;
-			g_pipeline_input   : NATURAL:=1;
-			g_pipeline_product : NATURAL:=0;
-			g_pipeline_adder   : NATURAL:=1;
-			g_pipeline_output  : NATURAL:=1
+			g_pipeline_input   : NATURAL := 1;
+			g_pipeline_product : NATURAL := 0;
+			g_pipeline_adder   : NATURAL := 1;
+			g_pipeline_output  : NATURAL := 1
 		);
 		port(
 			rst       : IN  STD_LOGIC;
@@ -56,15 +56,15 @@ PACKAGE tech_mult_component_pkg IS
 	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
 	component ip_cmult_rtl_3dsp
 		generic(
-			g_use_dsp		   : STRING := "yes";
+			g_use_dsp          : STRING  := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
 			g_conjugate_b      : BOOLEAN := FALSE;
-			g_pipeline_input   : NATURAL:=1;
-			g_pipeline_product : NATURAL:=0;
-			g_pipeline_adder   : NATURAL:=1;
-			g_pipeline_output  : NATURAL:=1
+			g_pipeline_input   : NATURAL := 1;
+			g_pipeline_product : NATURAL := 0;
+			g_pipeline_adder   : NATURAL := 1;
+			g_pipeline_output  : NATURAL := 1
 		);
 		port(
 			rst       : IN  STD_LOGIC;

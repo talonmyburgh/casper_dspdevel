@@ -33,54 +33,76 @@ USE common_pkg_lib.common_pkg.ALL;
 --LIBRARY ip_arria10_e1sg_fifo_lib;
 
 ENTITY tech_fifo_dc_mixed_widths IS
-  GENERIC (
-    g_technology : NATURAL := 0; --c_tech_select_default;
-    g_nof_words  : NATURAL;  -- FIFO size in nof wr_dat words
-    g_wrdat_w    : NATURAL;
-    g_rddat_w    : NATURAL
-  );
-  PORT (
-    aclr    : IN STD_LOGIC  := '0';
-    data    : IN STD_LOGIC_VECTOR (g_wrdat_w-1 DOWNTO 0);
-    rdclk   : IN STD_LOGIC;
-    rdreq   : IN STD_LOGIC;
-    wrclk   : IN STD_LOGIC;
-    wrreq   : IN STD_LOGIC;
-    q       : OUT STD_LOGIC_VECTOR (g_rddat_w-1 DOWNTO 0);
-    rdempty : OUT STD_LOGIC;
-    rdusedw : OUT STD_LOGIC_VECTOR (ceil_log2(g_nof_words*g_wrdat_w/g_rddat_w)-1 DOWNTO 0);
-    wrfull  : OUT STD_LOGIC;
-    wrusedw : OUT STD_LOGIC_VECTOR (ceil_log2(g_nof_words)-1 DOWNTO 0)
-  );
+	GENERIC(
+		g_technology     : NATURAL := 0; --c_tech_select_default;
+		g_nof_words      : NATURAL := 16; -- FIFO size in nof wr_dat words
+		g_wrdat_w        : NATURAL := 12;
+		g_rddat_w        : NATURAL := 10;
+		g_fifo_primitive : STRING  := "auto"
+	);
+	PORT(
+		aclr    : IN  STD_LOGIC := '0';
+		data    : IN  STD_LOGIC_VECTOR(g_wrdat_w - 1 DOWNTO 0);
+		rdclk   : IN  STD_LOGIC;
+		rdreq   : IN  STD_LOGIC;
+		wrclk   : IN  STD_LOGIC;
+		wrreq   : IN  STD_LOGIC;
+		q       : OUT STD_LOGIC_VECTOR(g_rddat_w - 1 DOWNTO 0);
+		rdempty : OUT STD_LOGIC;
+		rdusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words * g_wrdat_w / g_rddat_w) - 1 DOWNTO 0);
+		wrfull  : OUT STD_LOGIC;
+		wrusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
+	);
 END tech_fifo_dc_mixed_widths;
-
 
 ARCHITECTURE str OF tech_fifo_dc_mixed_widths IS
 
 BEGIN
+	gen_ip_xilinx : IF g_technology = 0 GENERATE
+		u0 : component ip_xilinx_fifo_dc_mixed_widths
+			generic map(
+				g_nof_words      => g_nof_words,
+				g_wrdat_w        => g_wrdat_w,
+				g_rddat_w        => g_rddat_w,
+				g_fifo_primitive => g_fifo_primitive
+			)
+			port map(
+				aclr    => aclr,
+				data    => data,
+				rdclk   => rdclk,
+				rdreq   => rdreq,
+				wrclk   => wrclk,
+				wrreq   => wrreq,
+				q       => q,
+				rdempty => rdempty,
+				rdusedw => rdusedw,
+				wrfull  => wrfull,
+				wrusedw => wrusedw
+			);
+	END GENERATE;
 
-  gen_ip_stratixiv : IF g_technology=0 GENERATE
-    u0 : ip_stratixiv_fifo_dc_mixed_widths
-    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
-    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-  END GENERATE;
-  
---  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
---    u0 : ip_arria10_fifo_dc_mixed_widths
---    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
---    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
---  END GENERATE;
---
---  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
---    u0 : ip_arria10_e3sge3_fifo_dc_mixed_widths
---    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
---    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
---  END GENERATE;
---  
---  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
---    u0 : ip_arria10_e1sg_fifo_dc_mixed_widths
---    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
---    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
---  END GENERATE;
-  
+	gen_ip_stratixiv : IF g_technology = 1 GENERATE
+		u0 : ip_stratixiv_fifo_dc_mixed_widths
+			GENERIC MAP(g_nof_words, g_wrdat_w, g_rddat_w)
+			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
+	END GENERATE;
+
+	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
+	--    u0 : ip_arria10_fifo_dc_mixed_widths
+	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
+	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
+	--  END GENERATE;
+	--
+	--  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
+	--    u0 : ip_arria10_e3sge3_fifo_dc_mixed_widths
+	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
+	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
+	--  END GENERATE;
+	--  
+	--  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
+	--    u0 : ip_arria10_e1sg_fifo_dc_mixed_widths
+	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
+	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
+	--  END GENERATE;
+
 END ARCHITECTURE;

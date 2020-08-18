@@ -248,24 +248,37 @@ BEGIN
           g_init_file  => sel_a_b(g_file_name_prefix = "UNUSED", g_file_name_prefix, g_file_name_prefix & "_" & NATURAL'IMAGE(g_file_index_arr(I)) & c_post_buf_file)    
         )
         PORT MAP (
-          -- MM side
-          rst_a     => mm_rst,
-          clk_a     => mm_clk,
-          wr_en_a   => ram_bg_data_mosi_arr(I).wr,
-          wr_dat_a  => ram_bg_data_mosi_arr(I).wrdata(c_buf.dat_w -1 DOWNTO 0),
-          adr_a     => ram_bg_data_mosi_arr(I).address(c_buf.adr_w-1 DOWNTO 0),
-          rd_en_a   => ram_bg_data_mosi_arr(I).rd,
-          rd_dat_a  => ram_bg_data_miso_arr(I).rddata(c_buf.dat_w -1 DOWNTO 0),
-          rd_val_a  => ram_bg_data_miso_arr(I).rdval,
+          clk_a => mm_clk,
+          
           -- Waveform side
-          rst_b     => dp_rst,
-          clk_b     => dp_clk,
-          wr_en_b   => '0',
-          wr_dat_b  => (OTHERS =>'0'),
-          adr_b     => st_addr_arr(I), 
-          rd_en_b   => st_rd_arr(I),
-          rd_dat_b  => st_rddata_arr(I),
-          rd_val_b  => st_rdval_arr(I) 
+          
+          clk_b => dp_clk,
+          
+          -- MM side
+          
+          wr_en_a => ram_bg_data_mosi_arr(I).wr,
+          
+          wr_en_b => '0',
+          
+          wr_dat_a => ram_bg_data_mosi_arr(I).wrdata(c_buf.dat_w -1 DOWNTO 0),
+          
+          wr_dat_b => (OTHERS =>'0'),
+          
+          adr_a => ram_bg_data_mosi_arr(I).address(c_buf.adr_w-1 DOWNTO 0),
+          
+          adr_b => st_addr_arr(I),
+          
+          rd_en_a => ram_bg_data_mosi_arr(I).rd,
+          
+          rd_en_b => st_rd_arr(I),
+          
+          rd_dat_a => ram_bg_data_miso_arr(I).rddata(c_buf.dat_w -1 DOWNTO 0),
+          
+          rd_dat_b => st_rddata_arr(I),
+          
+          rd_val_a => ram_bg_data_miso_arr(I).rdval,
+          
+          rd_val_b => st_rdval_arr(I) 
         );
       END GENERATE;
       

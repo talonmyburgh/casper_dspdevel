@@ -1,0 +1,17 @@
+# compile vhdl design source files
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_pkg.vhd" \
+
+vhdl casper_fifo_lib  \
+"../../../../../common_rl_decrease.vhd" \
+"../../../../../common_fifo_rd.vhd" \
+
+vhdl common_pkg_lib  \
+"../../../../../../common_pkg/common_lfsr_sequences_pkg.vhd" \
+"../../../../../../common_pkg/common_pkg_tb.vhd" \
+
+vhdl casper_fifo_lib  \
+"../../../../../tb_common_fifo_rd.vhd" \
+
+# Do not sort compile order
+nosort

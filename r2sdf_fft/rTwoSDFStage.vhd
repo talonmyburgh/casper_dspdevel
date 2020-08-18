@@ -31,7 +31,7 @@ entity rTwoSDFStage is
 		g_stage_offset   : natural        := 0; --! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; --! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_scale_enable   : boolean        := TRUE; --! Enable scaling
-		g_variant		 : string			:= "4DSP";
+		g_variant        : string         := "4DSP";
 		g_use_dsp        : string         := "yes";
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
@@ -90,7 +90,7 @@ begin
 			g_step_size => 1
 		)
 		port map(
-			clken => '1',
+			clken  => '1',
 			rst    => rst,
 			clk    => clk,
 			cnt_en => in_val,

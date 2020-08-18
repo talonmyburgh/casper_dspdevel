@@ -48,7 +48,7 @@ entity ip_mult_infer is
 		out_p : out std_logic_vector(g_out_p_w - 1 downto 0) --! Output signal
 	);
 	attribute use_dsp : string;
-	attribute use_dsp of ip_mult_infer: entity is g_use_dsp;
+	attribute use_dsp of ip_mult_infer : entity is g_use_dsp;
 end entity;
 
 architecture rtl of ip_mult_infer is

@@ -1,7 +1,6 @@
 --! @file
 --! @brief Radix 2 butterfly module
 
-
 --------------------------------------------------------------------------------
 --
 -- Copyright 2020
@@ -77,13 +76,13 @@ entity rTwoBF is
 		g_out_d_zdly : natural := 0     --! default 0, optionally use 1
 	);
 	port(
-		clk    : in  std_logic := '0'; --! Input clock source
-		in_a   : in  std_logic_vector; --! Input signal A
-		in_b   : in  std_logic_vector; --! Input signal B
-		in_sel : in  std_logic; --! Select input
-		in_val : in  std_logic := '0'; --! Select input for delay
-		out_c  : out std_logic_vector; --! Output signal c
-		out_d  : out std_logic_vector --! Output signal d
+		clk    : in  std_logic := '0';  --! Input clock source
+		in_a   : in  std_logic_vector;  --! Input signal A
+		in_b   : in  std_logic_vector;  --! Input signal B
+		in_sel : in  std_logic;         --! Select input
+		in_val : in  std_logic := '0';  --! Select input for delay
+		out_c  : out std_logic_vector;  --! Output signal c
+		out_d  : out std_logic_vector   --! Output signal d
 	);
 end;
 

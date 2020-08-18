@@ -131,7 +131,7 @@ begin
 			-- data path.
 			regceb         => '1',      -- 1-bit input: Clock Enable for the last register stage on the output
 			-- data path.
-			rsta           => '0',    -- 1-bit input: Reset signal for the final port A output register
+			rsta           => '0',      -- 1-bit input: Reset signal for the final port A output register
 			-- stage. Synchronously resets output port douta to the value specified
 			-- by parameter READ_RESET_VALUE_B.
 			rstb           => '0',

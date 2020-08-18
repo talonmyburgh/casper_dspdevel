@@ -60,31 +60,31 @@ use work.rTwoSDFPkg.all;
 entity rTwoSDF is
 	generic(
 		-- generics for the FFT    
-		g_nof_chan    : natural        := 0; --! Exponent of nr of subbands (0 means 1 subband)
-		g_use_reorder : boolean        := true; --! Reorder output
-		g_in_dat_w    : natural        := 12; --! Number of input bits
-		g_out_dat_w   : natural        := 18; --! Number of output bits
-		g_stage_dat_w : natural        := 22; --! Number of bits used between the stages
-		g_guard_w     : natural        := 2; --! Guard bits are used to avoid overflow in single FFT stage   
-		g_nof_points  : natural        := 2048; --! N point FFT
+		g_nof_chan      : natural := 0; --! Exponent of nr of subbands (0 means 1 subband)
+		g_use_reorder   : boolean := true; --! Reorder output
+		g_in_dat_w      : natural := 12; --! Number of input bits
+		g_out_dat_w     : natural := 18; --! Number of output bits
+		g_stage_dat_w   : natural := 22; --! Number of bits used between the stages
+		g_guard_w       : natural := 2; --! Guard bits are used to avoid overflow in single FFT stage   
+		g_nof_points    : natural := 2048; --! N point FFT
 		-- generics for rTwoSDFStage
-		g_variant     : string         := "3DSP"; --! Use 3dsp or 4dsp for multiplication
-		g_use_dsp     : string         := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
+		g_variant       : string  := "3DSP"; --! Use 3dsp or 4dsp for multiplication
+		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		-- pipeline generics
-		g_stage_lat  :  natural        := 1; --! stage latencies
-		g_weight_lat : natural         := 1;
-		g_mult_lat    :natural            := 4;
-		g_bf_lat      : natural       := 1;
-		g_bf_use_zdly : natural       := 1;
-		g_bf_in_a_zdly : natural      := 0;
-		g_bf_out_d_zdly : natural     := 0;
+		g_stage_lat     : natural := 1; --! stage latencies
+		g_weight_lat    : natural := 1;
+		g_mult_lat      : natural := 4;
+		g_bf_lat        : natural := 1;
+		g_bf_use_zdly   : natural := 1;
+		g_bf_in_a_zdly  : natural := 0;
+		g_bf_out_d_zdly : natural := 0;
 		--generics for rTwoOrder
-		g_technology  : natural        := 0; --! 0 for Xilinx products, 1 for Alterra 
-		g_ram_primitive : STRING	   := "auto"
+		g_technology    : natural := 0; --! 0 for Xilinx products, 1 for Alterra 
+		g_ram_primitive : STRING  := "auto"
 	);
 	port(
 		clk     : in  std_logic;        --! Clock input
-		ce      : in std_logic :='1';         --! Clock enable
+		ce      : in  std_logic := '1'; --! Clock enable
 		rst     : in  std_logic := '0'; --! Reset input (resets on high)
 		in_re   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Real input (data width = g_in_dat_w)
 		in_im   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Imag input (data width = g_in_dat_w)
@@ -121,7 +121,7 @@ architecture str of rTwoSDF is
 	signal raw_out_re   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_im   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_val  : std_logic;
-	constant pipeline :    t_fft_pipeline :=   (g_stage_lat,g_weight_lat,g_mult_lat,g_bf_lat,g_bf_use_zdly,g_bf_in_a_zdly,g_bf_out_d_zdly);
+	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly);
 
 begin
 	-- Inputs
@@ -136,14 +136,14 @@ begin
 	gen_fft : for stage in c_nof_stages downto 1 generate
 		u_stage : entity work.rTwoSDFStage
 			generic map(
-				g_nof_chan => g_nof_chan,
-				g_stage => stage,
-				g_stage_offset => c_stage_offset,
+				g_nof_chan       => g_nof_chan,
+				g_stage          => stage,
+				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
-				g_scale_enable => sel_a_b(stage <= g_guard_w, FALSE, TRUE), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
-				g_variant => g_variant,
-				g_use_dsp => g_use_dsp,
-				g_pipeline => pipeline
+				g_scale_enable   => sel_a_b(stage <= g_guard_w, FALSE, TRUE), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
+				g_variant        => g_variant,
+				g_use_dsp        => g_use_dsp,
+				g_pipeline       => pipeline
 			)
 			port map(
 				clk     => clk,
@@ -175,15 +175,15 @@ begin
 
 		u_cplx : entity work.rTwoOrder
 			generic map(
-				g_technology => g_technology,
-				g_nof_points => g_nof_points,
-				g_nof_chan   => g_nof_chan,
-				g_dat_w      => 2 * g_stage_dat_w,
+				g_technology    => g_technology,
+				g_nof_points    => g_nof_points,
+				g_nof_chan      => g_nof_chan,
+				g_dat_w         => 2 * g_stage_dat_w,
 				g_ram_primitive => g_ram_primitive
 			)
 			port map(
 				clk     => clk,
-				ce 		=> ce,
+				ce      => ce,
 				rst     => rst,
 				in_dat  => raw_out_cplx,
 				in_val  => data_val(0),

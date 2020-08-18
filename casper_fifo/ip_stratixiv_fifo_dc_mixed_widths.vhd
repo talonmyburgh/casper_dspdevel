@@ -17,7 +17,6 @@
 -- 10.0 Build 218 06/27/2010 SJ Full Version
 -- ************************************************************
 
-
 --Copyright (C) 1991-2010 Altera Corporation
 --Your use of Altera Corporation's design tools, logic functions 
 --and other software and tools, and its AMPP partner logic 
@@ -32,120 +31,111 @@
 --Altera or its authorized distributors.  Please refer to the 
 --applicable agreement for further details.
 
-
-LIBRARY ieee;
+LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
-
-LIBRARY technology_lib;
-USE technology_lib.technology_pkg.ALL;
+USE common_pkg_lib.common_pkg.all;
 
 LIBRARY altera_mf;
 USE altera_mf.all;
 
 ENTITY ip_stratixiv_fifo_dc_mixed_widths IS
-  GENERIC (
-    g_nof_words : NATURAL;  -- FIFO size in nof wr_dat words
-    g_wrdat_w   : NATURAL;
-    g_rddat_w   : NATURAL
-  );
-	PORT
-	(
-		aclr		: IN STD_LOGIC  := '0';
-		data		: IN STD_LOGIC_VECTOR (g_wrdat_w-1 DOWNTO 0);
-		rdclk		: IN STD_LOGIC ;
-		rdreq		: IN STD_LOGIC ;
-		wrclk		: IN STD_LOGIC ;
-		wrreq		: IN STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (g_rddat_w-1 DOWNTO 0);
-		rdempty		: OUT STD_LOGIC ;
-		rdusedw		: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words*g_wrdat_w/g_rddat_w)-1 DOWNTO 0);
-		wrfull		: OUT STD_LOGIC ;
-		wrusedw		: OUT STD_LOGIC_VECTOR (tech_ceil_log2(g_nof_words)-1 DOWNTO 0)
+	GENERIC(
+		g_nof_words : NATURAL;          -- FIFO size in nof wr_dat words
+		g_wrdat_w   : NATURAL;
+		g_rddat_w   : NATURAL
+	);
+	PORT(
+		aclr    : IN  STD_LOGIC := '0';
+		data    : IN  STD_LOGIC_VECTOR(g_wrdat_w - 1 DOWNTO 0);
+		rdclk   : IN  STD_LOGIC;
+		rdreq   : IN  STD_LOGIC;
+		wrclk   : IN  STD_LOGIC;
+		wrreq   : IN  STD_LOGIC;
+		q       : OUT STD_LOGIC_VECTOR(g_rddat_w - 1 DOWNTO 0);
+		rdempty : OUT STD_LOGIC;
+		rdusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words * g_wrdat_w / g_rddat_w) - 1 DOWNTO 0);
+		wrfull  : OUT STD_LOGIC;
+		wrusedw : OUT STD_LOGIC_VECTOR(ceil_log2(g_nof_words) - 1 DOWNTO 0)
 	);
 END ip_stratixiv_fifo_dc_mixed_widths;
 
-
 ARCHITECTURE SYN OF ip_stratixiv_fifo_dc_mixed_widths IS
 
-	SIGNAL sub_wire0	: STD_LOGIC ;
-	SIGNAL sub_wire1	: STD_LOGIC_VECTOR (q'RANGE);
-	SIGNAL sub_wire2	: STD_LOGIC ;
-	SIGNAL sub_wire3	: STD_LOGIC_VECTOR (wrusedw'RANGE);
-	SIGNAL sub_wire4	: STD_LOGIC_VECTOR (rdusedw'RANGE);
-
-
+	SIGNAL sub_wire0 : STD_LOGIC;
+	SIGNAL sub_wire1 : STD_LOGIC_VECTOR(q'RANGE);
+	SIGNAL sub_wire2 : STD_LOGIC;
+	SIGNAL sub_wire3 : STD_LOGIC_VECTOR(wrusedw'RANGE);
+	SIGNAL sub_wire4 : STD_LOGIC_VECTOR(rdusedw'RANGE);
 
 	COMPONENT dcfifo_mixed_widths
-	GENERIC (
-		intended_device_family		: STRING;
-		lpm_numwords		: NATURAL;
-		lpm_showahead		: STRING;
-		lpm_type		: STRING;
-		lpm_width		: NATURAL;
-		lpm_widthu		: NATURAL;
-		lpm_widthu_r		: NATURAL;
-		lpm_width_r		: NATURAL;
-		overflow_checking		: STRING;
-		rdsync_delaypipe		: NATURAL;
-		underflow_checking		: STRING;
-		use_eab		: STRING;
-		write_aclr_synch		: STRING;
-		wrsync_delaypipe		: NATURAL
-	);
-	PORT (
-			rdclk	: IN STD_LOGIC ;
-			wrfull	: OUT STD_LOGIC ;
-			q	: OUT STD_LOGIC_VECTOR (q'RANGE);
-			rdempty	: OUT STD_LOGIC ;
-			wrclk	: IN STD_LOGIC ;
-			wrreq	: IN STD_LOGIC ;
-			wrusedw	: OUT STD_LOGIC_VECTOR (wrusedw'RANGE);
-			aclr	: IN STD_LOGIC ;
-			data	: IN STD_LOGIC_VECTOR (data'RANGE);
-			rdreq	: IN STD_LOGIC ;
-			rdusedw	: OUT STD_LOGIC_VECTOR (rdusedw'RANGE)
-	);
+		GENERIC(
+			intended_device_family : STRING;
+			lpm_numwords           : NATURAL;
+			lpm_showahead          : STRING;
+			lpm_type               : STRING;
+			lpm_width              : NATURAL;
+			lpm_widthu             : NATURAL;
+			lpm_widthu_r           : NATURAL;
+			lpm_width_r            : NATURAL;
+			overflow_checking      : STRING;
+			rdsync_delaypipe       : NATURAL;
+			underflow_checking     : STRING;
+			use_eab                : STRING;
+			write_aclr_synch       : STRING;
+			wrsync_delaypipe       : NATURAL
+		);
+		PORT(
+			rdclk   : IN  STD_LOGIC;
+			wrfull  : OUT STD_LOGIC;
+			q       : OUT STD_LOGIC_VECTOR(q'RANGE);
+			rdempty : OUT STD_LOGIC;
+			wrclk   : IN  STD_LOGIC;
+			wrreq   : IN  STD_LOGIC;
+			wrusedw : OUT STD_LOGIC_VECTOR(wrusedw'RANGE);
+			aclr    : IN  STD_LOGIC;
+			data    : IN  STD_LOGIC_VECTOR(data'RANGE);
+			rdreq   : IN  STD_LOGIC;
+			rdusedw : OUT STD_LOGIC_VECTOR(rdusedw'RANGE)
+		);
 	END COMPONENT;
 
 BEGIN
-	wrfull    <= sub_wire0;
-	q    <= sub_wire1(q'RANGE);
-	rdempty    <= sub_wire2;
-	wrusedw    <= sub_wire3(wrusedw'RANGE);
-	rdusedw    <= sub_wire4(rdusedw'RANGE);
+	wrfull  <= sub_wire0;
+	q       <= sub_wire1(q'RANGE);
+	rdempty <= sub_wire2;
+	wrusedw <= sub_wire3(wrusedw'RANGE);
+	rdusedw <= sub_wire4(rdusedw'RANGE);
 
 	dcfifo_mixed_widths_component : dcfifo_mixed_widths
-	GENERIC MAP (
-		intended_device_family => "Stratix IV",
-		lpm_numwords => g_nof_words,
-		lpm_showahead => "OFF",
-		lpm_type => "dcfifo",
-		lpm_width => g_wrdat_w,
-		lpm_widthu => tech_ceil_log2(g_nof_words),
-		lpm_widthu_r => tech_ceil_log2(g_nof_words*g_wrdat_w/g_rddat_w),
-		lpm_width_r => g_rddat_w,
-		overflow_checking => "ON",
-		rdsync_delaypipe => 5,
-		underflow_checking => "ON",
-		use_eab => "ON",
-		write_aclr_synch => "ON",
-		wrsync_delaypipe => 5
-	)
-	PORT MAP (
-		rdclk => rdclk,
-		wrclk => wrclk,
-		wrreq => wrreq,
-		aclr => aclr,
-		data => data,
-		rdreq => rdreq,
-		wrfull => sub_wire0,
-		q => sub_wire1,
-		rdempty => sub_wire2,
-		wrusedw => sub_wire3,
-		rdusedw => sub_wire4
-	);
-
-
+		GENERIC MAP(
+			intended_device_family => "Stratix IV",
+			lpm_numwords           => g_nof_words,
+			lpm_showahead          => "OFF",
+			lpm_type               => "dcfifo",
+			lpm_width              => g_wrdat_w,
+			lpm_widthu             => ceil_log2(g_nof_words),
+			lpm_widthu_r           => ceil_log2(g_nof_words * g_wrdat_w / g_rddat_w),
+			lpm_width_r            => g_rddat_w,
+			overflow_checking      => "ON",
+			rdsync_delaypipe       => 5,
+			underflow_checking     => "ON",
+			use_eab                => "ON",
+			write_aclr_synch       => "ON",
+			wrsync_delaypipe       => 5
+		)
+		PORT MAP(
+			rdclk   => rdclk,
+			wrclk   => wrclk,
+			wrreq   => wrreq,
+			aclr    => aclr,
+			data    => data,
+			rdreq   => rdreq,
+			wrfull  => sub_wire0,
+			q       => sub_wire1,
+			rdempty => sub_wire2,
+			wrusedw => sub_wire3,
+			rdusedw => sub_wire4
+		);
 
 END SYN;
 

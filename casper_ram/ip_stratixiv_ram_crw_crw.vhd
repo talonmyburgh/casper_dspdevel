@@ -17,7 +17,6 @@
 -- 10.0 Build 218 06/27/2010 SJ Full Version
 -- ************************************************************
 
-
 --Copyright (C) 1991-2010 Altera Corporation
 --Your use of Altera Corporation's design tools, logic functions 
 --and other software and tools, and its AMPP partner logic 
@@ -32,7 +31,6 @@
 --Altera or its authorized distributors.  Please refer to the 
 --applicable agreement for further details.
 
-
 LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
@@ -44,141 +42,135 @@ USE altera_mf.all;
 --USE technology_lib.technology_pkg.ALL;
 
 ENTITY ip_stratixiv_ram_crw_crw IS
-  GENERIC (
-    g_adr_w      : NATURAL := 5;
-    g_dat_w      : NATURAL := 8;
-    g_nof_words  : NATURAL := 2**5;
-    g_rd_latency : NATURAL := 2;  -- choose 1 or 2
-    g_init_file  : STRING  := "UNUSED"
-  );
-	PORT
-	(
-		address_a		: IN STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-		address_b		: IN STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-		clock_a		: IN STD_LOGIC  := '1';
-		clock_b		: IN STD_LOGIC ;
-		data_a		: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		data_b		: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		enable_a		: IN STD_LOGIC  := '1';
-		enable_b		: IN STD_LOGIC  := '1';
-		rden_a		: IN STD_LOGIC  := '1';
-		rden_b		: IN STD_LOGIC  := '1';
-		wren_a		: IN STD_LOGIC  := '0';
-		wren_b		: IN STD_LOGIC  := '0';
-		q_a		: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-		q_b		: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0)
+	GENERIC(
+		g_adr_w      : NATURAL := 5;
+		g_dat_w      : NATURAL := 8;
+		g_nof_words  : NATURAL := 2**5;
+		g_rd_latency : NATURAL := 2;    -- choose 1 or 2
+		g_init_file  : STRING  := "UNUSED"
+	);
+	PORT(
+		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		clock_a   : IN  STD_LOGIC := '1';
+		clock_b   : IN  STD_LOGIC;
+		data_a    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		data_b    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		enable_a  : IN  STD_LOGIC := '1';
+		enable_b  : IN  STD_LOGIC := '1';
+		rden_a    : IN  STD_LOGIC := '1';
+		rden_b    : IN  STD_LOGIC := '1';
+		wren_a    : IN  STD_LOGIC := '0';
+		wren_b    : IN  STD_LOGIC := '0';
+		q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+		q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
 END ip_stratixiv_ram_crw_crw;
 
-
 ARCHITECTURE SYN OF ip_stratixiv_ram_crw_crw IS
 
-  CONSTANT c_outdata_reg_a : STRING := sel_a_b(g_rd_latency=1, "UNREGISTERED", "CLOCK0");
-  CONSTANT c_outdata_reg_b : STRING := sel_a_b(g_rd_latency=1, "UNREGISTERED", "CLOCK1");
+	CONSTANT c_outdata_reg_a : STRING := sel_a_b(g_rd_latency = 1, "UNREGISTERED", "CLOCK0");
+	CONSTANT c_outdata_reg_b : STRING := sel_a_b(g_rd_latency = 1, "UNREGISTERED", "CLOCK1");
 
-	SIGNAL sub_wire0	: STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-	SIGNAL sub_wire1	: STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-
-
+	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	SIGNAL sub_wire1 : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 
 	COMPONENT altsyncram
-	GENERIC (
-		address_reg_b		: STRING;
-		clock_enable_input_a		: STRING;
-		clock_enable_input_b		: STRING;
-		clock_enable_output_a		: STRING;
-		clock_enable_output_b		: STRING;
-		indata_reg_b		: STRING;
-		init_file		: STRING;
-		intended_device_family		: STRING;
-		lpm_type		: STRING;
-		numwords_a		: NATURAL;
-		numwords_b		: NATURAL;
-		operation_mode		: STRING;
-		outdata_aclr_a		: STRING;
-		outdata_aclr_b		: STRING;
-		outdata_reg_a		: STRING;
-		outdata_reg_b		: STRING;
-		power_up_uninitialized		: STRING;
-		read_during_write_mode_port_a		: STRING;
-		read_during_write_mode_port_b		: STRING;
-		widthad_a		: NATURAL;
-		widthad_b		: NATURAL;
-		width_a		: NATURAL;
-		width_b		: NATURAL;
-		width_byteena_a		: NATURAL;
-		width_byteena_b		: NATURAL;
-		wrcontrol_wraddress_reg_b		: STRING
-	);
-	PORT (
-			clocken0	: IN STD_LOGIC ;
-			clocken1	: IN STD_LOGIC ;
-			wren_a	: IN STD_LOGIC ;
-			rden_a	: IN STD_LOGIC ;
-			clock0	: IN STD_LOGIC ;
-			wren_b	: IN STD_LOGIC ;
-			rden_b	: IN STD_LOGIC ;
-			clock1	: IN STD_LOGIC ;
-			address_a	: IN STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-			address_b	: IN STD_LOGIC_VECTOR (g_adr_w-1 DOWNTO 0);
-			q_a	: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			q_b	: OUT STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			data_a	: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0);
-			data_b	: IN STD_LOGIC_VECTOR (g_dat_w-1 DOWNTO 0)
-	);
+		GENERIC(
+			address_reg_b                 : STRING;
+			clock_enable_input_a          : STRING;
+			clock_enable_input_b          : STRING;
+			clock_enable_output_a         : STRING;
+			clock_enable_output_b         : STRING;
+			indata_reg_b                  : STRING;
+			init_file                     : STRING;
+			intended_device_family        : STRING;
+			lpm_type                      : STRING;
+			numwords_a                    : NATURAL;
+			numwords_b                    : NATURAL;
+			operation_mode                : STRING;
+			outdata_aclr_a                : STRING;
+			outdata_aclr_b                : STRING;
+			outdata_reg_a                 : STRING;
+			outdata_reg_b                 : STRING;
+			power_up_uninitialized        : STRING;
+			read_during_write_mode_port_a : STRING;
+			read_during_write_mode_port_b : STRING;
+			widthad_a                     : NATURAL;
+			widthad_b                     : NATURAL;
+			width_a                       : NATURAL;
+			width_b                       : NATURAL;
+			width_byteena_a               : NATURAL;
+			width_byteena_b               : NATURAL;
+			wrcontrol_wraddress_reg_b     : STRING
+		);
+		PORT(
+			clocken0  : IN  STD_LOGIC;
+			clocken1  : IN  STD_LOGIC;
+			wren_a    : IN  STD_LOGIC;
+			rden_a    : IN  STD_LOGIC;
+			clock0    : IN  STD_LOGIC;
+			wren_b    : IN  STD_LOGIC;
+			rden_b    : IN  STD_LOGIC;
+			clock1    : IN  STD_LOGIC;
+			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+			address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+			q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			data_a    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+			data_b    : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+		);
 	END COMPONENT;
 
 BEGIN
-	q_a    <= sub_wire0(g_dat_w-1 DOWNTO 0);
-	q_b    <= sub_wire1(g_dat_w-1 DOWNTO 0);
+	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);
+	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0);
 
 	altsyncram_component : altsyncram
-	GENERIC MAP (
-		address_reg_b => "CLOCK1",
-		clock_enable_input_a => "NORMAL",
-		clock_enable_input_b => "NORMAL",
-		clock_enable_output_a => "BYPASS",
-		clock_enable_output_b => "BYPASS",
-		indata_reg_b => "CLOCK1",
-		init_file => g_init_file,
-		intended_device_family => "Stratix IV",
-		lpm_type => "altsyncram",
-		numwords_a => g_nof_words,
-		numwords_b => g_nof_words,
-		operation_mode => "BIDIR_DUAL_PORT",
-		outdata_aclr_a => "NONE",
-		outdata_aclr_b => "NONE",
-		outdata_reg_a => c_outdata_reg_a,
-		outdata_reg_b => c_outdata_reg_b,
-		power_up_uninitialized => "FALSE",
-		read_during_write_mode_port_a => "NEW_DATA_NO_NBE_READ",
-		read_during_write_mode_port_b => "NEW_DATA_NO_NBE_READ",
-		widthad_a => g_adr_w,
-		widthad_b => g_adr_w,
-		width_a => g_dat_w,
-		width_b => g_dat_w,
-		width_byteena_a => 1,
-		width_byteena_b => 1,
-		wrcontrol_wraddress_reg_b => "CLOCK1"
-	)
-	PORT MAP (
-		clocken0 => enable_a,
-		clocken1 => enable_b,
-		wren_a => wren_a,
-		rden_a => rden_a,
-		clock0 => clock_a,
-		wren_b => wren_b,
-		rden_b => rden_b,
-		clock1 => clock_b,
-		address_a => address_a,
-		address_b => address_b,
-		data_a => data_a,
-		data_b => data_b,
-		q_a => sub_wire0,
-		q_b => sub_wire1
-	);
-
-
+		GENERIC MAP(
+			address_reg_b                 => "CLOCK1",
+			clock_enable_input_a          => "NORMAL",
+			clock_enable_input_b          => "NORMAL",
+			clock_enable_output_a         => "BYPASS",
+			clock_enable_output_b         => "BYPASS",
+			indata_reg_b                  => "CLOCK1",
+			init_file                     => g_init_file,
+			intended_device_family        => "Stratix IV",
+			lpm_type                      => "altsyncram",
+			numwords_a                    => g_nof_words,
+			numwords_b                    => g_nof_words,
+			operation_mode                => "BIDIR_DUAL_PORT",
+			outdata_aclr_a                => "NONE",
+			outdata_aclr_b                => "NONE",
+			outdata_reg_a                 => c_outdata_reg_a,
+			outdata_reg_b                 => c_outdata_reg_b,
+			power_up_uninitialized        => "FALSE",
+			read_during_write_mode_port_a => "NEW_DATA_NO_NBE_READ",
+			read_during_write_mode_port_b => "NEW_DATA_NO_NBE_READ",
+			widthad_a                     => g_adr_w,
+			widthad_b                     => g_adr_w,
+			width_a                       => g_dat_w,
+			width_b                       => g_dat_w,
+			width_byteena_a               => 1,
+			width_byteena_b               => 1,
+			wrcontrol_wraddress_reg_b     => "CLOCK1"
+		)
+		PORT MAP(
+			clocken0  => enable_a,
+			clocken1  => enable_b,
+			wren_a    => wren_a,
+			rden_a    => rden_a,
+			clock0    => clock_a,
+			wren_b    => wren_b,
+			rden_b    => rden_b,
+			clock1    => clock_b,
+			address_a => address_a,
+			address_b => address_b,
+			data_a    => data_a,
+			data_b    => data_b,
+			q_a       => sub_wire0,
+			q_b       => sub_wire1
+		);
 
 END SYN;
 

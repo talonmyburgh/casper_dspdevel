@@ -32,7 +32,7 @@ ENTITY common_pipeline IS
 	);
 	PORT(
 		rst     : IN  STD_LOGIC := '0'; --! Reset signal
-		clk     : IN  STD_LOGIC; --! Input clock signal
+		clk     : IN  STD_LOGIC;        --! Input clock signal
 		clken   : IN  STD_LOGIC := '1'; --! Enable clock
 		in_clr  : IN  STD_LOGIC := '0'; --! Clear input
 		in_en   : IN  STD_LOGIC := '1'; --! Enable input
@@ -70,7 +70,7 @@ BEGIN
 
 	out_dat_p(0) <= RESIZE_SVEC(in_dat, out_dat'LENGTH) WHEN g_representation = "SIGNED"
 	                ELSE RESIZE_UVEC(in_dat, out_dat'LENGTH) WHEN g_representation = "UNSIGNED"
-	;
+	              ;
 
 	out_dat <= out_dat_p(g_pipeline);
 
