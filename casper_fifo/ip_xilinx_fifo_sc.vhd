@@ -24,6 +24,7 @@ entity ip_xilinx_fifo_sc is
 end entity ip_xilinx_fifo_sc;
 
 architecture RTL of ip_xilinx_fifo_sc is
+
 	CONSTANT c_cnt_w : NATURAL := ceil_log2(g_nof_words) + 1;
 
 	SIGNAL sub_wire0 : STD_LOGIC_VECTOR(usedw'RANGE);
@@ -33,6 +34,8 @@ architecture RTL of ip_xilinx_fifo_sc is
 
 	SIGNAL num_rw : STD_LOGIC_VECTOR(c_cnt_w - 1 DOWNTO 0);
 	SIGNAL num_ww : STD_LOGIC_VECTOR(c_cnt_w - 1 DOWNTO 0);
+	
+	SIGNAL tmp_num: STD_LOGIC_VECTOR(c_cnt_w - 1 DOWNTO 0);
 
 begin
 	usedw <= sub_wire0;
@@ -40,7 +43,9 @@ begin
 	full  <= sub_wire2;
 	q     <= sub_wire3;
 
-	sub_wire0 <= std_logic_vector(unsigned(num_ww) - unsigned(num_rw));
+    --Xilinx likes to have cnt width be 1 bit larger than Altera... so slice off msb
+	tmp_num <= std_logic_vector(unsigned(num_ww) - unsigned(num_rw));
+	sub_wire0 <= tmp_num(c_cnt_w-2 DOWNTO 0);
 
 	xpm_fifo_sync_inst : xpm_fifo_sync
 		generic map(

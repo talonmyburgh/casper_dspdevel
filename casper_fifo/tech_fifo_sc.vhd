@@ -57,7 +57,6 @@ BEGIN
 	gen_ip_xilinx : IF g_technology = 0 GENERATE
 		u1 : ip_xilinx_fifo_sc
 			generic map(
-				g_use_eab        => g_use_eab,
 				g_dat_w          => g_dat_w,
 				g_nof_words      => g_nof_words,
 				g_fifo_primitive => g_fifo_primitive

@@ -32,7 +32,6 @@ PACKAGE tech_fifo_component_pkg IS
 	-----------------------------------------------------------------------------
 	COMPONENT ip_xilinx_fifo_sc
 		generic(
-			g_use_eab        : STRING;
 			g_dat_w          : NATURAL;
 			g_nof_words      : NATURAL;
 			g_fifo_primitive : STRING
