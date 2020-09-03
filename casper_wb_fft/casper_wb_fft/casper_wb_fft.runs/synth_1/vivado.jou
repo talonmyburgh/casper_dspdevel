@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2019.1 (64-bit)
+# SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
+# IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
+# Start of session at: Mon Aug 24 18:31:49 2020
+# Process ID: 10322
+# Current directory: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft/casper_wb_fft/casper_wb_fft.runs/synth_1
+# Command line: vivado -log fft_wide_unit.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source fft_wide_unit.tcl
+# Log file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft/casper_wb_fft/casper_wb_fft.runs/synth_1/fft_wide_unit.vds
+# Journal file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft/casper_wb_fft/casper_wb_fft.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source fft_wide_unit.tcl -notrace

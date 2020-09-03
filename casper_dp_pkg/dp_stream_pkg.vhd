@@ -49,8 +49,8 @@ PACKAGE dp_stream_pkg Is
   -- * The info fields are valid at the sop or at the eop, but typically they hold their last active value to avoid unnessary
   --   toggling and to ease viewing in the wave window.
   CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
-  CONSTANT c_dp_stream_data_w     : NATURAL := 768;  -- 72 is sufficient for max word 8 * 9-bit. 576 supports half rate DDR4 bus data width. The current 768 is enough for wide single clock SLVs (e.g. headers)
-  CONSTANT c_dp_stream_dsp_data_w : NATURAL :=  64;  -- 64 is sufficient for DSP data, including complex power accumulates
+  CONSTANT c_dp_stream_data_w     : NATURAL := 72;  -- 72 is sufficient for max word 8 * 9-bit. 576 supports half rate DDR4 bus data width. The current 768 is enough for wide single clock SLVs (e.g. headers)
+  CONSTANT c_dp_stream_dsp_data_w : NATURAL :=  36;  -- 64 is sufficient for DSP data, including complex power accumulates
   CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;  --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
   CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
   CONSTANT c_dp_stream_error_w    : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping error numbers, e.g. 32 different one-hot encoded errors, bit [0] = 0 = OK

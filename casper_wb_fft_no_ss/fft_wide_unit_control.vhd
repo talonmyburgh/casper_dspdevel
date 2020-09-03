@@ -149,7 +149,7 @@ begin
 			g_reset     => FALSE,
 			g_init      => FALSE,
 			g_dat_w     => c_dp_stream_bsn_w,
-			g_nof_words => 2
+			g_nof_words => 16
 		)
 		port map(
 			rst    => rst,

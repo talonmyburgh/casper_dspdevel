@@ -57,6 +57,17 @@ END common_fifo_sc;
 
 ARCHITECTURE str OF common_fifo_sc IS
 
+    function set_fifo_primitive
+        return STRING is
+    begin
+        if g_use_lut then
+            return "distributed";
+        else
+            return g_fifo_primitive;
+        end if;
+    end function;
+
+    CONSTANT c_fifo_primitive : STRING := set_fifo_primitive;
 	CONSTANT c_use_eab : STRING := sel_a_b(g_use_lut, "OFF", "ON"); -- when g_use_lut=TRUE then force using LUTs via Altera eab="OFF", else default to ram_block_type = "AUTO"
 
 	CONSTANT c_fifo_af_latency : NATURAL := 1; -- pipeline register wr_aful
@@ -158,7 +169,7 @@ BEGIN
 			g_use_eab        => c_use_eab,
 			g_dat_w          => g_dat_w,
 			g_nof_words      => g_nof_words,
-			g_fifo_primitive => g_fifo_primitive
+			g_fifo_primitive => c_fifo_primitive
 		)
 		PORT MAP(
 			aclr  => fifo_rst,

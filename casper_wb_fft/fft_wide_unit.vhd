@@ -45,10 +45,10 @@ entity fft_wide_unit is
 		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
 	);
 	port(
-		clken           : in  std_logic;
+		clken           : in  std_logic :='1';
 		dp_rst          : in  std_logic  := '0';
 		dp_clk          : in  std_logic;
-		mm_rst          : in  std_logic;
+		mm_rst          : in  std_logic := '0';
 		mm_clk          : in  std_logic;
 		ram_st_sst_mosi : in  t_mem_mosi; -- Subband statistics registers
 		ram_st_sst_miso : out t_mem_miso := c_mem_miso_rst;

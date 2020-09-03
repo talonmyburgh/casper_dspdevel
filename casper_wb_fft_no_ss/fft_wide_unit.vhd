@@ -54,7 +54,7 @@ entity fft_wide_unit is
 end entity fft_wide_unit;
 
 architecture str of fft_wide_unit is
-
+ 
 	signal fft_in_re_arr : t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
 	signal fft_in_im_arr : t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
 
