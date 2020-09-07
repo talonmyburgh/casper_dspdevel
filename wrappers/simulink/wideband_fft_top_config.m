@@ -36,6 +36,9 @@ function wideband_fft_top_config(this_block)
   use_separate = get_param(wb_fft_blk_parent,'use_separate');
   nof_chan = get_param(wb_fft_blk_parent,'nof_chan');
   wb_factor = str2double(get_param(wb_fft_blk_parent,'wb_factor'));
+  if wb_factor<1
+       error("Cannot have wideband factor <1"); 
+  end
   twiddle_offset = get_param(wb_fft_blk_parent,'twiddle_offset');
   nof_points = get_param(wb_fft_blk_parent,'nof_points');
   i_d_w = get_param(wb_fft_blk_parent,'in_dat_w');

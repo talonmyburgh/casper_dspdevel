@@ -55,59 +55,38 @@ in_re_0 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 in_data_0 : in STD_LOGIC_VECTOR(2*in_dat_w-1 DOWNTO 0);
 out_im_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
 out_re_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-out_data_0 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0)
+out_data_0 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0);
+in_im_1 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
+in_re_1 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
+in_data_1 : in STD_LOGIC_VECTOR(2*in_dat_w-1 DOWNTO 0);
+out_im_1 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+out_re_1 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+out_data_1 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0);
+in_im_2 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
+in_re_2 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
+in_data_2 : in STD_LOGIC_VECTOR(2*in_dat_w-1 DOWNTO 0);
+out_im_2 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+out_re_2 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+out_data_2 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0)
 );
 end entity wideband_fft_top;
-architecture RTL of wideband_fft_top is
-	constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,
-		nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);
-	signal in_sosi_arr : t_dp_sosi_arr(wb_factor - 1 downto 0); 
-	signal out_sosi_arr : t_dp_sosi_arr(wb_factor - 1 downto 0);
-	constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;
-	constant c_fft_pipeline : t_fft_pipeline := c_fft_pipeline; 
-	
-begin
-	
-	fft_wide_unit : entity wb_fft_lib.fft_wide_unit
-		generic map(
-			g_fft          => cc_fft,
-			g_pft_pipeline => c_pft_pipeline,
-			g_fft_pipeline => c_fft_pipeline
-		)
-		port map(
-			clken        => clken,
-			dp_rst       => rst,
-			dp_clk       => clk,
-			in_sosi_arr  => in_sosi_arr,
-			out_sosi_arr => out_sosi_arr
-		);
-		
-		otherinprtmap: for j in 0 to wb_factor-1 generate
-		  in_sosi_arr(j).sync <= in_sync;
-		  in_sosi_arr(j).bsn <= in_bsn;
-		  in_sosi_arr(j).valid <= in_valid;
-		  in_sosi_arr(j).sop <= in_sop;
-		  in_sosi_arr(j).eop <= in_eop;
-		  in_sosi_arr(j).empty <= in_empty;
-		  in_sosi_arr(j).channel <= in_channel;
-		  in_sosi_arr(j).err <= in_err;
-		end generate;
-		otheroutprtmap: for k in 0 to wb_factor-1 generate
-		  out_sosi_arr(k).sync <= out_sync;
-		  out_sosi_arr(k).bsn <= out_bsn;
-		  out_sosi_arr(k).valid <= out_valid;
-		  out_sosi_arr(k).sop <= out_sop;
-		  out_sosi_arr(k).eop <= out_eop;
-		  out_sosi_arr(k).empty <= out_empty;
-		  out_sosi_arr(k).channel <= out_channel;
-		  out_sosi_arr(k).err <= out_err;
-		end generate;
-		
-		--signal assignments made here (DO NOT REMOVE THIS COMMENT)
+
 in_sosi_arr(0).re <= RESIZE_SVEC(in_re_0, in_sosi_arr(0).re'length);
 in_sosi_arr(0).im <= RESIZE_SVEC(in_im_0, in_sosi_arr(0).im'length);
 in_sosi_arr(0).data <= RESIZE_SVEC(in_data_0, in_sosi_arr(0).data'length);
 out_re_0 <= RESIZE_SVEC(out_sosi_arr(0).re,out_dat_w);
 out_im_0 <= RESIZE_SVEC(out_sosi_arr(0).im,out_dat_w);
 out_data_0 <= RESIZE_SVEC(out_sosi_arr(0).data,2*out_dat_w);
+in_sosi_arr(1).re <= RESIZE_SVEC(in_re_1, in_sosi_arr(1).re'length);
+in_sosi_arr(1).im <= RESIZE_SVEC(in_im_1, in_sosi_arr(1).im'length);
+in_sosi_arr(1).data <= RESIZE_SVEC(in_data_1, in_sosi_arr(1).data'length);
+out_re_1 <= RESIZE_SVEC(out_sosi_arr(1).re,out_dat_w);
+out_im_1 <= RESIZE_SVEC(out_sosi_arr(1).im,out_dat_w);
+out_data_1 <= RESIZE_SVEC(out_sosi_arr(1).data,2*out_dat_w);
+in_sosi_arr(2).re <= RESIZE_SVEC(in_re_2, in_sosi_arr(2).re'length);
+in_sosi_arr(2).im <= RESIZE_SVEC(in_im_2, in_sosi_arr(2).im'length);
+in_sosi_arr(2).data <= RESIZE_SVEC(in_data_2, in_sosi_arr(2).data'length);
+out_re_2 <= RESIZE_SVEC(out_sosi_arr(2).re,out_dat_w);
+out_im_2 <= RESIZE_SVEC(out_sosi_arr(2).im,out_dat_w);
+out_data_2 <= RESIZE_SVEC(out_sosi_arr(2).data,2*out_dat_w);
 end architecture RTL;
