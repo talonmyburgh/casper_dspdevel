@@ -1,8 +1,9 @@
 function wb_subsys2bb_knit()
     %fetch wideband factor to know how many ports to draw
-    subsysblk = 'wb_fft_blk/Wideband_FFT';
+    subsysblk = gcb;
     wb_fft_bb = 'wb_fft_blk/Wideband_FFT/wb_fft';
     wb_factor = str2double(get_param(subsysblk,'wb_factor'));
+    
     %Collect all inports and outports of subsystem
     inprts = find_system(subsysblk,'LookUnderMasks','on','BlockType','Inport');
     outprts = find_system(subsysblk,'LookUnderMasks','on','BlockType','Outport');
@@ -77,37 +78,37 @@ function wb_subsys2bb_knit()
         %create necessary in/out prts and add lines:
         for i=curr_prts:wb_factor-1
            %add inports/outports and set names to match bb 
-           in_im_str_n = sprintf('wb_fft_blk/Wideband_FFT/in_im_%d',i);
+           in_im_str_n = sprintf([subsysblk '/in_im_%d'],i);
            add_block('simulink/Commonly Used Blocks/In1',in_im_str_n);
            in_im_ph = get_param(in_im_str_n,'PortHandles');
            add_line(subsysblk,in_im_ph.Outport(1),bbports.Inport(i_p_h_i));
            i_p_h_i = i_p_h_i+1;
            
-           in_re_str_n = sprintf('wb_fft_blk/Wideband_FFT/in_re_%d',i);
+           in_re_str_n = sprintf([subsysblk '/in_re_%d'],i);
            add_block('simulink/Commonly Used Blocks/In1',in_re_str_n);
            in_re_ph = get_param(in_re_str_n,'PortHandles');
            add_line(subsysblk,in_re_ph.Outport(1),bbports.Inport(i_p_h_i));
            i_p_h_i = i_p_h_i+1;
            
-           in_dat_str_n = sprintf('wb_fft_blk/Wideband_FFT/in_data_%d',i);
+           in_dat_str_n = sprintf([subsysblk '/in_data_%d'],i);
            add_block('simulink/Commonly Used Blocks/In1',in_dat_str_n);
            in_dat_ph = get_param(in_dat_str_n,'PortHandles');
            add_line(subsysblk,in_dat_ph.Outport(1),bbports.Inport(i_p_h_i));
            i_p_h_i = i_p_h_i+1;
            
-           out_im_str_n = sprintf('wb_fft_blk/Wideband_FFT/out_im_%d',i);
+           out_im_str_n = sprintf([subsysblk '/out_im_%d'],i);
            add_block('simulink/Commonly Used Blocks/Out1',out_im_str_n);
            out_im_ph = get_param(out_im_str_n,'PortHandles');
            add_line(subsysblk,bbports.Outport(o_p_h_i),out_im_ph.Inport(1));
            o_p_h_i = o_p_h_i+1;
            
-           out_re_str_n = sprintf('wb_fft_blk/Wideband_FFT/out_re_%d',i);
+           out_re_str_n = sprintf([subsysblk '/out_re_%d'],i);
            add_block('simulink/Commonly Used Blocks/Out1',out_re_str_n);
            out_re_ph = get_param(out_re_str_n,'PortHandles');
            add_line(subsysblk,bbports.Outport(o_p_h_i),out_re_ph.Inport(1));
            o_p_h_i = o_p_h_i+1;
            
-           out_dat_str_n = sprintf('wb_fft_blk/Wideband_FFT/out_data_%d',i);
+           out_dat_str_n = sprintf([subsysblk '/out_data_%d'],i);
            add_block('simulink/Commonly Used Blocks/Out1',out_dat_str_n);
            out_dat_ph = get_param(out_dat_str_n,'PortHandles');
            add_line(subsysblk,bbports.Outport(o_p_h_i),out_dat_ph.Inport(1));
