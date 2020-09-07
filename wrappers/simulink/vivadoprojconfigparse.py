@@ -13,7 +13,7 @@ with open('./tmp.txt', mode="r") as hierarchyfile:
         # split the full path for each file to get folder_name (used to define library name) and file_name
         splt_hier = hier_lines[i].strip().split('/')[-2:]
         # alter lines = this_block.addFileToLibrary(filename = getenv('HDL_DSP_DEVEL')+/foldername/filename, libname = foldername + _lib)
-        hier_lines[i] = "this_block.addFileToLibrary([filepath+\'/../../" + splt_hier[0] + \
+        hier_lines[i] = "this_block.addFileToLibrary([filepath \'/../../" + splt_hier[0] + \
             "/" + splt_hier[1] + "\'],\'"+splt_hier[0]+"_lib\');\n"
 hierarchyfile.close()
 
