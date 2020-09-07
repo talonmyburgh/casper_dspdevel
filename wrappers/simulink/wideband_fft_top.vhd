@@ -55,13 +55,7 @@ in_re_0 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 in_data_0 : in STD_LOGIC_VECTOR(2*in_dat_w-1 DOWNTO 0);
 out_im_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
 out_re_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-out_data_0 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0);
-in_im_1 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
-in_re_1 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
-in_data_1 : in STD_LOGIC_VECTOR(2*in_dat_w-1 DOWNTO 0);
-out_im_1 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-out_re_1 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-out_data_1 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0)
+out_data_0 : out STD_LOGIC_VECTOR(2*out_dat_w-1 DOWNTO 0)
 );
 end entity wideband_fft_top;
 architecture RTL of wideband_fft_top is
@@ -116,10 +110,4 @@ in_sosi_arr(0).data <= RESIZE_SVEC(in_data_0, in_sosi_arr(0).data'length);
 out_re_0 <= RESIZE_SVEC(out_sosi_arr(0).re,out_dat_w);
 out_im_0 <= RESIZE_SVEC(out_sosi_arr(0).im,out_dat_w);
 out_data_0 <= RESIZE_SVEC(out_sosi_arr(0).data,2*out_dat_w);
-in_sosi_arr(1).re <= RESIZE_SVEC(in_re_1, in_sosi_arr(1).re'length);
-in_sosi_arr(1).im <= RESIZE_SVEC(in_im_1, in_sosi_arr(1).im'length);
-in_sosi_arr(1).data <= RESIZE_SVEC(in_data_1, in_sosi_arr(1).data'length);
-out_re_1 <= RESIZE_SVEC(out_sosi_arr(1).re,out_dat_w);
-out_im_1 <= RESIZE_SVEC(out_sosi_arr(1).im,out_dat_w);
-out_data_1 <= RESIZE_SVEC(out_sosi_arr(1).data,2*out_dat_w);
 end architecture RTL;

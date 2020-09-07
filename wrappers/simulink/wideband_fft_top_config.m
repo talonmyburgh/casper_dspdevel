@@ -22,6 +22,14 @@ function wideband_fft_top_config(this_block)
   dp_stream_channel = 32;
   dp_stream_error = 32;
   
+    function boolval =  checkbox2bool(bxval)
+       if strcmp(bxval, 'on')
+        boolval= 'TRUE';
+       else
+        boolval= 'FALSE';
+       end 
+    end
+  
   %Fetch subsystem mask parameters for dynamic ports:
   use_reorder = get_param(wb_fft_blk_parent,'use_reorder');
   use_fft_shift = get_param(wb_fft_blk_parent,'use_fft_shift');
@@ -36,6 +44,11 @@ function wideband_fft_top_config(this_block)
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
+  
+  use_reorder = checkbox2bool(use_reorder);
+  use_fft_shift = checkbox2bool(use_fft_shift);
+  use_separate = checkbox2bool(use_separate);
+  guard_en = checkbox2bool(guard_en);
   
   %Update the vhdl top file with the required ports per wb_factor:
   topwb_code_gen(wb_factor);
@@ -54,16 +67,12 @@ function wideband_fft_top_config(this_block)
   this_block.addSimulinkInport('in_err');
   this_block.addSimulinkInport('in_channel');
   
-  %Dynamically add in/out im, re and data streams per wb_factor:
+  %Dynamically add in im, re and data streams per wb_factor:
   for i=0:wb_factor-1
     this_block.addSimulinkInport(sprintf('in_im_%d',i));
     this_block.addSimulinkInport(sprintf('in_re_%d',i));
     this_block.addSimulinkInport(sprintf('in_data_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_im_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_re_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_data_%d',i));
   end
-  
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_bsn');
   this_block.addSimulinkOutport('out_valid');
@@ -72,6 +81,13 @@ function wideband_fft_top_config(this_block)
   this_block.addSimulinkOutport('out_empty');
   this_block.addSimulinkOutport('out_err');
   this_block.addSimulinkOutport('out_channel');
+
+  %Dynamically add out im, re and data streams per wb_factor:
+  for i=0:wb_factor-1   
+    this_block.addSimulinkOutport(sprintf('out_im_%d',i));
+    this_block.addSimulinkOutport(sprintf('out_re_%d',i));
+    this_block.addSimulinkOutport(sprintf('out_data_%d',i));
+  end
   
   %std_logic signals:
   in_sync_port = this_block.port('in_sync');
@@ -232,11 +248,62 @@ function wideband_fft_top_config(this_block)
   %  |    this_block.addFile('b.vhd');
   %  |    this_block.addFile('a.vhd');
   %  |-------------
-  %ADD FILES HERE:
-  this_block.addFile('wideband_fft_top.vhd');
-
+this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_async.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
+this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/common_rl_decrease.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_rd.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_component_pkg.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_sc.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_sc.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_crw_crw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_cr_cw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
+this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'casper_dp_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_pkg.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBFStage.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWeights.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFStage.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_pipe.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_sepa_wide.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_wide.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit_control.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_3dsp.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_4dsp.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../simulink/wideband_fft_top.vhd'],'simulink_lib');
 return;
-
+end
 % ------------------------------------------------------------
 
 function setup_as_single_rate(block,clkname,cename) 
@@ -260,6 +327,8 @@ function setup_as_single_rate(block,clkname,cename)
   end 
   block.addClkCEPair(clkname,cename,theInputRate); 
   return; 
+  
+
 
 % ------------------------------------------------------------
-
+end
