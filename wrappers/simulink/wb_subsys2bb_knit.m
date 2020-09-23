@@ -1,8 +1,11 @@
 function wb_subsys2bb_knit()
     %fetch wideband factor to know how many ports to draw
     subsysblk = gcb;
-    wb_fft_bb = 'wb_fft_blk/Wideband_FFT/wb_fft';
+    wb_fft_bb = [subsysblk '/wb_fft'];
     wb_factor = str2double(get_param(subsysblk,'wb_factor'));
+    
+    % Unlink block, otherwise we're not allowed to modify it
+    set_param(subsysblk, 'LinkStatus', 'inactive');
     
     %Collect all inports and outports of subsystem
     inprts = find_system(subsysblk,'LookUnderMasks','on','BlockType','Inport');
