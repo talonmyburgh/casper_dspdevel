@@ -304,7 +304,7 @@ this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_4ds
 this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../simulink/wideband_fft_top.vhd'],'simulink_lib');
+this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_wb_fft_top.vhd'],'simulink_lib');
 return;
 end
 % ------------------------------------------------------------
@@ -331,7 +331,5 @@ function setup_as_single_rate(block,clkname,cename)
   block.addClkCEPair(clkname,cename,theInputRate); 
   return; 
   
-
-
 % ------------------------------------------------------------
 end
