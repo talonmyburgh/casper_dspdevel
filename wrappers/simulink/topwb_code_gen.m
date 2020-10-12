@@ -2,9 +2,6 @@ function topwb_code_gen(wb_factor)
     %gather all the string arrays required to write full file:
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
     vhdlfile = filepath+"/"+bdroot+"_wb_fft_top.vhd";                         %filename for vhd file
-    
-    %error("print: "+vhdlfile);
-    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec = ["library ieee, dp_pkg_lib, wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"

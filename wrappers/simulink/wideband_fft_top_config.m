@@ -24,10 +24,18 @@ function wideband_fft_top_config(this_block)
   
     function boolval =  checkbox2bool(bxval)
        if strcmp(bxval, 'on')
-        boolval= 'TRUE';
-       else
-        boolval= 'FALSE';
+        boolval= true;
+       elseif strcmp(bxval, 'off')
+        boolval= false;
        end 
+    end
+
+    function strboolval = bool2str(bval)
+        if bval
+            strboolval = 'TRUE';
+        elseif ~bval
+            strboolval = 'FALSE';
+        end
     end
   
   %Fetch subsystem mask parameters for dynamic ports:
@@ -47,11 +55,13 @@ function wideband_fft_top_config(this_block)
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
-  
+  dat_or_reim = checkbox2bool(get_param(wb_fft_blk_parent,'dat_or_reim'));
+  xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
   use_separate = checkbox2bool(use_separate);
   guard_en = checkbox2bool(guard_en);
+  
   
   %Update the vhdl top file with the required ports per wb_factor:
   topwb_code_gen(wb_factor);
@@ -72,10 +82,14 @@ function wideband_fft_top_config(this_block)
   
   %Dynamically add in im, re and data streams per wb_factor:
   for i=0:wb_factor-1
-    this_block.addSimulinkInport(sprintf('in_im_%d',i));
-    this_block.addSimulinkInport(sprintf('in_re_%d',i));
-    this_block.addSimulinkInport(sprintf('in_data_%d',i));
+    if (dat_or_reim)
+        this_block.addSimulinkInport(sprintf('in_data_%d',i));
+    elseif (~dat_or_reim)
+        this_block.addSimulinkInport(sprintf('in_im_%d',i));
+        this_block.addSimulinkInport(sprintf('in_re_%d',i));
+    end
   end
+  
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_bsn');
   this_block.addSimulinkOutport('out_valid');
@@ -86,10 +100,13 @@ function wideband_fft_top_config(this_block)
   this_block.addSimulinkOutport('out_channel');
 
   %Dynamically add out im, re and data streams per wb_factor:
-  for i=0:wb_factor-1   
-    this_block.addSimulinkOutport(sprintf('out_im_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_re_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_data_%d',i));
+  for i=0:wb_factor-1
+    if (dat_or_reim)
+        this_block.addSimulinkOutport(sprintf('out_data_%d',i));
+    elseif (~dat_or_reim)
+        this_block.addSimulinkOutport(sprintf('out_im_%d',i));
+        this_block.addSimulinkOutport(sprintf('out_re_%d',i));
+    end
   end
   
   %std_logic signals:
@@ -226,9 +243,9 @@ function wideband_fft_top_config(this_block)
   %      Add generics to blackbox (this_block)
   %      The addGeneric function takes  3 parameters, generic name, type and constant value.
   %      Supported types are boolean, real, integer and string.
-  this_block.addGeneric('use_reorder','boolean',use_reorder);
-  this_block.addGeneric('use_fft_shift','boolean',use_fft_shift);
-  this_block.addGeneric('use_separate','boolean',use_separate);
+  this_block.addGeneric('use_reorder','boolean',bool2str(use_reorder));
+  this_block.addGeneric('use_fft_shift','boolean',bool2str(use_fft_shift));
+  this_block.addGeneric('use_separate','boolean',bool2str(use_separate));
   this_block.addGeneric('nof_chan','natural',nof_chan);
   this_block.addGeneric('wb_factor','natural',num2str(wb_factor));
   this_block.addGeneric('twiddle_offset','natural',twiddle_offset);
@@ -238,7 +255,7 @@ function wideband_fft_top_config(this_block)
   this_block.addGeneric('out_gain_w','natural',o_g_w);
   this_block.addGeneric('stage_dat_w','natural',s_d_w);
   this_block.addGeneric('guard_w','natural',guard_w);
-  this_block.addGeneric('guard_enable','boolean',guard_en);
+  this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
   
 
   % Add addtional source files as needed.
