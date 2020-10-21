@@ -43,15 +43,16 @@ jobs:
           pip install vunit_hdl --progress-bar off
 
       # Runs a set of commands using the runners shell
-      - name: Casper_adder Run.py
-        run: |
-          cd casper_adder/
-          python run.py
+      # - name: Casper_adder Run.py
+      #   run: |
+      #     cd casper_adder/
+      #     python run.py
       
       - name: Create report file
         run: date +%s > report.txt
       - name: Commit report
         run: |
+          git add ./report.txt
           git config --global user.name 'RocketRoss Action'
           git config --global user.email 'rocketross@users.noreply.github.com'
           git commit -am "Automated report"
