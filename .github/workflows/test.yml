@@ -29,9 +29,8 @@ jobs:
       - name: Install GHDL
         run: |
           curl -fsSL -o ghdl.tgz https://github.com/ghdl/ghdl/releases/download/v0.37/ghdl-0.37-buster-mcode.tgz
-          tar -xf ghdl.tgz "-o../ghdl" -y
-          mv ../ghdl/GHDL/0.37-buster-mcode/ ../ghdl-v0.37
-          rm -rf ../ghdl ghdl.tgz
+          mkdir ../ghdl
+          tar -xf ghdl.tgz --directory ../ghdl
 
       - name: Install VUnit
         run: |
