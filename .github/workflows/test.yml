@@ -26,6 +26,9 @@ jobs:
         with:
           python-version: 3.8
 
+      - name: Install GNAT compiler
+        run: apt-get install libgnat-8-sh4-cross
+
       - name: Install GHDL
         run: |
           curl -fsSL -o ghdl.tgz https://github.com/ghdl/ghdl/releases/download/v0.37/ghdl-0.37-buster-mcode.tgz
