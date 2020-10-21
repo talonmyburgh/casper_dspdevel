@@ -46,14 +46,12 @@ jobs:
       - name: Casper_adder Run.py
         run: |
           cd casper_adder/
-          python run.py
+          python run.py --xunit-xml casper_adder_report.xml
       
-      - name: Create report file
-        run: date +%s > report.txt
       - name: Commit report
         run: |
-          git add ./report.txt
+          git add ./casper_adder/vunit_out/casper_adder_report.xml
           git config --global user.name 'RocketRoss Action'
           git config --global user.email 'rocketross@users.noreply.github.com'
-          git commit -am "Automated report"
+          git commit -am "VUnit Test Reports"
           git push
