@@ -31,6 +31,8 @@ jobs:
           curl -fsSL -o ghdl.tgz https://github.com/ghdl/ghdl/releases/download/v0.37/ghdl-0.37-buster-mcode.tgz
           mkdir ../ghdl
           tar -xf ghdl.tgz --directory ../ghdl
+          cd ../ghdl/bin
+          pwd >> $GITHUB_PATH
 
       - name: Install VUnit
         run: |
