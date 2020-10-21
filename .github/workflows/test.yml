@@ -42,11 +42,11 @@ jobs:
           pip install -U pip --progress-bar off
           pip install vunit_hdl --progress-bar off
 
-      # Runs a set of commands using the runners shell
-      # - name: Casper_adder Run.py
-      #   run: |
-      #     cd casper_adder/
-      #     python run.py
+      Runs a set of commands using the runners shell
+      - name: Casper_adder Run.py
+        run: |
+          cd casper_adder/
+          python run.py
       
       - name: Create report file
         run: date +%s > report.txt
