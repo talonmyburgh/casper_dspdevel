@@ -27,7 +27,7 @@ jobs:
           python-version: 3.8
 
       - name: Install GNAT compiler
-        run: sudo apt-get install libgnat-8-sh4-cross
+        run: sudo apt-get install libgnat-8
 
       - name: Install GHDL
         run: |
