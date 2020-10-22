@@ -1,4 +1,3 @@
-
 function wideband_fft_top_config(this_block)
 
   % Revision History:
@@ -55,7 +54,6 @@ function wideband_fft_top_config(this_block)
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
-  dat_or_reim = checkbox2bool(get_param(wb_fft_blk_parent,'dat_or_reim'));
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
@@ -72,38 +70,66 @@ function wideband_fft_top_config(this_block)
 
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_sync');
-  this_block.addSimulinkInport('in_bsn');
   this_block.addSimulinkInport('in_valid');
-  this_block.addSimulinkInport('in_sop');
-  this_block.addSimulinkInport('in_eop');
-  this_block.addSimulinkInport('in_empty');
-  this_block.addSimulinkInport('in_err');
-  this_block.addSimulinkInport('in_channel');
+  %If a simple interface is required by the user, hide these other signals
+  if xtra_dat_sigs
+        this_block.addSimulinkInport('in_bsn');
+        this_block.addSimulinkInport('in_sop');
+        this_block.addSimulinkInport('in_eop');
+        this_block.addSimulinkInport('in_empty');
+        this_block.addSimulinkInport('in_err');
+        this_block.addSimulinkInport('in_channel');
+        in_sop_port = this_block.port('in_sop');
+        in_sop_port.setType('UFix_1_0');
+        in_sop_port.useHDLVector(false);
+        in_eop_port = this_block.port('in_eop');
+        in_eop_port.setType('UFix_1_0');
+        in_eop_port.useHDLVector(false);
+        in_bsn_port = this_block.port('in_bsn');
+        in_empty_port = this_block.port('in_empty');
+        in_err_port = this_block.port('in_err');
+        in_channel_port = this_block.port('in_channel');
+  end
+  
   
   %Dynamically add in im, re and data streams per wb_factor:
   for i=0:wb_factor-1
-    if (dat_or_reim)
+    if (~use_separate)
         this_block.addSimulinkInport(sprintf('in_data_%d',i));
-    elseif (~dat_or_reim)
+    elseif (use_separate)
         this_block.addSimulinkInport(sprintf('in_im_%d',i));
         this_block.addSimulinkInport(sprintf('in_re_%d',i));
     end
   end
   
   this_block.addSimulinkOutport('out_sync');
-  this_block.addSimulinkOutport('out_bsn');
   this_block.addSimulinkOutport('out_valid');
-  this_block.addSimulinkOutport('out_sop');
-  this_block.addSimulinkOutport('out_eop');
-  this_block.addSimulinkOutport('out_empty');
-  this_block.addSimulinkOutport('out_err');
-  this_block.addSimulinkOutport('out_channel');
+  if xtra_dat_sigs
+      this_block.addSimulinkOutport('out_bsn');
+      this_block.addSimulinkOutport('out_sop');
+      this_block.addSimulinkOutport('out_eop');
+      this_block.addSimulinkOutport('out_empty');
+      this_block.addSimulinkOutport('out_err');
+      this_block.addSimulinkOutport('out_channel');
+      out_sop_port = this_block.port('out_sop');
+      out_sop_port.setType('UFix_1_0');
+      out_sop_port.useHDLVector(false);
+      out_eop_port = this_block.port('out_eop');
+      out_eop_port.setType('UFix_1_0');
+      out_eop_port.useHDLVector(false);
+      out_bsn_port = this_block.port('out_bsn');
+      out_empty_port = this_block.port('out_empty');
+      out_err_port = this_block.port('out_err');
+      out_channel_port = this_block.port('out_channel');
+  end
+
+  
 
   %Dynamically add out im, re and data streams per wb_factor:
   for i=0:wb_factor-1
-    if (dat_or_reim)
+    if (~use_separate)
         this_block.addSimulinkOutport(sprintf('out_data_%d',i));
-    elseif (~dat_or_reim)
+    elseif (use_separate)
         this_block.addSimulinkOutport(sprintf('out_im_%d',i));
         this_block.addSimulinkOutport(sprintf('out_re_%d',i));
     end
@@ -116,37 +142,15 @@ function wideband_fft_top_config(this_block)
   in_valid_port = this_block.port('in_valid');
   in_valid_port.setType('UFix_1_0');
   in_valid_port.useHDLVector(false);
-  in_sop_port = this_block.port('in_sop');
-  in_sop_port.setType('UFix_1_0');
-  in_sop_port.useHDLVector(false);
-  in_eop_port = this_block.port('in_eop');
-  in_eop_port.setType('UFix_1_0');
-  in_eop_port.useHDLVector(false);
-
+  
   out_sync_port = this_block.port('out_sync');
   out_sync_port.setType('UFix_1_0');
   out_sync_port.useHDLVector(false);
   out_valid_port = this_block.port('out_valid');
   out_valid_port.setType('UFix_1_0');
   out_valid_port.useHDLVector(false);
-  out_sop_port = this_block.port('out_sop');
-  out_sop_port.setType('UFix_1_0');
-  out_sop_port.useHDLVector(false);
-  out_eop_port = this_block.port('out_eop');
-  out_eop_port.setType('UFix_1_0');
-  out_eop_port.useHDLVector(false);
   
-  %Obtain port objects:
   in_rst_port = this_block.port('rst');
-  in_bsn_port = this_block.port('in_bsn');
-  in_empty_port = this_block.port('in_empty');
-  in_err_port = this_block.port('in_err');
-  in_channel_port = this_block.port('in_channel');
-
-  out_bsn_port = this_block.port('out_bsn');
-  out_empty_port = this_block.port('out_empty');
-  out_err_port = this_block.port('out_err');
-  out_channel_port = this_block.port('out_channel');
 
   % -----------------------------
   if (this_block.inputTypesKnown)
@@ -165,8 +169,10 @@ function wideband_fft_top_config(this_block)
     in_sync_port.useHDLVector(false);
     
     %input bsn
-    in_bsn_port.useHDLVector(true);
-    in_bsn_port.setWidth(dp_stream_bsn);
+    if xtra_dat_sigs
+        in_bsn_port.useHDLVector(true);
+        in_bsn_port.setWidth(dp_stream_bsn);
+    end
 
     %input valid
     if (in_valid_port.width ~= 1)
@@ -175,59 +181,75 @@ function wideband_fft_top_config(this_block)
     in_valid_port.useHDLVector(false);
 
     %input sop
-    if (in_sop_port.width ~= 1)
+    if (in_sop_port.width ~= 1 && xtra_dat_sigs)
       this_block.setError('Input data type for port "in_sop" must have width=1.');
     end
     in_sop_port.useHDLVector(false);
 
     %input eop
-    if (in_eop_port.width ~= 1)
+    if (in_eop_port.width ~= 1 && xtra_dat_sigs)
       this_block.setError('Input data type for port "in_eop" must have width=1.');
     end
     in_eop_port.useHDLVector(false);
 
     %input empty
-    in_empty_port.useHDLVector(true);
-    in_empty_port.setWidth(dp_stream_empty);
-
+    if xtra_dat_sigs
+        in_empty_port.useHDLVector(true);
+        in_empty_port.setWidth(dp_stream_empty);
+    end
+    
     %input error
-    in_err_port.useHDLVector(true);
-    in_err_port.setWidth(dp_stream_error);
+    if xtra_dat_sigs
+        in_err_port.useHDLVector(true);
+        in_err_port.setWidth(dp_stream_error);
+    end
     
     %input channel
-    in_channel_port.useHDLVector(true);
-    in_channel_port.setWidth(dp_stream_channel);
+    if xtra_dat_sigs
+        in_channel_port.useHDLVector(true);
+        in_channel_port.setWidth(dp_stream_channel);
+    end
     
     %output bsn
-    out_bsn_port.useHDLVector(true);
-    out_bsn_port.setWidth(dp_stream_bsn);
+    if xtra_dat_sigs
+        out_bsn_port.useHDLVector(true);
+        out_bsn_port.setWidth(dp_stream_bsn);
+    end
     
     %output empty
-    out_empty_port.useHDLVector(true);
-    out_empty_port.setWidth(dp_stream_empty);
+    if xtra_dat_sigs
+        out_empty_port.useHDLVector(true);
+        out_empty_port.setWidth(dp_stream_empty);
+    end
     
     %output error
-    out_err_port.useHDLVector(true);
-    out_err_port.setWidth(dp_stream_error);
-     
-    %output channel
-    out_channel_port.useHDLVector(true);
-    out_channel_port.setWidth(dp_stream_channel);
+    if xtra_dat_sigs
+        out_err_port.useHDLVector(true);
+        out_err_port.setWidth(dp_stream_error);
+    end
     
+    %output channel
+    if xtra_dat_sigs    
+        out_channel_port.useHDLVector(true);
+        out_channel_port.setWidth(dp_stream_channel);
+    end
     %input/output im, re and data
     for j=0:wb_factor-1
-        this_block.port(sprintf('in_im_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('in_im_%d',j)).setWidth(str2double(i_d_w));
-        this_block.port(sprintf('in_re_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('in_re_%d',j)).setWidth(str2double(i_d_w));
-        this_block.port(sprintf('in_data_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('in_data_%d',j)).setWidth(str2double(2*i_d_w));
-        this_block.port(sprintf('out_im_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('out_im_%d',j)).setWidth(str2double(i_d_w));
-        this_block.port(sprintf('out_re_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('out_re_%d',j)).setWidth(str2double(i_d_w));
-        this_block.port(sprintf('out_data_%d',j)).useHDLVector(true);
-        this_block.port(sprintf('out_data_%d',j)).setWidth(str2double(2*i_d_w));
+        if use_separate
+            this_block.port(sprintf('in_im_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('in_im_%d',j)).setWidth(str2double(i_d_w));
+            this_block.port(sprintf('in_re_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('in_re_%d',j)).setWidth(str2double(i_d_w));
+            this_block.port(sprintf('out_im_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('out_im_%d',j)).setWidth(str2double(i_d_w));
+            this_block.port(sprintf('out_re_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('out_re_%d',j)).setWidth(str2double(i_d_w));
+        elseif ~use_separate
+            this_block.port(sprintf('in_data_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('in_data_%d',j)).setWidth(str2double(2*i_d_w));
+            this_block.port(sprintf('out_data_%d',j)).useHDLVector(true);
+            this_block.port(sprintf('out_data_%d',j)).setWidth(str2double(2*i_d_w));
+        end
     end
   end  % if(inputTypesKnown)
   % -----------------------------
@@ -238,7 +260,7 @@ function wideband_fft_top_config(this_block)
    end  % if(inputRatesKnown)
   % -----------------------------
 
-    uniqueInputRates = unique(this_block.getInputRates);
+   uniqueInputRates = unique(this_block.getInputRates);
     
   %      Add generics to blackbox (this_block)
   %      The addGeneric function takes  3 parameters, generic name, type and constant value.
