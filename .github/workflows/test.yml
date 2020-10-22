@@ -1,0 +1,57 @@
+# This is a basic workflow to help you get started with Actions
+
+name: test
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the ci-cd branch
+on:
+  push:
+    branches: [ ci-cd ]
+  pull_request:
+    branches: [ ci-cd ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # This workflow contains a single job called "testbenches"
+  testbenches:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2  
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install GNAT compiler
+        run: sudo apt-get install libgnat-8
+
+      - name: Install GHDL
+        run: |
+          curl -fsSL -o ghdl.tgz https://github.com/ghdl/ghdl/releases/download/v0.37/ghdl-0.37-buster-mcode.tgz
+          mkdir ../ghdl
+          tar -xf ghdl.tgz --directory ../ghdl
+          cd ../ghdl/bin
+          pwd >> $GITHUB_PATH
+
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
+
+      # Runs a set of commands using the runners shell
+      - name: Casper_adder Run.py
+        run: |
+          cd casper_adder/
+          python run.py --xunit-xml casper_adder_report.xml
+      
+      - name: Commit report
+        run: |
+          git add -f ./casper_adder/casper_adder_report.xml
+          git config --global user.name 'RocketRoss Action'
+          git config --global user.email 'rocketross@users.noreply.github.com'
+          git commit -am "VUnit Test Reports"
+          git push
