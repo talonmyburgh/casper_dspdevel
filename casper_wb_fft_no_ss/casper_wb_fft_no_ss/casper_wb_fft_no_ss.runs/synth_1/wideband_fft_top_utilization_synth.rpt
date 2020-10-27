@@ -1,7 +1,7 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2019.1 (lin64) Build 2552052 Fri May 24 14:47:09 MDT 2019
-| Date         : Fri Aug 28 10:34:50 2020
+| Date         : Tue Oct 27 16:47:40 2020
 | Host         : talonpc running 64-bit Pop!_OS 18.04 LTS
 | Command      : report_utilization -file wideband_fft_top_utilization_synth.rpt -pb wideband_fft_top_utilization_synth.pb
 | Design       : wideband_fft_top
@@ -30,13 +30,13 @@ Table of Contents
 +----------------------------+------+-------+-----------+-------+
 |          Site Type         | Used | Fixed | Available | Util% |
 +----------------------------+------+-------+-----------+-------+
-| Slice LUTs*                | 3976 |     0 |    433200 |  0.92 |
-|   LUT as Logic             | 2166 |     0 |    433200 |  0.50 |
-|   LUT as Memory            | 1810 |     0 |    174200 |  1.04 |
+| Slice LUTs*                | 3788 |     0 |    433200 |  0.87 |
+|   LUT as Logic             | 2004 |     0 |    433200 |  0.46 |
+|   LUT as Memory            | 1784 |     0 |    174200 |  1.02 |
 |     LUT as Distributed RAM |  112 |     0 |           |       |
-|     LUT as Shift Register  | 1698 |     0 |           |       |
-| Slice Registers            | 4250 |     0 |    866400 |  0.49 |
-|   Register as Flip Flop    | 4250 |     0 |    866400 |  0.49 |
+|     LUT as Shift Register  | 1672 |     0 |           |       |
+| Slice Registers            | 4128 |     0 |    866400 |  0.48 |
+|   Register as Flip Flop    | 4128 |     0 |    866400 |  0.48 |
 |   Register as Latch        |    0 |     0 |    866400 |  0.00 |
 | F7 Muxes                   |    0 |     0 |    216600 |  0.00 |
 | F8 Muxes                   |    0 |     0 |    108300 |  0.00 |
@@ -59,7 +59,7 @@ Table of Contents
 | 1     |          Yes |           - |          Set |
 | 1254  |          Yes |           - |        Reset |
 | 35    |          Yes |         Set |            - |
-| 2960  |          Yes |       Reset |            - |
+| 2838  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -94,7 +94,7 @@ Table of Contents
 +-----------------------------+------+-------+-----------+-------+
 |          Site Type          | Used | Fixed | Available | Util% |
 +-----------------------------+------+-------+-----------+-------+
-| Bonded IOB                  |  170 |     0 |       600 | 28.33 |
+| Bonded IOB                  |  275 |     0 |       600 | 45.83 |
 | Bonded IPADs                |    0 |     0 |       242 |  0.00 |
 | Bonded OPADs                |    0 |     0 |       160 |  0.00 |
 | PHY_CONTROL                 |    0 |     0 |        20 |  0.00 |
@@ -154,21 +154,21 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     | 2960 |        Flop & Latch |
-| LUT3     | 1257 |                 LUT |
+| FDRE     | 2838 |        Flop & Latch |
 | FDCE     | 1254 |        Flop & Latch |
 | SRLC32E  | 1178 |  Distributed Memory |
-| LUT2     |  878 |                 LUT |
-| SRL16E   |  520 |  Distributed Memory |
-| CARRY4   |  339 |          CarryLogic |
+| LUT3     | 1084 |                 LUT |
+| LUT2     |  818 |                 LUT |
+| SRL16E   |  494 |  Distributed Memory |
 | LUT6     |  328 |                 LUT |
+| CARRY4   |  295 |          CarryLogic |
+| OBUF     |  174 |                  IO |
 | RAMD32   |  168 |  Distributed Memory |
-| LUT5     |  156 |                 LUT |
-| IBUF     |  118 |                  IO |
-| LUT1     |   59 |                 LUT |
+| LUT5     |  126 |                 LUT |
+| IBUF     |  101 |                  IO |
+| LUT4     |   84 |                 LUT |
+| LUT1     |   70 |                 LUT |
 | RAMS32   |   56 |  Distributed Memory |
-| LUT4     |   56 |                 LUT |
-| OBUF     |   52 |                  IO |
 | DSP48E1  |   40 |    Block Arithmetic |
 | FDSE     |   35 |        Flop & Latch |
 | RAMB36E1 |   26 |        Block Memory |

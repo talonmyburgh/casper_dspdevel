@@ -2,8 +2,8 @@
 # Vivado v2019.1 (64-bit)
 # SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
 # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-# Start of session at: Fri Aug 28 10:32:55 2020
-# Process ID: 27200
+# Start of session at: Tue Oct 27 16:45:49 2020
+# Process ID: 30940
 # Current directory: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.runs/synth_1
 # Command line: vivado -log wideband_fft_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source wideband_fft_top.tcl
 # Log file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.runs/synth_1/wideband_fft_top.vds

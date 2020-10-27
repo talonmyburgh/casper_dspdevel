@@ -98,7 +98,7 @@ read_vhdl -library r2sdf_fft_lib {
   /home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/rTwoWeights.vhd
   /home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/rTwoSDFStage.vhd
 }
-read_vhdl -library xil_defaultlib /home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/wideband_fft_top.vhd
+read_vhdl -library xil_defaultlib /home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/hdl_library_wb_fft_top.vhd
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
 # design are intentionally left as such for best results. Dcp files will be

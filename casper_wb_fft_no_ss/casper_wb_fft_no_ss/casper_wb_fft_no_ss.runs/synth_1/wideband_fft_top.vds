@@ -2,8 +2,8 @@
 # Vivado v2019.1 (64-bit)
 # SW Build 2552052 on Fri May 24 14:47:09 MDT 2019
 # IP Build 2548770 on Fri May 24 18:01:18 MDT 2019
-# Start of session at: Fri Aug 28 10:32:55 2020
-# Process ID: 27200
+# Start of session at: Tue Oct 27 16:45:49 2020
+# Process ID: 30940
 # Current directory: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.runs/synth_1
 # Command line: vivado -log wideband_fft_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source wideband_fft_top.tcl
 # Log file: /home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.runs/synth_1/wideband_fft_top.vds
@@ -17,12 +17,12 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7vx69
 INFO: [Common 17-1540] The version limit for your license is '2019.07' and has expired for new software. A version limit expiration means that, although you may be able to continue to use the current version of tools or IP with this license, you will not be eligible for any updates or new releases.
 INFO: [Device 21-403] Loading part xc7vx690tffg1927-2
 INFO: Launching helper process for spawning children vivado processes
-INFO: Helper process launched with PID 27226 
+INFO: Helper process launched with PID 30967 
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1955.121 ; gain = 152.684 ; free physical = 2937 ; free virtual = 15054
+Starting RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1955.090 ; gain = 152.684 ; free physical = 2636 ; free virtual = 12055
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-2048] function split_w does not always return a value [/home/talon/Documents/CASPERWORK/casper_dspdevel/common_pkg/common_pkg.vhd:2326]
-INFO: [Synth 8-638] synthesizing module 'wideband_fft_top' [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/wideband_fft_top.vhd:62]
+INFO: [Synth 8-638] synthesizing module 'wideband_fft_top' [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/hdl_library_wb_fft_top.vhd:52]
 	Parameter use_reorder bound to: 1 - type: bool 
 	Parameter use_fft_shift bound to: 1 - type: bool 
 	Parameter use_separate bound to: 1 - type: bool 
@@ -1531,7 +1531,9 @@ INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM g
 INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
 INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
 INFO: [Synth 8-5772] Detected attribute (* rw_addr_collision = "yes" *) on RAM gen_wr_a.gen_word_narrow.mem_reg 
-INFO: [Synth 8-256] done synthesizing module 'wideband_fft_top' (42#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/wideband_fft_top.vhd:62]
+WARNING: [Synth 8-3848] Net in_sosi_arr[0][re] in module/entity wideband_fft_top does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/hdl_library_wb_fft_top.vhd:55]
+WARNING: [Synth 8-3848] Net in_sosi_arr[0][im] in module/entity wideband_fft_top does not have driver. [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/hdl_library_wb_fft_top.vhd:55]
+INFO: [Synth 8-256] done synthesizing module 'wideband_fft_top' (42#1) [/home/talon/Documents/CASPERWORK/casper_dspdevel/wrappers/simulink/hdl_library_wb_fft_top.vhd:52]
 WARNING: [Synth 8-3331] design xpm_fifo_rst has unconnected port rd_clk
 WARNING: [Synth 8-3331] design xpm_memory_base__parameterized0 has unconnected port sleep
 WARNING: [Synth 8-3331] design xpm_memory_base__parameterized0 has unconnected port rsta
@@ -1634,7 +1636,7 @@ WARNING: [Synth 8-3331] design xpm_memory_base__parameterized1 has unconnected p
 WARNING: [Synth 8-3331] design xpm_memory_base__parameterized1 has unconnected port dinb[15]
 INFO: [Common 17-14] Message 'Synth 8-3331' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2156.980 ; gain = 354.543 ; free physical = 2812 ; free virtual = 14936
+Finished RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 2156.949 ; gain = 354.543 ; free physical = 2514 ; free virtual = 11938
 ---------------------------------------------------------------------------------
 
 Report Check Netlist: 
@@ -1647,10 +1649,10 @@ Report Check Netlist:
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2174.793 ; gain = 372.355 ; free physical = 2864 ; free virtual = 14988
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2174.762 ; gain = 372.355 ; free physical = 2565 ; free virtual = 11988
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2174.793 ; gain = 372.355 ; free physical = 2864 ; free virtual = 14988
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2174.762 ; gain = 372.355 ; free physical = 2565 ; free virtual = 11988
 ---------------------------------------------------------------------------------
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
@@ -1671,20 +1673,20 @@ INFO: [Project 1-236] Implementation specific constraints were found while readi
 Resolution: To avoid this warning, move constraints listed in [.Xil/wideband_fft_top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.449 ; gain = 0.000 ; free physical = 2639 ; free virtual = 14779
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.387 ; gain = 0.000 ; free physical = 2353 ; free virtual = 11777
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.17 . Memory (MB): peak = 2371.449 ; gain = 0.000 ; free physical = 2639 ; free virtual = 14779
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.18 ; elapsed = 00:00:00.17 . Memory (MB): peak = 2371.387 ; gain = 0.000 ; free physical = 2353 ; free virtual = 11776
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:22 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2813 ; free virtual = 14953
+Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2525 ; free virtual = 11948
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7vx690tffg1927-2
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:22 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2813 ; free virtual = 14953
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2525 ; free virtual = 11948
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
@@ -1694,7 +1696,7 @@ Applied set_property DONT_TOUCH = true for fft_wide_unit/u_fft_control/u_sync_bs
 Applied set_property DONT_TOUCH = true for fft_wide_unit/u_fft_control/u_error_fifo/u_fifo/\gen_ip_xilinx.u1 /xpm_fifo_sync_inst. (constraint file  auto generated constraint, line ).
 Applied set_property DONT_TOUCH = true for fft_wide_unit/u_fft_wide/\gen_fft_r2_pipe.u_fft_r2_pipe /\gen_reorder_and_separate.u_reorder_sep /u_buff/u_rw_rw/u_crw_crw/\gen_adr.u_mem /\gen_simple_dual_port.u_ram /\gen_ip_xilinx.u1 /xpm_memory_sdpram_inst. (constraint file  auto generated constraint, line ).
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:22 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2812 ; free virtual = 14953
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2525 ; free virtual = 11948
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'r_reg[state]' in module 'fft_reorder_sepa_pipe'
 INFO: [Synth 8-5818] HDL ADVISOR - The operator resource <adder> is shared. To prevent sharing consider applying a KEEP on the output of the operator [/opt/Vivado/2019.1/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv:1056]
@@ -1716,7 +1718,7 @@ INFO: [Synth 8-3354] encoded FSM with state register 'r_reg[state]' using encodi
 ---------------------------------------------------------------------------------------------------
 INFO: [Synth 8-3354] encoded FSM with state register 'r_reg[state]' using encoding 'one-hot' in module 'fft_wide_unit_control'
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:43 ; elapsed = 00:00:45 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2775 ; free virtual = 14922
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:43 ; elapsed = 00:00:45 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2492 ; free virtual = 11919
 ---------------------------------------------------------------------------------
 
 Report RTL Partitions: 
@@ -3939,8 +3941,9 @@ INFO: [Synth 8-3886] merging instance 'fft_wide_uniti_1/u_fft_control/r_reg[out_
 INFO: [Synth 8-3886] merging instance 'fft_wide_uniti_1/u_fft_control/r_reg[out_sosi_arr][0][data][35]' (FDRE) to 'fft_wide_uniti_1/u_fft_control/r_reg[out_sosi_arr][0][data][71]'
 INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
 INFO: [Synth 8-3333] propagating constant 0 across sequential element (fft_wide_uniti_1/\u_fft_control/r_reg[out_sosi_arr][0][data][71] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (fft_wide_uniti_1/\r_reg[in_sosi_arr][0][re][7] )
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:17 ; elapsed = 00:01:20 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2712 ; free virtual = 14898
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:15 ; elapsed = 00:01:18 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2431 ; free virtual = 11894
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP and Shift Register Reporting
@@ -4095,27 +4098,29 @@ INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_
 INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_0/i_24/gen_fft[2].u_stage/u_weights/gen_reg.weight_re_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_0/i_25/gen_fft[2].u_stage/u_weights/gen_reg.weight_im_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_0/i_25/gen_fft[2].u_stage/u_weights/gen_reg.weight_im_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_0/gen_reorder_and_separate.u_reorder_sep/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst/xpm_memory_base_inst/i_0/gen_wr_a.gen_word_narrow.mem_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-6837] The timing for the instance gen_fft_r2_pipe.u_fft_r2_pipei_0/gen_reorder_and_separate.u_reorder_sep/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst/xpm_memory_base_inst/i_0/gen_wr_a.gen_word_narrow.mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 
 Report RTL Partitions: 
 +------+-----------------------------+------------+----------+
 |      |RTL Partition                |Replication |Instances |
 +------+-----------------------------+------------+----------+
-|1     |rTwoSDFStage                 |           1|     20232|
+|1     |rTwoSDFStage                 |           1|     20174|
 |2     |rTwoSDFStage__parameterized0 |           1|     10415|
-|3     |fft_r2_pipe__GB2             |           1|     15741|
-|4     |fft_wide_unit__GC0           |           1|      1771|
+|3     |fft_r2_pipe__GB2             |           1|     15211|
+|4     |fft_wide_unit__GC0           |           1|      1720|
 +------+-----------------------------+------------+----------+
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:24 ; elapsed = 00:01:27 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2548 ; free virtual = 14742
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:22 ; elapsed = 00:01:25 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2277 ; free virtual = 11740
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:01:24 ; elapsed = 00:01:27 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2548 ; free virtual = 14742
+Finished Timing Optimization : Time (s): cpu = 00:01:22 ; elapsed = 00:01:25 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2277 ; free virtual = 11740
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP and Shift Register Reporting
@@ -4146,14 +4151,16 @@ Report RTL Partitions:
 +------+-----------------------------+------------+----------+
 |      |RTL Partition                |Replication |Instances |
 +------+-----------------------------+------------+----------+
-|1     |rTwoSDFStage                 |           1|     20232|
+|1     |rTwoSDFStage                 |           1|     20174|
 |2     |rTwoSDFStage__parameterized0 |           1|     10415|
-|3     |fft_r2_pipe__GB2             |           1|     15741|
-|4     |fft_wide_unit__GC0           |           1|      1771|
+|3     |fft_r2_pipe__GB2             |           1|     15211|
+|4     |fft_wide_unit__GC0           |           1|      1720|
 +------+-----------------------------+------------+----------+
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
+INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_reorder_and_separate.u_reorder_sep/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
+INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_reorder_and_separate.u_reorder_sep/u_buff/u_rw_rw/u_crw_crw/gen_adr.u_mem/gen_simple_dual_port.u_ram/gen_ip_xilinx.u1/xpm_memory_sdpram_inst/xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[10].u_stage/u_weights/gen_reg.weight_re_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[10].u_stage/u_weights/gen_reg.weight_re_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[10].u_stage/u_weights/gen_reg.weight_im_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
@@ -4191,7 +4198,7 @@ INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_ff
 INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[2].u_stage/u_weights/gen_reg.weight_im_reg_0 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 INFO: [Synth 8-6837] The timing for the instance fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[2].u_stage/u_weights/gen_reg.weight_im_reg_1 (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the block ram. Providing additional output register may help in improving timing.
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:01:28 ; elapsed = 00:01:32 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2567 ; free virtual = 14761
+Finished Technology Mapping : Time (s): cpu = 00:01:26 ; elapsed = 00:01:29 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2294 ; free virtual = 11757
 ---------------------------------------------------------------------------------
 
 Report RTL Partitions: 
@@ -4215,7 +4222,7 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:01:30 ; elapsed = 00:01:33 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished IO Insertion : Time (s): cpu = 00:01:27 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2296 ; free virtual = 11759
 ---------------------------------------------------------------------------------
 
 Report Check Netlist: 
@@ -4228,7 +4235,7 @@ Report Check Netlist:
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:01:30 ; elapsed = 00:01:33 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Renaming Generated Instances : Time (s): cpu = 00:01:27 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2296 ; free virtual = 11759
 ---------------------------------------------------------------------------------
 
 Report RTL Partitions: 
@@ -4240,25 +4247,25 @@ Report RTL Partitions:
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:30 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:01:28 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2297 ; free virtual = 11759
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:01:30 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Renaming Generated Ports : Time (s): cpu = 00:01:28 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2297 ; free virtual = 11759
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:01:31 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Handling Custom Attributes : Time (s): cpu = 00:01:28 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2297 ; free virtual = 11759
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:01:31 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Renaming Generated Nets : Time (s): cpu = 00:01:28 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2295 ; free virtual = 11758
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start ROM, RAM, DSP and Shift Register Reporting
@@ -4280,7 +4287,6 @@ Static Shift Register Report:
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[6].u_stage/u_butterfly/u_feedback/gen_reg.shift_reg_reg[32][35]                 | 32     | 36    | NO           | NO                 | YES               | 0      | 36      | 
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[5].u_stage/u_butterfly/u_feedback/gen_reg.shift_reg_reg[16][35]                 | 16     | 36    | NO           | NO                 | YES               | 36     | 0       | 
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[4].u_stage/u_butterfly/u_feedback/gen_reg.shift_reg_reg[8][35]                  | 8      | 36    | NO           | NO                 | YES               | 36     | 0       | 
-|wideband_fft_top | fft_wide_unit/u_fft_control/r_reg[in_re_arr2_dly][2][0][12]                                                                                    | 3      | 26    | NO           | NO                 | NO                | 26     | 0       | 
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[8].u_stage/u_TwiddleMult/u_pipeline_out_val/u_sl/gen_pipe_n.out_dat_p_reg[4][0] | 4      | 22    | YES          | NO                 | YES               | 22     | 0       | 
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[8].u_stage/u_butterfly/u_stage_sel/gen_reg.shift_reg_reg[128]                   | 128    | 2     | YES          | NO                 | YES               | 0      | 8       | 
 |wideband_fft_top | fft_wide_unit/u_fft_wide/gen_fft_r2_pipe.u_fft_r2_pipe/gen_fft[7].u_stage/u_butterfly/u_stage_sel/gen_reg.shift_reg_reg[64]                    | 64     | 2     | YES          | NO                 | YES               | 0      | 4       | 
@@ -4307,63 +4313,63 @@ Report Cell Usage:
 |      |Cell       |Count |
 +------+-----------+------+
 |1     |BUFG       |     1|
-|2     |CARRY4     |   339|
+|2     |CARRY4     |   295|
 |3     |DSP48E1    |    18|
 |4     |DSP48E1_1  |    20|
 |5     |DSP48E1_2  |     2|
-|6     |LUT1       |    59|
-|7     |LUT2       |   878|
-|8     |LUT3       |  1257|
-|9     |LUT4       |    56|
-|10    |LUT5       |   156|
+|6     |LUT1       |    70|
+|7     |LUT2       |   818|
+|8     |LUT3       |  1084|
+|9     |LUT4       |    84|
+|10    |LUT5       |   126|
 |11    |LUT6       |   328|
 |12    |RAM32M     |    28|
 |13    |RAMB36E1   |     6|
 |14    |RAMB36E1_1 |     6|
 |15    |RAMB36E1_2 |     6|
 |16    |RAMB36E1_3 |     6|
-|17    |RAMB36E1_5 |     2|
-|18    |SRL16E     |   520|
+|17    |RAMB36E1_4 |     2|
+|18    |SRL16E     |   494|
 |19    |SRLC32E    |  1178|
 |20    |FDCE       |  1254|
 |21    |FDPE       |     1|
-|22    |FDRE       |  2960|
+|22    |FDRE       |  2838|
 |23    |FDSE       |    35|
-|24    |IBUF       |   118|
-|25    |OBUF       |    52|
+|24    |IBUF       |   101|
+|25    |OBUF       |   174|
 +------+-----------+------+
 
 Report Instance Areas: 
 +------+--------------------------------------------------+---------------------------------------+------+
 |      |Instance                                          |Module                                 |Cells |
 +------+--------------------------------------------------+---------------------------------------+------+
-|1     |top                                               |                                       |  9286|
-|2     |  fft_wide_unit                                   |fft_wide_unit                          |  9115|
-|3     |    u_fft_control                                 |fft_wide_unit_control                  |   879|
+|1     |top                                               |                                       |  8975|
+|2     |  fft_wide_unit                                   |fft_wide_unit                          |  8699|
+|3     |    u_fft_control                                 |fft_wide_unit_control                  |   929|
 |4     |      u_bsn_fifo                                  |common_fifo_sc__xdcDup__1              |   180|
 |5     |        u_fifo                                    |tech_fifo_sc__xdcDup__1                |   180|
 |6     |          \gen_ip_xilinx.u1                       |ip_xilinx_fifo_sc__xdcDup__1           |   180|
 |7     |            xpm_fifo_sync_inst                    |xpm_fifo_sync                          |   179|
 |8     |              xpm_fifo_base_inst                  |xpm_fifo_base                          |   179|
 |9     |                \gen_sdpram.xpm_memory_base_inst  |xpm_memory_base__parameterized0        |    75|
-|10    |                rdp_inst                          |xpm_counter_updn_232                   |    27|
-|11    |                rdpp1_inst                        |xpm_counter_updn__parameterized0_233   |     8|
-|12    |                rst_d1_inst                       |xpm_fifo_reg_bit_234                   |     2|
-|13    |                wrp_inst                          |xpm_counter_updn_235                   |    17|
-|14    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_236   |    11|
-|15    |                xpm_fifo_rst_inst                 |xpm_fifo_rst_237                       |    14|
+|10    |                rdp_inst                          |xpm_counter_updn_231                   |    27|
+|11    |                rdpp1_inst                        |xpm_counter_updn__parameterized0_232   |     8|
+|12    |                rst_d1_inst                       |xpm_fifo_reg_bit_233                   |     2|
+|13    |                wrp_inst                          |xpm_counter_updn_234                   |    17|
+|14    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_235   |    11|
+|15    |                xpm_fifo_rst_inst                 |xpm_fifo_rst_236                       |    14|
 |16    |      u_error_fifo                                |common_fifo_sc__parameterized0         |   142|
 |17    |        u_fifo                                    |tech_fifo_sc__parameterized0           |   142|
 |18    |          \gen_ip_xilinx.u1                       |ip_xilinx_fifo_sc__parameterized1      |   142|
 |19    |            xpm_fifo_sync_inst                    |xpm_fifo_sync__parameterized1          |   142|
 |20    |              xpm_fifo_base_inst                  |xpm_fifo_base__parameterized0          |   142|
 |21    |                \gen_sdpram.xpm_memory_base_inst  |xpm_memory_base__parameterized1        |    38|
-|22    |                rdp_inst                          |xpm_counter_updn_226                   |    27|
-|23    |                rdpp1_inst                        |xpm_counter_updn__parameterized0_227   |     8|
-|24    |                rst_d1_inst                       |xpm_fifo_reg_bit_228                   |     2|
-|25    |                wrp_inst                          |xpm_counter_updn_229                   |    17|
-|26    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_230   |    11|
-|27    |                xpm_fifo_rst_inst                 |xpm_fifo_rst_231                       |    14|
+|22    |                rdp_inst                          |xpm_counter_updn_225                   |    27|
+|23    |                rdpp1_inst                        |xpm_counter_updn__parameterized0_226   |     8|
+|24    |                rst_d1_inst                       |xpm_fifo_reg_bit_227                   |     2|
+|25    |                wrp_inst                          |xpm_counter_updn_228                   |    17|
+|26    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_229   |    11|
+|27    |                xpm_fifo_rst_inst                 |xpm_fifo_rst_230                       |    14|
 |28    |      u_fifo_adapter                              |common_fifo_rd                         |   220|
 |29    |        u_rl0                                     |common_rl_decrease                     |   220|
 |30    |      u_sync_bsn_fifo                             |common_fifo_sc                         |   181|
@@ -4375,355 +4381,351 @@ Report Instance Areas:
 |36    |                rdp_inst                          |xpm_counter_updn                       |    27|
 |37    |                rdpp1_inst                        |xpm_counter_updn__parameterized0       |     8|
 |38    |                rst_d1_inst                       |xpm_fifo_reg_bit                       |     2|
-|39    |                wrp_inst                          |xpm_counter_updn_224                   |    17|
-|40    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_225   |    11|
+|39    |                wrp_inst                          |xpm_counter_updn_223                   |    17|
+|40    |                wrpp1_inst                        |xpm_counter_updn__parameterized0_224   |    11|
 |41    |                xpm_fifo_rst_inst                 |xpm_fifo_rst                           |    14|
-|42    |    u_fft_wide                                    |fft_r2_wide                            |  8121|
-|43    |      \gen_fft_r2_pipe.u_fft_r2_pipe              |fft_r2_pipe                            |  8121|
-|44    |        \gen_fft[10].u_stage                      |rTwoSDFStage                           |  1590|
+|42    |    u_fft_wide                                    |fft_r2_wide                            |  7671|
+|43    |      \gen_fft_r2_pipe.u_fft_r2_pipe              |fft_r2_pipe                            |  7671|
+|44    |        \gen_fft[10].u_stage                      |rTwoSDFStage                           |  1544|
 |45    |          u_TwiddleMult                           |rTwoWMul                               |   192|
-|46    |            \gen_ip.u_cmplx_mul                   |common_complex_mult_215                |    40|
-|47    |              u_complex_mult                      |tech_complex_mult_222                  |    40|
-|48    |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_223                  |    40|
-|49    |            u_im_lat                              |common_pipeline__parameterized3_216    |    38|
-|50    |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_217 |     3|
-|51    |              u_sl                                |common_pipeline__parameterized4_221    |     3|
-|52    |            u_re_lat                              |common_pipeline__parameterized3_218    |    38|
-|53    |            u_sel_lat                             |common_pipeline_sl__parameterized1_219 |     3|
-|54    |              u_sl                                |common_pipeline__parameterized4_220    |     3|
-|55    |          u_butterfly                             |rTwoBFStage                            |  1273|
-|56    |            u_out_sel                             |common_pipeline_sl_209                 |     1|
-|57    |              u_sl                                |common_pipeline__parameterized0_214    |     1|
-|58    |            u_out_val                             |common_pipeline_sl_210                 |     1|
-|59    |              u_sl                                |common_pipeline__parameterized0_213    |     1|
-|60    |            u_bf_im                               |rTwoBF_207                             |    20|
-|61    |            u_bf_re                               |rTwoBF_208                             |    20|
-|62    |            u_feedback                            |common_delay__parameterized0           |   646|
-|63    |            u_pipeline_out                        |common_pipeline_211                    |    36|
+|46    |            \gen_ip.u_cmplx_mul                   |common_complex_mult_214                |    40|
+|47    |              u_complex_mult                      |tech_complex_mult_221                  |    40|
+|48    |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_222                  |    40|
+|49    |            u_im_lat                              |common_pipeline__parameterized3_215    |    38|
+|50    |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_216 |     3|
+|51    |              u_sl                                |common_pipeline__parameterized4_220    |     3|
+|52    |            u_re_lat                              |common_pipeline__parameterized3_217    |    38|
+|53    |            u_sel_lat                             |common_pipeline_sl__parameterized1_218 |     3|
+|54    |              u_sl                                |common_pipeline__parameterized4_219    |     3|
+|55    |          u_butterfly                             |rTwoBFStage                            |  1245|
+|56    |            u_out_sel                             |common_pipeline_sl_208                 |     1|
+|57    |              u_sl                                |common_pipeline__parameterized0_213    |     1|
+|58    |            u_out_val                             |common_pipeline_sl_209                 |     1|
+|59    |              u_sl                                |common_pipeline__parameterized0_212    |     1|
+|60    |            u_bf_im                               |rTwoBF_206                             |     5|
+|61    |            u_bf_re                               |rTwoBF_207                             |     5|
+|62    |            u_feedback                            |common_delay__parameterized0           |   648|
+|63    |            u_pipeline_out                        |common_pipeline_210                    |    36|
 |64    |            u_stage_sel                           |common_bit_delay                       |   530|
-|65    |            u_stage_val                           |common_bit_delay_212                   |    19|
+|65    |            u_stage_val                           |common_bit_delay_211                   |    19|
 |66    |          u_control                               |common_counter                         |    21|
-|67    |          u_im_lat                                |common_pipeline__parameterized8_203    |    17|
-|68    |          u_re_lat                                |common_pipeline__parameterized8_204    |    17|
-|69    |          u_val_lat                               |common_pipeline_sl_205                 |     1|
-|70    |            u_sl                                  |common_pipeline__parameterized0_206    |     1|
+|67    |          u_im_lat                                |common_pipeline__parameterized8_202    |    17|
+|68    |          u_re_lat                                |common_pipeline__parameterized8_203    |    17|
+|69    |          u_val_lat                               |common_pipeline_sl_204                 |     1|
+|70    |            u_sl                                  |common_pipeline__parameterized0_205    |     1|
 |71    |          u_weights                               |rTwoWeights                            |     4|
 |72    |        \gen_fft[1].u_stage                       |rTwoSDFStage__parameterized8           |   470|
 |73    |          u_TwiddleMult                           |rTwoWMul__parameterized8               |   190|
-|74    |            \gen_rtl.u_CmplxMul                   |common_complex_mult_194                |    40|
-|75    |              u_complex_mult                      |tech_complex_mult_201                  |    40|
-|76    |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_202                  |    40|
-|77    |            u_im_lat                              |common_pipeline__parameterized3_195    |    36|
-|78    |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_196 |     3|
-|79    |              u_sl                                |common_pipeline__parameterized4_200    |     3|
-|80    |            u_re_lat                              |common_pipeline__parameterized3_197    |    36|
-|81    |            u_sel_lat                             |common_pipeline_sl__parameterized1_198 |     3|
-|82    |              u_sl                                |common_pipeline__parameterized4_199    |     3|
+|74    |            \gen_rtl.u_CmplxMul                   |common_complex_mult_193                |    40|
+|75    |              u_complex_mult                      |tech_complex_mult_200                  |    40|
+|76    |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_201                  |    40|
+|77    |            u_im_lat                              |common_pipeline__parameterized3_194    |    36|
+|78    |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_195 |     3|
+|79    |              u_sl                                |common_pipeline__parameterized4_199    |     3|
+|80    |            u_re_lat                              |common_pipeline__parameterized3_196    |    36|
+|81    |            u_sel_lat                             |common_pipeline_sl__parameterized1_197 |     3|
+|82    |              u_sl                                |common_pipeline__parameterized4_198    |     3|
 |83    |          u_butterfly                             |rTwoBFStage__parameterized8            |   204|
-|84    |            u_bf_im                               |rTwoBF_186                             |    10|
-|85    |            u_bf_re                               |rTwoBF_187                             |    10|
+|84    |            u_bf_im                               |rTwoBF_185                             |    10|
+|85    |            u_bf_re                               |rTwoBF_186                             |    10|
 |86    |            u_feedback                            |common_delay__parameterized9           |   108|
-|87    |            u_out_sel                             |common_pipeline_sl_188                 |     1|
-|88    |              u_sl                                |common_pipeline__parameterized0_193    |     1|
-|89    |            u_out_val                             |common_pipeline_sl_189                 |     1|
-|90    |              u_sl                                |common_pipeline__parameterized0_192    |     1|
-|91    |            u_pipeline_out                        |common_pipeline_190                    |    72|
+|87    |            u_out_sel                             |common_pipeline_sl_187                 |     1|
+|88    |              u_sl                                |common_pipeline__parameterized0_192    |     1|
+|89    |            u_out_val                             |common_pipeline_sl_188                 |     1|
+|90    |              u_sl                                |common_pipeline__parameterized0_191    |     1|
+|91    |            u_pipeline_out                        |common_pipeline_189                    |    72|
 |92    |            u_stage_sel                           |common_bit_delay__parameterized8       |     1|
-|93    |            u_stage_val                           |common_bit_delay__parameterized8_191   |     1|
+|93    |            u_stage_val                           |common_bit_delay__parameterized8_190   |     1|
 |94    |          u_control                               |common_counter__parameterized8         |     2|
-|95    |          u_im_lat                                |common_pipeline__parameterized8_182    |    18|
-|96    |          u_re_lat                                |common_pipeline__parameterized8_183    |    18|
-|97    |          u_val_lat                               |common_pipeline_sl_184                 |     2|
-|98    |            u_sl                                  |common_pipeline__parameterized0_185    |     2|
+|95    |          u_im_lat                                |common_pipeline__parameterized8_181    |    18|
+|96    |          u_re_lat                                |common_pipeline__parameterized8_182    |    18|
+|97    |          u_val_lat                               |common_pipeline_sl_183                 |     2|
+|98    |            u_sl                                  |common_pipeline__parameterized0_184    |     2|
 |99    |        \gen_fft[2].u_stage                       |rTwoSDFStage__parameterized7           |   516|
 |100   |          u_TwiddleMult                           |rTwoWMul__parameterized7               |   190|
-|101   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_173                |    40|
-|102   |              u_complex_mult                      |tech_complex_mult_180                  |    40|
-|103   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_181                  |    40|
-|104   |            u_im_lat                              |common_pipeline__parameterized3_174    |    36|
-|105   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_175 |     3|
-|106   |              u_sl                                |common_pipeline__parameterized4_179    |     3|
-|107   |            u_re_lat                              |common_pipeline__parameterized3_176    |    36|
-|108   |            u_sel_lat                             |common_pipeline_sl__parameterized1_177 |     3|
-|109   |              u_sl                                |common_pipeline__parameterized4_178    |     3|
+|101   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_172                |    40|
+|102   |              u_complex_mult                      |tech_complex_mult_179                  |    40|
+|103   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_180                  |    40|
+|104   |            u_im_lat                              |common_pipeline__parameterized3_173    |    36|
+|105   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_174 |     3|
+|106   |              u_sl                                |common_pipeline__parameterized4_178    |     3|
+|107   |            u_re_lat                              |common_pipeline__parameterized3_175    |    36|
+|108   |            u_sel_lat                             |common_pipeline_sl__parameterized1_176 |     3|
+|109   |              u_sl                                |common_pipeline__parameterized4_177    |     3|
 |110   |          u_butterfly                             |rTwoBFStage__parameterized7            |   242|
-|111   |            u_bf_im                               |rTwoBF_165                             |    10|
-|112   |            u_bf_re                               |rTwoBF_166                             |    10|
+|111   |            u_bf_im                               |rTwoBF_164                             |    10|
+|112   |            u_bf_re                               |rTwoBF_165                             |    10|
 |113   |            u_feedback                            |common_delay__parameterized8           |   144|
-|114   |            u_out_sel                             |common_pipeline_sl_167                 |     1|
-|115   |              u_sl                                |common_pipeline__parameterized0_172    |     1|
-|116   |            u_out_val                             |common_pipeline_sl_168                 |     1|
-|117   |              u_sl                                |common_pipeline__parameterized0_171    |     1|
-|118   |            u_pipeline_out                        |common_pipeline_169                    |    72|
+|114   |            u_out_sel                             |common_pipeline_sl_166                 |     1|
+|115   |              u_sl                                |common_pipeline__parameterized0_171    |     1|
+|116   |            u_out_val                             |common_pipeline_sl_167                 |     1|
+|117   |              u_sl                                |common_pipeline__parameterized0_170    |     1|
+|118   |            u_pipeline_out                        |common_pipeline_168                    |    72|
 |119   |            u_stage_sel                           |common_bit_delay__parameterized7       |     2|
-|120   |            u_stage_val                           |common_bit_delay__parameterized7_170   |     2|
+|120   |            u_stage_val                           |common_bit_delay__parameterized7_169   |     2|
 |121   |          u_control                               |common_counter__parameterized7         |     4|
-|122   |          u_im_lat                                |common_pipeline__parameterized8_161    |    18|
-|123   |          u_re_lat                                |common_pipeline__parameterized8_162    |    18|
-|124   |          u_val_lat                               |common_pipeline_sl_163                 |     4|
-|125   |            u_sl                                  |common_pipeline__parameterized0_164    |     4|
+|122   |          u_im_lat                                |common_pipeline__parameterized8_160    |    18|
+|123   |          u_re_lat                                |common_pipeline__parameterized8_161    |    18|
+|124   |          u_val_lat                               |common_pipeline_sl_162                 |     4|
+|125   |            u_sl                                  |common_pipeline__parameterized0_163    |     4|
 |126   |          u_weights                               |rTwoWeights__parameterized7            |     4|
 |127   |        \gen_fft[3].u_stage                       |rTwoSDFStage__parameterized6           |   556|
 |128   |          u_TwiddleMult                           |rTwoWMul__parameterized6               |   202|
-|129   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_152                |    40|
-|130   |              u_complex_mult                      |tech_complex_mult_159                  |    40|
-|131   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_160                  |    40|
-|132   |            u_im_lat                              |common_pipeline__parameterized3_153    |    41|
-|133   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_154 |     3|
-|134   |              u_sl                                |common_pipeline__parameterized4_158    |     3|
-|135   |            u_re_lat                              |common_pipeline__parameterized3_155    |    41|
-|136   |            u_sel_lat                             |common_pipeline_sl__parameterized1_156 |     3|
-|137   |              u_sl                                |common_pipeline__parameterized4_157    |     3|
+|129   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_151                |    40|
+|130   |              u_complex_mult                      |tech_complex_mult_158                  |    40|
+|131   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_159                  |    40|
+|132   |            u_im_lat                              |common_pipeline__parameterized3_152    |    41|
+|133   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_153 |     3|
+|134   |              u_sl                                |common_pipeline__parameterized4_157    |     3|
+|135   |            u_re_lat                              |common_pipeline__parameterized3_154    |    41|
+|136   |            u_sel_lat                             |common_pipeline_sl__parameterized1_155 |     3|
+|137   |              u_sl                                |common_pipeline__parameterized4_156    |     3|
 |138   |          u_butterfly                             |rTwoBFStage__parameterized6            |   244|
-|139   |            u_bf_im                               |rTwoBF_144                             |    10|
-|140   |            u_bf_re                               |rTwoBF_145                             |    10|
+|139   |            u_bf_im                               |rTwoBF_143                             |    10|
+|140   |            u_bf_re                               |rTwoBF_144                             |    10|
 |141   |            u_feedback                            |common_delay__parameterized7           |   144|
-|142   |            u_out_sel                             |common_pipeline_sl_146                 |     1|
-|143   |              u_sl                                |common_pipeline__parameterized0_151    |     1|
-|144   |            u_out_val                             |common_pipeline_sl_147                 |     1|
-|145   |              u_sl                                |common_pipeline__parameterized0_150    |     1|
-|146   |            u_pipeline_out                        |common_pipeline_148                    |    72|
+|142   |            u_out_sel                             |common_pipeline_sl_145                 |     1|
+|143   |              u_sl                                |common_pipeline__parameterized0_150    |     1|
+|144   |            u_out_val                             |common_pipeline_sl_146                 |     1|
+|145   |              u_sl                                |common_pipeline__parameterized0_149    |     1|
+|146   |            u_pipeline_out                        |common_pipeline_147                    |    72|
 |147   |            u_stage_sel                           |common_bit_delay__parameterized6       |     3|
-|148   |            u_stage_val                           |common_bit_delay__parameterized6_149   |     3|
+|148   |            u_stage_val                           |common_bit_delay__parameterized6_148   |     3|
 |149   |          u_control                               |common_counter__parameterized6         |     6|
-|150   |          u_im_lat                                |common_pipeline__parameterized8_136    |    17|
-|151   |          u_re_lat                                |common_pipeline__parameterized8_137    |    17|
-|152   |          u_requantize_im                         |common_requantize_138                  |    16|
-|153   |            u_remove_lsb                          |common_round_143                       |    16|
-|154   |          u_requantize_re                         |common_requantize_139                  |    16|
-|155   |            u_remove_lsb                          |common_round_142                       |    16|
-|156   |          u_val_lat                               |common_pipeline_sl_140                 |     2|
-|157   |            u_sl                                  |common_pipeline__parameterized0_141    |     2|
+|150   |          u_im_lat                                |common_pipeline__parameterized8_135    |    17|
+|151   |          u_re_lat                                |common_pipeline__parameterized8_136    |    17|
+|152   |          u_requantize_im                         |common_requantize_137                  |    16|
+|153   |            u_remove_lsb                          |common_round_142                       |    16|
+|154   |          u_requantize_re                         |common_requantize_138                  |    16|
+|155   |            u_remove_lsb                          |common_round_141                       |    16|
+|156   |          u_val_lat                               |common_pipeline_sl_139                 |     2|
+|157   |            u_sl                                  |common_pipeline__parameterized0_140    |     2|
 |158   |        \gen_fft[4].u_stage                       |rTwoSDFStage__parameterized5           |   562|
 |159   |          u_TwiddleMult                           |rTwoWMul__parameterized5               |   202|
-|160   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_127                |    40|
-|161   |              u_complex_mult                      |tech_complex_mult_134                  |    40|
-|162   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_135                  |    40|
-|163   |            u_im_lat                              |common_pipeline__parameterized3_128    |    41|
-|164   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_129 |     3|
-|165   |              u_sl                                |common_pipeline__parameterized4_133    |     3|
-|166   |            u_re_lat                              |common_pipeline__parameterized3_130    |    41|
-|167   |            u_sel_lat                             |common_pipeline_sl__parameterized1_131 |     3|
-|168   |              u_sl                                |common_pipeline__parameterized4_132    |     3|
+|160   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_126                |    40|
+|161   |              u_complex_mult                      |tech_complex_mult_133                  |    40|
+|162   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_134                  |    40|
+|163   |            u_im_lat                              |common_pipeline__parameterized3_127    |    41|
+|164   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_128 |     3|
+|165   |              u_sl                                |common_pipeline__parameterized4_132    |     3|
+|166   |            u_re_lat                              |common_pipeline__parameterized3_129    |    41|
+|167   |            u_sel_lat                             |common_pipeline_sl__parameterized1_130 |     3|
+|168   |              u_sl                                |common_pipeline__parameterized4_131    |     3|
 |169   |          u_butterfly                             |rTwoBFStage__parameterized5            |   244|
-|170   |            u_bf_im                               |rTwoBF_119                             |    10|
-|171   |            u_bf_re                               |rTwoBF_120                             |    10|
+|170   |            u_bf_im                               |rTwoBF_118                             |    10|
+|171   |            u_bf_re                               |rTwoBF_119                             |    10|
 |172   |            u_feedback                            |common_delay__parameterized6           |   144|
-|173   |            u_out_sel                             |common_pipeline_sl_121                 |     1|
-|174   |              u_sl                                |common_pipeline__parameterized0_126    |     1|
-|175   |            u_out_val                             |common_pipeline_sl_122                 |     1|
-|176   |              u_sl                                |common_pipeline__parameterized0_125    |     1|
-|177   |            u_pipeline_out                        |common_pipeline_123                    |    72|
+|173   |            u_out_sel                             |common_pipeline_sl_120                 |     1|
+|174   |              u_sl                                |common_pipeline__parameterized0_125    |     1|
+|175   |            u_out_val                             |common_pipeline_sl_121                 |     1|
+|176   |              u_sl                                |common_pipeline__parameterized0_124    |     1|
+|177   |            u_pipeline_out                        |common_pipeline_122                    |    72|
 |178   |            u_stage_sel                           |common_bit_delay__parameterized5       |     3|
-|179   |            u_stage_val                           |common_bit_delay__parameterized5_124   |     3|
+|179   |            u_stage_val                           |common_bit_delay__parameterized5_123   |     3|
 |180   |          u_control                               |common_counter__parameterized5         |     8|
-|181   |          u_im_lat                                |common_pipeline__parameterized8_111    |    17|
-|182   |          u_re_lat                                |common_pipeline__parameterized8_112    |    17|
-|183   |          u_requantize_im                         |common_requantize_113                  |    16|
-|184   |            u_remove_lsb                          |common_round_118                       |    16|
-|185   |          u_requantize_re                         |common_requantize_114                  |    16|
-|186   |            u_remove_lsb                          |common_round_117                       |    16|
-|187   |          u_val_lat                               |common_pipeline_sl_115                 |     2|
-|188   |            u_sl                                  |common_pipeline__parameterized0_116    |     2|
+|181   |          u_im_lat                                |common_pipeline__parameterized8_110    |    17|
+|182   |          u_re_lat                                |common_pipeline__parameterized8_111    |    17|
+|183   |          u_requantize_im                         |common_requantize_112                  |    16|
+|184   |            u_remove_lsb                          |common_round_117                       |    16|
+|185   |          u_requantize_re                         |common_requantize_113                  |    16|
+|186   |            u_remove_lsb                          |common_round_116                       |    16|
+|187   |          u_val_lat                               |common_pipeline_sl_114                 |     2|
+|188   |            u_sl                                  |common_pipeline__parameterized0_115    |     2|
 |189   |          u_weights                               |rTwoWeights__parameterized5            |     4|
 |190   |        \gen_fft[5].u_stage                       |rTwoSDFStage__parameterized4           |   560|
 |191   |          u_TwiddleMult                           |rTwoWMul__parameterized4               |   202|
-|192   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_102                |    40|
-|193   |              u_complex_mult                      |tech_complex_mult_109                  |    40|
-|194   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_110                  |    40|
-|195   |            u_im_lat                              |common_pipeline__parameterized3_103    |    41|
-|196   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_104 |     3|
-|197   |              u_sl                                |common_pipeline__parameterized4_108    |     3|
-|198   |            u_re_lat                              |common_pipeline__parameterized3_105    |    41|
-|199   |            u_sel_lat                             |common_pipeline_sl__parameterized1_106 |     3|
-|200   |              u_sl                                |common_pipeline__parameterized4_107    |     3|
+|192   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_101                |    40|
+|193   |              u_complex_mult                      |tech_complex_mult_108                  |    40|
+|194   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_109                  |    40|
+|195   |            u_im_lat                              |common_pipeline__parameterized3_102    |    41|
+|196   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_103 |     3|
+|197   |              u_sl                                |common_pipeline__parameterized4_107    |     3|
+|198   |            u_re_lat                              |common_pipeline__parameterized3_104    |    41|
+|199   |            u_sel_lat                             |common_pipeline_sl__parameterized1_105 |     3|
+|200   |              u_sl                                |common_pipeline__parameterized4_106    |     3|
 |201   |          u_butterfly                             |rTwoBFStage__parameterized4            |   244|
-|202   |            u_bf_im                               |rTwoBF_94                              |    10|
-|203   |            u_bf_re                               |rTwoBF_95                              |    10|
+|202   |            u_bf_im                               |rTwoBF_93                              |    10|
+|203   |            u_bf_re                               |rTwoBF_94                              |    10|
 |204   |            u_feedback                            |common_delay__parameterized5           |   144|
-|205   |            u_out_sel                             |common_pipeline_sl_96                  |     1|
-|206   |              u_sl                                |common_pipeline__parameterized0_101    |     1|
-|207   |            u_out_val                             |common_pipeline_sl_97                  |     1|
-|208   |              u_sl                                |common_pipeline__parameterized0_100    |     1|
-|209   |            u_pipeline_out                        |common_pipeline_98                     |    72|
+|205   |            u_out_sel                             |common_pipeline_sl_95                  |     1|
+|206   |              u_sl                                |common_pipeline__parameterized0_100    |     1|
+|207   |            u_out_val                             |common_pipeline_sl_96                  |     1|
+|208   |              u_sl                                |common_pipeline__parameterized0_99     |     1|
+|209   |            u_pipeline_out                        |common_pipeline_97                     |    72|
 |210   |            u_stage_sel                           |common_bit_delay__parameterized4       |     3|
-|211   |            u_stage_val                           |common_bit_delay__parameterized4_99    |     3|
+|211   |            u_stage_val                           |common_bit_delay__parameterized4_98    |     3|
 |212   |          u_control                               |common_counter__parameterized4         |    10|
-|213   |          u_im_lat                                |common_pipeline__parameterized8_86     |    17|
-|214   |          u_re_lat                                |common_pipeline__parameterized8_87     |    17|
-|215   |          u_requantize_im                         |common_requantize_88                   |    16|
-|216   |            u_remove_lsb                          |common_round_93                        |    16|
-|217   |          u_requantize_re                         |common_requantize_89                   |    16|
-|218   |            u_remove_lsb                          |common_round_92                        |    16|
-|219   |          u_val_lat                               |common_pipeline_sl_90                  |     2|
-|220   |            u_sl                                  |common_pipeline__parameterized0_91     |     2|
+|213   |          u_im_lat                                |common_pipeline__parameterized8_85     |    17|
+|214   |          u_re_lat                                |common_pipeline__parameterized8_86     |    17|
+|215   |          u_requantize_im                         |common_requantize_87                   |    16|
+|216   |            u_remove_lsb                          |common_round_92                        |    16|
+|217   |          u_requantize_re                         |common_requantize_88                   |    16|
+|218   |            u_remove_lsb                          |common_round_91                        |    16|
+|219   |          u_val_lat                               |common_pipeline_sl_89                  |     2|
+|220   |            u_sl                                  |common_pipeline__parameterized0_90     |     2|
 |221   |        \gen_fft[6].u_stage                       |rTwoSDFStage__parameterized3           |   566|
 |222   |          u_TwiddleMult                           |rTwoWMul__parameterized3               |   202|
-|223   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_77                 |    40|
-|224   |              u_complex_mult                      |tech_complex_mult_84                   |    40|
-|225   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_85                   |    40|
-|226   |            u_im_lat                              |common_pipeline__parameterized3_78     |    41|
-|227   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_79  |     3|
-|228   |              u_sl                                |common_pipeline__parameterized4_83     |     3|
-|229   |            u_re_lat                              |common_pipeline__parameterized3_80     |    41|
-|230   |            u_sel_lat                             |common_pipeline_sl__parameterized1_81  |     3|
-|231   |              u_sl                                |common_pipeline__parameterized4_82     |     3|
+|223   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_76                 |    40|
+|224   |              u_complex_mult                      |tech_complex_mult_83                   |    40|
+|225   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_84                   |    40|
+|226   |            u_im_lat                              |common_pipeline__parameterized3_77     |    41|
+|227   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_78  |     3|
+|228   |              u_sl                                |common_pipeline__parameterized4_82     |     3|
+|229   |            u_re_lat                              |common_pipeline__parameterized3_79     |    41|
+|230   |            u_sel_lat                             |common_pipeline_sl__parameterized1_80  |     3|
+|231   |              u_sl                                |common_pipeline__parameterized4_81     |     3|
 |232   |          u_butterfly                             |rTwoBFStage__parameterized3            |   244|
-|233   |            u_bf_im                               |rTwoBF_69                              |    10|
-|234   |            u_bf_re                               |rTwoBF_70                              |    10|
+|233   |            u_bf_im                               |rTwoBF_68                              |    10|
+|234   |            u_bf_re                               |rTwoBF_69                              |    10|
 |235   |            u_feedback                            |common_delay__parameterized4           |   144|
-|236   |            u_out_sel                             |common_pipeline_sl_71                  |     1|
-|237   |              u_sl                                |common_pipeline__parameterized0_76     |     1|
-|238   |            u_out_val                             |common_pipeline_sl_72                  |     1|
-|239   |              u_sl                                |common_pipeline__parameterized0_75     |     1|
-|240   |            u_pipeline_out                        |common_pipeline_73                     |    72|
+|236   |            u_out_sel                             |common_pipeline_sl_70                  |     1|
+|237   |              u_sl                                |common_pipeline__parameterized0_75     |     1|
+|238   |            u_out_val                             |common_pipeline_sl_71                  |     1|
+|239   |              u_sl                                |common_pipeline__parameterized0_74     |     1|
+|240   |            u_pipeline_out                        |common_pipeline_72                     |    72|
 |241   |            u_stage_sel                           |common_bit_delay__parameterized3       |     3|
-|242   |            u_stage_val                           |common_bit_delay__parameterized3_74    |     3|
+|242   |            u_stage_val                           |common_bit_delay__parameterized3_73    |     3|
 |243   |          u_control                               |common_counter__parameterized3         |    12|
-|244   |          u_im_lat                                |common_pipeline__parameterized8_61     |    17|
-|245   |          u_re_lat                                |common_pipeline__parameterized8_62     |    17|
-|246   |          u_requantize_im                         |common_requantize_63                   |    16|
-|247   |            u_remove_lsb                          |common_round_68                        |    16|
-|248   |          u_requantize_re                         |common_requantize_64                   |    16|
-|249   |            u_remove_lsb                          |common_round_67                        |    16|
-|250   |          u_val_lat                               |common_pipeline_sl_65                  |     2|
-|251   |            u_sl                                  |common_pipeline__parameterized0_66     |     2|
+|244   |          u_im_lat                                |common_pipeline__parameterized8_60     |    17|
+|245   |          u_re_lat                                |common_pipeline__parameterized8_61     |    17|
+|246   |          u_requantize_im                         |common_requantize_62                   |    16|
+|247   |            u_remove_lsb                          |common_round_67                        |    16|
+|248   |          u_requantize_re                         |common_requantize_63                   |    16|
+|249   |            u_remove_lsb                          |common_round_66                        |    16|
+|250   |          u_val_lat                               |common_pipeline_sl_64                  |     2|
+|251   |            u_sl                                  |common_pipeline__parameterized0_65     |     2|
 |252   |          u_weights                               |rTwoWeights__parameterized3            |     4|
 |253   |        \gen_fft[7].u_stage                       |rTwoSDFStage__parameterized2           |   603|
 |254   |          u_TwiddleMult                           |rTwoWMul__parameterized2               |   202|
-|255   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_52                 |    40|
-|256   |              u_complex_mult                      |tech_complex_mult_59                   |    40|
-|257   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_60                   |    40|
-|258   |            u_im_lat                              |common_pipeline__parameterized3_53     |    41|
-|259   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_54  |     3|
-|260   |              u_sl                                |common_pipeline__parameterized4_58     |     3|
-|261   |            u_re_lat                              |common_pipeline__parameterized3_55     |    41|
-|262   |            u_sel_lat                             |common_pipeline_sl__parameterized1_56  |     3|
-|263   |              u_sl                                |common_pipeline__parameterized4_57     |     3|
+|255   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_51                 |    40|
+|256   |              u_complex_mult                      |tech_complex_mult_58                   |    40|
+|257   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_59                   |    40|
+|258   |            u_im_lat                              |common_pipeline__parameterized3_52     |    41|
+|259   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_53  |     3|
+|260   |              u_sl                                |common_pipeline__parameterized4_57     |     3|
+|261   |            u_re_lat                              |common_pipeline__parameterized3_54     |    41|
+|262   |            u_sel_lat                             |common_pipeline_sl__parameterized1_55  |     3|
+|263   |              u_sl                                |common_pipeline__parameterized4_56     |     3|
 |264   |          u_butterfly                             |rTwoBFStage__parameterized2            |   318|
-|265   |            u_bf_im                               |rTwoBF_44                              |    12|
-|266   |            u_bf_re                               |rTwoBF_45                              |    12|
+|265   |            u_bf_im                               |rTwoBF_43                              |    12|
+|266   |            u_bf_re                               |rTwoBF_44                              |    12|
 |267   |            u_feedback                            |common_delay__parameterized3           |   248|
-|268   |            u_out_sel                             |common_pipeline_sl_46                  |     1|
-|269   |              u_sl                                |common_pipeline__parameterized0_51     |     1|
-|270   |            u_out_val                             |common_pipeline_sl_47                  |     1|
-|271   |              u_sl                                |common_pipeline__parameterized0_50     |     1|
-|272   |            u_pipeline_out                        |common_pipeline_48                     |    36|
+|268   |            u_out_sel                             |common_pipeline_sl_45                  |     1|
+|269   |              u_sl                                |common_pipeline__parameterized0_50     |     1|
+|270   |            u_out_val                             |common_pipeline_sl_46                  |     1|
+|271   |              u_sl                                |common_pipeline__parameterized0_49     |     1|
+|272   |            u_pipeline_out                        |common_pipeline_47                     |    36|
 |273   |            u_stage_sel                           |common_bit_delay__parameterized2       |     4|
-|274   |            u_stage_val                           |common_bit_delay__parameterized2_49    |     4|
+|274   |            u_stage_val                           |common_bit_delay__parameterized2_48    |     4|
 |275   |          u_control                               |common_counter__parameterized2         |    15|
-|276   |          u_im_lat                                |common_pipeline__parameterized8_36     |    17|
-|277   |          u_re_lat                                |common_pipeline__parameterized8_37     |    17|
-|278   |          u_requantize_im                         |common_requantize_38                   |    16|
-|279   |            u_remove_lsb                          |common_round_43                        |    16|
-|280   |          u_requantize_re                         |common_requantize_39                   |    16|
-|281   |            u_remove_lsb                          |common_round_42                        |    16|
-|282   |          u_val_lat                               |common_pipeline_sl_40                  |     2|
-|283   |            u_sl                                  |common_pipeline__parameterized0_41     |     2|
+|276   |          u_im_lat                                |common_pipeline__parameterized8_35     |    17|
+|277   |          u_re_lat                                |common_pipeline__parameterized8_36     |    17|
+|278   |          u_requantize_im                         |common_requantize_37                   |    16|
+|279   |            u_remove_lsb                          |common_round_42                        |    16|
+|280   |          u_requantize_re                         |common_requantize_38                   |    16|
+|281   |            u_remove_lsb                          |common_round_41                        |    16|
+|282   |          u_val_lat                               |common_pipeline_sl_39                  |     2|
+|283   |            u_sl                                  |common_pipeline__parameterized0_40     |     2|
 |284   |        \gen_fft[8].u_stage                       |rTwoSDFStage__parameterized1           |   685|
 |285   |          u_TwiddleMult                           |rTwoWMul__parameterized1               |   202|
-|286   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_27                 |    40|
-|287   |              u_complex_mult                      |tech_complex_mult_34                   |    40|
-|288   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_35                   |    40|
-|289   |            u_im_lat                              |common_pipeline__parameterized3_28     |    41|
-|290   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_29  |     3|
-|291   |              u_sl                                |common_pipeline__parameterized4_33     |     3|
-|292   |            u_re_lat                              |common_pipeline__parameterized3_30     |    41|
-|293   |            u_sel_lat                             |common_pipeline_sl__parameterized1_31  |     3|
-|294   |              u_sl                                |common_pipeline__parameterized4_32     |     3|
+|286   |            \gen_ip.u_cmplx_mul                   |common_complex_mult_26                 |    40|
+|287   |              u_complex_mult                      |tech_complex_mult_33                   |    40|
+|288   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp_34                   |    40|
+|289   |            u_im_lat                              |common_pipeline__parameterized3_27     |    41|
+|290   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1_28  |     3|
+|291   |              u_sl                                |common_pipeline__parameterized4_32     |     3|
+|292   |            u_re_lat                              |common_pipeline__parameterized3_29     |    41|
+|293   |            u_sel_lat                             |common_pipeline_sl__parameterized1_30  |     3|
+|294   |              u_sl                                |common_pipeline__parameterized4_31     |     3|
 |295   |          u_butterfly                             |rTwoBFStage__parameterized1            |   394|
-|296   |            u_bf_im                               |rTwoBF_19                              |    12|
-|297   |            u_bf_re                               |rTwoBF_20                              |    12|
+|296   |            u_bf_im                               |rTwoBF_18                              |    12|
+|297   |            u_bf_re                               |rTwoBF_19                              |    12|
 |298   |            u_feedback                            |common_delay__parameterized2           |   320|
-|299   |            u_out_sel                             |common_pipeline_sl_21                  |     1|
-|300   |              u_sl                                |common_pipeline__parameterized0_26     |     1|
-|301   |            u_out_val                             |common_pipeline_sl_22                  |     1|
-|302   |              u_sl                                |common_pipeline__parameterized0_25     |     1|
-|303   |            u_pipeline_out                        |common_pipeline_23                     |    36|
+|299   |            u_out_sel                             |common_pipeline_sl_20                  |     1|
+|300   |              u_sl                                |common_pipeline__parameterized0_25     |     1|
+|301   |            u_out_val                             |common_pipeline_sl_21                  |     1|
+|302   |              u_sl                                |common_pipeline__parameterized0_24     |     1|
+|303   |            u_pipeline_out                        |common_pipeline_22                     |    36|
 |304   |            u_stage_sel                           |common_bit_delay__parameterized1       |     6|
-|305   |            u_stage_val                           |common_bit_delay__parameterized1_24    |     6|
+|305   |            u_stage_val                           |common_bit_delay__parameterized1_23    |     6|
 |306   |          u_control                               |common_counter__parameterized1         |    17|
-|307   |          u_im_lat                                |common_pipeline__parameterized8_13     |    17|
-|308   |          u_re_lat                                |common_pipeline__parameterized8_14     |    17|
+|307   |          u_im_lat                                |common_pipeline__parameterized8_12     |    17|
+|308   |          u_re_lat                                |common_pipeline__parameterized8_13     |    17|
 |309   |          u_requantize_im                         |common_requantize                      |    16|
-|310   |            u_remove_lsb                          |common_round_18                        |    16|
-|311   |          u_requantize_re                         |common_requantize_15                   |    16|
+|310   |            u_remove_lsb                          |common_round_17                        |    16|
+|311   |          u_requantize_re                         |common_requantize_14                   |    16|
 |312   |            u_remove_lsb                          |common_round                           |    16|
-|313   |          u_val_lat                               |common_pipeline_sl_16                  |     2|
-|314   |            u_sl                                  |common_pipeline__parameterized0_17     |     2|
+|313   |          u_val_lat                               |common_pipeline_sl_15                  |     2|
+|314   |            u_sl                                  |common_pipeline__parameterized0_16     |     2|
 |315   |          u_weights                               |rTwoWeights__parameterized1            |     4|
 |316   |        \gen_fft[9].u_stage                       |rTwoSDFStage__parameterized0           |  1065|
 |317   |          u_im_lat                                |common_pipeline__parameterized8        |    17|
-|318   |          u_re_lat                                |common_pipeline__parameterized8_3      |    17|
+|318   |          u_re_lat                                |common_pipeline__parameterized8_2      |    17|
 |319   |          u_TwiddleMult                           |rTwoWMul__parameterized0               |   192|
 |320   |            \gen_ip.u_cmplx_mul                   |common_complex_mult                    |    40|
 |321   |              u_complex_mult                      |tech_complex_mult                      |    40|
 |322   |                \gen_xilinx_cmult_ip_infer.u1     |ip_cmult_rtl_4dsp                      |    40|
 |323   |            u_im_lat                              |common_pipeline__parameterized3        |    38|
 |324   |            u_pipeline_out_val                    |common_pipeline_sl__parameterized1     |     3|
-|325   |              u_sl                                |common_pipeline__parameterized4_12     |     3|
-|326   |            u_re_lat                              |common_pipeline__parameterized3_10     |    38|
-|327   |            u_sel_lat                             |common_pipeline_sl__parameterized1_11  |     3|
+|325   |              u_sl                                |common_pipeline__parameterized4_11     |     3|
+|326   |            u_re_lat                              |common_pipeline__parameterized3_9      |    38|
+|327   |            u_sel_lat                             |common_pipeline_sl__parameterized1_10  |     3|
 |328   |              u_sl                                |common_pipeline__parameterized4        |     3|
 |329   |          u_butterfly                             |rTwoBFStage__parameterized0            |   733|
 |330   |            u_bf_im                               |rTwoBF                                 |    12|
-|331   |            u_bf_re                               |rTwoBF_4                               |    12|
+|331   |            u_bf_re                               |rTwoBF_3                               |    12|
 |332   |            u_feedback                            |common_delay__parameterized1           |   394|
-|333   |            u_out_sel                             |common_pipeline_sl_5                   |     1|
-|334   |              u_sl                                |common_pipeline__parameterized0_9      |     1|
-|335   |            u_out_val                             |common_pipeline_sl_6                   |     1|
-|336   |              u_sl                                |common_pipeline__parameterized0_8      |     1|
+|333   |            u_out_sel                             |common_pipeline_sl_4                   |     1|
+|334   |              u_sl                                |common_pipeline__parameterized0_8      |     1|
+|335   |            u_out_val                             |common_pipeline_sl_5                   |     1|
+|336   |              u_sl                                |common_pipeline__parameterized0_7      |     1|
 |337   |            u_pipeline_out                        |common_pipeline                        |    36|
 |338   |            u_stage_sel                           |common_bit_delay__parameterized0       |   266|
-|339   |            u_stage_val                           |common_bit_delay__parameterized0_7     |    11|
+|339   |            u_stage_val                           |common_bit_delay__parameterized0_6     |    11|
 |340   |          u_control                               |common_counter__parameterized0         |    19|
 |341   |          u_val_lat                               |common_pipeline_sl                     |     2|
 |342   |            u_sl                                  |common_pipeline__parameterized0        |     2|
 |343   |          u_weights                               |rTwoWeights__parameterized0            |     4|
-|344   |        \gen_reorder_and_separate.u_reorder_sep   |fft_reorder_sepa_pipe                  |   559|
-|345   |          \gen_separate.u_separate                |fft_sepa                               |   362|
-|346   |            adder                                 |common_add_sub                         |    48|
-|347   |              u_output_pipe                       |common_pipeline__parameterized11_2     |    25|
-|348   |            subtractor                            |common_add_sub__parameterized0         |    47|
-|349   |              u_output_pipe                       |common_pipeline__parameterized11       |    42|
-|350   |          u_adr_point_cnt                         |common_counter__parameterized9         |    70|
-|351   |          u_buff                                  |common_paged_ram_r_w                   |    19|
-|352   |            u_rw_rw                               |common_paged_ram_rw_rw                 |    19|
-|353   |              u_crw_crw                           |common_paged_ram_crw_crw               |    19|
-|354   |                \gen_adr.u_mem                    |common_ram_crw_crw                     |    15|
-|355   |                  \gen_simple_dual_port.u_ram     |tech_memory_ram_cr_cw                  |    12|
-|356   |                    \gen_ip_xilinx.u1             |ip_xpm_ram_cr_cw                       |    12|
-|357   |                      xpm_memory_sdpram_inst      |xpm_memory_sdpram                      |     2|
-|358   |                        xpm_memory_base_inst      |xpm_memory_base                        |     2|
-|359   |                  u_rd_val_b                      |common_pipeline__parameterized10       |     3|
-|360   |        u_requantize_im                           |common_requantize__parameterized1      |    54|
-|361   |          u_remove_lsb                            |common_round__parameterized2_1         |    54|
-|362   |        u_requantize_re                           |common_requantize__parameterized1_0    |    54|
-|363   |          u_remove_lsb                            |common_round__parameterized2           |    54|
+|344   |        \gen_reorder_and_separate.u_reorder_sep   |fft_reorder_sepa_pipe                  |   199|
+|345   |          \gen_separate.u_separate                |fft_sepa                               |     4|
+|346   |          u_adr_point_cnt                         |common_counter__parameterized9         |    70|
+|347   |          u_buff                                  |common_paged_ram_r_w                   |    53|
+|348   |            u_rw_rw                               |common_paged_ram_rw_rw                 |    53|
+|349   |              u_crw_crw                           |common_paged_ram_crw_crw               |    53|
+|350   |                \gen_adr.u_mem                    |common_ram_crw_crw                     |    49|
+|351   |                  \gen_simple_dual_port.u_ram     |tech_memory_ram_cr_cw                  |    48|
+|352   |                    \gen_ip_xilinx.u1             |ip_xpm_ram_cr_cw                       |    48|
+|353   |                      xpm_memory_sdpram_inst      |xpm_memory_sdpram                      |    38|
+|354   |                        xpm_memory_base_inst      |xpm_memory_base                        |    38|
+|355   |                  u_rd_val_b                      |common_pipeline__parameterized10       |     1|
+|356   |        u_requantize_im                           |common_requantize__parameterized1      |    32|
+|357   |          u_remove_lsb                            |common_round__parameterized2_1         |    32|
+|358   |        u_requantize_re                           |common_requantize__parameterized1_0    |    32|
+|359   |          u_remove_lsb                            |common_round__parameterized2           |    32|
 +------+--------------------------------------------------+---------------------------------------+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:01:31 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2566 ; free virtual = 14760
+Finished Writing Synthesis Report : Time (s): cpu = 00:01:28 ; elapsed = 00:01:31 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2294 ; free virtual = 11757
 ---------------------------------------------------------------------------------
 Synthesis finished with 0 errors, 0 critical warnings and 2 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:01:23 ; elapsed = 00:01:27 . Memory (MB): peak = 2371.449 ; gain = 372.355 ; free physical = 2635 ; free virtual = 14829
-Synthesis Optimization Complete : Time (s): cpu = 00:01:31 ; elapsed = 00:01:34 . Memory (MB): peak = 2371.449 ; gain = 569.012 ; free physical = 2635 ; free virtual = 14829
+Synthesis Optimization Runtime : Time (s): cpu = 00:01:21 ; elapsed = 00:01:24 . Memory (MB): peak = 2371.387 ; gain = 372.355 ; free physical = 2363 ; free virtual = 11826
+Synthesis Optimization Complete : Time (s): cpu = 00:01:28 ; elapsed = 00:01:32 . Memory (MB): peak = 2371.387 ; gain = 568.980 ; free physical = 2363 ; free virtual = 11826
 INFO: [Project 1-571] Translating synthesized netlist
-INFO: [Netlist 29-17] Analyzing 433 Unisim elements for replacement
+INFO: [Netlist 29-17] Analyzing 389 Unisim elements for replacement
 INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.449 ; gain = 0.000 ; free physical = 2588 ; free virtual = 14771
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.387 ; gain = 0.000 ; free physical = 2312 ; free virtual = 11775
 INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 28 instances were transformed.
   RAM32M => RAM32M (RAMD32, RAMD32, RAMD32, RAMD32, RAMD32, RAMD32, RAMS32, RAMS32): 28 instances
 
 INFO: [Common 17-83] Releasing license: Synthesis
-600 Infos, 143 Warnings, 0 Critical Warnings and 0 Errors encountered.
+605 Infos, 145 Warnings, 0 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:01:42 ; elapsed = 00:01:46 . Memory (MB): peak = 2371.449 ; gain = 968.582 ; free physical = 2706 ; free virtual = 14888
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.449 ; gain = 0.000 ; free physical = 2706 ; free virtual = 14888
+synth_design: Time (s): cpu = 00:01:39 ; elapsed = 00:01:42 . Memory (MB): peak = 2371.387 ; gain = 971.488 ; free physical = 2430 ; free virtual = 11893
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2371.387 ; gain = 0.000 ; free physical = 2430 ; free virtual = 11893
 WARNING: [Constraints 18-5210] No constraints selected for write.
 Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
 INFO: [Common 17-1381] The checkpoint '/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.runs/synth_1/wideband_fft_top.dcp' has been generated.
 INFO: [runtcl-4] Executing : report_utilization -file wideband_fft_top_utilization_synth.rpt -pb wideband_fft_top_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Fri Aug 28 10:34:50 2020...
+INFO: [Common 17-206] Exiting Vivado at Tue Oct 27 16:47:40 2020...
