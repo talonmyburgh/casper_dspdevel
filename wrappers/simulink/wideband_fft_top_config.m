@@ -62,7 +62,7 @@ function wideband_fft_top_config(this_block)
   
   
   %Update the vhdl top file with the required ports per wb_factor:
-  topwb_code_gen(wb_factor);
+  topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs);
 
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:

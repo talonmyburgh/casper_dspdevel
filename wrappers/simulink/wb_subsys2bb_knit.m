@@ -66,47 +66,53 @@ function wb_subsys2bb_knit()
     %and so we must delete them all each time we make changes here.
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     updatedataprts();
-    if ~use_separate
-        numPrtIndexToDelete = length(in_dat);
-    else
-        numPrtIndexToDelete = length(in_re);
+    
+    function numPrt2delete = prts2delete(use_separate)
+        if ~use_separate
+            numPrt2delete = length(in_dat);
+        else
+            numPrt2delete = length(in_re);
+        end
     end
     
-    for i=0:numPrtIndexToDelete-1
-           %in_ports
-           if(~use_separate)
-               %delete required data ports
-               inport_dat = inprts(in_dat(end-i));
-               inport_dat_lh = get_param(inport_dat{1},'LineHandles');
-               delete_line(inport_dat_lh.Outport(1));
-               delete_block(inport_dat{1});
-               
-               outport_dat = outprts(out_dat(end-i));
-               outprt_dat_lh = get_param(outport_dat{1},'LineHandles');
-               delete_line(outprt_dat_lh.Inport(1));
-               delete_block(outport_dat{1});
-           else
-               %delete required re/im ports
-               inport_im = inprts(in_im(end-i));
-               inport_im_lh = get_param(inport_im{1},'LineHandles');
-               delete_line(inport_im_lh.Outport(1));
-               delete_block(inport_im{1});
-
-               inport_re = inprts(in_re(end-i));
-               inport_re_lh = get_param(inport_re{1},'LineHandles');
-               delete_line(inport_re_lh.Outport(1));
-               delete_block(inport_re{1});
-               
-               outport_im = outprts(out_im(end-i));
-               outprt_im_lh = get_param(outport_im{1},'LineHandles');
-               delete_line(outprt_im_lh.Inport(1));
-               delete_block(outport_im{1});
-
-               outport_re = outprts(out_re(end-i));
-               outprt_re_lh = get_param(outport_re{1},'LineHandles');
-               delete_line(outprt_re_lh.Inport(1));
-               delete_block(outport_re{1});
-           end
+    function deleteDatImPrts(use_separate)
+        numPrt2delete=prts2delete(use_separate);
+        for k=0:numPrt2delete-1
+            %in_ports
+            if(~use_separate)
+                %delete required data ports
+                inport_dat = inprts(in_dat(end-k));
+                inport_dat_lh = get_param(inport_dat{1},'LineHandles');
+                delete_line(inport_dat_lh.Outport(1));
+                delete_block(inport_dat{1});
+                
+                outport_dat = outprts(out_dat(end-k));
+                outprt_dat_lh = get_param(outport_dat{1},'LineHandles');
+                delete_line(outprt_dat_lh.Inport(1));
+                delete_block(outport_dat{1});
+            else
+                %delete required re/im ports
+                inport_im = inprts(in_im(end-k));
+                inport_im_lh = get_param(inport_im{1},'LineHandles');
+                delete_line(inport_im_lh.Outport(1));
+                delete_block(inport_im{1});
+                
+                inport_re = inprts(in_re(end-k));
+                inport_re_lh = get_param(inport_re{1},'LineHandles');
+                delete_line(inport_re_lh.Outport(1));
+                delete_block(inport_re{1});
+                
+                outport_im = outprts(out_im(end-k));
+                outprt_im_lh = get_param(outport_im{1},'LineHandles');
+                delete_line(outprt_im_lh.Inport(1));
+                delete_block(outport_im{1});
+                
+                outport_re = outprts(out_re(end-k));
+                outprt_re_lh = get_param(outport_re{1},'LineHandles');
+                delete_line(outprt_re_lh.Inport(1));
+                delete_block(outport_re{1});
+            end
+        end
     end
     
     updateotherprts();
@@ -186,8 +192,10 @@ function wb_subsys2bb_knit()
     elseif(xtra_dat_sigs && (isempty(in_bsn) == 1))
         fprintf('case 3 xtra_dat_sigs = %d, isempty = %d\n',xtra_dat_sigs,isempty(in_bsn));
         bbports=get_param(wb_fft_bb,'PortHandles');
-        %create signals
+        %Delete ports so Simulink cannot complain.
+        deleteDatImPrts(use_separate);
         
+        %create signals
         %in ports
         in_bsn_str = sprintf([subsysblk '/in_bsn']);
         add_block('simulink/Commonly Used Blocks/In1',in_bsn_str);

@@ -431,7 +431,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../wrappers/simulink/wideband_fft_top.vhd">
+      <File Path="$PPRDIR/../../wrappers/simulink/hdl_library_wb_fft_top.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
