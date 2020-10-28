@@ -167,12 +167,6 @@ function wideband_fft_top_config(this_block)
       this_block.setError('Input data type for port "in_sync" must have width=1.');
     end
     in_sync_port.useHDLVector(false);
-    
-    %input bsn
-    if xtra_dat_sigs
-        in_bsn_port.useHDLVector(true);
-        in_bsn_port.setWidth(dp_stream_bsn);
-    end
 
     %input valid
     if (in_valid_port.width ~= 1)
@@ -180,59 +174,58 @@ function wideband_fft_top_config(this_block)
     end
     in_valid_port.useHDLVector(false);
 
+
+    if xtra_dat_sigs
+
+    %input bsn
+      in_bsn_port.useHDLVector(true);
+      in_bsn_port.setWidth(dp_stream_bsn);
+
     %input sop
-    if (in_sop_port.width ~= 1 && xtra_dat_sigs)
-      this_block.setError('Input data type for port "in_sop" must have width=1.');
-    end
-    in_sop_port.useHDLVector(false);
+      if (in_sop_port.width ~= 1)
+        this_block.setError('Input data type for port "in_sop" must have width=1.');
+      end
+      in_sop_port.useHDLVector(false);
 
-    %input eop
-    if (in_eop_port.width ~= 1 && xtra_dat_sigs)
-      this_block.setError('Input data type for port "in_eop" must have width=1.');
-    end
-    in_eop_port.useHDLVector(false);
+      %input eop
+      if (in_eop_port.width ~= 1)
+        this_block.setError('Input data type for port "in_eop" must have width=1.');
+      end
+      in_eop_port.useHDLVector(false);
 
-    %input empty
-    if xtra_dat_sigs
-        in_empty_port.useHDLVector(true);
-        in_empty_port.setWidth(dp_stream_empty);
-    end
-    
-    %input error
-    if xtra_dat_sigs
-        in_err_port.useHDLVector(true);
-        in_err_port.setWidth(dp_stream_error);
-    end
-    
-    %input channel
-    if xtra_dat_sigs
-        in_channel_port.useHDLVector(true);
-        in_channel_port.setWidth(dp_stream_channel);
-    end
-    
-    %output bsn
-    if xtra_dat_sigs
-        out_bsn_port.useHDLVector(true);
-        out_bsn_port.setWidth(dp_stream_bsn);
-    end
-    
-    %output empty
-    if xtra_dat_sigs
-        out_empty_port.useHDLVector(true);
-        out_empty_port.setWidth(dp_stream_empty);
-    end
-    
-    %output error
-    if xtra_dat_sigs
-        out_err_port.useHDLVector(true);
-        out_err_port.setWidth(dp_stream_error);
-    end
-    
-    %output channel
-    if xtra_dat_sigs    
-        out_channel_port.useHDLVector(true);
-        out_channel_port.setWidth(dp_stream_channel);
-    end
+      %input empty
+      in_empty_port.useHDLVector(true);
+      in_empty_port.setWidth(dp_stream_empty);
+      
+      %input error
+      in_err_port.useHDLVector(true);
+      in_err_port.setWidth(dp_stream_error);
+
+      
+      %input channel
+      in_channel_port.useHDLVector(true);
+      in_channel_port.setWidth(dp_stream_channel);
+
+      
+      %output bsn
+      out_bsn_port.useHDLVector(true);
+      out_bsn_port.setWidth(dp_stream_bsn);
+
+      
+      %output empty
+      out_empty_port.useHDLVector(true);
+      out_empty_port.setWidth(dp_stream_empty);
+
+      
+      %output error
+      out_err_port.useHDLVector(true);
+      out_err_port.setWidth(dp_stream_error);
+      
+      %output channel
+      out_channel_port.useHDLVector(true);
+      out_channel_port.setWidth(dp_stream_channel);
+  end
+
     %input/output im, re and data
     for j=0:wb_factor-1
         if use_separate
@@ -241,14 +234,14 @@ function wideband_fft_top_config(this_block)
             this_block.port(sprintf('in_re_%d',j)).useHDLVector(true);
             this_block.port(sprintf('in_re_%d',j)).setWidth(str2double(i_d_w));
             this_block.port(sprintf('out_im_%d',j)).useHDLVector(true);
-            this_block.port(sprintf('out_im_%d',j)).setWidth(str2double(i_d_w));
+            this_block.port(sprintf('out_im_%d',j)).setWidth(str2double(o_d_w));
             this_block.port(sprintf('out_re_%d',j)).useHDLVector(true);
-            this_block.port(sprintf('out_re_%d',j)).setWidth(str2double(i_d_w));
+            this_block.port(sprintf('out_re_%d',j)).setWidth(str2double(o_d_w));
         elseif ~use_separate
             this_block.port(sprintf('in_data_%d',j)).useHDLVector(true);
-            this_block.port(sprintf('in_data_%d',j)).setWidth(str2double(2*i_d_w));
+            this_block.port(sprintf('in_data_%d',j)).setWidth(2*str2double(i_d_w));
             this_block.port(sprintf('out_data_%d',j)).useHDLVector(true);
-            this_block.port(sprintf('out_data_%d',j)).setWidth(str2double(2*i_d_w));
+            this_block.port(sprintf('out_data_%d',j)).setWidth(2*str2double(o_d_w));
         end
     end
   end  % if(inputTypesKnown)
@@ -320,24 +313,24 @@ this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vh
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
-this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'casper_dp_pkg_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_pkg.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'dp_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_pkg.vhd'],'wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'casper_wb_fft_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'casper_wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBFStage.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWeights.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFStage.vhd'],'r2sdf_fft_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'casper_wb_fft_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'casper_wb_fft_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_pipe.vhd'],'casper_wb_fft_no_ss_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_sepa_wide.vhd'],'casper_wb_fft_no_ss_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_wide.vhd'],'casper_wb_fft_no_ss_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit_control.vhd'],'casper_wb_fft_no_ss_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit.vhd'],'casper_wb_fft_no_ss_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_pipe.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_sepa_wide.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_r2_wide.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit_control.vhd'],'wb_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_fft_no_ss/fft_wide_unit.vhd'],'wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_3dsp.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_4dsp.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'],'casper_fifo_lib');
