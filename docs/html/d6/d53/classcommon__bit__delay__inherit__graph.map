@@ -1,7 +1,0 @@
-<map id="common_bit_delay" name="common_bit_delay">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,139,33"/>
-<area shape="rect" id="node2" href="$dd/dc9/classrTwoBFStage.html" title=" " alt="" coords="21,81,123,109"/>
-<area shape="rect" id="node3" href="$d3/da3/classrTwoSDFStage.html" title=" " alt="" coords="16,157,128,185"/>
-<area shape="rect" id="node4" href="$da/d05/classrTwoSDF.html" title=" " alt="" coords="33,233,111,261"/>
-<area shape="rect" id="node5" href="$d0/d99/classtb__rTwoSDF.html" title=" " alt="" coords="24,309,120,337"/>
-</map>
