@@ -1,8 +1,0 @@
-<map id="rTwoBFStage" name="rTwoBFStage">
-<area shape="rect" id="node1" title=" " alt="" coords="215,157,318,185"/>
-<area shape="rect" id="node2" href="$dc/d77/classrTwoBF.html" title="digraph rTwoBF { 	rankdir=&quot;LR&quot;; &#160;node [shape=box, fontname=Helvetica, fontsize=12,..." alt="" coords="27,81,111,109"/>
-<area shape="rect" id="node3" href="$d6/ddb/classcommon__delay.html" title=" " alt="" coords="5,5,133,33"/>
-<area shape="rect" id="node4" href="$d5/dd7/classcommon__bit__delay.html" title=" " alt="" coords="136,81,285,109"/>
-<area shape="rect" id="node5" href="$d3/d5d/classcommon__pipeline.html" title=" " alt="" coords="318,5,444,33"/>
-<area shape="rect" id="node6" href="$d5/dc5/classcommon__pipeline__sl.html" title=" " alt="" coords="360,81,520,109"/>
-</map>

@@ -1,20 +1,21 @@
-.. CASPER HDL R2SDF pipelined FFT documentation master file, created by
-   sphinx-quickstart on Fri May  1 12:37:37 2020.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+CASPER's DSP Development Documentation
+======================================
 
-Welcome to CASPER HDL R2SDF pipelined FFT's documentation!
-==========================================================
-   
+Contained herein is the documentation for the HDL IP cores maintained by the CASPER community.
+These may be pulled into mlib_devel toolflow by pointing the HDL_DSP_DEVEL_PATH environment variable to the cloned casper_dspdevel repository. 
+
+IP Cores:
+---------
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 4
 
-.. doxygenindex:: common_add_sub
-   :project: common_add_sub
-   :path: /home/talon/Documents/CASPERWORK/CASPERFFT/docs/xml/
-   :outline:
-   :no-link:
+   wideband_fft
+   r2sdf_fft
+   
 
+Indices and tables
+==================
 
-
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
