@@ -51,7 +51,7 @@ jobs:
       - name: Commit report
         run: |
           git add -f ./casper_adder/casper_adder_report.xml
-          git config --global user.name 'RocketRoss Action'
-          git config --global user.email 'rocketross@users.noreply.github.com'
+          git config --global user.name 'TalonMyburgh Action'
+          git config --global user.email 'talonmyburgh@users.noreply.github.com'
           git commit -am "VUnit Test Reports"
           git push
