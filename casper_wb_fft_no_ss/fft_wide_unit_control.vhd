@@ -72,7 +72,7 @@ architecture rtl of fft_wide_unit_control is
 	type reg_type is record
 		out_sosi_arr   : t_dp_sosi_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- Register that holds the streaming interface          
 		in_re_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the real data 
-		in_im_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the imag data  
+		in_im_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the imag data
 		val_dly        : std_logic_vector(c_pipe_ctrl - 1 downto 0); -- Delay-register for the valid signal
 		sop_dly        : std_logic_vector(c_pipe_ctrl - 1 downto 0); -- Delay-register for the sop signal
 		eop_dly        : std_logic_vector(c_pipe_ctrl - 1 downto 0); -- Delay-register for the eop signal
@@ -218,7 +218,10 @@ begin
 			v.out_sosi_arr(I).bsn   := bsn; -- The bsn is read from the FIFO
 			v.out_sosi_arr(I).err   := err; -- The err is read from the FIFO
 			v.out_sosi_arr(I).re    := RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in 
-			v.out_sosi_arr(I).im    := RESIZE_SVEC(r.in_im_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in 
+			v.out_sosi_arr(I).im    := RESIZE_SVEC(r.in_im_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in
+			if (g_fft.use_separate /= true) then
+				v.out_sosi_arr(I).data  :=  RESIZE_SVEC((r.in_re_arr2_dly(c_pipe_data -1)(I) & (r.in_im_arr2_dly(c_pipe_data - 1)(I)),c_dp_stream_dsp_data_w)
+			end if;
 		end loop;
 
 		if (ctrl_sosi.sync = '1') then  -- Check which bsn accompanies the sync
