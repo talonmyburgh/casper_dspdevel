@@ -220,7 +220,7 @@ begin
 			v.out_sosi_arr(I).re    := RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in 
 			v.out_sosi_arr(I).im    := RESIZE_SVEC(r.in_im_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in
 			if (g_fft.use_separate /= true) then
-				v.out_sosi_arr(I).data  :=  RESIZE_SVEC((r.in_re_arr2_dly(c_pipe_data -1)(I) & (r.in_im_arr2_dly(c_pipe_data - 1)(I)),c_dp_stream_dsp_data_w)
+				v.out_sosi_arr(I).data  :=  RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data -1)(I) & r.in_im_arr2_dly(c_pipe_data - 1)(I),c_dp_stream_dsp_data_w);
 			end if;
 		end loop;
 
