@@ -101,15 +101,15 @@ begin
 
 	gen_prep_fft_data : for I in 0 to g_fft.wb_factor - 1 generate
 		-- Here we process 2 real streams. use_reorder must be true and use_fft_shift must be false.	
-		gen_prep_fft_data_real: if (g_fft.use_separate == true) generate
+		gen_prep_fft_data_real: if (g_fft.use_separate = true) generate
 			fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0), fft_in_re_arr(I)'length);
 			fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0), fft_in_im_arr(I)'length);
 		end generate gen_prep_fft_data_real;
 		-- Here we process complex data which is just the real concattenated with the imag. If use_fft_shift is true then 
 		-- use_reorder must be true too.
 		gen_prep_fft_data_cmplx: if (g_fft.use_separate /= true) generate
-			fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).dat(g_fft.in_dat_w - 1 downto g_fft.in_dat_w/2), fft_in_re_arr(I)'length);
-			fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).dat(g_fft.in_dat_w/2 - 1 downto 0), fft_in_im_arr(I)'length);
+			fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).data(g_fft.in_dat_w - 1 downto g_fft.in_dat_w/2), fft_in_re_arr(I)'length);
+			fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).data(g_fft.in_dat_w/2 - 1 downto 0), fft_in_im_arr(I)'length);
 		end generate gen_prep_fft_data_cmplx;
 	end generate;
 
