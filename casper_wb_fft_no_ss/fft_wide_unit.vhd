@@ -75,7 +75,7 @@ begin
 	---------------------------------------------------------------
 	-- INPUT REGISTER FOR THE SOSI ARRAY
 	---------------------------------------------------------------
-	-- The complete input sosi arry is registered. 
+	-- The complete input sosi array is registered. 
 	comb : process(r, in_sosi_arr)
 		variable v : reg_type;
 	begin
@@ -96,9 +96,16 @@ begin
 	---------------------------------------------------------------
 	-- Extract the data from the in_sosi_arr records and resize it 
 	-- to fit the format of the fft_r2_wide unit. 
+
 	gen_prep_fft_data : for I in 0 to g_fft.wb_factor - 1 generate
-		fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0), fft_in_re_arr(I)'length);
-		fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0), fft_in_im_arr(I)'length);
+		gen_prep_fft_data_real: if (g_fft.use_separate == true) generate
+			fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0), fft_in_re_arr(I)'length);
+			fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0), fft_in_im_arr(I)'length);
+		end generate gen_prep_fft_data_real;
+		gen_prep_fft_data_cmplx: if (g_fft.use_separate /= true) generate
+			fft_in_re_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0), fft_in_re_arr(I)'length);
+			fft_in_im_arr(I) <= RESIZE_SVEC(r.in_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0), fft_in_im_arr(I)'length);
+		end generate gen_prep_fft_data_cmplx;
 	end generate;
 
 	---------------------------------------------------------------

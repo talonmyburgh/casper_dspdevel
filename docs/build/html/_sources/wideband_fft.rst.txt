@@ -7,11 +7,6 @@ This FFT was originally sourced from ASTRON via OpenCores. It performs an N-Poin
 parallel. This FFT specifically suits applications where the sample clock is higher than the DSP processing clock. For each output stream a subband statistic
 unit is included which can be read via the memory mapped interface.
 
-This unit connects an incoming array of streaming interfaces to the wideband fft. The output of the wideband fft is 
-connected to a set of subband statistics units. The statistics can be read via the memory mapped interface (TODO). 
-A control unit takes care of the correct composition of the output streams(sop,eop,sync,bsn,err). These signals are 
-optional and can be removed to only use the sync signal.
-
 Module Overview:
 ----------------
 An overview of the fft_wide unit is shown in Figure 1. The fft_wide unit calculates a N-point FFT and has P
