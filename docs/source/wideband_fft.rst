@@ -1,8 +1,10 @@
+############
 Wideband FFT
-=============
+############
 
+********
 Purpose:
---------
+********
 This FFT was originally sourced from ASTRON via OpenCores. It performs an N-Point Wideband FFT on data that is partly applied in serial and partly applied in
 parallel. This FFT specifically suits applications where the sample clock is higher than the DSP processing clock. For each output stream a subband statistic
 unit is included which can be read via the memory mapped interface.
@@ -12,8 +14,12 @@ connected to a set of subband statistics units. The statistics can be read via t
 A control unit takes care of the correct composition of the output streams(sop,eop,sync,bsn,err). These signals are 
 optional and can be removed to only use the sync signal.
 
+This unit only handles one sync at a time. Therefore the sync interval should be larger than the total
+pipeline stages of the wideband FFT.
+
+****************
 Module Overview:
-----------------
+****************
 An overview of the fft_wide unit is shown in Figure 1. The fft_wide unit calculates a N-point FFT and has P
 number of input streams. Data of each input is offered to a M-point pipelined FFT, where M=N/P. The output
 of all pipelined FFTs is then connected to a P-point parallel FFT that performs the final stage of the wideband
@@ -26,16 +32,12 @@ The rTwoSDF pipelined FFT (see :ref:`r2sdf_fft`) design is used as building bloc
   :align: center
   :figclass: align-center
 
-Figure 1: FFT Wideband Unit Overview
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
+*******************
 Firmware Interface:
--------------------
+*******************
 
 Clock Domains
-~~~~~~~~~~~~~
+=============
 There are two clock domains used in the fft_wide unit: the mm_clk and the dp_clk domain. Figure 2 shows
 an overview of the clock domains in the fft_wide unit. The only unit that is connected to both clock domains is
 the memory of the subband statistics module. This memory is a dual ported ram that holds the results of the
@@ -49,8 +51,63 @@ subband statistics. Table 1 lists both clocks and their characteristics.
 | MM_CLK | 125 MHz        | Clock for mm interface |
 +--------+----------------+------------------------+
 
+=================
+Interface signals
+=================
+
+--------------
+Complex input:
+--------------
+For complex input use_separate = false.
+When use_reorder=true then the output bins of the FFT are re-ordered to 
+undo the bit-reversed (or bit-flipped) default radix 2 FFT output order.
+The fft_r2_wide then outputs first 0 Hz and the positive frequencies
+and then the negative frequencies. The use_reorder is performed at both
+the pipelined stage and the parallel stage.
+
+When use_fft_shift=true then the fft_r2_wide then outputs the frequency
+bins in incrementing order, so first the negative frequencies, then 0 Hz
+and then the positive frequencies.
+When use_fft_shift = true then also use_reorder must be true.
+
+----------------
+Two Real inputs:
+----------------
+When use_separate=true then the fft_r2_wide can be used to process two
+real streams. The first real stream (A) presented on the real input, the
+second real stream (B) presented on the imaginary input. The separation
+unit outputs the spectrum of A and B in an alternating way.
+When use_separate = true then also use_reorder must be true.
+When use_separate = true then the use_fft_shift must be false, because
+fft_shift() only applies to spectra for complex input.
+
+--------
+Remarks:
+--------
+This FFT supports a wb_factor = 1 (= only a fft_r2_pipe
+instance) or wb_factor = g_fft.nof_points (= only a fft_r2_par instance).
+Care must be taken to properly account for guard_w and out_gain_w,
+therefore it is best to simply use a structural approach that generates
+seperate instances for each case:
+
+* wb_factor = 1                                  --> pipelined FFT
+* wb_factor > 1 AND wb_factor < g_fft.nof_points --> wideband FFT
+* wb_factor = g_fft.nof_points                   --> parallel FFT
+
+This FFT uses the use_reorder in the pipeline FFT, in the parallel
+FFT and also has reorder memory in the fft_sepa_wide instance. The reorder
+memories in the FFTs can maybe be saved by using only the reorder memory
+in the fft_sepa_wide instance. This would require changing the indexing in
+fft_sepa_wide instance (TODO).
+
+The reorder memory in the pipeline FFT, parallel FFT and in the
+fft_sepa_wide could make reuse of a reorder component from the reorder
+library instead of using a dedicated local solution (TODO).
+
+**********
 Parameters
-~~~~~~~~~~
+**********
+
 +----------------+---------+-------+----------------------------------------------------------------+
 | Generic        | Type    | Value | Description                                                    |
 +================+=========+=======+================================================================+

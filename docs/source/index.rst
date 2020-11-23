@@ -7,7 +7,7 @@ These may be pulled into mlib_devel toolflow by pointing the HDL_DSP_DEVEL_PATH 
 IP Cores:
 ---------
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    wideband_fft
    r2sdf_fft
