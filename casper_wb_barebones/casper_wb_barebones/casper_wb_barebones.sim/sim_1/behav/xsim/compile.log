@@ -1,0 +1,98 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/casper_wb_fft_no_ss/casper_wb_fft_no_ss.sim/sim_1/behav/xsim/glbl.v" into library wb_fft_lib
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_pkg/common_pkg.vhd" into library common_pkg_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_pipeline.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_pipeline'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_adder/casper_common_add_sub.vhd" into library casper_adder_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_add_sub'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_async.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_async'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_areset.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_areset'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_bit_delay.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_bit_delay'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_pipeline_sl.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_pipeline_sl'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/tech_mult_component.vhd" into library casper_multiplier_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd" into library casper_multiplier_lib
+INFO: [VRFC 10-3107] analyzing entity 'tech_complex_mult'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/common_complex_mult.vhd" into library casper_multiplier_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_complex_mult'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_counter/common_counter.vhd" into library casper_counter_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_counter'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_components/common_delay.vhd" into library common_components_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_delay'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/common_rl_decrease.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_rl_decrease'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/common_fifo_rd.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_fifo_rd'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/tech_fifo_component_pkg.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/tech_fifo_sc.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'tech_fifo_sc'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/common_fifo_sc.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_fifo_sc'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/common_ram_pkg.vhd" into library casper_ram_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/tech_memory_component_pkg.vhd" into library casper_ram_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/tech_memory_ram_crw_crw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'tech_memory_ram_crw_crw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/tech_memory_ram_cr_cw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'tech_memory_ram_cr_cw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/common_ram_crw_crw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_ram_crw_crw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/common_paged_ram_crw_crw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_paged_ram_crw_crw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/common_paged_ram_rw_rw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_paged_ram_rw_rw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/common_paged_ram_r_w.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_paged_ram_r_w'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_requantize/common_round.vhd" into library casper_requantize_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_round'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_requantize/common_resize.vhd" into library casper_requantize_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_resize'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_requantize/common_requantize.vhd" into library casper_requantize_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_requantize'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/common_pkg/common_str_pkg.vhd" into library common_pkg_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplexer/common_zip.vhd" into library casper_multiplexer_lib
+INFO: [VRFC 10-3107] analyzing entity 'common_zip'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_dp_pkg/dp_stream_pkg.vhd" into library dp_pkg_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft/fft_pkg.vhd" into library wb_fft_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/twiddlesPkg.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoSDFPkg.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoBF.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'rTwoBF'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoWMul.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'rTwoWMul'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft/fft_r2_bf_par.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_r2_bf_par'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft/fft_r2_par.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_r2_par'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoBFStage.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'rTwoBFStage'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoWeights.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'rTwoWeights'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoSDFStage.vhd" into library r2sdf_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'rTwoSDFStage'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft/fft_sepa.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_sepa'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft/fft_reorder_sepa_pipe.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_reorder_sepa_pipe'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/fft_r2_pipe.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_r2_pipe'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/fft_sepa_wide.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_sepa_wide'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/fft_r2_wide.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_r2_wide'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/fft_wide_unit_control.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_wide_unit_control'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/ip_cmult_rtl_3dsp.vhd" into library casper_multiplier_lib
+INFO: [VRFC 10-3107] analyzing entity 'ip_cmult_rtl_3dsp'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/ip_cmult_rtl_4dsp.vhd" into library casper_multiplier_lib
+INFO: [VRFC 10-3107] analyzing entity 'ip_cmult_rtl_4dsp'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_fifo/ip_xilinx_fifo_sc.vhd" into library casper_fifo_lib
+INFO: [VRFC 10-3107] analyzing entity 'ip_xilinx_fifo_sc'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/ip_xpm_ram_cr_cw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'ip_xpm_ram_cr_cw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_ram/ip_xpm_ram_crw_crw.vhd" into library casper_ram_lib
+INFO: [VRFC 10-3107] analyzing entity 'ip_xpm_ram_crw_crw'
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/mybur/Work/casper_dspdevel/casper_wb_fft_no_ss/fft_wide_unit.vhd" into library wb_fft_lib
+INFO: [VRFC 10-3107] analyzing entity 'fft_wide_unit'

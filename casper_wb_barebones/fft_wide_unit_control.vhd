@@ -41,7 +41,7 @@ use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
 use casper_ram_lib.common_ram_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
-use work.fft_pkg.ALL;
+use work.fft_gnrcs_intrfcs_pkg.ALL;
 
 entity fft_wide_unit_control is
 	generic(
@@ -219,6 +219,9 @@ begin
 			v.out_sosi_arr(I).err   := err; -- The err is read from the FIFO
 			v.out_sosi_arr(I).re    := RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in 
 			v.out_sosi_arr(I).im    := RESIZE_SVEC(r.in_im_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in
+			if (g_fft.use_separate /= true) then
+				v.out_sosi_arr(I).data  :=  RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data -1)(I) & r.in_im_arr2_dly(c_pipe_data - 1)(I),c_dp_stream_dsp_data_w);
+			end if;
 		end loop;
 
 		if (ctrl_sosi.sync = '1') then  -- Check which bsn accompanies the sync
