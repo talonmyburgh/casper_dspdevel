@@ -119,11 +119,10 @@ function wb_subsys2bb_knit()
     
     if(xtra_dat_sigs && (isempty(in_bsn) == 0))
         %do nothing
-        fprintf('case 1 xtra_dat_sigs = %d, isempty = %d\n',xtra_dat_sigs,isempty(in_bsn));
+        
     %In this case, we don't want extra data signals but they are present 
     %in the design   
     elseif(~xtra_dat_sigs && (isempty(in_bsn) ==0))
-        fprintf('case 2 xtra_dat_sigs = %d, isempty = %d\n',xtra_dat_sigs,isempty(in_bsn));
         %In this case, we don't want extra signals but they are present in
         %the design.
         %delete signals 
@@ -190,7 +189,6 @@ function wb_subsys2bb_knit()
     %In this case, we want extra signals but they are not present in the
     %design
     elseif(xtra_dat_sigs && (isempty(in_bsn) == 1))
-        fprintf('case 3 xtra_dat_sigs = %d, isempty = %d\n',xtra_dat_sigs,isempty(in_bsn));
         bbports=get_param(wb_fft_bb,'PortHandles');
         %Delete ports so Simulink cannot complain.
         deleteDatImPrts(use_separate);
@@ -260,7 +258,6 @@ function wb_subsys2bb_knit()
     
     %In this case, we don't want extra signals and they are are not present    
     else
-        fprintf('case 4 xtra_dat_sigs = %d, isempty = %d\n',xtra_dat_sigs,isempty(in_bsn));
         %do nothing
     end
     
@@ -402,7 +399,6 @@ function wb_subsys2bb_knit()
         for i=curr_prts:wb_factor-1
            %add inports/outports and set names to match bb
            if (~use_separate)
-               fprintf("case 1: iphi=%d, ophi=%d and currprts =%d\n",i_p_h_i,o_p_h_i,curr_prts);
                in_dat_str_n = sprintf([subsysblk '/in_data_%d'],i);
                add_block('simulink/Commonly Used Blocks/In1',in_dat_str_n);
                in_dat_ph = get_param(in_dat_str_n,'PortHandles');
@@ -416,7 +412,6 @@ function wb_subsys2bb_knit()
                o_p_h_i = o_p_h_i+1;
                
            elseif(use_separate)
-               fprintf("case 2: iphi=%d, ophi=%d and currprts =%d\n",i_p_h_i,o_p_h_i,curr_prts);
                in_im_str_n = sprintf([subsysblk '/in_im_%d'],i);
                add_block('simulink/Commonly Used Blocks/In1',in_im_str_n);
                in_im_ph = get_param(in_im_str_n,'PortHandles');
