@@ -5,18 +5,22 @@ USE common_pkg_lib.common_pkg.ALL;
 
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
-
+  
+  CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
+  CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;  --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
+  CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
+  CONSTANT c_dp_stream_error_w    : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping error numbers, e.g. 32 different one-hot encoded errors, bit [0] = 0 = OK 
   CONSTANT use_reorder    : boolean := false;       -- = false for bit-reversed output, true for normal output
   CONSTANT use_fft_shift  : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-  CONSTANT use_separate   : boolean := false;       -- = false for complex input, true for two real inputs
+  CONSTANT use_separate   : boolean := true;       -- = false for complex input, true for two real inputs
   CONSTANT nof_chan       : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
-  CONSTANT wb_factor      : natural := 1;       -- = default 1, wideband factor
+  CONSTANT wb_factor      : natural := 4;       -- = default 1, wideband factor
   CONSTANT twiddle_offset : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
   CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
   CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
-  CONSTANT out_dat_w      : natural :=10;       -- = 13, number of output bits
+  CONSTANT out_dat_w      : natural :=14;       -- = 13, number of output bits
   CONSTANT out_gain_w     : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-  CONSTANT stage_dat_w    : natural :=12;       -- = 18, data width used between the stages(= DSP multiplier-width)
+  CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
   CONSTANT guard_w        : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
                                   --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
                                   --   12.3.2], therefore use input guard_w = 2.
@@ -52,22 +56,38 @@ PACKAGE fft_gnrcs_intrfcs_pkg Is
   type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
   type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(stage_dat_w-1 DOWNTO 0);
 	type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-  
+
   -- barebones t_dp_sosi record
   TYPE t_bb_sosi_in IS RECORD  -- Source Out or Sink In
-    sync     : STD_LOGIC;                                           -- ctrl
-    re       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0); -- data
-    im       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0); -- data
+    sync     : STD_LOGIC; 
+    bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                          -- ctrl
+    re       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);               -- data
+    im       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);               -- data
     valid    : STD_LOGIC;                                           -- ctrl
+    sop      : STD_LOGIC;                                           -- ctrl
+    eop      : STD_LOGIC;                                           -- ctrl
+    empty    : STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0);    -- info at eop
+    channel  : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);  -- info at sop
+    err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (name field 'err' to avoid the 'error' keyword)
   END RECORD;
 
-    -- barebones t_dp_sosi record
+  CONSTANT c_bb_sosi_rst_in : t_bb_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
+    
+  -- barebones t_dp_sosi record
   TYPE t_bb_sosi_out IS RECORD  -- Source Out or Sink In
-    sync     : STD_LOGIC;                                           -- ctrl
-    re       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0); -- data
-    im       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0); -- data
+    sync     : STD_LOGIC;   
+    bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                        -- ctrl
+    re       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);              -- data
+    im       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);              -- data
     valid    : STD_LOGIC;                                           -- ctrl
+    sop      : STD_LOGIC;                                           -- ctrl
+    eop      : STD_LOGIC;                                           -- ctrl
+    empty    : STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0);    -- info at eop
+    channel  : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);  -- info at sop
+    err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (name field 'err' to avoid the 'error' keyword)
   END RECORD;
+
+  CONSTANT c_bb_sosi_rst_out : t_bb_sosi_out := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
 
   TYPE t_bb_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_in;
   TYPE t_bb_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_out;
@@ -76,6 +96,7 @@ PACKAGE fft_gnrcs_intrfcs_pkg Is
 	function fft_shift(bin : std_logic_vector) return std_logic_vector;
 	function fft_shift(bin, w : natural) return natural;
 END fft_gnrcs_intrfcs_pkg;
+
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
 
   function fft_shift(bin : std_logic_vector) return std_logic_vector is

@@ -45,7 +45,7 @@ entity fft_wide_unit is
 	);
 	port(
 		clken           : in  std_logic := '1';
-		rst             : in  std_logic  := '0';
+		rst             : in  std_logic := '0';
 		clk             : in  std_logic := '1';
 		in_bb_sosi_arr      : in  t_bb_sosi_arr_in(g_fft.wb_factor -1 downto 0);
 		out_bb_sosi_arr     : out t_bb_sosi_arr_out(g_fft.wb_factor -1 downto 0)
