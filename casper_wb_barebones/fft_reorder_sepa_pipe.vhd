@@ -36,7 +36,7 @@ library ieee, common_pkg_lib, casper_counter_lib, casper_ram_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
-use work.fft_pkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_reorder_sepa_pipe is
 	generic(

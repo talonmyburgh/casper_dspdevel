@@ -35,12 +35,11 @@
 --              
 --
 
-library IEEE, common_pkg_lib, casper_ram_lib, casper_fifo_lib, dp_pkg_lib;
+library IEEE, common_pkg_lib, casper_ram_lib, casper_fifo_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
 use casper_ram_lib.common_ram_pkg.ALL;
-use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fft_gnrcs_intrfcs_pkg.ALL;
 
 entity fft_wide_unit_control is
@@ -51,11 +50,11 @@ entity fft_wide_unit_control is
 	port(
 		rst          : in  std_logic := '0';
 		clk          : in  std_logic;
-		in_re_arr    : in  t_fft_slv_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
-		in_im_arr    : in  t_fft_slv_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+		in_re_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+		in_im_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
 		in_val       : in  std_logic;
-		ctrl_sosi    : in  t_dp_sosi;   -- Inputrecord for tapping off the sync, bsn and err.              
-		out_sosi_arr : out t_dp_sosi_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
+		ctrl_sosi    : in  t_bb_sosi_in;   -- Inputrecord for tapping off the sync, bsn and err.              
+		out_sosi_arr : out t_bb_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
 	);
 end fft_wide_unit_control;
 
@@ -66,11 +65,11 @@ architecture rtl of fft_wide_unit_control is
 	constant c_packet_size     : natural := (2**g_fft.nof_chan) * g_fft.nof_points / g_fft.wb_factor; -- Definition of the packet size
 	constant c_ctrl_fifo_depth : natural := 16; -- Depth of the bsn and err fifo.  
 
-	type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+	type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
 	type state_type is (s_idle, s_run, s_hold);
 
 	type reg_type is record
-		out_sosi_arr   : t_dp_sosi_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- Register that holds the streaming interface          
+		out_sosi_arr   : t_bb_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- Register that holds the streaming interface          
 		in_re_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the real data 
 		in_im_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the imag data
 		val_dly        : std_logic_vector(c_pipe_ctrl - 1 downto 0); -- Delay-register for the valid signal
@@ -217,11 +216,8 @@ begin
 			v.out_sosi_arr(I).valid := r.val_dly(c_pipe_ctrl - 1); -- Assign the output of the shiftregisters to the "real" signals
 			v.out_sosi_arr(I).bsn   := bsn; -- The bsn is read from the FIFO
 			v.out_sosi_arr(I).err   := err; -- The err is read from the FIFO
-			v.out_sosi_arr(I).re    := RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in 
-			v.out_sosi_arr(I).im    := RESIZE_SVEC(r.in_im_arr2_dly(c_pipe_data - 1)(I), c_dp_stream_dsp_data_w); -- Data input is latched-in
-			if (g_fft.use_separate /= true) then
-				v.out_sosi_arr(I).data  :=  RESIZE_SVEC(r.in_re_arr2_dly(c_pipe_data -1)(I) & r.in_im_arr2_dly(c_pipe_data - 1)(I),c_dp_stream_dsp_data_w);
-			end if;
+			v.out_sosi_arr(I).re    := r.in_re_arr2_dly(c_pipe_data - 1)(I); -- Data input is latched-in 
+			v.out_sosi_arr(I).im    := r.in_im_arr2_dly(c_pipe_data - 1)(I); -- Data input is latched-in
 		end loop;
 
 		if (ctrl_sosi.sync = '1') then  -- Check which bsn accompanies the sync
@@ -268,7 +264,7 @@ begin
 		end case;
 
 		if (rst = '1') then
-			v.out_sosi_arr  := (others => c_dp_sosi_rst);
+			v.out_sosi_arr  := (others => c_bb_sosi_rst_out);
 			v.val_dly       := (others => '0');
 			v.sop_dly       := (others => '0');
 			v.eop_dly       := (others => '0');

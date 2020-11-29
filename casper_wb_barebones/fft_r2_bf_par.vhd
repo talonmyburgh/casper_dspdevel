@@ -33,7 +33,6 @@ use common_pkg_lib.common_pkg.all;
 use common_pkg_lib.common_str_pkg.all;
 use r2sdf_fft_lib.twiddlesPkg.all;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
-use work.fft_pkg.all;
 
 entity fft_r2_bf_par is
 	generic(
