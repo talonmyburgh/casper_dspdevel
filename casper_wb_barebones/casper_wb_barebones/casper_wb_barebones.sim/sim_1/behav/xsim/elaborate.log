@@ -1,6 +1,6 @@
 Vivado Simulator 2020.1.1
 Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
-Running: C:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto fa4620249d184c599ee2f837010916cb --incr --debug typical --relax --mt 2 -L common_pkg_lib -L common_components_lib -L casper_adder_lib -L casper_multiplier_lib -L casper_counter_lib -L casper_fifo_lib -L casper_ram_lib -L casper_requantize_lib -L casper_multiplexer_lib -L dp_pkg_lib -L wb_fft_lib -L r2sdf_fft_lib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot fft_wide_unit_behav wb_fft_lib.fft_wide_unit wb_fft_lib.glbl -log elaborate.log 
+Running: C:/Xilinx/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto da9415ca2ef24a008afeb622337b604c --incr --debug typical --relax --mt 2 -L common_pkg_lib -L common_components_lib -L casper_adder_lib -L casper_multiplier_lib -L casper_counter_lib -L casper_fifo_lib -L casper_ram_lib -L casper_requantize_lib -L casper_multiplexer_lib -L xil_defaultlib -L r2sdf_fft_lib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot fft_wide_unit_tb_behav xil_defaultlib.fft_wide_unit_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
@@ -14,10 +14,10 @@ Compiling package ieee.std_logic_1164
 Compiling package ieee.numeric_std
 Compiling package ieee.math_real
 Compiling package common_pkg_lib.common_pkg
-Compiling package casper_ram_lib.common_ram_pkg
-Compiling package dp_pkg_lib.dp_stream_pkg
+Compiling package xil_defaultlib.fft_gnrcs_intrfcs_pkg
 Compiling package r2sdf_fft_lib.rtwosdfpkg
-Compiling package wb_fft_lib.fft_pkg
+Compiling package std.env
+Compiling package casper_ram_lib.common_ram_pkg
 Compiling package r2sdf_fft_lib.twiddlespkg
 Compiling package casper_multiplier_lib.tech_mult_component_pkg
 Compiling package casper_ram_lib.tech_memory_component_pkg
@@ -26,7 +26,7 @@ Compiling package ieee.std_logic_textio
 Compiling package common_pkg_lib.common_str_pkg
 Compiling package casper_fifo_lib.tech_fifo_component_pkg
 Compiling package vl.vl_types
-Compiling module wb_fft_lib.glbl
+Compiling module xil_defaultlib.glbl
 Compiling architecture rtl of entity casper_counter_lib.common_counter [\common_counter(g_width=8)\]
 Compiling architecture rtl of entity common_components_lib.common_delay [\common_delay(g_dat_w=18,g_depth...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoBF [\rTwoBF(17,0)(17,0)(17,0)(17,0)\]
@@ -115,13 +115,13 @@ Compiling architecture str of entity casper_ram_lib.common_ram_crw_crw [\common_
 Compiling architecture rtl of entity casper_ram_lib.common_paged_ram_crw_crw [\common_paged_ram_crw_crw(g_str=...]
 Compiling architecture str of entity casper_ram_lib.common_paged_ram_rw_rw [\common_paged_ram_rw_rw(g_str="u...]
 Compiling architecture str of entity casper_ram_lib.common_paged_ram_r_w [\common_paged_ram_r_w(g_data_w=3...]
-Compiling architecture rtl of entity wb_fft_lib.fft_reorder_sepa_pipe [\fft_reorder_sepa_pipe(g_nof_poi...]
+Compiling architecture rtl of entity xil_defaultlib.fft_reorder_sepa_pipe [\fft_reorder_sepa_pipe(g_nof_poi...]
 Compiling architecture rtl of entity casper_requantize_lib.common_round [\common_round(g_pipeline_output=...]
 Compiling architecture rtl of entity casper_requantize_lib.common_resize [\common_resize(g_pipeline_output...]
 Compiling architecture str of entity casper_requantize_lib.common_requantize [\common_requantize(g_lsb_w=0,g_m...]
 Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_representatio...]
 Compiling architecture str of entity common_components_lib.common_pipeline_sl [\common_pipeline_sl(g_pipeline=0...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=8,g_twiddle...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage_offset=2,g...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=7,g_twiddle...]
@@ -138,7 +138,7 @@ Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_s
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=2,g_stage_...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=1,g_twiddle...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=1,g_stage_...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=8,g_twiddle...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage_offset=2,g...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=7,g_twiddle...]
@@ -155,7 +155,7 @@ Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_s
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=2,g_stage_...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=1,g_twiddle...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=1,g_stage_...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=8,g_stage_o...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage_offset=2,g...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=7,g_stage_o...]
@@ -172,28 +172,21 @@ Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_s
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=2,g_stage_...]
 Compiling architecture rtl of entity r2sdf_fft_lib.rTwoWeights [\rTwoWeights(g_stage=1,g_stage_o...]
 Compiling architecture str of entity r2sdf_fft_lib.rTwoSDFStage [\rTwoSDFStage(g_stage=1,g_stage_...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
-Compiling architecture rtl of entity casper_multiplexer_lib.common_zip [\common_zip(g_dat_w=36)\]
-Compiling architecture rtl of entity casper_requantize_lib.common_round [\common_round(g_pipeline_output=...]
-Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_in_dat_w=19,g...]
-Compiling architecture add_sub of entity casper_adder_lib.common_add_sub [\common_add_sub(g_in_dat_w=18,g_...]
-Compiling architecture add_sub of entity casper_adder_lib.common_add_sub [\common_add_sub(g_direction="SUB...]
-Compiling architecture rtl of entity wb_fft_lib.fft_sepa [\fft_sepa(35,0)(35,0)\]
-Compiling architecture rtl of entity wb_fft_lib.fft_sepa_wide [\fft_sepa_wide(g_fft=(true,false...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_pipe [\fft_r2_pipe(g_fft=(true,false,f...]
 Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_pipeline=0,g_...]
 Compiling architecture rtl of entity casper_requantize_lib.common_round [\common_round(g_pipeline_output=...]
 Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_pipeline=0,g_...]
 Compiling architecture rtl of entity casper_requantize_lib.common_resize [\common_resize(g_pipeline_output...]
 Compiling architecture str of entity casper_requantize_lib.common_requantize [\common_requantize(g_msb_clip=fa...]
 Compiling architecture rtl of entity common_components_lib.common_pipeline [\common_pipeline(g_pipeline=6,g_...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=2,g_eleme...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=2,g_scale...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=1,g_eleme...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=1,g_scale...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=2,g_eleme...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=2,g_scale...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=1,g_eleme...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_bf_par [\fft_r2_bf_par(g_stage=1,g_scale...]
 Compiling architecture rtl of entity casper_requantize_lib.common_round [\common_round(g_in_dat_w=18)(1,6...]
 Compiling architecture str of entity casper_requantize_lib.common_requantize [\common_requantize(g_lsb_w=0,g_m...]
-Compiling architecture str of entity wb_fft_lib.fft_r2_par [\fft_r2_par(g_fft=(true,false,fa...]
-Compiling architecture rtl of entity wb_fft_lib.fft_r2_wide [\fft_r2_wide(g_fft=(true,false,t...]
+Compiling architecture str of entity xil_defaultlib.fft_r2_par [\fft_r2_par(g_fft=(true,false,fa...]
+Compiling architecture rtl of entity xil_defaultlib.fft_r2_wide [\fft_r2_wide(g_fft=(true,false,f...]
 Compiling module xpm.xpm_fifo_rst_default
 Compiling module xpm.xpm_fifo_reg_bit
 Compiling module xpm.xpm_counter_updn(COUNTER_WIDTH=5...
@@ -214,6 +207,7 @@ Compiling architecture str of entity casper_fifo_lib.tech_fifo_sc [\tech_fifo_sc
 Compiling architecture str of entity casper_fifo_lib.common_fifo_sc [\common_fifo_sc(g_use_lut=true,g...]
 Compiling architecture rtl of entity casper_fifo_lib.common_rl_decrease [\common_rl_decrease(g_dat_w=64)\]
 Compiling architecture wrap of entity casper_fifo_lib.common_fifo_rd [\common_fifo_rd(g_dat_w=64)\]
-Compiling architecture rtl of entity wb_fft_lib.fft_wide_unit_control [\fft_wide_unit_control(g_fft=(tr...]
-Compiling architecture str of entity wb_fft_lib.fft_wide_unit
-Built simulation snapshot fft_wide_unit_behav
+Compiling architecture rtl of entity xil_defaultlib.fft_wide_unit_control [\fft_wide_unit_control(g_fft=(tr...]
+Compiling architecture str of entity xil_defaultlib.fft_wide_unit [\fft_wide_unit(g_fft=(true,false...]
+Compiling architecture sim of entity xil_defaultlib.fft_wide_unit_tb
+Built simulation snapshot fft_wide_unit_tb_behav

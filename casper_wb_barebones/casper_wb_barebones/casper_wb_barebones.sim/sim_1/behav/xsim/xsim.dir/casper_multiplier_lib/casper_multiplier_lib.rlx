@@ -1,0 +1,9 @@
+0.7
+2020.1.1
+Aug  5 2020
+23:19:43
+C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/common_complex_mult.vhd,1605702353,vhdl,C:/Users/mybur/Work/casper_dspdevel/r2sdf_fft/rTwoWMul.vhd,,,common_complex_mult,,,,,,,,
+C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/ip_cmult_rtl_3dsp.vhd,1605702353,vhdl,,,,ip_cmult_rtl_3dsp,,,,,,,,
+C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/ip_cmult_rtl_4dsp.vhd,1605702353,vhdl,,,,ip_cmult_rtl_4dsp,,,,,,,,
+C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd,1605702353,vhdl,C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/common_complex_mult.vhd,,,tech_complex_mult,,,,,,,,
+C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/tech_mult_component.vhd,1605702353,vhdl,C:/Users/mybur/Work/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd,,,tech_mult_component_pkg,,,,,,,,
