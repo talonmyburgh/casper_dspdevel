@@ -2,11 +2,11 @@
 # Vivado v2020.1.1 (64-bit)
 # SW Build 2960000 on Wed Aug  5 22:57:20 MDT 2020
 # IP Build 2956692 on Thu Aug  6 01:41:30 MDT 2020
-# Start of session at: Tue Nov 24 17:46:57 2020
-# Process ID: 1044
+# Start of session at: Mon Nov 30 17:18:30 2020
+# Process ID: 12772
 # Current directory: C:/Users/mybur/Work/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.runs/synth_1
-# Command line: vivado.exe -log fft_wide_unit.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source fft_wide_unit.tcl
-# Log file: C:/Users/mybur/Work/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.runs/synth_1/fft_wide_unit.vds
+# Command line: vivado.exe -log wideband_fft_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source wideband_fft_top.tcl
+# Log file: C:/Users/mybur/Work/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.runs/synth_1/wideband_fft_top.vds
 # Journal file: C:/Users/mybur/Work/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.runs/synth_1\vivado.jou
 #-----------------------------------------------------------
-source fft_wide_unit.tcl -notrace
+source wideband_fft_top.tcl -notrace

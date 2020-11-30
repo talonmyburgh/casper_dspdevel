@@ -2,7 +2,7 @@ import os
 import sys
 
 # launch vivado in tcl mode and execute tcl script to write out hierarchy to txt file
-vivcommand = 'vivado -mode batch -source getprojhierarchy.tcl -tclargs '+sys.argv[1]
+vivcommand = 'C:\Xilinx\Vivado\2020.1\bin\vivado.bat -mode batch -source getprojhierarchy.tcl -tclargs '+sys.argv[1]
 os.system(vivcommand)
 
 # open hierarchy txt file
@@ -44,6 +44,6 @@ with open(sys.argv[2], mode='w') as mlibfile:
     if lines:
         # writeout
         mlibfile.writelines(lines)
-os.system('rm ./tmp.txt')
-os.system('rm ./vivado*.jou')
-os.system('rm ./vivado*.log')
+os.system('rm .\tmp.txt')
+os.system('rm .\vivado*.jou')
+os.system('rm .\vivado*.log')

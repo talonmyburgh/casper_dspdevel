@@ -40,4 +40,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log fft_wide_unit.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source fft_wide_unit.tcl
+EAStep vivado -log wideband_fft_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source wideband_fft_top.tcl
