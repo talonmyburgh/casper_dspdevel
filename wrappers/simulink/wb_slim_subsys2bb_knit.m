@@ -1,7 +1,7 @@
 function wb_slim_subsys2bb_knit()
     %fetch wideband parameters to figure out which ports to draw
     subsysblk = gcb;
-    wb_fft_bb = [subsysblk '/wb_fft'];
+    wb_fft_bb = [subsysblk '/wb_fft_slim'];
     wb_factor = str2double(get_param(subsysblk,'wb_factor'));
     xtra_dat_sigs = checkbox2bool(get_param(subsysblk,'xtra_dat_sigs'));
     
@@ -66,8 +66,8 @@ function wb_slim_subsys2bb_knit()
             numPrt2delete = length(in_re);
     end
     
-    function deleteDatImPrts(use_separate)
-        numPrt2delete=prts2delete(use_separate);
+    function deleteDatImPrts()
+        numPrt2delete=prts2delete();
         for k=0:numPrt2delete-1
             %in_ports
             %delete required re/im ports
@@ -169,7 +169,7 @@ function wb_slim_subsys2bb_knit()
     elseif(xtra_dat_sigs && (isempty(in_bsn) == 1))
         bbports=get_param(wb_fft_bb,'PortHandles');
         %Delete ports so Simulink cannot complain.
-        deleteDatImPrts(use_separate);
+        deleteDatImPrts();
         
         %create signals
         %in ports
@@ -250,11 +250,8 @@ function wb_slim_subsys2bb_knit()
     
     %Adjust number of in/out ports depending on the wideband factor
     %specified.
-    if ~use_separate
-        curr_prts = length(in_dat);
-    else
-        curr_prts = length(in_re);
-    end
+    curr_prts = length(in_re);
+
     
     %Check if we have more in/out streams than wb_factor    
     if(curr_prts > wb_factor)

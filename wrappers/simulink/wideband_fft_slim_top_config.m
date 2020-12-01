@@ -11,7 +11,7 @@ function wideband_fft_slim_top_config(this_block)
 
   this_block.setTopLevelLanguage('VHDL');
 
-  this_block.setEntityName('wideband_fft_top');
+  this_block.setEntityName('wideband_fft_slim_top');
   wb_fft_blk = this_block.blockName;
   wb_fft_blk_parent = get_param(wb_fft_blk, 'Parent');
   
@@ -62,7 +62,7 @@ function wideband_fft_slim_top_config(this_block)
   
   
   %Update the vhdl top file with the required ports per wb_factor:
-  topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs);
+  topwb_slim_code_gen(wb_factor,xtra_dat_sigs);
 
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
@@ -311,7 +311,7 @@ this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_wide_unit.vhd'],'casper_wb_barebones_lib');
-this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_wb_fft_top.vhd'],'simulink_lib');
+this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_wb_fft_slim_top.vhd'],'simulink_lib');
 return;
 end
 % ------------------------------------------------------------
