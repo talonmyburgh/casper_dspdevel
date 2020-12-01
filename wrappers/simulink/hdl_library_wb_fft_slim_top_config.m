@@ -1,4 +1,3 @@
-
 function wideband_fft_top_config(this_block)
 
   % Revision History:

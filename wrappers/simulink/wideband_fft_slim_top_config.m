@@ -1,4 +1,4 @@
-function wideband_fft_slim_top_config(this_block)
+function wideband_fft_top_config(this_block)
 
   % Revision History:
   %
@@ -11,7 +11,7 @@ function wideband_fft_slim_top_config(this_block)
 
   this_block.setTopLevelLanguage('VHDL');
 
-  this_block.setEntityName('wideband_fft_slim_top');
+  this_block.setEntityName('wideband_fft_top');
   wb_fft_blk = this_block.blockName;
   wb_fft_blk_parent = get_param(wb_fft_blk, 'Parent');
   
@@ -217,7 +217,7 @@ function wideband_fft_slim_top_config(this_block)
       out_channel_port.setWidth(dp_stream_channel);
   end
 
-    %input/output im, re and data
+    %input/output im, re
     for j=0:wb_factor-1
       this_block.port(sprintf('in_im_%d',j)).useHDLVector(true);
       this_block.port(sprintf('in_im_%d',j)).setWidth(str2double(i_d_w));
