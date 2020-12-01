@@ -1,7 +1,7 @@
-function topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs)
+function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
     %gather all the string arrays required to write full file:
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
-    vhdlfile = filepath+"/"+bdroot+"_wb_fft_top.vhd";                         %filename for vhd file
+    vhdlfile = filepath+"/"+bdroot+"_wb_fft_slim_top.vhd";                         %filename for vhd file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec_w_xtra = ["library ieee, dp_pkg_lib, wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
@@ -13,23 +13,23 @@ function topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs)
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
 "entity wideband_fft_top is"
 "	generic("
-		"use_reorder    : boolean := True;       -- = false for bit-reversed output, true for normal output"
-		"use_fft_shift  : boolean := True;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
-		"use_separate   : boolean := True;       -- = false for complex input, true for two real inputs"
-		"nof_chan       : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan "
-		"wb_factor      : natural := 1;       -- = default 1, wideband factor"
-		"twiddle_offset : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
-		"nof_points     : natural := 1024;       -- = 1024, N point FFT"
-		"in_dat_w       : natural := 8;       -- = 8,  number of input bits"
-		"out_dat_w      : natural := 13;       -- = 13, number of output bits"
-		"out_gain_w     : natural := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
-		"stage_dat_w    : natural := 18;       -- = 18, data width used between the stages(= DSP multiplier-width)"
-		"guard_w        : natural := 2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
-		                                "--   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
-		                                "--   12.3.2], therefore use input guard_w = 2."
-		"guard_enable   : boolean := True       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
-		                                "--   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
-		                                "--   doing the input guard and par fft section doing the output compensation)"
+		"use_reorder    : boolean := use_reorder;       -- = false for bit-reversed output, true for normal output"
+		"use_fft_shift  : boolean := use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
+		"use_separate   : boolean := use_separate;       -- = false for complex input, true for two real inputs"
+		"nof_chan       : natural := nof_chan;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan "
+		"wb_factor      : natural := wb_factor;       -- = default 1, wideband factor"
+		"twiddle_offset : natural := twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
+		"nof_points     : natural := nof_points;       -- = 1024, N point FFT"
+		"in_dat_w       : natural := in_dat_w;       -- = 8,  number of input bits"
+		"out_dat_w      : natural := out_dat_w;       -- = 13, number of output bits"
+		"out_gain_w     : natural := out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
+		"stage_dat_w    : natural := stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)"
+		"guard_w        : natural := guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
+                                                "--   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
+                                                "--   12.3.2], therefore use input guard_w = 2."
+		"guard_enable   : boolean := guard_enable       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
+                                                "--   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
+                                                "--   doing the input guard and par fft section doing the output compensation)"
 	");"
 	"port("
 		"clk : in std_logic;"
@@ -90,7 +90,7 @@ function topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs)
         "out_valid : out std_logic;"];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     
-    portdec = join(mknprts(wb_factor,use_separate),'\n');                               %fetch port declarations
+    portdec = join(mknprts(wb_factor),'\n');                               %fetch port declarations
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     lnsafterarchopen_w_xtradat = [");"
@@ -169,7 +169,7 @@ function topwb_code_gen(wb_factor,use_separate,xtra_dat_sigs)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %create an array of lines from architecture opening till where 
     %we wish to insert signal mappings in architecture
-    archdec = join(mkarch(wb_factor,use_separate),'\n');
+    archdec = join(mkarch(wb_factor),'\n');
     
     %Done with breaking strings up, now write them to hdl file:
     Vfile = fopen(vhdlfile,'w');
