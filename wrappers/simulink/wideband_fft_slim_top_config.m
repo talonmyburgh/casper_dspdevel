@@ -1,4 +1,4 @@
-function wideband_fft_top_config(this_block)
+function wideband_fft_slim_top_config(this_block)
 
   % Revision History:
   %
@@ -91,7 +91,6 @@ function wideband_fft_top_config(this_block)
         in_channel_port = this_block.port('in_channel');
   end
   
-  
   %Dynamically add in im, re per wb_factor:
   for i=0:wb_factor-1
       this_block.addSimulinkInport(sprintf('in_im_%d',i));
@@ -118,8 +117,6 @@ function wideband_fft_top_config(this_block)
       out_err_port = this_block.port('out_err');
       out_channel_port = this_block.port('out_channel');
   end
-
-  
 
   %Dynamically add out im, re per wb_factor:
   for i=0:wb_factor-1
@@ -166,7 +163,6 @@ function wideband_fft_top_config(this_block)
     end
     in_valid_port.useHDLVector(false);
 
-
    if xtra_dat_sigs
     %input bsn
       in_bsn_port.useHDLVector(true);
@@ -192,21 +188,17 @@ function wideband_fft_top_config(this_block)
       in_err_port.useHDLVector(true);
       in_err_port.setWidth(dp_stream_error);
 
-      
       %input channel
       in_channel_port.useHDLVector(true);
       in_channel_port.setWidth(dp_stream_channel);
 
-      
       %output bsn
       out_bsn_port.useHDLVector(true);
       out_bsn_port.setWidth(dp_stream_bsn);
 
-      
       %output empty
       out_empty_port.useHDLVector(true);
       out_empty_port.setWidth(dp_stream_empty);
-
       
       %output error
       out_err_port.useHDLVector(true);
