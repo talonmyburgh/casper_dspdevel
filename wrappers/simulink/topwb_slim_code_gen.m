@@ -11,7 +11,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
 "use work.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
-"entity wideband_fft_top is"
+"entity wideband_fft_slim_top is"
 "	generic("
 		"use_reorder    : boolean := use_reorder;       -- = false for bit-reversed output, true for normal output"
 		"use_fft_shift  : boolean := use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
@@ -60,7 +60,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
 "use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
-"entity wideband_fft_top is"
+"entity wideband_fft_slim_top is"
 "	generic("
         "use_reorder    : boolean := use_reorder;       -- = false for bit-reversed output, true for normal output"
         "use_fft_shift  : boolean := use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
@@ -94,8 +94,8 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     lnsafterarchopen_w_xtradat = [");"
-        "end entity wideband_fft_top;"
-        "architecture RTL of wideband_fft_top is"
+        "end entity wideband_fft_slim_top;"
+        "architecture RTL of wideband_fft_slim_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,"
         "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
@@ -137,8 +137,8 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
 		];
     
     lnsafterarchopen_w_o_xtradat = [");"
-        "end entity wideband_fft_top;"
-        "architecture RTL of wideband_fft_top is"
+        "end entity wideband_fft_slim_top;"
+        "architecture RTL of wideband_slim_fft_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,"
         "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
