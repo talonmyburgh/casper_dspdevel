@@ -1,4 +1,4 @@
-function wb_subsys2bb_knit()
+function wb_slim_subsys2bb_knit()
     %fetch wideband parameters to figure out which ports to draw
     subsysblk = gcb;
     wb_fft_bb = [subsysblk '/wb_fft'];
@@ -15,7 +15,7 @@ function wb_subsys2bb_knit()
 
     global inprts;
     global outprts;
-    global in_re in_im in_dat out_re out_im out_dat;
+    global in_re in_im out_re out_im;
     global in_bsn in_sop in_eop in_empty in_err in_channel;
     global out_bsn out_sop out_eop out_empty out_err out_channel;
 
@@ -62,7 +62,7 @@ function wb_subsys2bb_knit()
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     updatedataprts();
     
-    function numPrt2delete = prts2delete(use_separate)
+    function numPrt2delete = prts2delete
             numPrt2delete = length(in_re);
     end
     

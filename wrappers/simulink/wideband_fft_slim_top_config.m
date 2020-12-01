@@ -1,4 +1,4 @@
-function wideband_fft_top_config(this_block)
+function wideband_fft_slim_top_config(this_block)
 
   % Revision History:
   %
@@ -167,8 +167,7 @@ function wideband_fft_top_config(this_block)
     in_valid_port.useHDLVector(false);
 
 
-    if xtra_dat_sigs
-
+   if xtra_dat_sigs
     %input bsn
       in_bsn_port.useHDLVector(true);
       in_bsn_port.setWidth(dp_stream_bsn);
