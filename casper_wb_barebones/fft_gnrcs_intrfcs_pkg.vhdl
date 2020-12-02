@@ -3,9 +3,14 @@ USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 
-
 PACKAGE fft_gnrcs_intrfcs_pkg Is
-  
+  --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
+  CONSTANT wb_factor      : natural :=4;       -- = default 1, wideband factor
+  CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
+  CONSTANT out_dat_w      : natural :=14;       -- = 13, number of output bits
+  CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
+
+  --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
   CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
   CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;  --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
   CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
@@ -14,13 +19,9 @@ PACKAGE fft_gnrcs_intrfcs_pkg Is
   CONSTANT use_fft_shift  : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
   CONSTANT use_separate   : boolean := true;       -- = false for complex input, true for two real inputs
   CONSTANT nof_chan       : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
-  CONSTANT wb_factor      : natural := 4;       -- = default 1, wideband factor
   CONSTANT twiddle_offset : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
   CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
-  CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
-  CONSTANT out_dat_w      : natural :=14;       -- = 13, number of output bits
   CONSTANT out_gain_w     : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-  CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
   CONSTANT guard_w        : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
                                   --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
                                   --   12.3.2], therefore use input guard_w = 2.

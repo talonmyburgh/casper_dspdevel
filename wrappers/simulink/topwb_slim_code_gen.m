@@ -1,7 +1,7 @@
-function topwb_slim_code_gen(wb_factor,xtra_dat_sigs)
+function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_dat_w)
     %gather all the string arrays required to write full file:
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
-    vhdlfile = filepath+"/"+bdroot+"_wb_fft_slim_top.vhd";                         %filename for vhd file
+    vhdlfile = filepath+"/"+bdroot+"_wb_fft_slim_top.vhd";                 %filename for vhd file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec_w_xtra = ["library ieee, dp_pkg_lib, wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
@@ -235,5 +235,30 @@ function achararr = mkarch(wbfctr)
         l=l+1;
         achararr(l,1)=sprintf(omap_im_c,mm,mm);
         l=l+1;
+
+   end
+
+    function update_vhdlpkg = updtvhd()
+        insertloc = 7 %Change this if you change the fft_gnrcs_intrfcs_pkg.vhdl file so the line numbers change
+        vhdlgenfileloc = "../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhdl";
+        lineone = sprintf("CONSTANT wb_factor      : natural :=%d;       -- = default 1, wideband factor",wb_factor);
+        linetwo = sprintf("CONSTANT in_dat_w       : natural :=%d;       -- = 8,  number of input bits",in_dat_w);
+        linethree = sprintf("CONSTANT out_dat_w      : natural :=%d;       -- = 13, number of output bits",out_dat_w);
+        linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+        fid = fopen(vhdlgenfileloc)
+        lines = textscan(vhdlgenfileloc, '%s', 'Delimiter', '\n', 'CollectOutput',true);
+        fclose(fid);
+
+        fid = fopen(vhdlgenfileloc, 'w');
+        for jj = 1: insertloc
+            fprintf(fid,'%s\n',lines{jj});
+        end
+        fprintf(fid,'%s\n', lineone);
+        fprintf(fid,'%s\n',linetwo);
+        fprintf(fid,'%s\n',linethree);
+        fprintf(fid,'%s\n',linefour);
+        for jj = insertloc+5 : length(lines)
+            fprintf( fid, '%s\n', lines{jj} );
+        end
     end
 end
