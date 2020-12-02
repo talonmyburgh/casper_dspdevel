@@ -250,8 +250,9 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w)
     linetwo = sprintf("CONSTANT in_dat_w       : natural :=%d;       -- = 8,  number of input bits",in_dat_w);
     linethree = sprintf("CONSTANT out_dat_w      : natural :=%d;       -- = 13, number of output bits",out_dat_w);
     linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
-    fid = fopen(vhdlgenfileloc);
-    lines = textscan(vhdlgenfileloc, '%s', 'Delimiter', '\n', 'CollectOutput',true);
+    fid = fopen(vhdlgenfileloc,'r');
+    lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
+    lines = lines{jj};
     fclose(fid);
 
     fid = fopen(vhdlgenfileloc, 'w');
