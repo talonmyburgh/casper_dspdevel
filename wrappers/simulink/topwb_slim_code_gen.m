@@ -252,7 +252,7 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w)
     linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
     fid = fopen(vhdlgenfileloc,'r');
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
-    lines = lines{jj};
+    lines = lines{1};
     fclose(fid);
 
     fid = fopen(vhdlgenfileloc, 'w');
