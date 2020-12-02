@@ -260,5 +260,6 @@ function achararr = mkarch(wbfctr)
         for jj = insertloc+5 : length(lines)
             fprintf( fid, '%s\n', lines{jj} );
         end
+        fclose(fid);
     end
 end
