@@ -4,12 +4,11 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
     vhdlfile = filepath+"/"+bdroot+"_wb_fft_slim_top.vhd";                 %filename for vhd file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-    lnsuptoportdec_w_xtra = ["library ieee, dp_pkg_lib, wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
+    lnsuptoportdec_w_xtra = ["library ieee, casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
 "use ieee.numeric_std.all;"
 "use common_pkg_lib.common_pkg.all;"
-"use dp_pkg_lib.dp_stream_pkg.ALL;"
-"use work.fft_gnrcs_intrfcs_pkg.all;"
+"use casper_wb_barebones_lib.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
 "entity wideband_fft_slim_top is"
@@ -53,12 +52,11 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
 		"out_err : out STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);"
 		"out_channel : out STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);"];
     
-    lnsuptoportdec_w_o_xtra = ["library ieee, dp_pkg_lib, wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
+    lnsuptoportdec_w_o_xtra = ["library ieee,casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
 "use ieee.numeric_std.all;"
 "use common_pkg_lib.common_pkg.all;"
-"use dp_pkg_lib.dp_stream_pkg.ALL;"
-"use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
+"use casper_wb_barebones_lib.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
 "entity wideband_fft_slim_top is"
@@ -104,7 +102,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "constant c_fft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "begin"
-        "fft_wide_unit : entity wb_fft_lib.fft_wide_unit"
+        "fft_wide_unit : entity casper_wb_barebones_lib.fft_wide_unit"
         "generic map("
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
@@ -139,7 +137,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
     
     lnsafterarchopen_w_o_xtradat = [");"
         "end entity wideband_fft_slim_top;"
-        "architecture RTL of wideband_slim_fft_top is"
+        "architecture RTL of wideband_fft_slim_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,"
         "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
@@ -147,7 +145,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "constant c_fft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "begin"
-        "fft_wide_unit : entity wb_fft_lib.fft_wide_unit"
+        "fft_wide_unit : entity casper_wb_barebones_lib.fft_wide_unit"
         "generic map("
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
