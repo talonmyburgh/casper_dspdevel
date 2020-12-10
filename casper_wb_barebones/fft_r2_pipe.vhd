@@ -61,15 +61,17 @@ entity fft_r2_pipe is
 		g_dont_flip_channels : boolean        := false -- generic to prevent re-ordering of the channels
 	);
 	port(
-		clken   : in  std_logic;
-		clk     : in  std_logic;
-		rst     : in  std_logic := '0';
-		in_re   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_im   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_val  : in  std_logic := '1';
-		out_re  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_im  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_val : out std_logic
+		clken    : in  std_logic;
+		clk      : in  std_logic;
+		rst      : in  std_logic := '0';
+		shiftreg : in  std_logic_vector(c_stages_pipe -1 downto 0);
+		in_re    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
+		in_im    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
+		in_val   : in  std_logic := '1';
+		out_re   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
+		out_im   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
+		ovflw	 : out std_logic_vector(c_stages_pipe - 1 downto 0);
+		out_val  : out std_logic
 	);
 end entity fft_r2_pipe;
 
@@ -96,6 +98,7 @@ architecture str of fft_r2_pipe is
 	signal raw_out_re  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 	signal raw_out_im  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 	signal raw_out_val : std_logic;
+	signal shift_bool  : boolean;
 
 begin
 
@@ -108,25 +111,26 @@ begin
 	-- pipelined FFT stages
 	------------------------------------------------------------------------------
 	gen_fft : for stage in c_nof_stages downto 1 generate
-		u_stage : entity r2sdf_fft_lib.rTwoSDFStage
-			generic map(
-				g_nof_chan       => g_fft.nof_chan,
-				g_stage          => stage,
-				g_stage_offset   => c_stage_offset,
-				g_twiddle_offset => g_fft.twiddle_offset,
-				g_scale_enable   => sel_a_b(stage <= g_fft.guard_w, FALSE, TRUE),
-				g_pipeline       => g_pipeline
-			)
-			port map(
-				clk     => clk,
+        u_stage : entity r2sdf_fft_lib.rTwoSDFStage
+            generic map(
+                g_nof_chan       => g_fft.nof_chan,
+                g_stage          => stage,
+                g_stage_offset   => c_stage_offset,
+                g_twiddle_offset => g_fft.twiddle_offset,
+                g_pipeline       => g_pipeline
+            )
+            port map(
+                clk     => clk,
 				rst     => rst,
-				in_re   => data_re(stage),
-				in_im   => data_im(stage),
-				in_val  => data_val(stage),
-				out_re  => data_re(stage - 1),
+				scale   => shiftreg(stage-1),
+                in_re   => data_re(stage),
+                in_im   => data_im(stage),
+                in_val  => data_val(stage),
+                out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
-				out_val => data_val(stage - 1)
-			);
+				ovflw	=> ovflw(stage-1),
+                out_val => data_val(stage - 1)
+            );
 	end generate;
 
 	------------------------------------------------------------------------------
