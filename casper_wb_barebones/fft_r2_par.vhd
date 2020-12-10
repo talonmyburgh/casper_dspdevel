@@ -50,9 +50,11 @@ entity fft_r2_par is
 		rst        : in  std_logic := '0';
 		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
 		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
+		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0);
 		in_val     : in  std_logic := '1';
 		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
 		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
+		ovflw	   : out std_logic_vector(c_stages_par - 1 downto 0);
 		out_val    : out std_logic
 	);
 end entity fft_r2_par;
@@ -147,6 +149,8 @@ architecture str of fft_r2_par is
 	signal sub_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
 	signal int_val    : std_logic;
 	signal fft_val    : std_logic;
+	
+	signal shift_bool : boolean;
 
 begin
 
@@ -165,29 +169,30 @@ begin
 	-- parallel FFT stages
 	------------------------------------------------------------------------------
 	gen_fft_stages : for stage in c_nof_stages downto 1 generate
-		gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
-			u_element : entity work.fft_r2_bf_par
-				generic map(
-					g_stage        => stage,
-					g_element      => element,
-					g_scale_enable => sel_a_b(stage <= g_fft.guard_w, FALSE, TRUE),
-					g_pipeline     => g_pipeline
-				)
-				port map(
-					clk      => clk,
+        gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
+            u_element : entity work.fft_r2_bf_par
+                generic map(
+                    g_stage        => stage,
+                    g_element      => element,
+                    g_pipeline     => g_pipeline
+                )
+                port map(
+                    clk      => clk,
 					rst      => rst,
-					x_in_re  => data_re(stage)(2 * element),
-					x_in_im  => data_im(stage)(2 * element),
-					y_in_re  => data_re(stage)(2 * element + 1),
-					y_in_im  => data_im(stage)(2 * element + 1),
-					in_val   => data_val(stage)(element),
-					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-					y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-					y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+					scale	 => shiftreg(stage-1),
+                    x_in_re  => data_re(stage)(2 * element),
+                    x_in_im  => data_im(stage)(2 * element),
+                    y_in_re  => data_re(stage)(2 * element + 1),
+                    y_in_im  => data_im(stage)(2 * element + 1),
+                    in_val   => data_val(stage)(element),
+                    x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+                    x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+                    y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+                    y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+					ovflw    => ovflw(stage-1),
 					out_val  => data_val(stage - 1)(element)
-				);
-		end generate;
+                );
+        end generate;
 	end generate;
 
 	--------------------------------------------------------------------------------

@@ -30,7 +30,6 @@ entity rTwoSDFStage is
 		g_stage          : natural        := 8; --! Stage number
 		g_stage_offset   : natural        := 0; --! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; --! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_scale_enable   : boolean        := TRUE; --! Enable scaling
 		g_variant        : string         := "4DSP";
 		g_use_dsp        : string         := "yes";
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
@@ -38,11 +37,13 @@ entity rTwoSDFStage is
 	port(
 		clk     : in  std_logic;        --! Input clock
 		rst     : in  std_logic;        --! Input reset
+		scale 	: in  std_logic;		--! Scale (1) or not (0)
 		in_re   : in  std_logic_vector; --! Real input value
 		in_im   : in  std_logic_vector; --! Imaginary input value
 		in_val  : in  std_logic;        --! Input value select
 		out_re  : out std_logic_vector; --! Output real value
 		out_im  : out std_logic_vector; --! Output imaginary value
+		ovflw	: out std_logic;		--! Overflow detected
 		out_val : out std_logic         --! Output value select
 	);
 end entity rTwoSDFStage;
@@ -50,9 +51,7 @@ end entity rTwoSDFStage;
 architecture str of rTwoSDFStage is
 
 	-- The amplification factor per stage is 2, therefor bit growth defintion of 1.
-	-- Scale enable is defined by generic.
-	constant c_rtwo_stage_bit_growth : natural := sel_a_b(g_scale_enable, 1, 0);
-
+	
 	-- counter for ctrl_sel 
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
@@ -76,6 +75,8 @@ architecture str of rTwoSDFStage is
 
 	signal quant_out_re : std_logic_vector(out_re'range);
 	signal quant_out_im : std_logic_vector(out_im'range);
+
+	signal ovflw_det	: std_logic_vector(1 DOWNTO 0);
 
 begin
 
@@ -170,10 +171,9 @@ begin
 	------------------------------------------------------------------------------
 	-- stage requantization
 	------------------------------------------------------------------------------
-	u_requantize_re : entity casper_requantize_lib.common_requantize
+	u_requantize_re : entity casper_requantize_lib.rl_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_rtwo_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -186,15 +186,15 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale 	=> scale,
 			in_dat  => mul_out_re,
 			out_dat => quant_out_re,
-			out_ovr => open
+			out_ovr => ovflw_det(1)
 		);
 
-	u_requantize_im : entity casper_requantize_lib.common_requantize
+	u_requantize_im : entity casper_requantize_lib.rl_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_rtwo_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -207,9 +207,10 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale   => scale,
 			in_dat  => mul_out_im,
 			out_dat => quant_out_im,
-			out_ovr => open
+			out_ovr => ovflw_det(0)
 		);
 
 	------------------------------------------------------------------------------
@@ -248,5 +249,6 @@ begin
 			in_dat  => mul_out_val,
 			out_dat => out_val
 		);
+	ovflw <= ovflw_det(1) nor ovflw_det(0); -- Check if overflow occured when processing either im or re sigs
 
 end str;

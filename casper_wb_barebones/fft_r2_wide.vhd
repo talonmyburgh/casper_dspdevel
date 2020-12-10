@@ -80,9 +80,11 @@ entity fft_r2_wide is
 		clken      : in  std_logic;
 		clk        : in  std_logic;
 		rst        : in  std_logic := '0';
+		shiftreg   : in  std_logic_vector(c_stages - 1 DOWNTO 0) := (others => '1'); 
 		in_re_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0); -- = time samples t3, t2, t1, t0
 		in_im_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);
 		in_val     : in  std_logic := '1';
+		ovflw 	   : out std_logic_vector(c_stages - 1 DOWNTO 0) := (others => '0');
 		out_re_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
 		out_im_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
 		out_val    : out std_logic
@@ -190,15 +192,17 @@ begin
 				g_pipeline => g_pft_pipeline
 			)
 			port map(
-				clken   => clken,
-				clk     => clk,
-				rst     => rst,
-				in_re   => in_re_arr(0)(g_fft.in_dat_w - 1 downto 0),
-				in_im   => in_im_arr(0)(g_fft.in_dat_w - 1 downto 0),
-				in_val  => in_val,
-				out_re  => fft_pipe_out_re,
-				out_im  => fft_pipe_out_im,
-				out_val => out_val
+				clken    => clken,
+				clk      => clk,
+				rst      => rst,
+				shiftreg => shiftreg, -- full length shiftreg here since stages = log2(pts)
+				in_re    => in_re_arr(0)(g_fft.in_dat_w - 1 downto 0),
+				in_im    => in_im_arr(0)(g_fft.in_dat_w - 1 downto 0),
+				in_val   => in_val,
+				ovflw	 => ovflw,
+				out_re   => fft_pipe_out_re,
+				out_im   => fft_pipe_out_im,
+				out_val  => out_val
 			);
 
 		out_re_arr(0) <= fft_pipe_out_re;
@@ -206,14 +210,15 @@ begin
 	end generate;
 
 	-- Default to fft_r2_par when g_fft.wb_factor=g_fft.nof_points
-	--First resize the inputs for parallel FFT and then requantize the outputs
+	-- First resize the inputs for parallel FFT and then requantize the outputs
 
 	gen_fft_r2_par : if g_fft.wb_factor = g_fft.nof_points generate
 		--RESIZE
 		gen_fft_pipe_inputs : for I in 0 to g_fft.wb_factor - 1 generate
 			par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), g_fft.stage_dat_w);
 			par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), g_fft.stage_dat_w);
-		--REQUANTIZE
+		
+		--REQUANTIZE (though chronologically before the par FFT, we're requantising its output)
 		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
 					g_representation      => "SIGNED",
@@ -264,9 +269,11 @@ begin
 				rst        => rst,
 				in_re_arr  => par_stg_fft_re_in,
 				in_im_arr  => par_stg_fft_im_in,
+				shiftreg   => shiftreg,
 				in_val     => in_val,
 				out_re_arr => par_stg_fft_re_out,
 				out_im_arr => par_stg_fft_im_out,
+				ovflw	   => ovflw,
 				out_val    => out_val
 			);
 	end generate;
@@ -293,15 +300,17 @@ begin
 					g_pipeline => g_pft_pipeline -- pipeline generics for the pipelined FFTs
 				)
 				port map(
-					clken   => clken,
-					clk     => clk,
-					rst     => rst,
-					in_re   => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					in_im   => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					in_val  => in_val,
-					out_re  => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					out_im  => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					out_val => int_val(I)
+					clken    => clken,
+					clk      => clk,
+					rst      => rst,
+					in_re    => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+					in_im    => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+					shiftreg => shiftreg(c_stages-1 DOWNTO c_stages_par),
+					in_val   => in_val,
+					out_re   => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+					out_im   => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+					ovflw 	 => ovflw(c_stages-1 DOWNTO c_stages_par),
+					out_val  => int_val(I)
 				);
 		end generate;
 
@@ -327,9 +336,11 @@ begin
 				rst        => rst,
 				in_re_arr  => in_fft_par_re_arr,
 				in_im_arr  => in_fft_par_im_arr,
+				shiftreg   => shiftreg(c_stages_par-1 DOWNTO 0),
 				in_val     => int_val(0),
 				out_re_arr => fft_out_re_arr,
 				out_im_arr => fft_out_im_arr,
+				ovflw	   => ovflw(c_stages_par-1 DOWNTO 0),
 				out_val    => fft_out_val
 			);
 

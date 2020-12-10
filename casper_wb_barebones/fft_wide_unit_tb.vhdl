@@ -54,6 +54,11 @@ begin
         end loop;
 
         wait for clk_period *39;
+        array_in(0).sync <='1';
+        array_in(0).valid <= '1';
+        wait for clk_period;
+        array_in(0).sync<='0';
+        wait for clk_period;
         array_in(0).re <= "01111111";
         wait for clk_period*2;
         array_in(0).re <= "00000000";
@@ -63,5 +68,4 @@ begin
         array_in(0).re <= "00000000";
         wait;
     end process;
-
 end architecture;
