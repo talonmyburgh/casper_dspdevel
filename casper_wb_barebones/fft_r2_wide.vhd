@@ -72,9 +72,17 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_wide is
 	generic(
-		g_fft          : t_fft          := c_fft; -- generics for the FFT
-		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; -- For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft          : t_fft          := c_fft; 			--! generics for the FFT
+		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline;  --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline;   --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
+		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_fifo_primitive : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clken      : in  std_logic;
@@ -114,8 +122,7 @@ architecture rtl of fft_r2_wide is
 			v_return(I).twiddle_offset := I; -- Twiddle offset is set to the order number of the pipelined fft. 
 			v_return(I).nof_points     := v_nof_points; -- Set the nof points 
 			v_return(I).in_dat_w       := input.stage_dat_w; -- Set the input width  
-			v_return(I).out_dat_w      := input.stage_dat_w; -- Set the output width.
-			v_return(I).stage_dat_w    := input.stage_dat_w; -- Set stage data width
+			v_return(I).out_dat_w      := input.stage_dat_w; -- Set the output width. 
 			v_return(I).out_gain_w     := 0; -- Output gain is forced to 0
 			v_return(I).guard_w        := 0; -- Set the guard_w to 0 to enable scaling at every stage. 
 			v_return(I).guard_enable   := false; -- No input guard. 
@@ -144,7 +151,9 @@ architecture rtl of fft_r2_wide is
 		v_return.guard_enable   := false; -- No input guard. 
 		return v_return;
 	end;
-
+    
+    constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 	constant c_pipeline_remove_lsb : natural := 0;
 
 	constant c_fft_r2_pipe_arr : t_fft_arr(g_fft.wb_factor - 1 downto 0) := func_create_generic_for_pipe_fft(g_fft);
@@ -189,7 +198,13 @@ begin
 		u_fft_r2_pipe : entity work.fft_r2_pipe
 			generic map(
 				g_fft      => g_fft,
-				g_pipeline => g_pft_pipeline
+				g_pipeline => g_pft_pipeline,
+				g_use_variant  => g_use_variant,
+				g_use_dsp	   => g_use_dsp,
+				g_representation => g_representation,
+				g_ovflw_behav  => g_ovflw_behav,
+				g_use_round    => g_use_round,
+				g_technology => g_technology
 			)
 			port map(
 				clken    => clken,
@@ -221,11 +236,11 @@ begin
 		--REQUANTIZE (though chronologically before the par FFT, we're requantising its output)
 		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
@@ -240,11 +255,11 @@ begin
 				);
 		u_requantize_par_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
@@ -262,7 +277,13 @@ begin
 		u_fft_r2_par : entity work.fft_r2_par
 			generic map(
 				g_fft      => g_fft,
-				g_pipeline => g_fft_pipeline
+				g_pipeline => g_fft_pipeline,
+				g_use_variant  => g_use_variant,
+				g_use_dsp	   => g_use_dsp,
+				g_representation => g_representation,
+				g_ovflw_behav  => g_ovflw_behav,
+				g_use_round    => g_use_round,
+				g_technology => g_technology
 			)
 			port map(
 				clk        => clk,
@@ -297,7 +318,13 @@ begin
 			u_pft : entity work.fft_r2_pipe
 				generic map(
 					g_fft      => c_fft_r2_pipe_arr(I), -- generics for the pipelined FFTs
-					g_pipeline => g_pft_pipeline -- pipeline generics for the pipelined FFTs
+					g_pipeline => g_pft_pipeline,	    -- pipeline generics for the pipelined FFTs
+					g_use_variant  => g_use_variant,
+					g_use_dsp	   => g_use_dsp,
+					g_representation => g_representation,
+					g_ovflw_behav  => g_ovflw_behav,
+					g_use_round    => g_use_round,
+					g_technology => g_technology
 				)
 				port map(
 					clken    => clken,
@@ -329,7 +356,12 @@ begin
 		u_fft : entity work.fft_r2_par
 			generic map(
 				g_fft      => c_fft_r2_par, -- generics for the FFT
-				g_pipeline => g_fft_pipeline -- pipeline generics for the parallel FFT
+				g_pipeline => g_fft_pipeline, -- pipeline generics for the parallel FFT
+				g_use_dsp	   => g_use_dsp,
+				g_representation => g_representation,
+				g_ovflw_behav  => g_ovflw_behav,
+				g_use_round    => g_use_round,
+				g_technology => g_technology
 			)
 			port map(
 				clk        => clk,
@@ -351,7 +383,8 @@ begin
 		gen_separate : if g_fft.use_separate generate
 			u_separator : entity work.fft_sepa_wide
 				generic map(
-					g_fft => g_fft
+					g_fft => g_fft,
+					g_ram_primitive => g_ram_primitive
 				)
 				port map(
 					clken      => clken,
@@ -379,7 +412,7 @@ begin
 		gen_output_requantizers : for I in g_fft.wb_factor - 1 downto 0 generate
 			u_requantize_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => TRUE,
 					g_lsb_round_clip      => FALSE,
@@ -399,7 +432,7 @@ begin
 
 			u_requantize_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => TRUE,
 					g_lsb_round_clip      => FALSE,

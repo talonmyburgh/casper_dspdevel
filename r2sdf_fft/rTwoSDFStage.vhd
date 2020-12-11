@@ -30,8 +30,11 @@ entity rTwoSDFStage is
 		g_stage          : natural        := 8; --! Stage number
 		g_stage_offset   : natural        := 0; --! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; --! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_variant        : string         := "4DSP";
+		g_use_variant    : string         := "4DSP";
 		g_use_dsp        : string         := "yes";
+		g_representation : string 		  := "SIGNED";
+		g_ovflw_behav	 : string		  := "WRAP";
+		g_use_round			 : string		  := "ROUND";
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
 	port(
@@ -55,6 +58,9 @@ architecture str of rTwoSDFStage is
 	-- counter for ctrl_sel 
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
+
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
 
@@ -149,7 +155,7 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
-			g_variant => g_variant,
+			g_use_variant => g_use_variant,
 			g_stage   => g_stage,
 			g_use_dsp => g_use_dsp,
 			g_lat     => g_pipeline.mul_lat
@@ -173,10 +179,10 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.rl_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -194,10 +200,10 @@ begin
 
 	u_requantize_im : entity casper_requantize_lib.rl_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,

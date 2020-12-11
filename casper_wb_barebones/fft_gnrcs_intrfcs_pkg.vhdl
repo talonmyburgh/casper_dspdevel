@@ -30,28 +30,27 @@ CONSTANT guard_enable   : boolean :=true;       -- = true when input needs guard
 --   doing the input guard and par fft section doing the output compensation)
 
 type t_fft is record
-use_reorder    : boolean;       -- = false for bit-reversed output, true for normal output
-use_fft_shift  : boolean;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-use_separate   : boolean;       -- = false for complex input, true for two real inputs
-nof_chan       : natural;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
-wb_factor      : natural;       -- = default 1, wideband factor
-twiddle_offset : natural;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
-nof_points     : natural;       -- = 1024, N point FFT
-in_dat_w       : natural;       -- = 8,  number of input bits
-out_dat_w      : natural;       -- = 13, number of output bits
-out_gain_w     : natural;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-stage_dat_w    : natural;       -- = 18, data width used between the stages(= DSP multiplier-width)
-guard_w        : natural;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
---   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
---   12.3.2], therefore use input guard_w = 2.
-guard_enable   : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
---   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
---   doing the input guard and par fft section doing the output compensation)
-stat_data_w    : positive;      -- = 56
-stat_data_sz   : positive;      -- = 2
+    use_reorder    : boolean;       --! = false for bit-reversed output, true for normal output
+    use_fft_shift  : boolean;       --! = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+    use_separate   : boolean;       --! = false for complex input, true for two real inputs
+    nof_chan       : natural;       --! = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
+    wb_factor      : natural;       --! = default 1, wideband factor
+    twiddle_offset : natural;       --! = default 0, twiddle offset for PFT sections in a wideband FFT
+    nof_points     : natural;       --! = 1024, N point FFT
+    in_dat_w       : natural;       --! = 8,  number of input bits
+    out_dat_w      : natural;       --! = 13, number of output bits
+    out_gain_w     : natural;       --! = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+    stage_dat_w    : natural;       --! = 18, data width used between the stages(= DSP multiplier-width)
+    guard_w        : natural;       --! = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
+    --!   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
+    --!   12.3.2], therefore use input guard_w = 2.
+    guard_enable   : boolean;       --! = true when input needs guarding, false when input requires no guarding but scaling must be
+    --!   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
+    --!  doing the input guard and par fft section doing the output compensation)
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 8, 14, 0, c_dsp_mult_w, 2, true, 56, 2);
+constant c_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 8, 14, 0, 
+c_dsp_mult_w, 2, TRUE);
 
 type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(stage_dat_w-1 DOWNTO 0);

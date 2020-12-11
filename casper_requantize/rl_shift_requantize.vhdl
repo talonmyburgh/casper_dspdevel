@@ -35,7 +35,6 @@ ENTITY rl_shift_requantize IS
     g_msb_clip            : BOOLEAN := TRUE;      -- when true CLIP else WRAP the input MSbits
     g_msb_clip_symmetric  : BOOLEAN := FALSE;     -- when TRUE clip signed symmetric to +c_smax and -c_smax, else to +c_smax and c_smin_symm
                                                   -- for wrapping when g_msb_clip=FALSE the g_msb_clip_symmetric is ignored, so signed wrapping is done asymmetric
-    g_gain_w              : NATURAL := 0;         -- do not use, must be 0, use negative g_lsb_w instead
     g_pipeline_remove_lsb : NATURAL := 0;         -- >= 0
     g_pipeline_remove_msb : NATURAL := 0;         -- >= 0, use g_pipeline_remove_lsb=0 and g_pipeline_remove_msb=0 for combinatorial output
     g_in_dat_w            : NATURAL := 36;        -- input data width
@@ -74,6 +73,7 @@ BEGIN
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= u_round(in_dat(g_in_dat_w - 1 DOWNTO 0), 1, g_lsb_round_clip);
         elsif g_lsb_round = FALSE then
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= truncate(in_dat(g_in_dat_w - 1 DOWNTO 0), 1);
+        else NULL;
         end if;
     elsif scale = '0' then
         rem_dat <= in_dat(g_in_dat_w-1 DOWNTO 0);

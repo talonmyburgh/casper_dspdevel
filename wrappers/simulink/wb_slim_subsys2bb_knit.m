@@ -16,8 +16,8 @@ function wb_slim_subsys2bb_knit()
     global inprts;
     global outprts;
     global in_re in_im out_re out_im;
-    global in_bsn in_sop in_eop in_empty in_err in_channel;
-    global out_bsn out_sop out_eop out_empty out_err out_channel;
+    global in_bsn in_sop in_eop in_empty in_err in_channel in_shiftreg;
+    global out_bsn out_sop out_eop out_empty out_err out_channel out_ovflw;
 
     function updatedataprts()
         subsysblk = gcb;

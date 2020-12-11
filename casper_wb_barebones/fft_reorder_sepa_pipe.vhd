@@ -45,7 +45,8 @@ entity fft_reorder_sepa_pipe is
 		g_fft_shift          : boolean := false; -- apply fft_shift to have negative bin frequencies first for complex input
 		g_dont_flip_channels : boolean := false; -- set true to preserve the channel interleaving when g_bit_flip is true, otherwise the channels get separated in time when g_bit_flip is true
 		g_separate           : boolean := true; -- apply separation bins for two real inputs
-		g_nof_chan           : natural := 0 -- Exponent of nr of subbands (0 means 1 subband, 1 => 2 sb, 2 => 4 sb, etc )
+		g_nof_chan           : natural := 0; -- Exponent of nr of subbands (0 means 1 subband, 1 => 2 sb, 2 => 4 sb, etc )
+		g_ram_primitive      : string  := "auto"
 	);
 	port(
 		clken   : in  std_logic;
@@ -192,7 +193,8 @@ begin
 			g_page_sz       => c_page_size,
 			g_wr_start_page => 0,
 			g_rd_start_page => 1,
-			g_rd_latency    => 1
+			g_rd_latency    => 1,
+			g_ram_primitive => g_ram_primitive
 		)
 		port map(
 			rst          => rst,
