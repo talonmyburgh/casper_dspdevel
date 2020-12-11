@@ -47,9 +47,9 @@ USE common_pkg_lib.common_pkg.ALL;
 ENTITY common_complex_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; --! 0: Simulate variant passed via g_variant for given g_technology
+		g_sim_level        : NATURAL := 0; --! 0: Simulate variant passed via g_use_variant for given g_technology
 		g_technology       : NATURAL := 0;
-		g_variant          : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
+		g_use_variant      : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
 		g_use_dsp          : STRING  := "YES";
 		g_in_a_w           : POSITIVE;  --! Input A-bitwidth
 		g_in_b_w           : POSITIVE;  --! Input B-bitwidth
@@ -116,7 +116,7 @@ BEGIN
 			g_sim              => g_sim,
 			g_sim_level        => g_sim_level,
 			g_technology       => g_technology,
-			g_variant          => g_variant,
+			g_use_variant      => g_use_variant,
 			g_use_dsp          => g_use_dsp,
 			g_in_a_w           => g_in_a_w,
 			g_in_b_w           => g_in_b_w,

@@ -8,7 +8,7 @@ entity ip_xilinx_fifo_sc is
 	generic(
 		g_dat_w          : NATURAL;
 		g_nof_words      : NATURAL;
-		g_fifo_primitive : STRING := "auto"
+		g_fifo_primitive : STRING := "auto" --! "auto", "block", "distributed" or "ultra"
 	);
 	port(
 		aclr  : IN  STD_LOGIC;

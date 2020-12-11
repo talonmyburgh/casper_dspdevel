@@ -43,7 +43,13 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_par is
 	generic(
 		g_fft      : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline : t_fft_pipeline := c_fft_pipeline -- generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_pipeline : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
+		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clk        : in  std_logic;
@@ -122,6 +128,8 @@ architecture str of fft_r2_par is
 		return v_return;
 	end;
 
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 	constant c_pipeline_add_sub    : natural := 1;
 	constant c_pipeline_remove_lsb : natural := 1;
 	constant c_sepa_round          : boolean := true; -- must be true, because separate should round the 1 bit growth
@@ -172,9 +180,15 @@ begin
         gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
             u_element : entity work.fft_r2_bf_par
                 generic map(
-                    g_stage        => stage,
-                    g_element      => element,
-                    g_pipeline     => g_pipeline
+                    g_stage         => stage,
+                    g_element       => element,
+					g_pipeline      => g_pipeline,
+					g_use_variant	=> g_use_variant,
+					g_representation => g_representation,
+					g_ovflw_behav   => g_ovflw_behav,
+					g_use_round			=> g_use_round,
+					g_technology	=> g_technology,
+					g_use_dsp		=> g_use_dsp
                 )
                 port map(
                     clk      => clk,
@@ -233,7 +247,7 @@ begin
 			a_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -249,7 +263,7 @@ begin
 			b_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -265,7 +279,7 @@ begin
 			a_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -281,7 +295,7 @@ begin
 			b_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -306,9 +320,9 @@ begin
 				-- round the one LSbit
 				round_re_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round           => TRUE, -- when TRUE round the input, else truncate the input
-						g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round       	  => c_round, -- when TRUE round the input, else truncate the input
+						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
 						g_in_dat_w        => g_fft.stage_dat_w + 1,
@@ -322,9 +336,9 @@ begin
 
 				round_re_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round           => TRUE, -- when TRUE round the input, else truncate the input
-						g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round       	  => c_round, -- when TRUE round the input, else truncate the input
+						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
 						g_in_dat_w        => g_fft.stage_dat_w + 1,
@@ -338,9 +352,9 @@ begin
 
 				round_im_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round           => TRUE, -- when TRUE round the input, else truncate the input
-						g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round           => c_round, -- when TRUE round the input, else truncate the input
+						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
 						g_in_dat_w        => g_fft.stage_dat_w + 1,
@@ -354,9 +368,9 @@ begin
 
 				round_im_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round           => TRUE, -- when TRUE round the input, else truncate the input
-						g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round           => c_round, -- when TRUE round the input, else truncate the input
+						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
 						g_in_dat_w        => g_fft.stage_dat_w + 1,
@@ -435,11 +449,11 @@ begin
 	gen_output_requantizers : for I in 0 to g_fft.nof_points - 1 generate
 		u_requantize_re : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => "SIGNED",
+				g_representation      => g_representation,
 				g_lsb_w               => c_out_scale_w,
-				g_lsb_round           => TRUE,
+				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
-				g_msb_clip            => FALSE,
+				g_msb_clip            => c_clip,
 				g_msb_clip_symmetric  => FALSE,
 				g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 				g_pipeline_remove_msb => 0,
@@ -455,11 +469,11 @@ begin
 
 		u_requantize_im : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => "SIGNED",
+				g_representation      => g_representation,
 				g_lsb_w               => c_out_scale_w,
-				g_lsb_round           => TRUE,
+				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
-				g_msb_clip            => FALSE,
+				g_msb_clip            => c_clip,
 				g_msb_clip_symmetric  => FALSE,
 				g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 				g_pipeline_remove_msb => 0,

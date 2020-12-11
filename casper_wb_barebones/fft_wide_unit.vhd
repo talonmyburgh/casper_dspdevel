@@ -41,7 +41,15 @@ entity fft_wide_unit is
 	generic(
 		g_fft          : t_fft          := c_fft; -- generics for the FFT
 		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; -- For the pipelined part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline; -- For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
+		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_fifo_primitive : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clken           : in  std_logic := '1';
@@ -112,7 +120,14 @@ begin
 		generic map(
 			g_fft          => g_fft,    -- generics for the WFFT
 			g_pft_pipeline => g_pft_pipeline,
-			g_fft_pipeline => g_fft_pipeline
+			g_use_variant  => g_use_variant,
+			g_use_dsp	   => g_use_dsp,
+			g_representation => g_representation,
+			g_ovflw_behav  => g_ovflw_behav,
+			g_use_round    => g_use_round,
+			g_ram_primitive => g_ram_primitive,
+			g_fifo_primitive => g_fifo_primitive,
+			g_technology => g_technology
 		)
 		port map(
 			clken      => clken,
@@ -135,7 +150,15 @@ begin
 	-- streaming format. 
 	u_fft_control : entity work.fft_wide_unit_control
 		generic map(
-			g_fft => g_fft
+			g_fft => g_fft,
+			g_use_variant  => g_use_variant,
+			g_use_dsp	   => g_use_dsp,
+			g_representation => g_representation,
+			g_ovflw_behav  => g_ovflw_behav,
+			g_use_round    => g_use_round,
+			g_ram_primitive => g_ram_primitive,
+			g_fifo_primitive => g_fifo_primitive,
+			g_technology => g_technology
 		)
 		port map(
 			rst          => rst,

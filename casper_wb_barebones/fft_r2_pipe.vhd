@@ -58,8 +58,15 @@ entity fft_r2_pipe is
 	generic(
 		g_fft                : t_fft          := c_fft; -- generics for the FFT
 		g_pipeline           : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false -- generic to prevent re-ordering of the channels
-	);
+		g_dont_flip_channels : boolean        := false; -- generic to prevent re-ordering of the channels
+		g_use_variant    	 : string  		  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        	 : string  		  := "yes";        --! = "yes" or "no"
+		g_representation 	 : string  		  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    	 : string  		  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      	 : string  		  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  	 : string  		  := "auto";
+		g_technology     	 : natural 		  := 0       --! = 0 for Xilinx, 1 for Alterra
+		);
 	port(
 		clken    : in  std_logic;
 		clk      : in  std_logic;
@@ -77,6 +84,9 @@ end entity fft_r2_pipe;
 
 architecture str of fft_r2_pipe is
 
+	
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 	constant c_pipeline_remove_lsb : natural := 0;
 
 	constant c_nof_stages   : natural := ceil_log2(g_fft.nof_points);
@@ -116,7 +126,12 @@ begin
                 g_nof_chan       => g_fft.nof_chan,
                 g_stage          => stage,
                 g_stage_offset   => c_stage_offset,
-                g_twiddle_offset => g_fft.twiddle_offset,
+				g_twiddle_offset => g_fft.twiddle_offset,
+				g_use_variant        => g_use_variant,
+				g_use_dsp        => g_use_dsp,
+				g_representation => g_representation,
+				g_ovflw_behav	 => g_ovflw_behav,
+				g_use_round		 => g_use_round, 
                 g_pipeline       => g_pipeline
             )
             port map(
@@ -146,7 +161,8 @@ begin
 				g_separate           => g_fft.use_separate,
 				g_dont_flip_channels => g_dont_flip_channels,
 				g_nof_points         => g_fft.nof_points,
-				g_nof_chan           => g_fft.nof_chan
+				g_nof_chan           => g_fft.nof_chan,
+				g_ram_primitive 	 => g_ram_primitive
 			)
 			port map(
 				clken   => clken,
@@ -174,11 +190,11 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
@@ -194,11 +210,11 @@ begin
 
 	u_requantize_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
