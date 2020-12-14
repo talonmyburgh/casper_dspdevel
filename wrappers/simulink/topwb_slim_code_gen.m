@@ -304,7 +304,8 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
     fprintf(fid,'%s\n',linetwo);
     fprintf(fid,'%s\n',linethree);
     fprintf(fid,'%s\n',linefour);
-    for jj = insertloc+5 : length(lines)
+    fprintf(fid,'%s\n',linefive);
+    for jj = insertloc+6: length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);

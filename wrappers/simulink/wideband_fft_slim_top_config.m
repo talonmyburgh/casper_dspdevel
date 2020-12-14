@@ -68,8 +68,8 @@ function wideband_fft_slim_top_config(this_block)
   use_separate = checkbox2bool(use_separate);
   guard_en = checkbox2bool(guard_en);
   
-  function stages = stagecalc(str2double(nof_points))
-    stages = ceil(log2(nof_points));
+  function stages = stagecalc(nof_points)
+    stages = ceil(log2(str2double(nof_points)));
   end
   
   %Update the vhdl top file with the required ports per wb_factor:
@@ -272,7 +272,7 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('stage_dat_w','natural',s_d_w);
   this_block.addGeneric('guard_w','natural',guard_w);
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
-  this_block.addGeneric('use_variant','String',use_variant);
+  this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
   this_block.addGeneric('representation','String',representation);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
