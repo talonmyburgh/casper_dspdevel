@@ -85,7 +85,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "guard_w        : natural := guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
                                                     "--   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
                                                     "--   12.3.2], therefore use input guard_w = 2."
-        "guard_enable   : boolean := guard_enable       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
+        "guard_enable   : boolean := guard_enable;       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
                                                     "--   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
                                                     "--   doing the input guard and par fft section doing the output compensation)"
         "use_variant    : string  := ""4DSP"";        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
@@ -116,7 +116,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "end entity wideband_fft_slim_top;"
         "architecture RTL of wideband_fft_slim_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,"
-        "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);"
+        "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
         "signal out_bb_sosi_arr : t_bb_sosi_arr_out(wb_factor - 1 downto 0);"
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
@@ -170,7 +170,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "end entity wideband_fft_slim_top;"
         "architecture RTL of wideband_fft_slim_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,"
-        "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);"
+        "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
         "signal out_bb_sosi_arr : t_bb_sosi_arr_out(wb_factor - 1 downto 0);"
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
@@ -279,7 +279,6 @@ function achararr = mkarch(wbfctr)
         l=l+1;
         achararr(l,1)=sprintf(omap_im_c,mm,mm);
         l=l+1;
-
    end
 end
 
@@ -309,5 +308,4 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);
-
 end

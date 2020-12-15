@@ -6,9 +6,9 @@ USE common_pkg_lib.common_pkg.ALL;
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
 CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
-CONSTANT in_dat_w       : natural :=9;       -- = 8,  number of input bits
-CONSTANT out_dat_w      : natural :=13;       -- = 13, number of output bits
-CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
+CONSTANT out_dat_w      : natural :=12;       -- = 13, number of output bits
+CONSTANT stage_dat_w    : natural :=14;       -- = 18, data width used between the stages(= DSP multiplier-width)
 CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
@@ -125,7 +125,7 @@ end;
 
 -- Calculate the length of the shiftregister and ovflw register for par fft
 function fft_shiftreglen_par(wb_factor,pts :natural) return natural is
-variable sr_len : integer;
+variable sr_len : natural;
 begin
 if(wb_factor = pts) then
 sr_len := ceil_log2(nof_points);
