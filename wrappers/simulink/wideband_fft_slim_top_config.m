@@ -71,7 +71,7 @@ function wideband_fft_slim_top_config(this_block)
   function stages = stagecalc(nof_points)
     stages = ceil(log2(str2double(nof_points)));
   end
-  
+  num_stages = stagecalc(nof_points);
   %Update the vhdl top file with the required ports per wb_factor:
   topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(nof_points));
 
@@ -179,6 +179,14 @@ function wideband_fft_slim_top_config(this_block)
       this_block.setError('Input data type for port "in_valid" must have width=1.');
     end
     in_valid_port.useHDLVector(false);
+    
+    %input shiftreg
+    in_shiftreg_port.useHDLVector(true);
+    in_shiftreg_port.setWidth(num_stages);
+    
+    %output ovflw
+    out_ovflw_port.useHDLVector(true);
+    out_ovflw_port.setWidth(num_stages);
 
    if xtra_dat_sigs
     %input bsn
@@ -197,10 +205,6 @@ function wideband_fft_slim_top_config(this_block)
       end
       in_eop_port.useHDLVector(false);
 
-      %input shiftreg
-      in_shiftreg_port.useHDLVector(true);
-      in_shiftreg_port.setWidth(stagecalc(nof_points));
-
       %input empty
       in_empty_port.useHDLVector(true);
       in_empty_port.setWidth(dp_stream_empty);
@@ -212,10 +216,6 @@ function wideband_fft_slim_top_config(this_block)
       %input channel
       in_channel_port.useHDLVector(true);
       in_channel_port.setWidth(dp_stream_channel);
-
-      %output ovflw
-      out_ovflw_port.useHDLVector(true);
-      out_ovflw_port.setWidth(stagecalc(nof_points));
 
       %output bsn
       out_bsn_port.useHDLVector(true);
@@ -317,6 +317,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/rl_shift_requantize.vhdl'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
