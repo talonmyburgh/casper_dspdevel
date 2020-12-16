@@ -122,7 +122,8 @@ architecture rtl of fft_r2_wide is
 			v_return(I).twiddle_offset := I; -- Twiddle offset is set to the order number of the pipelined fft. 
 			v_return(I).nof_points     := v_nof_points; -- Set the nof points 
 			v_return(I).in_dat_w       := input.stage_dat_w; -- Set the input width  
-			v_return(I).out_dat_w      := input.stage_dat_w; -- Set the output width. 
+			v_return(I).out_dat_w      := input.stage_dat_w; -- Set the output width.
+			v_return(I).stage_dat_w    := input.stage_dat_w; -- Set stage data width 
 			v_return(I).out_gain_w     := 0; -- Output gain is forced to 0
 			v_return(I).guard_w        := 0; -- Set the guard_w to 0 to enable scaling at every stage. 
 			v_return(I).guard_enable   := false; -- No input guard. 
