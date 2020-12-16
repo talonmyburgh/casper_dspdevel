@@ -34,7 +34,7 @@ entity rTwoSDFStage is
 		g_use_dsp        : string         := "yes";
 		g_representation : string 		  := "SIGNED";
 		g_ovflw_behav	 : string		  := "WRAP";
-		g_use_round			 : string		  := "ROUND";
+		g_use_round		 : string		  := "ROUND";
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
 	port(

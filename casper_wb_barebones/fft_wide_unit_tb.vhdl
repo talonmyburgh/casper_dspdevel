@@ -17,6 +17,9 @@ architecture sim of fft_wide_unit_tb is
 
     signal clk : std_logic := '1';
     signal rst : std_logic := '1';
+    
+    signal shiftreg : std_logic_vector(9 downto 0) := "1001111100";
+    signal ovflw : std_logic_vector(9 downto 0);
 
     signal array_in : t_bb_sosi_arr_in(wb_factor -1 downto 0);
     signal array_out : t_bb_sosi_arr_out(wb_factor -1 downto 0);
@@ -36,6 +39,8 @@ begin
         clk => clk,
         rst => rst,
         clken => '1',
+        shiftreg => shiftreg,
+        ovflw => ovflw,
         in_bb_sosi_arr => array_in,
 		out_bb_sosi_arr => array_out
     );
@@ -52,20 +57,14 @@ begin
         for I in 0 to wb_factor-1 loop
             array_in(I) <= c_bb_sosi_rst_in;
         end loop;
-
+        
         wait for clk_period *39;
-        array_in(0).sync <='1';
-        array_in(0).valid <= '1';
-        wait for clk_period;
-        array_in(0).sync<='0';
-        wait for clk_period;
         array_in(0).re <= "01111111";
-        wait for clk_period*2;
-        array_in(0).re <= "00000000";
-        wait for clk_period*255;
-        array_in(0).re <= "01111111";
-        wait for clk_period*2;
-        array_in(0).re <= "00000000";
+        array_in(0).sync <= '1';
+        array_in(0).valid <='1';
+        wait for clk_period;
+        array_in(0).sync <= '0';
         wait;
     end process;
+
 end architecture;

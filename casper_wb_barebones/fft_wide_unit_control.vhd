@@ -50,7 +50,7 @@ entity fft_wide_unit_control is
 		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
 		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
 		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_fifo_primitive : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
@@ -104,13 +104,12 @@ begin
 	---------------------------------------------------------------
 	u_bsn_fifo : entity casper_fifo_lib.common_fifo_sc
 		generic map(
-			g_technology     => g_technology, 
 			g_use_lut        => TRUE,        -- Make this FIFO in logic, since it's only 4 words deep. 
 			g_reset          => FALSE,
 			g_init           => FALSE,
 			g_dat_w          => c_dp_stream_bsn_w,
 			g_nof_words      => c_ctrl_fifo_depth,
-			g_fifo_primitive => g_fifo_primitive
+			g_fifo_primitive => "distributed"
 		)
 		port map(
 			rst    => rst,
@@ -130,12 +129,12 @@ begin
 	---------------------------------------------------------------
 	u_error_fifo : entity casper_fifo_lib.common_fifo_sc
 		generic map(
-			g_use_lut   => TRUE,        -- Make this FIFO in logic, since it's only 4 words deep. 
-			g_reset     => FALSE,
-			g_init      => FALSE,
-			g_dat_w     => c_dp_stream_error_w,
-			g_nof_words => c_ctrl_fifo_depth,
-			g_fifo_primitive => g_fifo_primitive
+			g_use_lut   	 => TRUE,        -- Make this FIFO in logic, since it's only 4 words deep. 
+			g_reset     	 => FALSE,
+			g_init      	 => FALSE,
+			g_dat_w     	 => c_dp_stream_error_w,
+			g_nof_words 	 => c_ctrl_fifo_depth,
+			g_fifo_primitive => "distributed"
 		)
 		port map(
 			rst    => rst,
@@ -155,12 +154,12 @@ begin
 	---------------------------------------------------------------
 	u_sync_bsn_fifo : entity casper_fifo_lib.common_fifo_sc
 		generic map(
-			g_use_lut   => TRUE,        -- Make this FIFO in logic, since it's only 4 words deep. 
-			g_reset     => FALSE,
-			g_init      => FALSE,
-			g_dat_w     => c_dp_stream_bsn_w,
-			g_nof_words => 16,
-			g_fifo_primitive => g_fifo_primitive
+			g_use_lut   	 => TRUE,        -- Make this FIFO in logic, since it's only 4 words deep. 
+			g_reset     	 => FALSE,
+			g_init      	 => FALSE,
+			g_dat_w     	 => c_dp_stream_bsn_w,
+			g_nof_words 	 => 16,
+			g_fifo_primitive => "distributed"
 		)
 		port map(
 			rst    => rst,

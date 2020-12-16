@@ -127,7 +127,7 @@ begin
                 g_stage          => stage,
                 g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
-				g_use_variant        => g_use_variant,
+				g_use_variant    => g_use_variant,
 				g_use_dsp        => g_use_dsp,
 				g_representation => g_representation,
 				g_ovflw_behav	 => g_ovflw_behav,

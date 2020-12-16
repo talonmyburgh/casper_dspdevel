@@ -5,29 +5,29 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
-CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
-CONSTANT out_dat_w      : natural :=12;       -- = 13, number of output bits
-CONSTANT stage_dat_w    : natural :=14;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
+CONSTANT wb_factor      : natural :=1;              -- = default 1, wideband factor
+CONSTANT in_dat_w       : natural :=8;              -- = 8,  number of input bits
+CONSTANT out_dat_w      : natural :=12;             -- = 13, number of output bits
+CONSTANT stage_dat_w    : natural :=14;             -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT nof_points     : natural := 1024;          -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
-CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;  --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
-CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
-CONSTANT c_dp_stream_error_w    : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping error numbers, e.g. 32 different one-hot encoded errors, bit [0] = 0 = OK 
-CONSTANT use_reorder    : boolean := false;       -- = false for bit-reversed output, true for normal output
-CONSTANT use_fft_shift  : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-CONSTANT use_separate   : boolean := true;       -- = false for complex input, true for two real inputs
-CONSTANT nof_chan       : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
-CONSTANT twiddle_offset : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
-CONSTANT out_gain_w     : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-CONSTANT guard_w        : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
---   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
---   12.3.2], therefore use input guard_w = 2.
-CONSTANT guard_enable   : boolean :=true;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
---   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
---   doing the input guard and par fft section doing the output compensation)
+CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;   -- 64 is sufficient to count blocks of data for years
+CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;   --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
+CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;   -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
+CONSTANT c_dp_stream_error_w    : NATURAL :=  32;   -- 32 is sufficient for several levels of hierarchy in mapping error numbers, e.g. 32 different one-hot encoded errors, bit [0] = 0 = OK 
+CONSTANT use_reorder    : boolean := false;         -- = false for bit-reversed output, true for normal output
+CONSTANT use_fft_shift  : boolean := false;         -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+CONSTANT use_separate   : boolean := true;          -- = false for complex input, true for two real inputs
+CONSTANT nof_chan       : natural := 0;             -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
+CONSTANT twiddle_offset : natural := 0;             -- = default 0, twiddle offset for PFT sections in a wideband FFT
+CONSTANT out_gain_w     : natural :=0;              -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+CONSTANT guard_w        : natural :=2;              -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
+                                                    --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
+                                                    --   12.3.2], therefore use input guard_w = 2.
+CONSTANT guard_enable   : boolean :=true;           -- = true when input needs guarding, false when input requires no guarding but scaling must be
+                                                    --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
+                                                    --   doing the input guard and par fft section doing the output compensation)
 
 type t_fft is record
 use_reorder    : boolean;       --! = false for bit-reversed output, true for normal output
@@ -49,8 +49,8 @@ guard_enable   : boolean;       --! = true when input needs guarding, false when
 --!  doing the input guard and par fft section doing the output compensation)
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 8, 14, 0, 
-c_dsp_mult_w, 2, TRUE);
+constant c_fft : t_fft := (use_reorder, use_fft_shift, use_separate, nof_chan, wb_factor, twiddle_offset, nof_points, in_dat_w, out_dat_w, out_gain_w, 
+stage_dat_w, guard_w, guard_enable);
 
 type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(stage_dat_w-1 DOWNTO 0);

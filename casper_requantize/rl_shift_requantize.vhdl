@@ -1,23 +1,3 @@
--------------------------------------------------------------------------------
---
--- Copyright 2020
--- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
--- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
--- 
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
--- 
---     http://www.apache.org/licenses/LICENSE-2.0
--- 
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
---
--------------------------------------------------------------------------------
-
 LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
@@ -57,12 +37,6 @@ ARCHITECTURE str OF rl_shift_requantize IS
   SIGNAL res_dat       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);  -- resulting out_dat after removing the g_msb_w number of MSBits
   
 BEGIN
-
-  scale_process : process(scale)
-  begin
-    
-  end process;
-
   -- Replace common_round, since we only shift down or not at all. Furthermore, we don't use the pipeline in this case.
   shift_proc : process(scale)
   begin
