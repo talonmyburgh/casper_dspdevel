@@ -56,21 +56,22 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_pipe is
 	generic(
-		g_fft                : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline           : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false -- generic to prevent re-ordering of the channels
+		g_fft                : t_fft          := c_fft; 		 --! generics for the FFT
+		g_pipeline           : t_fft_pipeline := c_fft_pipeline; --! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_dont_flip_channels : boolean        := false 			 --! generic to prevent re-ordering of the channels
 	);
 	port(
-		clken   : in  std_logic;
-		clk     : in  std_logic;
-		rst     : in  std_logic := '0';
-		shiftreg : in  std_logic_vector(c_stages_pipe -1 downto 0);
-		in_re   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_im   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_val  : in  std_logic := '1';
-		out_re  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_im  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_val : out std_logic
+		clken   : in  std_logic;										--! Clock enable
+		clk     : in  std_logic;										--! Clock
+		rst     : in  std_logic := '0';									--! Reset
+		shiftreg : in  std_logic_vector(c_stages_pipe -1 downto 0);		--! Shift register
+		in_re   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);	--! Input real signal
+		in_im   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);	--! Input imaginary signal
+		in_val  : in  std_logic := '1';									--! In data valid
+		out_re  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);	--! Output real signal
+		out_im  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);	--! Output imaginary signal
+		ovflw	: out std_logic_vector(c_stages_pipe - 1 downto 0);		--! Overflow register
+		out_val : out std_logic											--! Output data valid
 	);
 end entity fft_r2_pipe;
 
@@ -126,6 +127,7 @@ begin
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
+				ovflw	=> ovflw(stage -1),
 				out_val => data_val(stage - 1)
 			);
 	end generate;

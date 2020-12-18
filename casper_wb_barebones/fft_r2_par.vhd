@@ -42,19 +42,20 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_par is
 	generic(
-		g_fft      : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline : t_fft_pipeline := c_fft_pipeline -- generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_fft      : t_fft          := c_fft; 				--! generics for the FFT
+		g_pipeline : t_fft_pipeline := c_fft_pipeline	 	--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
 	);
 	port(
-		clk        : in  std_logic;
-		rst        : in  std_logic := '0';
-		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0); -- par stage long shiftreg
-		in_val     : in  std_logic := '1';
-		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		out_val    : out std_logic
+		clk        : in  std_logic;											--! Clock
+		rst        : in  std_logic := '0';									--! Reset
+		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Input real data (nof_points wide)
+		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Input imag data (nof_points wide)
+		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0); 		--! Par stage long shiftreg
+		in_val     : in  std_logic := '1';									--! In data valid
+		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Output real data (nof_points wide)
+		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Output imag data (nof_points wide)
+		ovflw	   : out std_logic_vector(c_stages_par - 1 downto 0);		--! Par stage long ovflw register
+		out_val    : out std_logic											--! Out data valid
 	);
 end entity fft_r2_par;
 
@@ -186,6 +187,7 @@ begin
 					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
 					y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
 					y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+					ovflw	 => ovflw(stage - 1),				-- Record if overflow occured at stage
 					out_val  => data_val(stage - 1)(element)
 				);
 		end generate;

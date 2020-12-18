@@ -39,17 +39,18 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_wide_unit is
 	generic(
-		g_fft          : t_fft          := c_fft; -- generics for the FFT
-		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; -- For the pipelined part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+		g_fft          : t_fft          := c_fft; 			--! generics for the FFT
+		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; 	--! For the pipelined part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline 	--! For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
 	);
 	port(
-		clken           	: in  std_logic := '1';
-		rst             	: in  std_logic := '0';
-		clk             	: in  std_logic := '1';
-		shiftreg 		    : in  std_logic_vector(c_stages - 1 DOWNTO 0) := (others=>'1');
-		in_bb_sosi_arr      : in  t_bb_sosi_arr_in(g_fft.wb_factor -1 downto 0);
-		out_bb_sosi_arr     : out t_bb_sosi_arr_out(g_fft.wb_factor -1 downto 0)
+		clken           	: in  std_logic := '1';									--! Clock enable
+		rst             	: in  std_logic := '0';									--! Reset
+		clk             	: in  std_logic := '1';									--! Clock
+		shiftreg 		    : in  std_logic_vector(c_stages - 1 DOWNTO 0);			--! Shift register
+		in_bb_sosi_arr      : in  t_bb_sosi_arr_in(g_fft.wb_factor -1 downto 0);	--! Input data array (wb_factor wide)
+		ovflw				: out std_logic_vector(c_stages - 1 DOWNTO 0);			--!	Overflow register
+		out_bb_sosi_arr     : out t_bb_sosi_arr_out(g_fft.wb_factor -1 downto 0)	--! Output data array (wb_factor wide)
 	);
 end entity fft_wide_unit;
 
@@ -123,6 +124,7 @@ begin
 			in_val     => r.in_bb_sosi_arr(0).valid,
 			out_re_arr => fft_out_re_arr,
 			out_im_arr => fft_out_im_arr,
+			ovflw	   => ovflw,
 			out_val    => fft_out_val
 		);
 

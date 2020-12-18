@@ -72,21 +72,22 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_wide is
 	generic(
-		g_fft          : t_fft          := c_fft; -- generics for the FFT
-		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; -- For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft          : t_fft          := c_fft; 				--! generics for the FFT
+		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; 		--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline 		--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
 	);
 	port(
-		clken      : in  std_logic;
-		clk        : in  std_logic;
-		rst        : in  std_logic := '0';
-		shiftreg   : in  std_logic_vector(c_stages - 1 DOWNTO 0); 
-		in_re_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0); -- = time samples t3, t2, t1, t0
-		in_im_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);
-		in_val     : in  std_logic := '1';
-		out_re_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
-		out_im_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
-		out_val    : out std_logic
+		clken      : in  std_logic;											--! Clock enable
+		clk        : in  std_logic;											--! Clock
+		rst        : in  std_logic := '0';									--! Reset
+		shiftreg   : in  std_logic_vector(c_stages - 1 DOWNTO 0); 			--! Shift register
+		in_re_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);	--! Input real data (wb_factor wide)
+		in_im_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);	--! Input imag data (wb_factor wide)
+		in_val     : in  std_logic := '1';									--! In data valid
+		out_re_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);	--! Output real data (wb_factor wide)
+		out_im_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);	--! Output imag data (wb_factor wide)
+		ovflw 	   : out std_logic_vector(c_stages - 1 DOWNTO 0);			--! Overflow register
+		out_val    : out std_logic											--! Out data valid
 	);
 end entity fft_r2_wide;
 
@@ -200,6 +201,7 @@ begin
 				in_val  => in_val,
 				out_re  => fft_pipe_out_re,
 				out_im  => fft_pipe_out_im,
+				ovflw	=> ovflw,
 				out_val => out_val
 			);
 
@@ -270,6 +272,7 @@ begin
 				in_val     => in_val,
 				out_re_arr => par_stg_fft_re_out,
 				out_im_arr => par_stg_fft_im_out,
+				ovflw	   => ovflw,
 				out_val    => out_val
 			);
 	end generate;
@@ -296,16 +299,17 @@ begin
 					g_pipeline => g_pft_pipeline -- pipeline generics for the pipelined FFTs
 				)
 				port map(
-					clken   => clken,
-					clk     => clk,
-					rst     => rst,
-					in_re   => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					in_im   => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					shiftreg => shiftreg(c_stages-1 DOWNTO c_stages_par), -- Only c_stages_par of shiftreg
-					in_val  => in_val,
-					out_re  => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					out_im  => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					out_val => int_val(I)
+					clken   	=> clken,
+					clk     	=> clk,
+					rst     	=> rst,
+					in_re   	=> in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+					in_im   	=> in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+					shiftreg	=> shiftreg(c_stages-1 DOWNTO c_stages_par), -- Only c_stages_par of shiftreg
+					in_val  	=> in_val,
+					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+					ovflw		=> ovflw(c_stages-1 DOWNTO c_stages_par),
+					out_val 	=> int_val(I)
 				);
 		end generate;
 
@@ -335,6 +339,7 @@ begin
 				in_val     => int_val(0),
 				out_re_arr => fft_out_re_arr,
 				out_im_arr => fft_out_im_arr,
+				ovflw	   => ovflw(c_stages_par-1 DOWNTO 0),
 				out_val    => fft_out_val
 			);
 
