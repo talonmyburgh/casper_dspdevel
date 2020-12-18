@@ -188,11 +188,11 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
@@ -208,11 +208,11 @@ begin
 
 	u_requantize_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,

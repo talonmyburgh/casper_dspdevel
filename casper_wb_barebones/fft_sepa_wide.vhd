@@ -45,7 +45,8 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_sepa_wide is
 	generic(
-		g_fft : t_fft := c_fft          -- generics for the FFT
+		g_fft           : t_fft   := c_fft;          -- generics for the FFT
+		g_ram_primitive : string := "auto"
 	);
 	port(
 		clken      : in  std_logic;
@@ -142,7 +143,8 @@ begin
 				g_page_sz       => c_page_size,
 				g_wr_start_page => 0,
 				g_rd_start_page => 1,
-				g_rd_latency    => 1
+				g_rd_latency    => 1,
+				g_ram_primitive => g_ram_primitive
 			)
 			port map(
 				rst          => rst,

@@ -26,7 +26,7 @@ use common_pkg_lib.common_pkg.all;
 entity rTwoWMul is
 	generic(
 		g_technology : NATURAL := 0;
-		g_use_dsp    : STRING  := "YES";
+		g_use_dsp    : STRING  := "yes";
 		g_variant    : STRING  := "4DSP";
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
