@@ -317,7 +317,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/rl_shift_requantize.vhdl'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhdl'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
