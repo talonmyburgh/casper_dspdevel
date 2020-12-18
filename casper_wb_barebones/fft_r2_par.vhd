@@ -50,6 +50,7 @@ entity fft_r2_par is
 		rst        : in  std_logic := '0';
 		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
 		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
+		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0); -- par stage long shiftreg
 		in_val     : in  std_logic := '1';
 		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
 		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
@@ -170,7 +171,6 @@ begin
 				generic map(
 					g_stage        => stage,
 					g_element      => element,
-					g_scale_enable => sel_a_b(stage <= g_fft.guard_w, FALSE, TRUE),
 					g_pipeline     => g_pipeline
 				)
 				port map(
@@ -180,6 +180,7 @@ begin
 					x_in_im  => data_im(stage)(2 * element),
 					y_in_re  => data_re(stage)(2 * element + 1),
 					y_in_im  => data_im(stage)(2 * element + 1),
+					scale	 => shiftreg(stage-1),				-- Scale or not at stage
 					in_val   => data_val(stage)(element),
 					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
 					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),

@@ -44,9 +44,10 @@ entity fft_wide_unit is
 		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline -- For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
 	);
 	port(
-		clken           : in  std_logic := '1';
-		rst             : in  std_logic := '0';
-		clk             : in  std_logic := '1';
+		clken           	: in  std_logic := '1';
+		rst             	: in  std_logic := '0';
+		clk             	: in  std_logic := '1';
+		shiftreg 		    : in  std_logic_vector(c_stages - 1 DOWNTO 0) := (others=>'1');
 		in_bb_sosi_arr      : in  t_bb_sosi_arr_in(g_fft.wb_factor -1 downto 0);
 		out_bb_sosi_arr     : out t_bb_sosi_arr_out(g_fft.wb_factor -1 downto 0)
 	);
@@ -116,6 +117,7 @@ begin
 			clken      => clken,
 			clk        => clk,
 			rst        => rst,
+			shiftreg   => shiftreg,
 			in_re_arr  => fft_in_re_arr,
 			in_im_arr  => fft_in_im_arr,
 			in_val     => r.in_bb_sosi_arr(0).valid,
