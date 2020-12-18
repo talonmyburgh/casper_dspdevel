@@ -43,7 +43,13 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_par is
 	generic(
 		g_fft      : t_fft          := c_fft; 				--! generics for the FFT
-		g_pipeline : t_fft_pipeline := c_fft_pipeline	 	--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_pipeline : t_fft_pipeline := c_fft_pipeline;	 	--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  	:= "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  	:= "yes";        		--! = "yes" or "no"
+		g_representation : string  	:= "SIGNED";        	--! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    : string  	:= "WRAP";        		--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  	:= "ROUND";        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_technology     : natural 	:= 0       				--! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clk        : in  std_logic;											--! Clock
@@ -170,9 +176,15 @@ begin
 		gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
 			u_element : entity work.fft_r2_bf_par
 				generic map(
-					g_stage        => stage,
-					g_element      => element,
-					g_pipeline     => g_pipeline
+					g_stage        		=> stage,
+					g_element      		=> element,
+					g_pipeline     		=> g_pipeline,
+					g_use_variant		=> g_use_variant,
+					g_representation 	=> g_representation,
+					g_ovflw_behav   	=> g_ovflw_behav,
+					g_use_round			=> g_use_round,
+					g_technology		=> g_technology,
+					g_use_dsp			=> g_use_dsp
 				)
 				port map(
 					clk      => clk,
