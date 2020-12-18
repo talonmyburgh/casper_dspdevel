@@ -5,10 +5,11 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
+CONSTANT wb_factor      : natural :=2;       -- = default 1, wideband factor
 CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=13;       -- = 13, number of output bits
 CONSTANT stage_dat_w    : natural :=16;       -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT nof_points     : natural := 1024;          -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -20,7 +21,6 @@ CONSTANT use_fft_shift  : boolean := false;       -- = false for [0, pos, neg] b
 CONSTANT use_separate   : boolean := true;       -- = false for complex input, true for two real inputs
 CONSTANT nof_chan       : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
 CONSTANT twiddle_offset : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
-CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
 CONSTANT out_gain_w     : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
 CONSTANT guard_w        : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
@@ -47,11 +47,9 @@ guard_w        : natural;       -- = 2, guard used to avoid overflow in first FF
 guard_enable   : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
 --   doing the input guard and par fft section doing the output compensation)
-stat_data_w    : positive;      -- = 56
-stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 8, 14, 0, c_dsp_mult_w, 2, true, 56, 2);
+constant c_fft : t_fft := (use_reorder, use_fft_shift, use_separate, nof_chan, wb_factor, twiddle_offset, nof_points, in_dat_w, out_dat_w, out_gain_w, stage_dat_w, guard_w, guard_enable);
 
 
 type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
@@ -96,6 +94,16 @@ TYPE t_bb_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_out;
 -- FFT shift swaps right and left half of bin axis to shift zero-frequency component to center of spectrum
 function fft_shift(bin : std_logic_vector) return std_logic_vector;
 function fft_shift(bin, w : natural) return natural;
+
+-- Calculate stage lengths for the pipelined and parallel FFT's separately.
+function fft_shiftreglen_pipe(wb_factor, pts : natural) return natural;
+function fft_shiftreglen_par(wb_factor,pts : natural) return natural;
+
+-- Calculate the shiftregister and ovflw register sizes for both FFT's.
+CONSTANT c_stages      : NATURAL := ceil_log2(nof_points);
+CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
+CONSTANT c_stages_par  : NATURAL := fft_shiftreglen_par(wb_factor,nof_points);
+
 END fft_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
@@ -110,5 +118,23 @@ end;
 function fft_shift(bin, w : natural) return natural is
 begin
 return TO_UINT(fft_shift(TO_UVEC(bin, w)));
+end;
+
+-- Functions for stage length calculations for wideband FFT
+function fft_shiftreglen_pipe(wb_factor,pts : natural) return natural is
+    begin
+    return ceil_log2(nof_points/wb_factor);
+end;
+    
+    -- Calculate the length of the shiftregister and ovflw register for par fft
+function fft_shiftreglen_par(wb_factor,pts :natural) return natural is
+    variable sr_len : natural;
+    begin
+    if(wb_factor = pts) then
+    sr_len := ceil_log2(nof_points);
+    elsif(wb_factor>1 and wb_factor < pts) then
+    sr_len := ceil_log2(wb_factor);
+    end if;
+    return sr_len;
 end;
 END fft_gnrcs_intrfcs_pkg;

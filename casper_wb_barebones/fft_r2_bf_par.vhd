@@ -38,7 +38,6 @@ entity fft_r2_bf_par is
 	generic(
 		g_stage        : natural        := 3;
 		g_element      : natural        := 1;
-		g_scale_enable : boolean        := TRUE;
 		-- internal pipeline settings
 		g_pipeline     : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
@@ -53,6 +52,7 @@ entity fft_r2_bf_par is
 		x_in_im  : in  std_logic_vector;
 		y_in_re  : in  std_logic_vector;
 		y_in_im  : in  std_logic_vector;
+		scale    : in  std_logic;
 		in_val   : in  std_logic;
 		x_out_re : out std_logic_vector;
 		x_out_im : out std_logic_vector;
@@ -63,10 +63,6 @@ entity fft_r2_bf_par is
 end entity fft_r2_bf_par;
 
 architecture str of fft_r2_bf_par is
-
-	-- The amplification factor per stage is 2, therefor bit growth defintion of 1.
-	-- Scale enable is defined by generic.
-	constant c_stage_bit_growth : natural := sel_a_b(g_scale_enable, 1, 0);
 
 	constant c_out_dat_w : natural := x_out_re'length; -- re and im have same width  
 
@@ -138,10 +134,9 @@ begin
 	------------------------------------------------------------------------------
 	-- requantize x output
 	------------------------------------------------------------------------------
-	u_requantize_x_re : entity casper_requantize_lib.common_requantize
+	u_requantize_x_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -154,15 +149,15 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale	=> scale,
 			in_dat  => sum_re,
 			out_dat => sum_quant_re,
 			out_ovr => open
 		);
 
-	u_requantize_x_im : entity casper_requantize_lib.common_requantize
+	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -175,6 +170,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale	=> scale,
 			in_dat  => sum_im,
 			out_dat => sum_quant_im,
 			out_ovr => open
@@ -274,10 +270,9 @@ begin
 	------------------------------------------------------------------------------
 	-- requantize y output
 	------------------------------------------------------------------------------
-	u_requantize_y_re : entity casper_requantize_lib.common_requantize
+	u_requantize_y_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -290,15 +285,15 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale	=> scale,
 			in_dat  => mul_out_re,
 			out_dat => mul_quant_re,
 			out_ovr => open
 		);
 
-	u_requantize_y_im : entity casper_requantize_lib.common_requantize
+	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_representation      => "SIGNED",
-			g_lsb_w               => c_stage_bit_growth,
 			g_lsb_round           => TRUE,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => FALSE,
@@ -311,6 +306,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
+			scale	=> scale,
 			in_dat  => mul_out_im,
 			out_dat => mul_quant_im,
 			out_ovr => open

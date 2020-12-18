@@ -1,7 +1,0 @@
-# compile verilog/system verilog design source files
-
-# compile glbl module
-verilog wb_fft_lib "glbl.v"
-
-# Do not sort compile order
-nosort

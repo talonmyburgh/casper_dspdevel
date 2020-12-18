@@ -64,6 +64,7 @@ entity fft_r2_pipe is
 		clken   : in  std_logic;
 		clk     : in  std_logic;
 		rst     : in  std_logic := '0';
+		shiftreg : in  std_logic_vector(c_stages_pipe -1 downto 0);
 		in_re   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
 		in_im   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
 		in_val  : in  std_logic := '1';
@@ -114,7 +115,6 @@ begin
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
-				g_scale_enable   => sel_a_b(stage <= g_fft.guard_w, FALSE, TRUE),
 				g_pipeline       => g_pipeline
 			)
 			port map(
@@ -122,6 +122,7 @@ begin
 				rst     => rst,
 				in_re   => data_re(stage),
 				in_im   => data_im(stage),
+				scale   => shiftreg(stage-1),
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
