@@ -54,15 +54,26 @@ function wideband_fft_slim_top_config(this_block)
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
+  variant = get_param(wb_fft_blk_parent,'use_variant');
+  use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
+  representation = get_param(wb_fft_blk_parent,'representation');
+  ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
+  use_round = get_param(wb_fft_blk_parent,'use_round');
+  ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
+  fifo_primitive = get_param(wb_fft_blk_parent,'fifo_primitive');
+  technology = get_param(wb_fft_blk_parent,'technology');
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
   use_separate = checkbox2bool(use_separate);
   guard_en = checkbox2bool(guard_en);
   
-  
+  function stages = stagecalc(nof_points)
+    stages = ceil(log2(str2double(nof_points)));
+  end
+  num_stages = stagecalc(nof_points);
   %Update the vhdl top file with the required ports per wb_factor:
-  topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
+  topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(nof_points));
 
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
@@ -71,6 +82,9 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_sync');
   this_block.addSimulinkInport('in_valid');
+  this_block.addSimulinkInport('shiftreg');
+  in_shiftreg_port = this_block.port('shiftreg');
+
   %If a simple interface is required by the user, hide these other signals
   if xtra_dat_sigs
         this_block.addSimulinkInport('in_bsn');
@@ -99,6 +113,9 @@ function wideband_fft_slim_top_config(this_block)
   
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_valid');
+  this_block.addSimulinkOutport('ovflw');
+  out_ovflw_port = this_block.port('ovflw');
+
   if xtra_dat_sigs
       this_block.addSimulinkOutport('out_bsn');
       this_block.addSimulinkOutport('out_sop');
@@ -162,6 +179,14 @@ function wideband_fft_slim_top_config(this_block)
       this_block.setError('Input data type for port "in_valid" must have width=1.');
     end
     in_valid_port.useHDLVector(false);
+    
+    %input shiftreg
+    in_shiftreg_port.useHDLVector(true);
+    in_shiftreg_port.setWidth(num_stages);
+    
+    %output ovflw
+    out_ovflw_port.useHDLVector(true);
+    out_ovflw_port.setWidth(num_stages);
 
    if xtra_dat_sigs
     %input bsn
@@ -247,6 +272,14 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('stage_dat_w','natural',s_d_w);
   this_block.addGeneric('guard_w','natural',guard_w);
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
+  this_block.addGeneric('use_variant','String',variant);
+  this_block.addGeneric('use_dsp','String',use_dsp);
+  this_block.addGeneric('representation','String',representation);
+  this_block.addGeneric('ovflw_behav','String',ovflw_behav);
+  this_block.addGeneric('use_round','String',use_round);
+  this_block.addGeneric('ram_primitive','String',ram_primitive);
+  this_block.addGeneric('fifo_primitive','String',fifo_primitive);
+  this_block.addGeneric('technology','natural',technology);
   
 
   % Add addtional source files as needed.
@@ -284,6 +317,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/rl_shift_requantize.vhdl'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');

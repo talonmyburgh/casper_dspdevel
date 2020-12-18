@@ -66,7 +66,7 @@ function wb_slim_subsys2bb_knit()
             numPrt2delete = length(in_re);
     end
     
-    function deleteDatImPrts()
+    function deleteDatPrts()
         numPrt2delete=prts2delete();
         for k=0:numPrt2delete-1
             %in_ports
@@ -101,8 +101,9 @@ function wb_slim_subsys2bb_knit()
     %In this case, we don't want extra data signals but they are present 
     %in the design   
     elseif(~xtra_dat_sigs && (isempty(in_bsn) ==0))
-        %In this case, we don't want extra signals but they are present in
-        %the design.
+        %delete data sigs
+        deleteDatPrts();
+        
         %delete signals 
         i_bsn = inprts(in_bsn);
         in_bsn_lh = get_param(i_bsn{1},'LineHandles');
@@ -169,70 +170,70 @@ function wb_slim_subsys2bb_knit()
     elseif(xtra_dat_sigs && (isempty(in_bsn) == 1))
         bbports=get_param(wb_fft_bb,'PortHandles');
         %Delete ports so Simulink cannot complain.
-        deleteDatImPrts();
+        deleteDatPrts();
         
         %create signals
         %in ports
         in_bsn_str = sprintf([subsysblk '/in_bsn']);
         add_block('simulink/Commonly Used Blocks/In1',in_bsn_str);
         in_bsn_ph = get_param(in_bsn_str,'PortHandles');
-        add_line(subsysblk,in_bsn_ph.Outport(1),bbports.Inport(4));
+        add_line(subsysblk,in_bsn_ph.Outport(1),bbports.Inport(5));
                
         in_sop_str = sprintf([subsysblk '/in_sop']);
         add_block('simulink/Commonly Used Blocks/In1',in_sop_str);
         in_sop_ph = get_param(in_sop_str,'PortHandles');
-        add_line(subsysblk,in_sop_ph.Outport(1),bbports.Inport(5));
+        add_line(subsysblk,in_sop_ph.Outport(1),bbports.Inport(6));
         
         in_eop_str = sprintf([subsysblk '/in_eop']);
         add_block('simulink/Commonly Used Blocks/In1',in_eop_str);
         in_eop_ph = get_param(in_eop_str,'PortHandles');
-        add_line(subsysblk,in_eop_ph.Outport(1),bbports.Inport(6));
+        add_line(subsysblk,in_eop_ph.Outport(1),bbports.Inport(7));
         
         in_empty_str = sprintf([subsysblk '/in_empty']);
         add_block('simulink/Commonly Used Blocks/In1',in_empty_str);
         in_empty_ph = get_param(in_empty_str,'PortHandles');
-        add_line(subsysblk,in_empty_ph.Outport(1),bbports.Inport(7));
+        add_line(subsysblk,in_empty_ph.Outport(1),bbports.Inport(8));
         
         in_err_str = sprintf([subsysblk '/in_err']);
         add_block('simulink/Commonly Used Blocks/In1',in_err_str);
         in_err_ph = get_param(in_err_str,'PortHandles');
-        add_line(subsysblk,in_err_ph.Outport(1),bbports.Inport(8));        
+        add_line(subsysblk,in_err_ph.Outport(1),bbports.Inport(9));        
         
         in_chan_str = sprintf([subsysblk '/in_channel']);
         add_block('simulink/Commonly Used Blocks/In1',in_chan_str);
         in_chan_ph = get_param(in_chan_str,'PortHandles');
-        add_line(subsysblk,in_chan_ph.Outport(1),bbports.Inport(9));
+        add_line(subsysblk,in_chan_ph.Outport(1),bbports.Inport(10));
         
         %out ports
         out_bsn_str = sprintf([subsysblk '/out_bsn']);
         add_block('simulink/Commonly Used Blocks/Out1',out_bsn_str);
         out_bsn_ph = get_param(out_bsn_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(3),out_bsn_ph.Inport(1));
+        add_line(subsysblk,bbports.Outport(4),out_bsn_ph.Inport(1));
         
         out_sop_str = sprintf([subsysblk '/out_sop']);
         add_block('simulink/Commonly Used Blocks/Out1',out_sop_str);
         out_sop_ph = get_param(out_sop_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(4),out_sop_ph.Inport(1));
+        add_line(subsysblk,bbports.Outport(5),out_sop_ph.Inport(1));
 
         out_eop_str = sprintf([subsysblk '/out_eop']);
         add_block('simulink/Commonly Used Blocks/Out1',out_eop_str);
         out_eop_ph = get_param(out_eop_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(5),out_eop_ph.Inport(1));
+        add_line(subsysblk,bbports.Outport(6),out_eop_ph.Inport(1));
         
         out_empty_str = sprintf([subsysblk '/out_empty']);
         add_block('simulink/Commonly Used Blocks/Out1',out_empty_str);
         out_empty_ph = get_param(out_empty_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(6),out_empty_ph.Inport(1));
+        add_line(subsysblk,bbports.Outport(7),out_empty_ph.Inport(1));
         
         out_err_str = sprintf([subsysblk '/out_err']);
         add_block('simulink/Commonly Used Blocks/Out1',out_err_str);
         out_err_ph = get_param(out_err_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(7),out_err_ph.Inport(1)); 
+        add_line(subsysblk,bbports.Outport(8),out_err_ph.Inport(1)); 
         
         out_chan_str = sprintf([subsysblk '/out_channel']);
         add_block('simulink/Commonly Used Blocks/Out1',out_chan_str);
         out_chan_ph = get_param(out_chan_str,'PortHandles');
-        add_line(subsysblk,bbports.Outport(8),out_chan_ph.Inport(1));  
+        add_line(subsysblk,bbports.Outport(9),out_chan_ph.Inport(1));  
     
     %In this case, we don't want extra signals and they are are not present    
     else
@@ -291,11 +292,11 @@ function wb_slim_subsys2bb_knit()
         %Get bb port handles to add signals
         bbports=get_param(wb_fft_bb,'PortHandles');
         if xtra_dat_sigs
-            i_basic_prts = 10;
-            o_basic_prts = 9;
+            i_basic_prts = 11;
+            o_basic_prts = 10;
         else
-            i_basic_prts = 4;
-            o_basic_prts = 3;
+            i_basic_prts = 5;
+            o_basic_prts = 4;
         end
         %start index for ports on bb
         i_p_h_i = i_basic_prts + 2*curr_prts;
