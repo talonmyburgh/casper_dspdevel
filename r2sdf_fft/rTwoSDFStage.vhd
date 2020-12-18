@@ -26,12 +26,12 @@ use work.rTwoSDFPkg.all;
 
 entity rTwoSDFStage is
 	generic(
-		g_nof_chan       : natural        := 0; --! Exponent of nr of subbands (0 means 1 subband)
-		g_stage          : natural        := 8; --! Stage number
-		g_stage_offset   : natural        := 0; --! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_twiddle_offset : natural        := 0; --! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_variant        : string         := "4DSP";
-		g_use_dsp        : string         := "yes";
+		g_nof_chan       : natural        := 0; 			--! Exponent of nr of subbands (0 means 1 subband)
+		g_stage          : natural        := 8; 			--! Stage number
+		g_stage_offset   : natural        := 0; 			--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_twiddle_offset : natural        := 0; 			--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_variant        : string         := "4DSP";		--! Cmult variant to use "3DSP" or "4DSP"
+		g_use_dsp        : string         := "yes";			--! Use dsp for cmults
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
 	port(
@@ -43,6 +43,7 @@ entity rTwoSDFStage is
 		in_val  : in  std_logic;        --! Input value select
 		out_re  : out std_logic_vector; --! Output real value
 		out_im  : out std_logic_vector; --! Output imaginary value
+		ovflw	: out std_logic;	--! Overflow out (1 - ovflw, 0 - no ovflw)
 		out_val : out std_logic         --! Output value select
 	);
 end entity rTwoSDFStage;
@@ -75,6 +76,9 @@ architecture str of rTwoSDFStage is
 
 	signal quant_out_re : std_logic_vector(out_re'range);
 	signal quant_out_im : std_logic_vector(out_im'range);
+
+	-- signal for detection of overflow in any of the requantizations
+	signal ovflw_det	: std_logic_vector(1 DOWNTO 0);
 
 begin
 
@@ -187,7 +191,7 @@ begin
 			scale	=> scale,
 			in_dat  => mul_out_re,
 			out_dat => quant_out_re,
-			out_ovr => open
+			out_ovr => ovflw_det(1)
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
@@ -207,51 +211,9 @@ begin
 			scale	=> scale,
 			in_dat  => mul_out_im,
 			out_dat => quant_out_im,
-			out_ovr => open
+			out_ovr => ovflw_det(0)
 		);
     
---    u_requantize_re : entity casper_requantize_lib.common_requantize
---		generic map(
---			g_representation      => "SIGNED",
---			g_lsb_w               => c_rtwo_stage_bit_growth,
---			g_lsb_round           => TRUE,
---			g_lsb_round_clip      => FALSE,
---			g_msb_clip            => FALSE,
---			g_msb_clip_symmetric  => FALSE,
---			g_pipeline_remove_lsb => 0,
---			g_pipeline_remove_msb => 0,
---			g_in_dat_w            => in_re'LENGTH,
---			g_out_dat_w           => out_re'LENGTH
---		)
---		port map(
---			clk     => clk,
---			clken   => '1',
---			in_dat  => mul_out_re,
---			out_dat => quant_out_re,
---			out_ovr => open
---		);
-
---	u_requantize_im : entity casper_requantize_lib.common_requantize
---		generic map(
---			g_representation      => "SIGNED",
---			g_lsb_w               => c_rtwo_stage_bit_growth,
---			g_lsb_round           => TRUE,
---			g_lsb_round_clip      => FALSE,
---			g_msb_clip            => FALSE,
---			g_msb_clip_symmetric  => FALSE,
---			g_pipeline_remove_lsb => 0,
---			g_pipeline_remove_msb => 0,
---			g_in_dat_w            => in_im'LENGTH,
---			g_out_dat_w           => out_im'LENGTH
---		)
---		port map(
---			clk     => clk,
---			clken   => '1',
---			in_dat  => mul_out_im,
---			out_dat => quant_out_im,
---			out_ovr => open
---		);
-
 	------------------------------------------------------------------------------
 	-- output
 	------------------------------------------------------------------------------
@@ -288,5 +250,8 @@ begin
 			in_dat  => mul_out_val,
 			out_dat => out_val
 		);
+
+	-- Check if overflow occured when processing either im or re sigs	
+	ovflw <= not(ovflw_det(1) nor ovflw_det(0));
 
 end str;

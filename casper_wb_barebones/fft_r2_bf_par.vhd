@@ -58,6 +58,7 @@ entity fft_r2_bf_par is
 		x_out_im : out std_logic_vector;
 		y_out_re : out std_logic_vector;
 		y_out_im : out std_logic_vector;
+		ovflw	 : out std_logic;
 		out_val  : out std_logic
 	);
 end entity fft_r2_bf_par;
@@ -95,6 +96,8 @@ architecture str of fft_r2_bf_par is
 	signal mul_quant_im : std_logic_vector(y_out_im'range);
 	signal mul_out_val  : std_logic;
 	signal mul_in_val   : std_logic;
+
+	signal ovflw_det	: std_logic_vector(3 DOWNTO 0); -- record overflow in any of the requantizings
 
 begin
 
@@ -152,7 +155,7 @@ begin
 			scale	=> scale,
 			in_dat  => sum_re,
 			out_dat => sum_quant_re,
-			out_ovr => open
+			out_ovr => ovflw_det(3)
 		);
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
@@ -173,7 +176,7 @@ begin
 			scale	=> scale,
 			in_dat  => sum_im,
 			out_dat => sum_quant_im,
-			out_ovr => open
+			out_ovr => ovflw_det(2)
 		);
 
 	------------------------------------------------------------------------------
@@ -288,7 +291,7 @@ begin
 			scale	=> scale,
 			in_dat  => mul_out_re,
 			out_dat => mul_quant_re,
-			out_ovr => open
+			out_ovr => ovflw_det(1)
 		);
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
@@ -309,7 +312,7 @@ begin
 			scale	=> scale,
 			in_dat  => mul_out_im,
 			out_dat => mul_quant_im,
-			out_ovr => open
+			out_ovr => ovflw_det(0)
 		);
 
 	------------------------------------------------------------------------------
@@ -348,5 +351,7 @@ begin
 			in_dat  => mul_out_val,
 			out_dat => out_val
 		);
+		--4 way nor to detect overflow in any of the resizings
+		ovflw <= not(not(ovflw_det(3) nor ovflw_det(2)) nor not(ovflw_det(1) nor ovflw_det(0)));
 
 end str;
