@@ -56,9 +56,16 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_pipe is
 	generic(
-		g_fft                : t_fft          := c_fft; 		 --! generics for the FFT
-		g_pipeline           : t_fft_pipeline := c_fft_pipeline; --! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false 			 --! generic to prevent re-ordering of the channels
+		g_fft                : t_fft          := c_fft; 		 	--! generics for the FFT
+		g_pipeline           : t_fft_pipeline := c_fft_pipeline; 	--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_dont_flip_channels : boolean        := false; 			--! generic to prevent re-ordering of the channels
+		g_use_variant    	 : string  		  := "4DSP";        	--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        	 : string  		  := "yes";        		--! = "yes" or "no"
+		g_representation 	 : string  		  := "SIGNED";        	--! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    	 : string  		  := "WRAP";        	--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      	 : string  		  := "ROUND";        	--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  	 : string  		  := "auto";			--! = "auto", "distributed", "ultra" or "block"
+		g_technology     	 : natural 		  := 0       			--! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clken   : in  std_logic;										--! Clock enable
@@ -76,6 +83,9 @@ entity fft_r2_pipe is
 end entity fft_r2_pipe;
 
 architecture str of fft_r2_pipe is
+
+	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
 
 	constant c_pipeline_remove_lsb : natural := 0;
 
@@ -116,6 +126,11 @@ begin
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
+				g_variant    	 => g_use_variant,
+				g_use_dsp        => g_use_dsp,
+				g_representation => g_representation,
+				g_ovflw_behav	 => g_ovflw_behav,
+				g_use_round		 => g_use_round, 
 				g_pipeline       => g_pipeline
 			)
 			port map(

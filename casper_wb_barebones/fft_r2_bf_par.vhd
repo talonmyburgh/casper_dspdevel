@@ -41,7 +41,10 @@ entity fft_r2_bf_par is
 		-- internal pipeline settings
 		g_pipeline     : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
-		g_variant      : STRING         := "4DSP";
+		g_use_variant      : STRING         := "4DSP";
+		g_representation : string 		:= "SIGNED";
+		g_ovflw_behav	 : string		:= "WRAP";
+		g_use_round		 : string		:= "ROUND";
 		g_technology   : natural        := 0;
 		g_use_dsp      : STRING         := "yes"
 	);
@@ -64,6 +67,9 @@ entity fft_r2_bf_par is
 end entity fft_r2_bf_par;
 
 architecture str of fft_r2_bf_par is
+
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	constant c_out_dat_w : natural := x_out_re'length; -- re and im have same width  
 
@@ -139,10 +145,10 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_x_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -160,10 +166,10 @@ begin
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -245,11 +251,11 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity r2sdf_fft_lib.rTwoWMul
 		generic map(
-			g_technology => g_technology,
-			g_use_dsp    => g_use_dsp,
-			g_variant    => g_variant,
-			g_stage      => g_stage,
-			g_lat        => g_pipeline.mul_lat
+			g_technology 	=> g_technology,
+			g_use_dsp    	=> g_use_dsp,
+			g_variant		=> g_use_variant,
+			g_stage      	=> g_stage,
+			g_lat        	=> g_pipeline.mul_lat
 		)
 		port map(
 			clk       => clk,
@@ -275,10 +281,10 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_y_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -296,10 +302,10 @@ begin
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
-			g_lsb_round           => TRUE,
+			g_representation      => g_representation,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
