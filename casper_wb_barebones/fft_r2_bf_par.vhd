@@ -41,7 +41,7 @@ entity fft_r2_bf_par is
 		-- internal pipeline settings
 		g_pipeline     : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
-		g_use_variant      : STRING         := "4DSP";
+		g_use_variant      : STRING     := "4DSP";
 		g_representation : string 		:= "SIGNED";
 		g_ovflw_behav	 : string		:= "WRAP";
 		g_use_round		 : string		:= "ROUND";

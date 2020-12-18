@@ -59,14 +59,10 @@ begin
         end loop;
         wait for clk_period *5;
         array_in(0).re <= "01111111";
-        array_in(1).re <= "01111111";
         array_in(0).sync <= '1';
-        array_in(1).sync <= '1';
         array_in(0).valid <='1';
-        array_in(1).valid <='1';
         wait for clk_period;
         array_in(0).sync <= '0';
-        array_in(1).sync <= '0';
         wait for 10000*clk_period;
         shiftreg<="0000000000";
         wait;

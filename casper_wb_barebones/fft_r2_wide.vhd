@@ -153,6 +153,9 @@ architecture rtl of fft_r2_wide is
 		return v_return;
 	end;
 
+	constant c_round : boolean := sel_a_b(g_use_round = "ROUND", true, false);
+	constant c_clip	 : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);	
+
 	constant c_pipeline_remove_lsb : natural := 0;
 
 	constant c_fft_r2_pipe_arr : t_fft_arr(g_fft.wb_factor - 1 downto 0) := func_create_generic_for_pipe_fft(g_fft);
@@ -234,11 +237,11 @@ begin
 		--REQUANTIZE
 		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
@@ -253,11 +256,11 @@ begin
 				);
 		u_requantize_par_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
@@ -381,7 +384,8 @@ begin
 		gen_separate : if g_fft.use_separate generate
 			u_separator : entity work.fft_sepa_wide
 				generic map(
-					g_fft 			=> g_fft
+					g_fft 			=> g_fft,
+					g_ram_primitive => g_ram_primitive
 				)
 				port map(
 					clken      => clken,
@@ -409,11 +413,11 @@ begin
 		gen_output_requantizers : for I in g_fft.wb_factor - 1 downto 0 generate
 			u_requantize_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
@@ -429,11 +433,11 @@ begin
 
 			u_requantize_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => TRUE,
+					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => FALSE,
+					g_msb_clip            => c_clip,
 					g_msb_clip_symmetric  => FALSE,
 					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 					g_pipeline_remove_msb => 0,
