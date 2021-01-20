@@ -118,9 +118,17 @@ begin
 	---------------------------------------------------------------
 	u_fft_wide : entity work.fft_r2_wide
 		generic map(
-			g_fft          => g_fft,    -- generics for the WFFT
-			g_pft_pipeline => g_pft_pipeline,
-			g_fft_pipeline => g_fft_pipeline
+			g_fft          		=> g_fft,    -- generics for the WFFT
+			g_pft_pipeline 		=> g_pft_pipeline,
+			g_fft_pipeline 		=> g_fft_pipeline,
+			g_use_variant  		=> g_use_variant,
+			g_use_dsp	   		=> g_use_dsp,
+			g_representation	=> g_representation,
+			g_ovflw_behav		=> g_ovflw_behav,
+			g_use_round			=> g_use_round,
+			g_ram_primitive		=> g_ram_primitive,
+			g_fifo_primitive	=> g_fifo_primitive,
+			g_technology		=> g_technology
 		)
 		port map(
 			clken      => clken,
@@ -161,4 +169,3 @@ begin
 	end generate;
 
 end str;
-
