@@ -5,11 +5,11 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=2;       -- = default 1, wideband factor
-CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
+CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
+CONSTANT in_dat_w       : natural :=9;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=13;       -- = 13, number of output bits
-CONSTANT stage_dat_w    : natural :=16;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 1024;          -- = 1024, N point FFT
+CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT nof_points     : natural :=1024;       -- 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -122,19 +122,19 @@ end;
 
 -- Functions for stage length calculations for wideband FFT
 function fft_shiftreglen_pipe(wb_factor,pts : natural) return natural is
-    begin
-    return ceil_log2(nof_points/wb_factor);
+begin
+return ceil_log2(nof_points/wb_factor);
 end;
-    
-    -- Calculate the length of the shiftregister and ovflw register for par fft
+
+-- Calculate the length of the shiftregister and ovflw register for par fft
 function fft_shiftreglen_par(wb_factor,pts :natural) return natural is
-    variable sr_len : natural;
-    begin
-    if(wb_factor = pts) then
-    sr_len := ceil_log2(nof_points);
-    elsif(wb_factor>1 and wb_factor < pts) then
-    sr_len := ceil_log2(wb_factor);
-    end if;
-    return sr_len;
+variable sr_len : natural;
+begin
+if(wb_factor = pts) then
+sr_len := ceil_log2(nof_points);
+elsif(wb_factor>1 and wb_factor < pts) then
+sr_len := ceil_log2(wb_factor);
+end if;
+return sr_len;
 end;
 END fft_gnrcs_intrfcs_pkg;
