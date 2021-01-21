@@ -58,7 +58,7 @@ BEGIN
 --   Remove MSBits using CLIP or WRAP
   u_remove_msb : ENTITY work.common_resize
   GENERIC MAP (
-    g_representation  => g_representation,
+    g_representation  => "SIGNED",
     g_pipeline_input  => 0,
     g_pipeline_output => g_pipeline_remove_msb,
     g_clip            => g_msb_clip,

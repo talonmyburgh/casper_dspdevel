@@ -123,7 +123,7 @@ begin
 			g_fft_pipeline 		=> g_fft_pipeline,
 			g_use_variant  		=> g_use_variant,
 			g_use_dsp	   		=> g_use_dsp,
-			g_representation	=> g_representation,
+			g_representation	=> "SIGNED",
 			g_ovflw_behav		=> g_ovflw_behav,
 			g_use_round			=> g_use_round,
 			g_ram_primitive		=> g_ram_primitive,

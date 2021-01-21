@@ -203,7 +203,7 @@ begin
 				g_pipeline 		 => g_pft_pipeline,
 				g_use_variant  	 => g_use_variant,
 				g_use_dsp	   	 => g_use_dsp,
-				g_representation => g_representation,
+				g_representation => "SIGNED",
 				g_ovflw_behav  	 => g_ovflw_behav,
 				g_use_round    	 => g_use_round,
 				g_technology 	 => g_technology
@@ -237,7 +237,7 @@ begin
 		--REQUANTIZE
 		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => g_representation,
+					g_representation      => "SIGNED",
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -256,7 +256,7 @@ begin
 				);
 		u_requantize_par_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => g_representation,
+					g_representation      => "SIGNED",
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -281,7 +281,7 @@ begin
 				g_pipeline 			=> g_fft_pipeline,
 				g_use_variant  		=> g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
-				g_representation 	=> g_representation,
+				g_representation 	=> "SIGNED",
 				g_ovflw_behav  		=> g_ovflw_behav,
 				g_use_round    		=> g_use_round,
 				g_technology 		=> g_technology
@@ -322,7 +322,7 @@ begin
 					g_pipeline 			=> g_pft_pipeline, -- pipeline generics for the pipelined FFTs
 					g_use_variant 		=> g_use_variant,
 					g_use_dsp	   		=> g_use_dsp,
-					g_representation 	=> g_representation,
+					g_representation 	=> "SIGNED",
 					g_ovflw_behav  		=> g_ovflw_behav,
 					g_use_round    		=> g_use_round,
 					g_technology 		=> g_technology
@@ -359,7 +359,7 @@ begin
 				g_fft      			=> c_fft_r2_par, -- generics for the FFT
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
 				g_use_dsp	   		=> g_use_dsp,
-				g_representation 	=> g_representation,
+				g_representation 	=> "SIGNED",
 				g_ovflw_behav  		=> g_ovflw_behav,
 				g_use_round			=> g_use_round,
 				g_technology 	 	=> g_technology
@@ -413,7 +413,7 @@ begin
 		gen_output_requantizers : for I in g_fft.wb_factor - 1 downto 0 generate
 			u_requantize_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => g_representation,
+					g_representation      => "SIGNED",
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -433,7 +433,7 @@ begin
 
 			u_requantize_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => g_representation,
+					g_representation      => "SIGNED",
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,

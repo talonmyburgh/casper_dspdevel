@@ -183,7 +183,7 @@ begin
 					g_element      		=> element,
 					g_pipeline     		=> g_pipeline,
 					g_use_variant		=> g_use_variant,
-					g_representation 	=> g_representation,
+					g_representation 	=> "SIGNED",
 					g_ovflw_behav   	=> g_ovflw_behav,
 					g_use_round			=> g_use_round,
 					g_technology		=> g_technology,
@@ -246,7 +246,7 @@ begin
 			a_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => g_representation,
+					g_representation  => "SIGNED",
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -262,7 +262,7 @@ begin
 			b_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => g_representation,
+					g_representation  => "SIGNED",
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -278,7 +278,7 @@ begin
 			a_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => g_representation,
+					g_representation  => "SIGNED",
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -294,7 +294,7 @@ begin
 			b_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => g_representation,
+					g_representation  => "SIGNED",
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
@@ -319,7 +319,7 @@ begin
 				-- round the one LSbit
 				round_re_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -335,7 +335,7 @@ begin
 
 				round_re_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -351,7 +351,7 @@ begin
 
 				round_im_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -367,7 +367,7 @@ begin
 
 				round_im_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -448,7 +448,7 @@ begin
 	gen_output_requantizers : for I in 0 to g_fft.nof_points - 1 generate
 		u_requantize_re : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => g_representation,
+				g_representation      => "SIGNED",
 				g_lsb_w               => c_out_scale_w,
 				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
@@ -468,7 +468,7 @@ begin
 
 		u_requantize_im : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => g_representation,
+				g_representation      => "SIGNED",
 				g_lsb_w               => c_out_scale_w,
 				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
