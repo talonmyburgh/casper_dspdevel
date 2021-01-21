@@ -183,7 +183,7 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => g_representation,
+			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -203,7 +203,7 @@ begin
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => g_representation,
+			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
