@@ -60,9 +60,14 @@ function wideband_fft_slim_top_config(this_block)
   use_separate = checkbox2bool(use_separate);
   guard_en = checkbox2bool(guard_en);
   
+    function stages = stagecalc(nof_points)
+        stages = ceil(log2(str2double(nof_points)));
+    end
+
+  num_stages = stagecalc(nof_points);
   
   %Update the vhdl top file with the required ports per wb_factor:
-  topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
+  topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(nof_points));
 
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
@@ -71,6 +76,8 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_sync');
   this_block.addSimulinkInport('in_valid');
+  this_block.addSimulinkInport('shiftreg');
+  in_shiftreg_port = this_block.port('shiftreg');
   %If a simple interface is required by the user, hide these other signals
   if xtra_dat_sigs
         this_block.addSimulinkInport('in_bsn');
@@ -99,6 +106,8 @@ function wideband_fft_slim_top_config(this_block)
   
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_valid');
+  this_block.addSimulinkOutport('ovflw');
+  out_ovflw_port = this_block.port('ovflw');
   if xtra_dat_sigs
       this_block.addSimulinkOutport('out_bsn');
       this_block.addSimulinkOutport('out_sop');
@@ -162,6 +171,14 @@ function wideband_fft_slim_top_config(this_block)
       this_block.setError('Input data type for port "in_valid" must have width=1.');
     end
     in_valid_port.useHDLVector(false);
+    
+    %input shiftreg
+    in_shiftreg_port.useHDLVector(true);
+    in_shiftreg_port.setWidth(num_stages);
+    
+    %output ovflw
+    out_ovflw_port.useHDLVector(true);
+    out_ovflw_port.setWidth(num_stages);
 
    if xtra_dat_sigs
     %input bsn

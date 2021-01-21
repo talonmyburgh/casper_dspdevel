@@ -1,4 +1,4 @@
-function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_dat_w)
+function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_dat_w, nof_points)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('topwb_slim_code_gen'));
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
@@ -191,7 +191,7 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
     fclose(Vfile);
     
     %update generics package
-    updatepkg(filepathscript,wb_factor,in_dat_w,out_dat_w,stage_dat_w);
+    updatepkg(filepathscript,wb_factor,in_dat_w,out_dat_w,stage_dat_w,nof_points);
 end
 
 function chararr = mknprts(wbfctr)
@@ -241,13 +241,14 @@ function achararr = mkarch(wbfctr)
    end
 end
 
-function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w)
+function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhdl file so the line numbers change
     vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhdl'];
     lineone = sprintf("CONSTANT wb_factor      : natural :=%d;       -- = default 1, wideband factor",wb_factor);
     linetwo = sprintf("CONSTANT in_dat_w       : natural :=%d;       -- = 8,  number of input bits",in_dat_w);
     linethree = sprintf("CONSTANT out_dat_w      : natural :=%d;       -- = 13, number of output bits",out_dat_w);
     linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+    linefive = sprintf("CONSTANT nof_points     : natural :=%d;       -- 1024, N point FFT",nof_points);
     fid = fopen(vhdlgenfileloc,'r');
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
     lines = lines{1};
@@ -261,7 +262,8 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w)
     fprintf(fid,'%s\n',linetwo);
     fprintf(fid,'%s\n',linethree);
     fprintf(fid,'%s\n',linefour);
-    for jj = insertloc+5 : length(lines)
+    fprintf(fid,'%s\n',linefive);
+    for jj = insertloc+6 : length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);
