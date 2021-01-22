@@ -36,33 +36,39 @@ use r2sdf_fft_lib.rTwoSDFPkg.all;
 
 entity fft_r2_bf_par is
 	generic(
-		g_stage        : natural        := 3;
-		g_element      : natural        := 1;
-		g_scale_enable : boolean        := TRUE;
+		g_stage          : natural        := 3;
+		g_element        : natural        := 1;
+		g_scale_enable   : boolean        := TRUE;
 		-- internal pipeline settings
-		g_pipeline     : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_pipeline       : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
-		g_variant      : STRING         := "4DSP";
-		g_technology   : natural        := 0;
-		g_use_dsp      : STRING         := "yes"
+		g_variant        : STRING         := "4DSP";
+		g_representation : string 		  := "SIGNED";
+		g_ovflw_behav	 : string		  := "WRAP";
+		g_use_round		 : string		  := "ROUND";
+		g_technology     : natural        := 0;
+		g_use_dsp        : STRING         := "yes"
 	);
 	port(
-		clk      : in  std_logic;
-		rst      : in  std_logic;
-		x_in_re  : in  std_logic_vector;
-		x_in_im  : in  std_logic_vector;
-		y_in_re  : in  std_logic_vector;
-		y_in_im  : in  std_logic_vector;
-		in_val   : in  std_logic;
-		x_out_re : out std_logic_vector;
-		x_out_im : out std_logic_vector;
-		y_out_re : out std_logic_vector;
-		y_out_im : out std_logic_vector;
-		out_val  : out std_logic
+		clk      		 : in  std_logic;
+		rst      		 : in  std_logic;
+		x_in_re  		 : in  std_logic_vector;
+		x_in_im  		 : in  std_logic_vector;
+		y_in_re  		 : in  std_logic_vector;
+		y_in_im  		 : in  std_logic_vector;
+		in_val   		 : in  std_logic;
+		x_out_re 		 : out std_logic_vector;
+		x_out_im 		 : out std_logic_vector;
+		y_out_re 		 : out std_logic_vector;
+		y_out_im 		 : out std_logic_vector;
+		out_val  		 : out std_logic
 	);
 end entity fft_r2_bf_par;
 
 architecture str of fft_r2_bf_par is
+
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	-- The amplification factor per stage is 2, therefor bit growth defintion of 1.
 	-- Scale enable is defined by generic.
@@ -140,11 +146,11 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_x_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -161,11 +167,11 @@ begin
 
 	u_requantize_x_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -253,17 +259,17 @@ begin
 			g_lat        => g_pipeline.mul_lat
 		)
 		port map(
-			clk       => clk,
-			rst       => rst,
-			weight_re => weight_re,
-			weight_im => weight_im,
-			in_re     => dif_out_re,
-			in_im     => dif_out_im,
-			in_val    => mul_in_val,
-			in_sel    => '1',           -- Always select the multiplier output
-			out_re    => mul_out_re,
-			out_im    => mul_out_im,
-			out_val   => mul_out_val
+			clk       	 => clk,
+			rst       	 => rst,
+			weight_re 	 => weight_re,
+			weight_im 	 => weight_im,
+			in_re     	 => dif_out_re,
+			in_im     	 => dif_out_im,
+			in_val    	 => mul_in_val,
+			in_sel    	 => '1',           -- Always select the multiplier output
+			out_re    	 => mul_out_re,
+			out_im    	 => mul_out_im,
+			out_val   	 => mul_out_val
 		);
 
 	weight_re <= wRe(wMap(g_element, g_stage));
@@ -276,11 +282,11 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_y_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -288,20 +294,20 @@ begin
 			g_out_dat_w           => mul_quant_re'LENGTH
 		)
 		port map(
-			clk     => clk,
-			clken   => '1',
-			in_dat  => mul_out_re,
-			out_dat => mul_quant_re,
-			out_ovr => open
+			clk     			  => clk,
+			clken   			  => '1',
+			in_dat  			  => mul_out_re,
+			out_dat 			  => mul_quant_re,
+			out_ovr 			  => open
 		);
 
 	u_requantize_y_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -309,11 +315,11 @@ begin
 			g_out_dat_w           => mul_quant_im'LENGTH
 		)
 		port map(
-			clk     => clk,
-			clken   => '1',
-			in_dat  => mul_out_im,
-			out_dat => mul_quant_im,
-			out_ovr => open
+			clk     			  => clk,
+			clken   			  => '1',
+			in_dat  			  => mul_out_im,
+			out_dat 			  => mul_quant_im,
+			out_ovr 			  => open
 		);
 
 	------------------------------------------------------------------------------
@@ -326,9 +332,9 @@ begin
 			g_out_dat_w => y_out_re'LENGTH
 		)
 		port map(
-			clk     => clk,
-			in_dat  => mul_quant_re,
-			out_dat => y_out_re
+			clk     	=> clk,
+			in_dat  	=> mul_quant_re,
+			out_dat 	=> y_out_re
 		);
 
 	u_y_im_stage_lat : entity common_components_lib.common_pipeline
@@ -338,19 +344,19 @@ begin
 			g_out_dat_w => y_out_im'LENGTH
 		)
 		port map(
-			clk     => clk,
-			in_dat  => mul_quant_im,
-			out_dat => y_out_im
+			clk     	=> clk,
+			in_dat  	=> mul_quant_im,
+			out_dat 	=> y_out_im
 		);
 
 	u_val_stage_lat : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_pipeline.stage_lat
+			g_pipeline  => g_pipeline.stage_lat
 		)
 		port map(
-			clk     => clk,
-			in_dat  => mul_out_val,
-			out_dat => out_val
+			clk     	=> clk,
+			in_dat  	=> mul_out_val,
+			out_dat 	=> out_val
 		);
 
 end str;

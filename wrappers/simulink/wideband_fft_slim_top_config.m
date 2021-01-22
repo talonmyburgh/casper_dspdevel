@@ -54,6 +54,14 @@ function wideband_fft_slim_top_config(this_block)
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
+  variant = get_param(wb_fft_blk_parent,'use_variant');
+  use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
+  representation = get_param(wb_fft_blk_parent,'representation');
+  ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
+  use_round = get_param(wb_fft_blk_parent,'use_round');
+  ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
+  fifo_primitive = get_param(wb_fft_blk_parent,'fifo_primitive');
+  technology = get_param(wb_fft_blk_parent,'technology');
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
@@ -247,6 +255,14 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('stage_dat_w','natural',s_d_w);
   this_block.addGeneric('guard_w','natural',guard_w);
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
+  this_block.addGeneric('use_variant','String',variant);
+  this_block.addGeneric('use_dsp','String',use_dsp);
+  this_block.addGeneric('representation','String',representation);
+  this_block.addGeneric('ovflw_behav','String',ovflw_behav);
+  this_block.addGeneric('use_round','String',use_round);
+  this_block.addGeneric('ram_primitive','String',ram_primitive);
+  this_block.addGeneric('fifo_primitive','String',fifo_primitive);
+  this_block.addGeneric('technology','natural',technology);
   
 
   % Add addtional source files as needed.
