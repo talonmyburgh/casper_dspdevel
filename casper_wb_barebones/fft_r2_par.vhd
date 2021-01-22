@@ -43,7 +43,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_par is
 	generic(
 		g_fft      		 : t_fft          	:= c_fft; 				--! generics for the FFT
-		g_pipeline 		 : t_fft_pipeline 	:= c_fft_pipeline 		--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_pipeline 		 : t_fft_pipeline 	:= c_fft_pipeline; 		--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
 		g_use_variant    : string  			:= "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  			:= "yes";        		--! = "yes" or "no"
 		g_representation : string  			:= "SIGNED";        	--! = "SIGNED" or "UNSIGNED" for data type representation

@@ -33,6 +33,10 @@ entity rTwoSDFStage is
 		g_scale_enable   : boolean        := TRUE; --! Enable scaling
 		g_variant        : string         := "4DSP";
 		g_use_dsp        : string         := "yes";
+		g_representation : string 		  := "SIGNED";		--! Data representation "SIGNED" or "UNSIGNED"
+		g_ovflw_behav	 : string		  := "WRAP";		--! Clip behaviour "WRAP" or "SATURATE"
+		g_use_round		 : string		  := "ROUND";		--! Rounding behaviour "ROUND" or "TRUNCATE"
+		g_technology	 : natural		  := 0;
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline --! internal pipeline settings
 	);
 	port(
@@ -56,6 +60,9 @@ architecture str of rTwoSDFStage is
 	-- counter for ctrl_sel 
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
+
+	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
 
@@ -172,11 +179,11 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_rtwo_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
@@ -193,11 +200,11 @@ begin
 
 	u_requantize_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => "SIGNED",
+			g_representation      => g_representation,
 			g_lsb_w               => c_rtwo_stage_bit_growth,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => 0,
 			g_pipeline_remove_msb => 0,
