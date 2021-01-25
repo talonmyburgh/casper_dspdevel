@@ -46,7 +46,6 @@ entity fft_r2_par is
 		g_pipeline : t_fft_pipeline := c_fft_pipeline;	 	--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
 		g_use_variant    : string  	:= "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  	:= "yes";        		--! = "yes" or "no"
-		g_representation : string  	:= "SIGNED";        	--! = "SIGNED" or "UNSIGNED" for data type representation
 		g_ovflw_behav    : string  	:= "WRAP";        		--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round      : string  	:= "ROUND";        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_technology     : natural 	:= 0       				--! = 0 for Xilinx, 1 for Alterra
@@ -183,7 +182,6 @@ begin
 					g_element      		=> element,
 					g_pipeline     		=> g_pipeline,
 					g_use_variant		=> g_use_variant,
-					g_representation 	=> "SIGNED",
 					g_ovflw_behav   	=> g_ovflw_behav,
 					g_use_round			=> g_use_round,
 					g_technology		=> g_technology,
@@ -196,7 +194,7 @@ begin
 					x_in_im  => data_im(stage)(2 * element),
 					y_in_re  => data_re(stage)(2 * element + 1),
 					y_in_im  => data_im(stage)(2 * element + 1),
-					scale	 => shiftreg(stage-1),				-- Scale or not at stage
+					scale	 => '1',				-- Scale or not at stage
 					in_val   => data_val(stage)(element),
 					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
 					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),

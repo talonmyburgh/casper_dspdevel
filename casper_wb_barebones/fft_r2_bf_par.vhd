@@ -41,10 +41,9 @@ entity fft_r2_bf_par is
 		-- internal pipeline settings
 		g_pipeline     : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
-		g_use_variant      : STRING     := "4DSP";
-		g_representation : string 		:= "SIGNED";
-		g_ovflw_behav	 : string		:= "WRAP";
-		g_use_round		 : string		:= "ROUND";
+		g_use_variant  : STRING     	:= "4DSP";
+		g_ovflw_behav  : string			:= "WRAP";
+		g_use_round	   : string			:= "ROUND";
 		g_technology   : natural        := 0;
 		g_use_dsp      : STRING         := "yes"
 	);
@@ -145,7 +144,6 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_x_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -158,7 +156,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
-			scale	=> scale,
+			scale	=> '1',
 			in_dat  => sum_re,
 			out_dat => sum_quant_re,
 			out_ovr => ovflw_det(3)
@@ -166,7 +164,6 @@ begin
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -179,7 +176,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
-			scale	=> scale,
+			scale	=> '1',
 			in_dat  => sum_im,
 			out_dat => sum_quant_im,
 			out_ovr => ovflw_det(2)
@@ -281,7 +278,6 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_y_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -294,7 +290,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
-			scale	=> scale,
+			scale	=> '1',
 			in_dat  => mul_out_re,
 			out_dat => mul_quant_re,
 			out_ovr => ovflw_det(1)
@@ -302,7 +298,6 @@ begin
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -315,7 +310,7 @@ begin
 		port map(
 			clk     => clk,
 			clken   => '1',
-			scale	=> scale,
+			scale	=> '1',
 			in_dat  => mul_out_im,
 			out_dat => mul_quant_im,
 			out_ovr => ovflw_det(0)
