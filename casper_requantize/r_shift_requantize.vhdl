@@ -9,7 +9,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY r_shift_requantize IS
   GENERIC (
-    g_representation      : STRING  := "SIGNED";  -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
     g_lsb_round           : BOOLEAN := TRUE;      -- when true ROUND else TRUNCATE the input LSbits
     g_lsb_round_clip      : BOOLEAN := FALSE;     -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding
     g_msb_clip            : BOOLEAN := TRUE;      -- when true CLIP else WRAP the input MSbits
@@ -41,14 +40,10 @@ BEGIN
   shift_proc : process(scale, in_dat)
   begin
     if scale = '1' then
-        if g_representation ="SIGNED" and g_lsb_round = TRUE then
+        if g_lsb_round = TRUE then
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= s_round(in_dat(g_in_dat_w - 1 DOWNTO 0), 1, g_lsb_round_clip);
-        elsif g_representation = "UNSIGNED" and g_lsb_round = TRUE then
-            rem_dat(g_in_dat_w-2 DOWNTO 0) <= u_round(in_dat(g_in_dat_w - 1 DOWNTO 0), 1, g_lsb_round_clip);
         elsif g_lsb_round = FALSE then
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= truncate(in_dat(g_in_dat_w - 1 DOWNTO 0), 1);
-        else
-            rem_dat(g_in_dat_w -1 DOWNTO 0) <= (others => '0');
         end if;
     elsif scale = '0' then
         rem_dat(g_in_dat_w - 1 DOWNTO 0) <= in_dat(g_in_dat_w-1 DOWNTO 0);

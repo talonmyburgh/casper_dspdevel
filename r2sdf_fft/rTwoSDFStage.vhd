@@ -32,7 +32,6 @@ entity rTwoSDFStage is
 		g_twiddle_offset : natural        := 0; 			--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_variant        : string         := "4DSP";		--! Cmult variant to use "3DSP" or "4DSP"
 		g_use_dsp        : string         := "yes";			--! Use dsp for cmults
-		g_representation : string 		  := "SIGNED";		--! Data representation "SIGNED" or "UNSIGNED"
 		g_ovflw_behav	 : string		  := "WRAP";		--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";		--! Rounding behaviour "ROUND" or "TRUNCATE"
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline; --! internal pipeline settings
@@ -183,7 +182,6 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
@@ -203,7 +201,6 @@ begin
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_representation      => "SIGNED",
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
