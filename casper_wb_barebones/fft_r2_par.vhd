@@ -194,7 +194,7 @@ begin
 					x_in_im  => data_im(stage)(2 * element),
 					y_in_re  => data_re(stage)(2 * element + 1),
 					y_in_im  => data_im(stage)(2 * element + 1),
-					scale	 => '1',				-- Scale or not at stage
+					scale	 => shiftreg(stage-1),				-- Scale or not at stage
 					in_val   => data_val(stage)(element),
 					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
 					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
