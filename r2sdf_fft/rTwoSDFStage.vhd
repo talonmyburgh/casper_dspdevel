@@ -183,11 +183,7 @@ begin
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_lsb_round           => c_round,
-			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
+			g_lsb_round_clip      => FALSE,	
 			g_in_dat_w            => in_re'LENGTH,
 			g_out_dat_w           => out_re'LENGTH
 		)
@@ -196,17 +192,12 @@ begin
 			clken   => '1',
 			scale	=> scale,
 			in_dat  => mul_out_re,
-			out_dat => quant_out_re,
-			out_ovr => ovflw_det(1)
+			out_dat => quant_out_re
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => in_im'LENGTH,
 			g_out_dat_w           => out_im'LENGTH
 		)
@@ -215,8 +206,7 @@ begin
 			clken   => '1',
 			scale	=> scale,
 			in_dat  => mul_out_im,
-			out_dat => quant_out_im,
-			out_ovr => ovflw_det(0)
+			out_dat => quant_out_im
 		);
     
 	------------------------------------------------------------------------------

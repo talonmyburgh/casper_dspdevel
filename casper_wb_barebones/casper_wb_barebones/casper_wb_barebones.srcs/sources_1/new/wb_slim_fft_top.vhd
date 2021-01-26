@@ -69,6 +69,7 @@ architecture RTL of wideband_fft_top is
         clken        => ce,
         rst       => rst,
         clk       => clk,
+        shiftreg => "1111111111",
         in_bb_sosi_arr  => in_bb_sosi_arr,
         out_bb_sosi_arr => out_bb_sosi_arr);
         
