@@ -136,7 +136,7 @@ begin
 				rst     => rst,
 				in_re   => data_re(stage),
 				in_im   => data_im(stage),
-				scale   => '1',
+				scale   => shiftreg(stage-1),
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
