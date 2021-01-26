@@ -146,10 +146,6 @@ begin
 		generic map(
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => sum_re'LENGTH,
 			g_out_dat_w           => sum_quant_re'LENGTH
 		)
@@ -158,18 +154,13 @@ begin
 			clken   => '1',
 			scale	=> '1',
 			in_dat  => sum_re,
-			out_dat => sum_quant_re,
-			out_ovr => ovflw_det(3)
+			out_dat => sum_quant_re
 		);
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => sum_im'LENGTH,
 			g_out_dat_w           => sum_quant_im'LENGTH
 		)
@@ -178,8 +169,7 @@ begin
 			clken   => '1',
 			scale	=> '1',
 			in_dat  => sum_im,
-			out_dat => sum_quant_im,
-			out_ovr => ovflw_det(2)
+			out_dat => sum_quant_im
 		);
 
 	------------------------------------------------------------------------------
@@ -280,10 +270,6 @@ begin
 		generic map(
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => mul_out_re'LENGTH,
 			g_out_dat_w           => mul_quant_re'LENGTH
 		)
@@ -292,18 +278,13 @@ begin
 			clken   => '1',
 			scale	=> '1',
 			in_dat  => mul_out_re,
-			out_dat => mul_quant_re,
-			out_ovr => ovflw_det(1)
+			out_dat => mul_quant_re
 		);
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => c_clip,
-			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
-			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => mul_out_im'LENGTH,
 			g_out_dat_w           => mul_quant_im'LENGTH
 		)
@@ -312,8 +293,7 @@ begin
 			clken   => '1',
 			scale	=> '1',
 			in_dat  => mul_out_im,
-			out_dat => mul_quant_im,
-			out_ovr => ovflw_det(0)
+			out_dat => mul_quant_im
 		);
 
 	------------------------------------------------------------------------------

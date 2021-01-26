@@ -279,7 +279,6 @@ begin
 				g_pipeline 			=> g_fft_pipeline,
 				g_use_variant  		=> g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
-				g_representation 	=> "SIGNED",
 				g_ovflw_behav  		=> g_ovflw_behav,
 				g_use_round    		=> g_use_round,
 				g_technology 		=> g_technology
@@ -356,7 +355,6 @@ begin
 				g_fft      			=> c_fft_r2_par, -- generics for the FFT
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
 				g_use_dsp	   		=> g_use_dsp,
-				g_representation 	=> "SIGNED",
 				g_ovflw_behav  		=> g_ovflw_behav,
 				g_use_round			=> g_use_round,
 				g_technology 	 	=> g_technology
