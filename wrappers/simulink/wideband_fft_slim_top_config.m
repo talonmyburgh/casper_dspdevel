@@ -56,7 +56,6 @@ function wideband_fft_slim_top_config(this_block)
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
   variant = get_param(wb_fft_blk_parent,'use_variant');
   use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
-  representation = get_param(wb_fft_blk_parent,'representation');
   ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
   use_round = get_param(wb_fft_blk_parent,'use_round');
   ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
@@ -274,7 +273,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
   this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
-  this_block.addGeneric('representation','String',representation);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
   this_block.addGeneric('use_round','String',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
