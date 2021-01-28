@@ -46,7 +46,7 @@ entity rTwoSDFStage is
 		in_val  : in  std_logic;        --! Input value select
 		out_re  : out std_logic_vector; --! Output real value
 		out_im  : out std_logic_vector; --! Output imaginary value
-		ovflw	: out std_logic;		--! Overflow out (1 - ovflw, 0 - no ovflw)
+		ovflw   : out std_logic;		--! Overflow detected in butterfly add/sub
 		out_val : out std_logic         --! Output value select
 	);
 end entity rTwoSDFStage;
@@ -82,10 +82,7 @@ architecture str of rTwoSDFStage is
 
 	signal quant_out_re : std_logic_vector(out_re'range);
 	signal quant_out_im : std_logic_vector(out_im'range);
-
-	-- signal for detection of overflow in any of the requantizations
-	signal ovflw_det	: std_logic_vector(1 DOWNTO 0);
-
+	
 begin
 
 	------------------------------------------------------------------------------
@@ -129,10 +126,10 @@ begin
 			in_val  => in_val,
 			out_re  => bf_re,
 			out_im  => bf_im,
+			ovflw	=> ovflw,
 			out_sel => bf_sel,
 			out_val => bf_val
 		);
-
 	------------------------------------------------------------------------------
 	-- get twiddles
 	------------------------------------------------------------------------------
@@ -176,7 +173,6 @@ begin
 			out_im    => mul_out_im,
 			out_val   => mul_out_val
 		);
-
 	------------------------------------------------------------------------------
 	-- stage requantization
 	------------------------------------------------------------------------------
@@ -208,7 +204,6 @@ begin
 			in_dat  => mul_out_im,
 			out_dat => quant_out_im
 		);
-    
 	------------------------------------------------------------------------------
 	-- output
 	------------------------------------------------------------------------------
@@ -245,8 +240,4 @@ begin
 			in_dat  => mul_out_val,
 			out_dat => out_val
 		);
-
-	-- Check if overflow occured when processing either im or re sigs	
-	ovflw <= not(ovflw_det(1) nor ovflw_det(0));
-
 end str;
