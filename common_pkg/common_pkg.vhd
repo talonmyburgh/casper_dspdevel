@@ -367,6 +367,9 @@ PACKAGE common_pkg IS
 	FUNCTION COMPLEX_MULT_REAL(a_re, a_im, b_re, b_im : INTEGER) RETURN INTEGER; -- Calculate real part of complex multiplication: a_re*b_re - a_im*b_im 
 	FUNCTION COMPLEX_MULT_IMAG(a_re, a_im, b_re, b_im : INTEGER) RETURN INTEGER; -- Calculate imag part of complex multiplication: a_im*b_re + a_re*b_im 
 
+	FUNCTION S_ADD_OVFLW_DET (a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is addition overflow for signed values 
+	FUNCTION S_SUB_OVFLW_DET (a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is subtraction overflow for signed values 
+	
 	FUNCTION SHIFT_UVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR; -- < 0 shift left, > 0 shift right
 	FUNCTION SHIFT_SVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR; -- < 0 shift left, > 0 shift right
 
@@ -1921,7 +1924,39 @@ PACKAGE BODY common_pkg IS
 		RETURN (a_im * b_re + a_re * b_im);
 	END;
 
-	FUNCTION SHIFT_UVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR IS
+	FUNCTION S_ADD_OVFLW_DET(a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
+		VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
+		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
+		VARIABLE sum_a_b_sign: SIGNED(a'RANGE) := a_sign + b_sign;
+	BEGIN
+		IF (a_sign < 0 and b_sign > 0) xor (a_sign > 0 and b_sign < 0) THEN
+			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
+		ELSIF (sum_a_b_sign < 0 and a_sign > 0 and b_sign > 0) THEN 
+			RETURN '1';	-- overflow has occured - note wrapping
+		ELSIF (sum_a_b_sign > 0 and a_sign < 0 and b_sign < 0) THEN
+			RETURN '1'; -- overflow has occured - note wrapping
+		ELSE 
+			RETURN '0';
+		END IF;
+	END;
+
+	FUNCTION S_SUB_OVFLW_DET(a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
+		VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
+		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
+		VARIABLE sub_a_b_sign: SIGNED(a'RANGE) := a_sign - b_sign;
+	BEGIN
+		IF (a_sign < 0 and b_sign < 0) xor (a_sign > 0 and b_sign > 0) THEN
+			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
+		ELSIF (sub_a_b_sign < 0 and b_sign < 0) THEN
+			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
+		ELSIF (sub_a_b_sign > 0 and b_sign > 0) THEN
+			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
+		ELSE 
+			RETURN '0';
+		END IF;
+	END;
+	
+	FUNCTION SHIFT_UVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR is
 	BEGIN
 		IF shift < 0 THEN
 			RETURN STD_LOGIC_VECTOR(SHIFT_LEFT(UNSIGNED(vec), -shift)); -- fill zeros from right

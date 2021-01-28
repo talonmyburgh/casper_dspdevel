@@ -31,8 +31,10 @@ entity wideband_fft_top is
 		rst : in std_logic := '0';
 		in_sync : in std_logic := '1';
 		in_valid : in std_logic := '1';
+		in_shiftreg : in std_logic_vector(c_stages -1 DOWNTO 0) := "1111111111";
         out_sync : out std_logic;
         out_valid : out std_logic;
+        out_ovflw : out STD_LOGIC_VECTOR(c_stages -1 DOWNTO 0);
         in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0) := (others=>'0');
 		in_sop : in std_logic :='1';
 		in_eop : in std_logic :='1';
@@ -69,8 +71,9 @@ architecture RTL of wideband_fft_top is
         clken        => ce,
         rst       => rst,
         clk       => clk,
-        shiftreg => "1111111111",
+        shiftreg => in_shiftreg,
         in_bb_sosi_arr  => in_bb_sosi_arr,
+        ovflw => out_ovflw,
         out_bb_sosi_arr => out_bb_sosi_arr);
         
         otherinprtmap: for j in 0 to wb_factor-1 generate

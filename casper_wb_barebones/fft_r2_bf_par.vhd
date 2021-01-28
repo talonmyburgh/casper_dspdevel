@@ -102,7 +102,7 @@ architecture str of fft_r2_bf_par is
 	signal mul_out_val  : std_logic;
 	signal mul_in_val   : std_logic;
 
-	signal ovflw_det	: std_logic_vector(3 DOWNTO 0); -- record overflow in any of the requantizings
+	signal ovflw_det	: std_logic_vector(1 DOWNTO 0); -- record overflow in any of the requantizings
 
 begin
 
@@ -120,6 +120,7 @@ begin
 			in_b   => y_in_re,
 			in_sel => '1',
 			in_val => in_val,
+			ovflw  => ovflw_det(0),
 			out_c  => sum_re,
 			out_d  => dif_re
 		);
@@ -135,10 +136,12 @@ begin
 			in_b   => y_in_im,
 			in_sel => '1',
 			in_val => in_val,
+			ovflw  => ovflw_det(1),
 			out_c  => sum_im,
 			out_d  => dif_im
 		);
 
+	ovflw <= (ovflw_det(1) or ovflw_det(0)); -- Detect if overflow is detected in either butterfly add/sub
 	------------------------------------------------------------------------------
 	-- requantize x output
 	------------------------------------------------------------------------------
@@ -332,7 +335,4 @@ begin
 			in_dat  => mul_out_val,
 			out_dat => out_val
 		);
-		--4 way nor to detect overflow in any of the resizings
-		ovflw <= not(not(ovflw_det(3) nor ovflw_det(2)) nor not(ovflw_det(1) nor ovflw_det(0)));
-
 end str;

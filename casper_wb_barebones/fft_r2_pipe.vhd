@@ -76,7 +76,7 @@ entity fft_r2_pipe is
 		in_val  : in  std_logic := '1';									--! In data valid
 		out_re  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);	--! Output real signal
 		out_im  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);	--! Output imaginary signal
-		ovflw	: out std_logic_vector(c_stages_pipe - 1 downto 0);		--! Overflow register
+		ovflw	: out std_logic_vector(c_stages_pipe - 1 downto 0);		--! Overflow register (detects overflow in add/sub of butterfly)
 		out_val : out std_logic											--! Output data valid
 	);
 end entity fft_r2_pipe;
