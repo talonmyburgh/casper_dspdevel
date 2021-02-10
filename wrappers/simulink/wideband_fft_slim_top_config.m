@@ -81,8 +81,8 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_sync');
   this_block.addSimulinkInport('in_valid');
-  this_block.addSimulinkInport('shiftreg');
-  in_shiftreg_port = this_block.port('shiftreg');
+  this_block.addSimulinkInport('in_shiftreg');
+  in_shiftreg_port = this_block.port('in_shiftreg');
 
   %If a simple interface is required by the user, hide these other signals
   if xtra_dat_sigs
@@ -112,8 +112,8 @@ function wideband_fft_slim_top_config(this_block)
   
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_valid');
-  this_block.addSimulinkOutport('ovflw');
-  out_ovflw_port = this_block.port('ovflw');
+  this_block.addSimulinkOutport('out_ovflw');
+  out_ovflw_port = this_block.port('out_ovflw');
 
   if xtra_dat_sigs
       this_block.addSimulinkOutport('out_bsn');
