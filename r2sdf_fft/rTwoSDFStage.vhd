@@ -96,7 +96,7 @@ begin
 			g_step_size => 1
 		)
 		port map(
-			clken  => '1',
+			clken  => std_logic'('1'),
 			rst    => rst,
 			clk    => clk,
 			cnt_en => in_val,
@@ -185,7 +185,7 @@ begin
 		)
 		port map(
 			clk     => clk,
-			clken   => '1',
+			clken   => std_logic'('1'),
 			scale	=> scale,
 			in_dat  => mul_out_re,
 			out_dat => quant_out_re
@@ -199,7 +199,7 @@ begin
 		)
 		port map(
 			clk     => clk,
-			clken   => '1',
+			clken   => std_logic'('1'),
 			scale	=> scale,
 			in_dat  => mul_out_im,
 			out_dat => quant_out_im
