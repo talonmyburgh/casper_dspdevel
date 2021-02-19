@@ -149,7 +149,7 @@ begin
 	-- streaming format. 
 	u_fft_control : entity work.fft_wide_unit_control
 		generic map(
-			g_fft => g_fft
+			g_fft 		 => g_fft
 		)
 		port map(
 			rst          => rst,
