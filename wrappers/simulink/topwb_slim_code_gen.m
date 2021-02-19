@@ -1,4 +1,4 @@
-function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_dat_w,nof_points)
+function topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('topwb_slim_code_gen'));
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
@@ -300,7 +300,7 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
     fprintf(fid,'%s\n',linethree);
     fprintf(fid,'%s\n',linefour);
     fprintf(fid,'%s\n',linefive);
-    for jj = insertloc+6: length(lines)
+    for jj = insertloc+6 : length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);
