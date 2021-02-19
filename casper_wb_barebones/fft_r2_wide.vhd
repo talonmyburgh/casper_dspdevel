@@ -151,6 +151,9 @@ architecture rtl of fft_r2_wide is
 		v_return.guard_enable   := false; -- No input guard. 
 		return v_return;
 	end;
+	
+	constant c_round : boolean := sel_a_b(g_use_round = "ROUND", true, false);
+	constant c_clip	 : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);	
 
 	constant c_round : boolean := sel_a_b(g_use_round = "ROUND", true, false);
 	constant c_clip	 : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);	
@@ -225,7 +228,7 @@ begin
 	end generate;
 
 	-- Default to fft_r2_par when g_fft.wb_factor=g_fft.nof_points
-	--First resize the inputs for parallel FFT and then requantize the outputs
+	-- First resize the inputs for parallel FFT and then requantize the outputs
 
 	gen_fft_r2_par : if g_fft.wb_factor = g_fft.nof_points generate
 		--RESIZE
@@ -235,7 +238,7 @@ begin
 		--REQUANTIZE
 		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -247,14 +250,14 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     => clk,
-					in_dat  => par_stg_fft_re_out(I),
-					out_dat => out_re_arr(I),
-					out_ovr => open
+					clk     			  => clk,
+					in_dat  			  => par_stg_fft_re_out(I),
+					out_dat 			  => out_re_arr(I),
+					out_ovr 			  => open
 				);
 		u_requantize_par_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -266,10 +269,10 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     => clk,
-					in_dat  => par_stg_fft_im_out(I),
-					out_dat => out_re_arr(I),
-					out_ovr => open
+					clk     			  => clk,
+					in_dat  			  => par_stg_fft_im_out(I),
+					out_dat 			  => out_re_arr(I),
+					out_ovr 			  => open
 				);
 		end generate;
 
@@ -383,15 +386,15 @@ begin
 					g_ram_primitive => g_ram_primitive
 				)
 				port map(
-					clken      => clken,
-					clk        => clk,
-					rst        => rst,
-					in_re_arr  => fft_out_re_arr,
-					in_im_arr  => fft_out_im_arr,
-					in_val     => fft_out_val,
-					out_re_arr => sep_out_re_arr,
-					out_im_arr => sep_out_im_arr,
-					out_val    => sep_out_val
+					clken      		=> clken,
+					clk        		=> clk,
+					rst        		=> rst,
+					in_re_arr  		=> fft_out_re_arr,
+					in_im_arr  		=> fft_out_im_arr,
+					in_val     		=> fft_out_val,
+					out_re_arr 		=> sep_out_re_arr,
+					out_im_arr 		=> sep_out_im_arr,
+					out_val    		=> sep_out_val
 				);
 		end generate;
 
@@ -408,7 +411,7 @@ begin
 		gen_output_requantizers : for I in g_fft.wb_factor - 1 downto 0 generate
 			u_requantize_output_re : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -420,15 +423,15 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     => clk,
-					in_dat  => sep_out_re_arr(I),
-					out_dat => out_re_arr(I),
-					out_ovr => open
+					clk     			  => clk,
+					in_dat  			  => sep_out_re_arr(I),
+					out_dat 			  => out_re_arr(I),
+					out_ovr 			  => open
 				);
 
 			u_requantize_output_im : entity casper_requantize_lib.common_requantize
 				generic map(
-					g_representation      => "SIGNED",
+					g_representation      => g_representation,
 					g_lsb_w               => c_out_scale_w,
 					g_lsb_round           => c_round,
 					g_lsb_round_clip      => FALSE,
@@ -440,22 +443,22 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     => clk,
-					in_dat  => sep_out_im_arr(I),
-					out_dat => out_im_arr(I),
-					out_ovr => open
+					clk     			  => clk,
+					in_dat  			  => sep_out_im_arr(I),
+					out_dat 			  => out_im_arr(I),
+					out_ovr 			  => open
 				);
 		end generate;
 
 		u_out_val : entity common_components_lib.common_pipeline_sl
 			generic map(
-				g_pipeline => c_pipeline_remove_lsb
+				g_pipeline 				  => c_pipeline_remove_lsb
 			)
 			port map(
-				rst     => rst,
-				clk     => clk,
-				in_dat  => sep_out_val,
-				out_dat => out_val
+				rst     				  => rst,
+				clk     				  => clk,
+				in_dat  				  => sep_out_val,
+				out_dat 				  => out_val
 			);
 
 	end generate;

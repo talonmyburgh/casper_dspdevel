@@ -244,65 +244,65 @@ begin
 			a_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_re_arr(g_fft.nof_points - I),
-					in_b   => int_re_arr(I),
-					result => add_arr(2 * I)
+					clk    			  => clk,
+					in_a   			  => int_re_arr(g_fft.nof_points - I),
+					in_b   			  => int_re_arr(I),
+					result 			  => add_arr(2 * I)
 				);
 
 			b_output_real_adder : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "ADD",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_im_arr(g_fft.nof_points - I),
-					in_b   => int_im_arr(I),
-					result => add_arr(2 * I + 1)
+					clk    			  => clk,
+					in_a   			  => int_im_arr(g_fft.nof_points - I),
+					in_b   			  => int_im_arr(I),
+					result 			  => add_arr(2 * I + 1)
 				);
 
 			a_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_im_arr(I),
-					in_b   => int_im_arr(g_fft.nof_points - I),
-					result => sub_arr(2 * I)
+					clk    			  => clk,
+					in_a   			  => int_im_arr(I),
+					in_b   			  => int_im_arr(g_fft.nof_points - I),
+					result 			  => sub_arr(2 * I)
 				);
 
 			b_output_imag_subtractor : entity casper_adder_lib.common_add_sub
 				generic map(
 					g_direction       => "SUB",
-					g_representation  => "SIGNED",
+					g_representation  => g_representation,
 					g_pipeline_input  => 0,
 					g_pipeline_output => c_pipeline_add_sub,
 					g_in_dat_w        => g_fft.stage_dat_w,
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_re_arr(g_fft.nof_points - I),
-					in_b   => int_re_arr(I),
-					result => sub_arr(2 * I + 1)
+					clk    			  => clk,
+					in_a   			  => int_re_arr(g_fft.nof_points - I),
+					in_b   			  => int_re_arr(I),
+					result 			  => sub_arr(2 * I + 1)
 				);
 
 			gen_sepa_truncate : IF c_sepa_round = false GENERATE
@@ -326,9 +326,9 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => add_arr(2 * I),
-						out_dat => fft_re_arr(2 * I)
+						clk     		  => clk,
+						in_dat  		  => add_arr(2 * I),
+						out_dat 		  => fft_re_arr(2 * I)
 					);
 
 				round_re_b : ENTITY casper_requantize_lib.common_round
@@ -342,9 +342,9 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => add_arr(2 * I + 1),
-						out_dat => fft_re_arr(2 * I + 1)
+						clk     		  => clk,
+						in_dat  		  => add_arr(2 * I + 1),
+						out_dat 		  => fft_re_arr(2 * I + 1)
 					);
 
 				round_im_a : ENTITY casper_requantize_lib.common_round
@@ -358,9 +358,9 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => sub_arr(2 * I),
-						out_dat => fft_im_arr(2 * I)
+						clk     		  => clk,
+						in_dat  		  => sub_arr(2 * I),
+						out_dat 		  => fft_im_arr(2 * I)
 					);
 
 				round_im_b : ENTITY casper_requantize_lib.common_round
@@ -374,9 +374,9 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => sub_arr(2 * I + 1),
-						out_dat => fft_im_arr(2 * I + 1)
+						clk     		  => clk,
+						in_dat  		  => sub_arr(2 * I + 1),
+						out_dat 		  => fft_im_arr(2 * I + 1)
 					);
 			end generate;
 		end generate;
@@ -397,9 +397,9 @@ begin
 				g_out_dat_w => g_fft.stage_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_re_arr(0),
-				out_dat => fft_re_arr(0)
+				clk     	=> clk,
+				in_dat  	=> int_re_arr(0),
+				out_dat 	=> fft_re_arr(0)
 			);
 
 		u_pipeline_b_re_0 : entity common_components_lib.common_pipeline
@@ -409,9 +409,9 @@ begin
 				g_out_dat_w => g_fft.stage_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_im_arr(0),
-				out_dat => fft_re_arr(1)
+				clk     	=> clk,
+				in_dat  	=> int_im_arr(0),
+				out_dat 	=> fft_re_arr(1)
 			);
 
 		-- The imaginary outputs of A(0) and B(0) are always zero in case two real inputs are provided
@@ -423,12 +423,12 @@ begin
 		------------------------------------------------------------------------------
 		u_seperate_fft_val : entity common_components_lib.common_pipeline_sl
 			generic map(
-				g_pipeline => c_pipeline_add_sub
+				g_pipeline 	=> c_pipeline_add_sub
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_val,
-				out_dat => fft_val
+				clk     	=> clk,
+				in_dat  	=> int_val,
+				out_dat 	=> fft_val
 			);
 	end generate;
 
@@ -446,7 +446,7 @@ begin
 	gen_output_requantizers : for I in 0 to g_fft.nof_points - 1 generate
 		u_requantize_re : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => "SIGNED",
+				g_representation      => g_representation,
 				g_lsb_w               => c_out_scale_w,
 				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
@@ -458,15 +458,15 @@ begin
 				g_out_dat_w           => g_fft.out_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => fft_re_arr(I),
-				out_dat => out_re_arr(I),
-				out_ovr => open
+				clk     			  => clk,
+				in_dat  			  => fft_re_arr(I),
+				out_dat 			  => out_re_arr(I),
+				out_ovr 			  => open
 			);
 
 		u_requantize_im : entity casper_requantize_lib.common_requantize
 			generic map(
-				g_representation      => "SIGNED",
+				g_representation      => g_representation,
 				g_lsb_w               => c_out_scale_w,
 				g_lsb_round           => c_round,
 				g_lsb_round_clip      => FALSE,
@@ -478,22 +478,22 @@ begin
 				g_out_dat_w           => g_fft.out_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => fft_im_arr(I),
-				out_dat => out_im_arr(I),
-				out_ovr => open
+				clk     			  => clk,
+				in_dat  			  => fft_im_arr(I),
+				out_dat 			  => out_im_arr(I),
+				out_ovr 			  => open
 			);
 
 	end generate;
 
 	u_out_val : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => c_pipeline_remove_lsb
+			g_pipeline  => c_pipeline_remove_lsb
 		)
 		port map(
-			rst     => rst,
-			clk     => clk,
-			in_dat  => fft_val,
-			out_dat => out_val
+			rst     	=> rst,
+			clk     	=> clk,
+			in_dat  	=> fft_val,
+			out_dat 	=> out_val
 		);
 end str;
