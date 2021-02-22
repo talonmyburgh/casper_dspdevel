@@ -358,42 +358,8 @@ The shift operation acts on value :math:`A` as:
 where :math:`round()` is a function that rounds the value :math:`A` according to the "Rounding behaviour" specified see :ref:`_wb_fft_params`.
 
 Overflow is detected in a stage by inspecting the sign of the input to the adder and sign of the output. This check differs depending on whether a subtraction or addition is being performed.
-The following VHDL snippets make this check:
+The following VHDL snippets make this check (TODO):
 
-.. code-block:: vhdl
-
-   FUNCTION S_SUB_OVFLW_DET(a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
-		VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
-		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
-		VARIABLE sub_a_b_sign: SIGNED(a'RANGE) := a_sign - b_sign;
-	BEGIN
-		IF (a_sign < 0 and b_sign < 0) xor (a_sign > 0 and b_sign > 0) THEN
-			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
-		ELSIF (sub_a_b_sign < 0 and b_sign < 0) THEN
-			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
-		ELSIF (sub_a_b_sign > 0 and b_sign > 0) THEN
-			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
-		ELSE 
-			RETURN '0';
-		END IF;
-	END;
-
-.. code-block:: vhdl
-   FUNCTION S_ADD_OVFLW_DET(a, b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
-	 VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
-	 VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
-	 VARIABLE sum_a_b_sign: SIGNED(a'RANGE) := a_sign + b_sign;
-	  BEGIN
-		IF (a_sign < 0 and b_sign > 0) xor (a_sign > 0 and b_sign < 0) THEN
-			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
-		ELSIF (sum_a_b_sign < 0 and a_sign > 0 and b_sign > 0) THEN 
-			RETURN '1';	-- overflow has occured - note wrapping
-		ELSIF (sum_a_b_sign > 0 and a_sign < 0 and b_sign < 0) THEN
-			RETURN '1'; -- overflow has occured - note wrapping
-		ELSE 
-			RETURN '0';
-		END IF;
-	 END;
 
       
    
