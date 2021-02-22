@@ -155,9 +155,6 @@ architecture rtl of fft_r2_wide is
 	constant c_round : boolean := sel_a_b(g_use_round = "ROUND", true, false);
 	constant c_clip	 : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);	
 
-	constant c_round : boolean := sel_a_b(g_use_round = "ROUND", true, false);
-	constant c_clip	 : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);	
-
 	constant c_pipeline_remove_lsb : natural := 0;
 
 	constant c_fft_r2_pipe_arr : t_fft_arr(g_fft.wb_factor - 1 downto 0) := func_create_generic_for_pipe_fft(g_fft);
