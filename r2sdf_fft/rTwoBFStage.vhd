@@ -42,6 +42,7 @@ entity rTwoBFStage is
 		in_sel  : in  std_logic;        --! Select input
 		out_re  : out std_logic_vector; --! Real output
 		out_im  : out std_logic_vector; --! Imaginary output
+		ovflw   : out std_logic;		--! Overflow detected in butterfly add/sub
 		out_val : out std_logic;        --! Output value valid signal
 		out_sel : out std_logic         --! Select output
 	);
@@ -78,6 +79,8 @@ architecture str of rTwoBFStage is
 	signal stage_sel         : std_logic;
 	signal stage_val         : std_logic;
 
+	signal ovflw_det		 : std_logic_vector(1 DOWNTO 0);
+
 begin
 
 	------------------------------------------------------------------------------
@@ -95,6 +98,7 @@ begin
 			in_b   => in_re,
 			in_sel => in_sel,
 			in_val => in_val,
+			ovflw  => ovflw_det(0),
 			out_c  => stage_re,
 			out_d  => bf_re
 		);
@@ -110,10 +114,12 @@ begin
 			in_b   => in_im,
 			in_sel => in_sel,
 			in_val => in_val,
+			ovflw  => ovflw_det(1),
 			out_c  => stage_im,
 			out_d  => bf_im
 		);
-
+	
+	ovflw <= (ovflw_det(0) or ovflw_det(1));
 	------------------------------------------------------------------------------
 	-- feedback fifo
 	------------------------------------------------------------------------------

@@ -44,9 +44,7 @@
 --
 --          At the output will find: 
 --
---          c0f0 c0f1 c0f2 ... c0f15 c1f0 c1f1 c1f2 ... c1f15  (c0f0 means channel 0, frequency bin 0)
---
---           
+--          c0f0 c0f1 c0f2 ... c0f15 c1f0 c1f1 c1f2 ... c1f15  (c0f0 means channel 0, frequency bin 0)     
 
 library ieee, common_pkg_lib, common_components_lib, casper_requantize_lib, r2sdf_fft_lib;
 use IEEE.std_logic_1164.all;
@@ -56,37 +54,36 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_pipe is
 	generic(
-		g_fft                : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline           : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false; -- generic to prevent re-ordering of the channels
-		g_use_variant    	 : string  		  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-		g_use_dsp        	 : string  		  := "yes";        --! = "yes" or "no"
-		g_representation 	 : string  		  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
-		g_ovflw_behav    	 : string  		  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      	 : string  		  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  	 : string  		  := "auto";
-		g_technology     	 : natural 		  := 0       --! = 0 for Xilinx, 1 for Alterra
-		);
+		g_fft                : t_fft          := c_fft; 		 			--! generics for the FFT
+		g_pipeline           : t_fft_pipeline := c_fft_pipeline; 			--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_dont_flip_channels : boolean        := false; 					--! generic to prevent re-ordering of the channels
+		g_use_variant    	 : string  		  := "4DSP";        			--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        	 : string  		  := "yes";        				--! = "yes" or "no"
+		g_ovflw_behav    	 : string  		  := "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      	 : string  		  := "ROUND";        			--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  	 : string  		  := "auto";					--! = "auto", "distributed", "ultra" or "block"
+		g_technology     	 : natural 		  := 0       					--! = 0 for Xilinx, 1 for Alterra
+	);
 	port(
-		clken    : in  std_logic;
-		clk      : in  std_logic;
-		rst      : in  std_logic := '0';
-		shiftreg : in  std_logic_vector(c_stages_pipe -1 downto 0);
-		in_re    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_im    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_val   : in  std_logic := '1';
-		out_re   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_im   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		ovflw	 : out std_logic_vector(c_stages_pipe - 1 downto 0);
-		out_val  : out std_logic
+		clken    			 : in  std_logic;											--! Clock enable
+		clk      			 : in  std_logic;											--! Clock
+		rst      			 : in  std_logic := '0';									--! Reset
+		shiftreg 			 : in  std_logic_vector(c_stages_pipe -1 downto 0);			--! Shift register
+		in_re    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input real signal
+		in_im    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input imaginary signal
+		in_val   			 : in  std_logic := '1';									--! In data valid
+		out_re   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output real signal
+		out_im   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output imaginary signal
+		ovflw	 			 : out std_logic_vector(c_stages_pipe - 1 downto 0);		--! Overflow register (detects overflow in add/sub of butterfly)
+		out_val  			 : out std_logic											--! Output data valid
 	);
 end entity fft_r2_pipe;
 
 architecture str of fft_r2_pipe is
 
-	
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
+	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
+
 	constant c_pipeline_remove_lsb : natural := 0;
 
 	constant c_nof_stages   : natural := ceil_log2(g_fft.nof_points);
@@ -127,25 +124,24 @@ begin
                 g_stage          => stage,
                 g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
-				g_use_variant    => g_use_variant,
+				g_variant    	 => g_use_variant,
 				g_use_dsp        => g_use_dsp,
-				g_representation => g_representation,
 				g_ovflw_behav	 => g_ovflw_behav,
 				g_use_round		 => g_use_round, 
-                g_pipeline       => g_pipeline
-            )
-            port map(
-                clk     => clk,
+				g_pipeline       => g_pipeline
+			)
+			port map(
+				clk     => clk,
 				rst     => rst,
+				in_re   => data_re(stage),
+				in_im   => data_im(stage),
 				scale   => shiftreg(stage-1),
-                in_re   => data_re(stage),
-                in_im   => data_im(stage),
-                in_val  => data_val(stage),
-                out_re  => data_re(stage - 1),
+				in_val  => data_val(stage),
+				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
-				ovflw	=> ovflw(stage-1),
-                out_val => data_val(stage - 1)
-            );
+				ovflw	=> ovflw(stage -1),
+				out_val => data_val(stage - 1)
+			);
 	end generate;
 
 	------------------------------------------------------------------------------
@@ -239,6 +235,4 @@ begin
 			in_dat  => raw_out_val,
 			out_dat => out_val
 		);
-
 end str;
-

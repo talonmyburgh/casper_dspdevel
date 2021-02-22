@@ -1,4 +1,4 @@
-function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_dat_w,nof_points)
+function topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('topwb_slim_code_gen'));
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
@@ -32,7 +32,6 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
                                                 "--   doing the input guard and par fft section doing the output compensation)"
         "use_variant    : string  := ""4DSP"";        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
         "use_dsp        : string  := ""YES"";        --! = ""yes"" or ""no"""
-        "representation : string  := ""SIGNED"";        --! = ""SIGNED"" or ""UNSIGNED"" for data type representation"
         "ovflw_behav    : string  := ""WRAP"";        --! = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
         "use_round      : string  := ""ROUND"";        --! = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
         "ram_primitive  : string  := ""auto"";        --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
@@ -45,8 +44,8 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
 		"rst : in std_logic;"
 		"in_sync : in std_logic;"
         "in_valid : in std_logic;"
-        "shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
-        "ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'0');"
+        "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
+        "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
         "out_sync : out std_logic;"
         "out_valid : out std_logic;"
         "in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);"
@@ -90,7 +89,6 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
                                                     "--   doing the input guard and par fft section doing the output compensation)"
         "use_variant    : string  := ""4DSP"";        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
         "use_dsp        : string  := ""YES"";        --! = ""yes"" or ""no"""
-        "representation : string  := ""SIGNED"";        --! = ""SIGNED"" or ""UNSIGNED"" for data type representation"
         "ovflw_behav    : string  := ""WRAP"";        --! = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
         "use_round      : string  := ""ROUND"";        --! = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
         "ram_primitive  : string  := ""auto"";        --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
@@ -103,8 +101,8 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
 		"rst : in std_logic;"
 		"in_sync : in std_logic;"
         "in_valid : in std_logic;"
-        "shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
-        "ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'0');"
+        "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
+        "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
         "out_sync : out std_logic;"
         "out_valid : out std_logic;"];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -129,7 +127,6 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "g_fft_pipeline => c_fft_pipeline,"
         "g_use_variant => use_variant,"
         "g_use_dsp   => use_dsp,"
-        "g_representation => representation,"
         "g_ovflw_behav => ovflw_behav,"
         "g_use_round => use_round,"
         "g_ram_primitive => ram_primitive,"
@@ -138,10 +135,10 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         ")"
         "port map ("
         "clken        => ce,"
-        "dp_rst       => rst,"
-        "dp_clk       => clk,"
-        "shiftreg  => shiftreg,"
-        "ovflw     => ovflw,"
+        "rst       => rst,"
+        "clk       => clk,"
+        "shiftreg  => in_shiftreg,"
+        "ovflw     => out_ovflw,"
         "in_bb_sosi_arr  => in_bb_sosi_arr,"
         "out_bb_sosi_arr => out_bb_sosi_arr);"
         "otherinprtmap: for j in 0 to wb_factor-1 generate"
@@ -183,7 +180,6 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "g_fft_pipeline => c_fft_pipeline,"
         "g_use_variant => use_variant,"
         "g_use_dsp   => use_dsp,"
-        "g_representation => representation,"
         "g_ovflw_behav => ovflw_behav,"
         "g_use_round => use_round,"
         "g_ram_primitive => ram_primitive,"
@@ -194,8 +190,8 @@ function topwb_slim_code_gen(wb_factor,xtra_dat_sigs,in_dat_w, out_dat_w, stage_
         "clken        => ce,"
         "rst       => rst,"
         "clk       => clk,"
-        "shiftreg  => shiftreg,"
-        "ovflw     => ovflw,"
+        "shiftreg  => in_shiftreg,"
+        "ovflw     => out_ovflw,"
         "in_bb_sosi_arr  => in_bb_sosi_arr,"
         "out_bb_sosi_arr => out_bb_sosi_arr);"
         "otherinprtmap: for j in 0 to wb_factor-1 generate"
@@ -304,7 +300,7 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
     fprintf(fid,'%s\n',linethree);
     fprintf(fid,'%s\n',linefour);
     fprintf(fid,'%s\n',linefive);
-    for jj = insertloc+6: length(lines)
+    for jj = insertloc+6 : length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);

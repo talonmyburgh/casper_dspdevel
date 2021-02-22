@@ -42,26 +42,25 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_par is
 	generic(
-		g_fft      : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
-		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
-		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
+		g_fft      		 : t_fft          := c_fft; 				--! generics for the FFT
+		g_pipeline 		 : t_fft_pipeline := c_fft_pipeline;	 	--! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  		  := "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  		  := "yes";        		--! = "yes" or "no"
+		g_ovflw_behav    : string  		  := "WRAP";        		--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  		  := "ROUND";        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_technology     : natural 		  := 0       				--! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
-		clk        : in  std_logic;
-		rst        : in  std_logic := '0';
-		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0);
-		in_val     : in  std_logic := '1';
-		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);
-		ovflw	   : out std_logic_vector(c_stages_par - 1 downto 0);
-		out_val    : out std_logic
+		clk        : in  std_logic;											--! Clock
+		rst        : in  std_logic := '0';									--! Reset
+		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Input real data (nof_points wide)
+		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Input imag data (nof_points wide)
+		shiftreg   : in  std_logic_vector(c_stages_par - 1 downto 0); 		--! Par stage long shiftreg
+		in_val     : in  std_logic := '1';									--! In data valid
+		out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Output real data (nof_points wide)
+		out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0);	--! Output imag data (nof_points wide)
+		ovflw	   : out std_logic_vector(c_stages_par - 1 downto 0);		--! Par stage long ovflw register
+		out_val    : out std_logic											--! Out data valid
 	);
 end entity fft_r2_par;
 
@@ -128,8 +127,9 @@ architecture str of fft_r2_par is
 		return v_return;
 	end;
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
+	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
+
 	constant c_pipeline_add_sub    : natural := 1;
 	constant c_pipeline_remove_lsb : natural := 1;
 	constant c_sepa_round          : boolean := true; -- must be true, because separate should round the 1 bit growth
@@ -177,33 +177,32 @@ begin
 	-- parallel FFT stages
 	------------------------------------------------------------------------------
 	gen_fft_stages : for stage in c_nof_stages downto 1 generate
-        gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
-            u_element : entity work.fft_r2_bf_par
-                generic map(
-                    g_stage         => stage,
-                    g_element       => element,
-					g_pipeline      => g_pipeline,
-					g_use_variant	=> g_use_variant,
-					g_representation => g_representation,
-					g_ovflw_behav   => g_ovflw_behav,
+		gen_fft_elements : for element in 0 to c_nof_bf_per_stage - 1 generate
+			u_element : entity work.fft_r2_bf_par
+				generic map(
+					g_stage        		=> stage,
+					g_element      		=> element,
+					g_pipeline     		=> g_pipeline,
+					g_use_variant		=> g_use_variant,
+					g_ovflw_behav   	=> g_ovflw_behav,
 					g_use_round			=> g_use_round,
-					g_technology	=> g_technology,
-					g_use_dsp		=> g_use_dsp
-                )
-                port map(
-                    clk      => clk,
+					g_technology		=> g_technology,
+					g_use_dsp			=> g_use_dsp
+				)
+				port map(
+					clk      => clk,
 					rst      => rst,
-					scale	 => shiftreg(stage-1),
-                    x_in_re  => data_re(stage)(2 * element),
-                    x_in_im  => data_im(stage)(2 * element),
-                    y_in_re  => data_re(stage)(2 * element + 1),
-                    y_in_im  => data_im(stage)(2 * element + 1),
-                    in_val   => data_val(stage)(element),
-                    x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-                    x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-                    y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-                    y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-					ovflw    => ovflw(stage-1),
+					x_in_re  => data_re(stage)(2 * element),
+					x_in_im  => data_im(stage)(2 * element),
+					y_in_re  => data_re(stage)(2 * element + 1),
+					y_in_im  => data_im(stage)(2 * element + 1),
+					scale	 => shiftreg(stage-1),				-- Scale or not at stage
+					in_val   => data_val(stage)(element),
+					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+					y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+					y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+					ovflw	 => ovflw(stage - 1),				-- Record if overflow occured at stage
 					out_val  => data_val(stage - 1)(element)
                 );
         end generate;
@@ -254,10 +253,10 @@ begin
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_re_arr(g_fft.nof_points - I),
-					in_b   => int_re_arr(I),
-					result => add_arr(2 * I)
+					clk    			  => clk,
+					in_a   			  => int_re_arr(g_fft.nof_points - I),
+					in_b   			  => int_re_arr(I),
+					result 			  => add_arr(2 * I)
 				);
 
 			b_output_real_adder : entity casper_adder_lib.common_add_sub
@@ -270,10 +269,10 @@ begin
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_im_arr(g_fft.nof_points - I),
-					in_b   => int_im_arr(I),
-					result => add_arr(2 * I + 1)
+					clk    			  => clk,
+					in_a   			  => int_im_arr(g_fft.nof_points - I),
+					in_b   			  => int_im_arr(I),
+					result 			  => add_arr(2 * I + 1)
 				);
 
 			a_output_imag_subtractor : entity casper_adder_lib.common_add_sub
@@ -286,10 +285,10 @@ begin
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_im_arr(I),
-					in_b   => int_im_arr(g_fft.nof_points - I),
-					result => sub_arr(2 * I)
+					clk    			  => clk,
+					in_a   			  => int_im_arr(I),
+					in_b   			  => int_im_arr(g_fft.nof_points - I),
+					result 			  => sub_arr(2 * I)
 				);
 
 			b_output_imag_subtractor : entity casper_adder_lib.common_add_sub
@@ -302,10 +301,10 @@ begin
 					g_out_dat_w       => g_fft.stage_dat_w + 1
 				)
 				port map(
-					clk    => clk,
-					in_a   => int_re_arr(g_fft.nof_points - I),
-					in_b   => int_re_arr(I),
-					result => sub_arr(2 * I + 1)
+					clk    			  => clk,
+					in_a   			  => int_re_arr(g_fft.nof_points - I),
+					in_b   			  => int_re_arr(I),
+					result 			  => sub_arr(2 * I + 1)
 				);
 
 			gen_sepa_truncate : IF c_sepa_round = false GENERATE
@@ -320,8 +319,8 @@ begin
 				-- round the one LSbit
 				round_re_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round       	  => c_round, -- when TRUE round the input, else truncate the input
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
@@ -329,15 +328,15 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => add_arr(2 * I),
-						out_dat => fft_re_arr(2 * I)
+						clk     		  => clk,
+						in_dat  		  => add_arr(2 * I),
+						out_dat 		  => fft_re_arr(2 * I)
 					);
 
 				round_re_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-						g_round       	  => c_round, -- when TRUE round the input, else truncate the input
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
 						g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
@@ -345,14 +344,14 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => add_arr(2 * I + 1),
-						out_dat => fft_re_arr(2 * I + 1)
+						clk     		  => clk,
+						in_dat  		  => add_arr(2 * I + 1),
+						out_dat 		  => fft_re_arr(2 * I + 1)
 					);
 
 				round_im_a : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -361,14 +360,14 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => sub_arr(2 * I),
-						out_dat => fft_im_arr(2 * I)
+						clk     		  => clk,
+						in_dat  		  => sub_arr(2 * I),
+						out_dat 		  => fft_im_arr(2 * I)
 					);
 
 				round_im_b : ENTITY casper_requantize_lib.common_round
 					GENERIC MAP(
-						g_representation  => g_representation, -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+						g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
 						g_round           => c_round, -- when TRUE round the input, else truncate the input
 						g_round_clip      => c_clip, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 						g_pipeline_input  => 0, -- >= 0
@@ -377,9 +376,9 @@ begin
 						g_out_dat_w       => g_fft.stage_dat_w
 					)
 					PORT MAP(
-						clk     => clk,
-						in_dat  => sub_arr(2 * I + 1),
-						out_dat => fft_im_arr(2 * I + 1)
+						clk     		  => clk,
+						in_dat  		  => sub_arr(2 * I + 1),
+						out_dat 		  => fft_im_arr(2 * I + 1)
 					);
 			end generate;
 		end generate;
@@ -400,9 +399,9 @@ begin
 				g_out_dat_w => g_fft.stage_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_re_arr(0),
-				out_dat => fft_re_arr(0)
+				clk     	=> clk,
+				in_dat  	=> int_re_arr(0),
+				out_dat 	=> fft_re_arr(0)
 			);
 
 		u_pipeline_b_re_0 : entity common_components_lib.common_pipeline
@@ -412,9 +411,9 @@ begin
 				g_out_dat_w => g_fft.stage_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_im_arr(0),
-				out_dat => fft_re_arr(1)
+				clk     	=> clk,
+				in_dat  	=> int_im_arr(0),
+				out_dat 	=> fft_re_arr(1)
 			);
 
 		-- The imaginary outputs of A(0) and B(0) are always zero in case two real inputs are provided
@@ -426,12 +425,12 @@ begin
 		------------------------------------------------------------------------------
 		u_seperate_fft_val : entity common_components_lib.common_pipeline_sl
 			generic map(
-				g_pipeline => c_pipeline_add_sub
+				g_pipeline 	=> c_pipeline_add_sub
 			)
 			port map(
-				clk     => clk,
-				in_dat  => int_val,
-				out_dat => fft_val
+				clk     	=> clk,
+				in_dat  	=> int_val,
+				out_dat 	=> fft_val
 			);
 	end generate;
 
@@ -461,10 +460,10 @@ begin
 				g_out_dat_w           => g_fft.out_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => fft_re_arr(I),
-				out_dat => out_re_arr(I),
-				out_ovr => open
+				clk     			  => clk,
+				in_dat  			  => fft_re_arr(I),
+				out_dat 			  => out_re_arr(I),
+				out_ovr 			  => open
 			);
 
 		u_requantize_im : entity casper_requantize_lib.common_requantize
@@ -481,22 +480,22 @@ begin
 				g_out_dat_w           => g_fft.out_dat_w
 			)
 			port map(
-				clk     => clk,
-				in_dat  => fft_im_arr(I),
-				out_dat => out_im_arr(I),
-				out_ovr => open
+				clk     			  => clk,
+				in_dat  			  => fft_im_arr(I),
+				out_dat 			  => out_im_arr(I),
+				out_ovr 			  => open
 			);
 
 	end generate;
 
 	u_out_val : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => c_pipeline_remove_lsb
+			g_pipeline  => c_pipeline_remove_lsb
 		)
 		port map(
-			rst     => rst,
-			clk     => clk,
-			in_dat  => fft_val,
-			out_dat => out_val
+			rst     	=> rst,
+			clk     	=> clk,
+			in_dat  	=> fft_val,
+			out_dat 	=> out_val
 		);
 end str;

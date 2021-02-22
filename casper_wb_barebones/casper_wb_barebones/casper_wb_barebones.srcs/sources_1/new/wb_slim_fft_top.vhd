@@ -31,8 +31,10 @@ entity wideband_fft_top is
 		rst : in std_logic := '0';
 		in_sync : in std_logic := '1';
 		in_valid : in std_logic := '1';
+		in_shiftreg : in std_logic_vector(c_stages -1 DOWNTO 0) := "1111111111";
         out_sync : out std_logic;
         out_valid : out std_logic;
+        out_ovflw : out STD_LOGIC_VECTOR(c_stages -1 DOWNTO 0);
         in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0) := (others=>'0');
 		in_sop : in std_logic :='1';
 		in_eop : in std_logic :='1';
@@ -54,7 +56,7 @@ end entity wideband_fft_top;
 
 architecture RTL of wideband_fft_top is
         constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,twiddle_offset,
-        nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable,56,2);
+        nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable);
         signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);
         signal out_bb_sosi_arr : t_bb_sosi_arr_out(wb_factor - 1 downto 0);
         constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;
@@ -69,7 +71,9 @@ architecture RTL of wideband_fft_top is
         clken        => ce,
         rst       => rst,
         clk       => clk,
+        shiftreg => in_shiftreg,
         in_bb_sosi_arr  => in_bb_sosi_arr,
+        ovflw => out_ovflw,
         out_bb_sosi_arr => out_bb_sosi_arr);
         
         otherinprtmap: for j in 0 to wb_factor-1 generate

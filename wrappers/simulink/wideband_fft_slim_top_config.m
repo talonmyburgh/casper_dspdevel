@@ -56,7 +56,6 @@ function wideband_fft_slim_top_config(this_block)
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
   variant = get_param(wb_fft_blk_parent,'use_variant');
   use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
-  representation = get_param(wb_fft_blk_parent,'representation');
   ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
   use_round = get_param(wb_fft_blk_parent,'use_round');
   ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
@@ -82,8 +81,8 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_sync');
   this_block.addSimulinkInport('in_valid');
-  this_block.addSimulinkInport('shiftreg');
-  in_shiftreg_port = this_block.port('shiftreg');
+  this_block.addSimulinkInport('in_shiftreg');
+  in_shiftreg_port = this_block.port('in_shiftreg');
 
   %If a simple interface is required by the user, hide these other signals
   if xtra_dat_sigs
@@ -113,8 +112,8 @@ function wideband_fft_slim_top_config(this_block)
   
   this_block.addSimulinkOutport('out_sync');
   this_block.addSimulinkOutport('out_valid');
-  this_block.addSimulinkOutport('ovflw');
-  out_ovflw_port = this_block.port('ovflw');
+  this_block.addSimulinkOutport('out_ovflw');
+  out_ovflw_port = this_block.port('out_ovflw');
 
   if xtra_dat_sigs
       this_block.addSimulinkOutport('out_bsn');
@@ -274,7 +273,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
   this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
-  this_block.addGeneric('representation','String',representation);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
   this_block.addGeneric('use_round','String',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
@@ -317,7 +315,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/rl_shift_requantize.vhdl'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhdl'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');

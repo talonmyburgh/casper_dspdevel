@@ -26,23 +26,23 @@ use common_pkg_lib.common_pkg.all;
 entity rTwoWMul is
 	generic(
 		g_technology : NATURAL := 0;
-		g_use_dsp    : STRING  := "YES";
-		g_use_variant    : STRING  := "4DSP";
+		g_use_dsp    : STRING  := "yes";
+		g_variant    : STRING  := "4DSP";
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
 	);
 	port(
-		clk       : in  std_logic;
-		rst       : in  std_logic;
-		weight_re : in  std_logic_vector;
-		weight_im : in  std_logic_vector;
-		in_re     : in  std_logic_vector;
-		in_im     : in  std_logic_vector;
-		in_val    : in  std_logic;
-		in_sel    : in  std_logic;
-		out_re    : out std_logic_vector;
-		out_im    : out std_logic_vector;
-		out_val   : out std_logic
+		clk       	 : in  std_logic;
+		rst       	 : in  std_logic;
+		weight_re 	 : in  std_logic_vector;
+		weight_im 	 : in  std_logic_vector;
+		in_re     	 : in  std_logic_vector;
+		in_im     	 : in  std_logic_vector;
+		in_val    	 : in  std_logic;
+		in_sel    	 : in  std_logic;
+		out_re    	 : out std_logic_vector;
+		out_im    	 : out std_logic_vector;
+		out_val   	 : out std_logic
 	);
 end entity rTwoWMul;
 
