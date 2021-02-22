@@ -111,7 +111,7 @@ begin
 		u_CmplxMul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
 				g_technology       => g_technology,
-				g_use_variant      => g_use_variant,
+				g_use_variant      => g_variant,
 				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => c_in_dat_w,
 				g_in_b_w           => c_weight_w,
@@ -142,7 +142,7 @@ begin
 			generic map(
 				g_use_dsp          => g_use_dsp,
 				g_technology       => g_technology,
-				g_use_variant          => g_use_variant,
+				g_use_variant      => g_variant,
 				g_in_a_w           => in_re'length,
 				g_in_b_w           => weight_re'length,
 				g_out_p_w          => product_re'length,

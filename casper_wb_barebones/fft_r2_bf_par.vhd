@@ -55,7 +55,6 @@ entity fft_r2_bf_par is
 		x_in_im  : in  std_logic_vector;
 		y_in_re  : in  std_logic_vector;
 		y_in_im  : in  std_logic_vector;
-		scale    : in  std_logic;
 		in_val   : in  std_logic;
 		x_out_re : out std_logic_vector;
 		x_out_im : out std_logic_vector;
@@ -156,7 +155,7 @@ begin
 		port map(
 			clk                   => clk,
 			clken                 => '1',
-			scale	              => '1',
+			scale	              => scale,
 			in_dat                => sum_re,
 			out_dat               => sum_quant_re
 		);
@@ -171,7 +170,7 @@ begin
 		port map(
 			clk     			  => clk,
 			clken   			  => '1',
-			scale				  => '1',
+			scale				  => scale,
 			in_dat  			  => sum_im,
 			out_dat 			  => sum_quant_im
 		);
@@ -280,7 +279,7 @@ begin
 		port map(
 			clk     			=> clk,
 			clken   			=> '1',
-			scale				=> '1',
+			scale				=> scale,
 			in_dat  			=> mul_out_re,
 			out_dat 			=> mul_quant_re
 		);
@@ -295,7 +294,7 @@ begin
 		port map(
 			clk     			=> clk,
 			clken   			=> '1',
-			scale				=> '1',
+			scale				=> scale,
 			in_dat  			=> mul_out_im,
 			out_dat 			=> mul_quant_im
 		);

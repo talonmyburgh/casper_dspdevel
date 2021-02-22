@@ -40,7 +40,6 @@ entity rTwoSDFStage is
 	port(
 		clk     		 : in  std_logic;        				--! Input clock
 		rst     		 : in  std_logic;        				--! Input reset
-		scale 			 : in  std_logic;						--! Scale (1) or not (0)
 		in_re   		 : in  std_logic_vector; 				--! Real input value
 		in_im   		 : in  std_logic_vector; 				--! Imaginary input value
 		scale 			 : in  std_logic;						--! Scale (1) or not (0)
