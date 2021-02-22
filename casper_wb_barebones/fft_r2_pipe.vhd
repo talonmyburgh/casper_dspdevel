@@ -54,15 +54,15 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_pipe is
 	generic(
-		g_fft                : t_fft          := c_fft; 		 			--! generics for the FFT
-		g_pipeline           : t_fft_pipeline := c_fft_pipeline; 			--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false; 					--! generic to prevent re-ordering of the channels
-		g_use_variant    	 : string  		  := "4DSP";        			--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-		g_use_dsp        	 : string  		  := "yes";        				--! = "yes" or "no"
-		g_ovflw_behav    	 : string  		  := "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      	 : string  		  := "ROUND";        			--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  	 : string  		  := "auto";					--! = "auto", "distributed", "ultra" or "block"
-		g_technology     	 : natural 		  := 0       					--! = 0 for Xilinx, 1 for Alterra
+		g_fft                : t_fft          				:= c_fft; 		 			--! generics for the FFT
+		g_pipeline           : t_fft_pipeline 				:= c_fft_pipeline; 			--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_dont_flip_channels : boolean        				:= false; 					--! generic to prevent re-ordering of the channels
+		g_use_variant    	 : string  		  				:= "4DSP";        			--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        	 : string  		  				:= "yes";        			--! = "yes" or "no"
+		g_ovflw_behav    	 : string  		  				:= "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      	 : string  		  				:= "ROUND";        			--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  	 : string  		  				:= "auto";					--! = "auto", "distributed", "ultra" or "block"
+		g_technology     	 : natural 		  				:= 0       					--! = 0 for Xilinx, 1 for Alterra
 	);
 	port(
 		clken    			 : in  std_logic;											--! Clock enable
@@ -96,9 +96,9 @@ architecture str of fft_r2_pipe is
 	-- . the data output of the last stage has index 0
 	type t_data_arr is array (c_nof_stages downto 0) of std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 
-	signal data_re  : t_data_arr;
-	signal data_im  : t_data_arr;
-	signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+	signal data_re     : t_data_arr;
+	signal data_im     : t_data_arr;
+	signal data_val    : std_logic_vector(c_nof_stages downto 0) := (others => '0');
 
 	signal out_cplx    : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
 	signal in_cplx     : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
@@ -186,7 +186,7 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => g_representation,
+			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
@@ -206,7 +206,7 @@ begin
 
 	u_requantize_im : entity casper_requantize_lib.common_requantize
 		generic map(
-			g_representation      => g_representation,
+			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
 			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
