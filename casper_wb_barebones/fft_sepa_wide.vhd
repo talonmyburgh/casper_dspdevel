@@ -45,8 +45,8 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_sepa_wide is
 	generic(
-		g_fft : t_fft := c_fft;          -- generics for the FFT
-		g_ram_primitive : string :="auto"
+		g_fft 			: t_fft  := c_fft;          -- generics for the FFT
+		g_ram_primitive : string := "auto"
 	);
 	port(
 		clken      : in  std_logic;
@@ -328,4 +328,3 @@ begin
 	end generate;
 
 end rtl;
-
