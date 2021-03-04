@@ -27,7 +27,7 @@
 -- Remarks:    .
 --              
 
-library IEEE, common_pkg_lib, astron_multiplier_lib, astron_requantize_lib, astron_adder_lib;
+library IEEE, common_pkg_lib, casper_multiplier_lib, casper_requantize_lib, casper_adder_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
@@ -36,6 +36,7 @@ use work.fil_pkg.ALL;
 
 entity fil_ppf_filter is
   generic (
+    g_use_dsp          : STRING  := "YES";
     g_technology       : NATURAL := 0;
     g_fil_ppf          : t_fil_ppf; 
     g_fil_ppf_pipeline : t_fil_ppf_pipeline
@@ -76,18 +77,15 @@ begin
   gen_multipliers : for I in 0 to g_fil_ppf.nof_taps-1 generate
     in_taps_backoff((I+1)*c_in_dat_w-1 downto I*c_in_dat_w) <= resize_svec(in_taps((I+1)*g_fil_ppf.in_dat_w-1 downto I*g_fil_ppf.in_dat_w), c_in_dat_w);
     
-    u_multiplier : entity astron_multiplier_lib.common_mult
+    u_multiplier : entity casper_multiplier_lib.common_mult
     generic map (
-      g_technology       => g_technology,
-      g_variant          => "IP",
+      g_use_dsp          => g_use_dsp,
       g_in_a_w           => c_in_dat_w,   
       g_in_b_w           => g_fil_ppf.coef_dat_w, 
-      g_out_p_w          => c_prod_w,           
-      g_nof_mult         => 1,                    
+      g_out_p_w          => c_prod_w,                              
       g_pipeline_input   => g_fil_ppf_pipeline.mult_input,
       g_pipeline_product => g_fil_ppf_pipeline.mult_product,  
-      g_pipeline_output  => g_fil_ppf_pipeline.mult_output, 
-      g_representation   => "SIGNED"            
+      g_pipeline_output  => g_fil_ppf_pipeline.mult_output       
     )
     port map (
       rst      => rst,
@@ -95,7 +93,7 @@ begin
       clken    => '1',
       in_a     => in_taps_backoff((I+1)*c_in_dat_w-1 downto I*c_in_dat_w),
       in_b     => coefs((I+1)*g_fil_ppf.coef_dat_w-1 downto I*g_fil_ppf.coef_dat_w),
-      out_p    => prod_vec((I+1)*c_prod_w-1 downto I*c_prod_w)
+      result   => prod_vec((I+1)*c_prod_w-1 downto I*c_prod_w)
     );
   end generate; 
 
@@ -103,7 +101,7 @@ begin
   -- ADDER TREE
   ---------------------------------------------------------------  
   -- The adder tree summarizes the outputs of all multipliers.
-  u_adder_tree : entity astron_adder_lib.common_adder_tree(str) 
+  u_adder_tree : entity casper_adder_lib.common_adder_tree(str) 
   generic map (
     g_representation => "SIGNED",
     g_pipeline       => g_fil_ppf_pipeline.adder_stage,          
@@ -117,7 +115,7 @@ begin
     sum    => adder_out
   );
   
-  u_requantize_addeer_output : entity astron_requantize_lib.common_requantize
+  u_requantize_addeer_output : entity casper_requantize_lib.common_requantize
   generic map (
     g_representation      => "SIGNED",      
     g_lsb_w               => c_ppf_lsb_w,  
