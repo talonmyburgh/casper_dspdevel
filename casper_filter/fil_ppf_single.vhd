@@ -63,11 +63,11 @@
 -- Remarks:
 -- .  See also description tb_fil_ppf_single.vhd for more info.
 --
-library IEEE, common_pkg_lib, astron_ram_lib, astron_mm_lib;
+library IEEE, common_pkg_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL; 
-use astron_ram_lib.common_ram_pkg.ALL;  
+use casper_ram_lib.common_ram_pkg.ALL;  
 use work.fil_pkg.ALL;
 
 entity fil_ppf_single is
@@ -75,8 +75,8 @@ entity fil_ppf_single is
     g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
-    g_coefs_file_prefix : string             := "hex/coef"       -- Relative path to the mif files that contain the initial data for the coefficients memories 
-  );                                                                   -- The sequence number and ".mif"-extension are added within the entity.
+    g_coefs_file        : string                                        -- Relative path to the mem files that contain the initial data for the coefficients memories 
+  );                                                                    -- The sequence number and ".mif"-extension are added within the entity.
   port (
     dp_clk         : in  std_logic;
     dp_rst         : in  std_logic;
@@ -93,7 +93,6 @@ end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
    
-  constant c_coefs_postfix   : string := ".mif"; 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              
@@ -129,13 +128,12 @@ begin
   -- MEMORY FOR THE HISTORICAL TAP DATA
   ---------------------------------------------------------------
   gen_taps_mems : for I in 0 to g_fil_ppf.nof_streams-1 generate
-    u_taps_mem : entity astron_ram_lib.common_ram_r_w                                                          
+    u_taps_mem : entity casper_ram_lib.common_ram_r_w                                                          
     generic map (                                                                                     
       g_ram       => c_taps_mem,                                                                           
       g_init_file => "UNUSED"     -- assume block RAM gets initialized to '0' by default in simulation
     )                                                                                               
-    port map (                                                                                        
-      rst       => dp_rst,                                                                               
+    port map (                                                                                                                                                                     
       clk       => dp_clk,                                                                               
       wr_en     => taps_wren,                                                                              
       wr_adr    => taps_wraddr,                                                                            
@@ -151,7 +149,7 @@ begin
   ---------------------------------------------------------------
   -- Combine the internal array of mm interfaces for the coefficents 
   -- memory to one array that is connected to the port of the fil_ppf
-  u_mem_mux_coef : entity astron_mm_lib.common_mem_mux
+  u_mem_mux_coef : entity casper_mm_lib.common_mem_mux
   generic map (    
     g_nof_mosi    => g_fil_ppf.nof_taps,
     g_mult_addr_w => c_coef_mem_addr_w
@@ -169,15 +167,14 @@ begin
   -- For every tap a unique memory is instantiated that holds
   -- the corresponding coefficients for all the bands. 
   gen_coef_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
-    u_coef_mem : entity astron_ram_lib.common_ram_crw_crw
+    u_coef_mem : entity casper_ram_lib.common_ram_crw_crw
     generic map (
       g_ram        => c_coef_mem,
       -- Sequence number and ".hex" extensie are added to the relative path in case a ram file is provided.                                                          
-      g_init_file  => sel_a_b(g_coefs_file_prefix = "UNUSED", g_coefs_file_prefix, g_coefs_file_prefix & "_" & NATURAL'IMAGE(g_file_index_arr(I)) & c_coefs_postfix)    
+      g_init_file  => g_coefs_file    
     )
     port map (
       -- MM side
-      rst_a     => mm_rst,
       clk_a     => mm_clk,
       wr_en_a   => ram_coefs_mosi_arr(I).wr,
       wr_dat_a  => ram_coefs_mosi_arr(I).wrdata(g_fil_ppf.coef_dat_w-1 downto 0),
@@ -186,7 +183,6 @@ begin
       rd_dat_a  => ram_coefs_miso_arr(I).rddata(g_fil_ppf.coef_dat_w-1 downto 0),
       rd_val_a  => ram_coefs_miso_arr(I).rdval,
       -- Datapath side
-      rst_b     => dp_rst,
       clk_b     => dp_clk,
       wr_en_b   => '0',
       wr_dat_b  => (others =>'0'),

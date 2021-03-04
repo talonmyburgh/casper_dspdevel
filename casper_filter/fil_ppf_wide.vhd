@@ -108,11 +108,11 @@
 -- Remarks:
 -- . See also description tb_fil_ppf_single.vhd for more info.
 --              
-library IEEE, common_pkg_lib, astron_ram_lib, astron_mm_lib;
+library IEEE, common_pkg_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL; 
-use astron_ram_lib.common_ram_pkg.ALL;  
+use casper_ram_lib.common_ram_pkg.ALL;  
 use work.fil_pkg.ALL;
 
 entity fil_ppf_wide is
@@ -121,8 +121,7 @@ entity fil_ppf_wide is
     g_big_endian_wb_out : boolean            := false;
     g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
-    g_coefs_file_prefix : string             := "../../data/coef"  -- Relative path to the mif files that contain the FIR the coefficients
-                                                                   -- The sequence number and ".mif"-extension are added within the entity.
+    g_coefs_file        : string             := "filtercoeff.mem"  -- mem file locations
   );
   port (
     dp_clk         : in  std_logic;
@@ -200,7 +199,7 @@ begin
   ---------------------------------------------------------------
   -- Combine the internal array of mm interfaces for the coefficents 
   -- memory to one array that is connected to the port of the fil_ppf_w
-  u_mem_mux_coef : entity astron_mm_lib.common_mem_mux
+  u_mem_mux_coef : entity casper_mm_lib.common_mem_mux
   generic map (    
     g_nof_mosi    => g_fil_ppf.wb_factor,
     g_mult_addr_w => c_mem_addr_w
@@ -236,7 +235,7 @@ begin
       g_fil_ppf           => c_fil_ppf_arr(P),
       g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
       g_file_index_arr    => c_file_index_arr2(P),  -- use (g_fil_ppf.wb_factor-1 - P) to try impact of reversed WB FIR coefficients
-      g_coefs_file_prefix => g_coefs_file_prefix 
+      g_coefs_file        => g_coefs_file        
     )
     port map (
       dp_clk         => dp_clk,
