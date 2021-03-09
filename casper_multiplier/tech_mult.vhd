@@ -7,7 +7,7 @@ USE work.tech_mult_component_pkg.all;
 ENTITY tech_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_variant for given g_technology
+		g_sim_level        : NATURAL := 0; 	   -- 0: Simulate variant passed via g_variant for given g_technology
 		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
 		g_in_b_w           : POSITIVE;

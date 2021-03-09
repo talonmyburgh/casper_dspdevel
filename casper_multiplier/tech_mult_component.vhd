@@ -82,7 +82,7 @@ PACKAGE tech_mult_component_pkg IS
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
 	component ip_mult_infer
 		generic(
-			g_use_dsp          : STRING := "yes";
+			g_use_dsp          : STRING := "YES";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
 			g_out_p_w          : POSITIVE;
