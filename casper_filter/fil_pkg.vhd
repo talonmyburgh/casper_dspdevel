@@ -25,6 +25,20 @@ use common_pkg_lib.common_pkg.all;
 
 package fil_pkg is
 
+--UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
+  CONSTANT in_dat_w : natural := 8;
+  CONSTANT out_dat_w : natural := 16;
+  CONSTANT coef_dat_w : natural := 16;
+
+--UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
+  CONSTANT wb_factor : natural := 1;
+  CONSTANT nof_chan : natural := 0;
+  CONSTANT nof_bands : natural := 1024;
+  CONSTANT nof_taps  : natural := 4;
+  CONSTANT nof_streams : natural := 1;
+  CONSTANT backoff_w : natural := 0;
+  CONSTANT c_coefs_file : string := "filtercoeff.mem";
+
   -- Parameters for the (wideband) poly phase filter. 
   type t_fil_ppf is record
     wb_factor      : natural; -- = 1, the wideband factor
@@ -38,7 +52,7 @@ package fil_pkg is
     coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
   end record;
   
-  constant c_fil_ppf : t_fil_ppf := (1, 0, 1024, 16, 1, 0, 8, 16, 16);
+  constant c_fil_ppf : t_fil_ppf := (wb_factor, nof_chan, nof_bands, nof_taps, nof_streams, backoff_w, in_dat_w, out_dat_w, coef_dat_w);
   
   -- Definitions for fil slv array (an array can not have unconstraint elements, so choose sufficiently wide 32 bit slv elements)
   subtype  t_fil_slv_arr is t_slv_32_arr;    -- use subtype to ease interfacing to existing types and to have central definition for filter components

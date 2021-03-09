@@ -117,22 +117,21 @@ use work.fil_pkg.ALL;
 
 entity fil_ppf_wide is
   generic (
-    g_big_endian_wb_in  : boolean            := false;
-    g_big_endian_wb_out : boolean            := false;
-    g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
-    g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
-    g_coefs_file        : string             := "filtercoeff.mem"  -- mem file locations
+    g_big_endian_wb_in  : boolean            := false;              -- input endian
+    g_big_endian_wb_out : boolean            := false;              -- output endian 
+    g_fil_ppf           : t_fil_ppf          := c_fil_ppf;          -- data widths and filter information
+    g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline  -- pipeline delay factors
   );
   port (
-    dp_clk         : in  std_logic;
-    dp_rst         : in  std_logic;
+    clk            : in  std_logic;
+    rst            : in  std_logic;
     mm_clk         : in  std_logic;
     mm_rst         : in  std_logic;
     ram_coefs_mosi : in  t_mem_mosi;               
     ram_coefs_miso : out t_mem_miso := c_mem_miso_rst;
-    in_dat_arr     : in  t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
+    in_dat_arr     : in  t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
     in_val         : in  std_logic;  
-    out_dat_arr    : out t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
+    out_dat_arr    : out t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
     out_val        : out std_logic
   ); 
 end fil_ppf_wide;
@@ -238,8 +237,8 @@ begin
       g_coefs_file        => g_coefs_file        
     )
     port map (
-      dp_clk         => dp_clk,
-      dp_rst         => dp_rst,
+      dp_clk         => clk,
+      dp_rst         => rst,
       mm_clk         => mm_clk,
       mm_rst         => mm_rst,
       ram_coefs_mosi => ram_coefs_mosi_arr(P), 
