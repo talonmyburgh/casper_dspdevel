@@ -52,11 +52,10 @@ package fil_pkg is
     coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
   end record;
   
-  constant c_fil_ppf : t_fil_ppf := (wb_factor, nof_chan, nof_bands, nof_taps, nof_streams, backoff_w, in_dat_w, out_dat_w, coef_dat_w);
-  
-  -- Definitions for fil slv array (an array can not have unconstraint elements, so choose sufficiently wide 32 bit slv elements)
-  subtype  t_fil_slv_arr is t_slv_32_arr;    -- use subtype to ease interfacing to existing types and to have central definition for filter components
-  constant c_fil_slv_w   : natural := 32;    -- match slv width of t_fil_slv_arr
+  constant c_fil_ppf : t_fil_ppf := (1, 0, 1024, 4, 1, 0, 8, 16, 16);
+  TYPE t_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
+  TYPE t_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+  TYPE t_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR(coef_dat_w -1 DOWNTO 0);
   
   -- Record with the pipeline settings for the filter units. 
   type t_fil_ppf_pipeline is record
@@ -79,4 +78,3 @@ end package fil_pkg;
 
 package body fil_pkg is
 end fil_pkg;
-
