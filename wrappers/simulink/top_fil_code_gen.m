@@ -24,8 +24,10 @@ function top_fil_code_gen(wb_factor)
     "in_val         : in  std_logic;"
     "out_val        : out std_logic;"];
 
+    portdec = join(mknprts(wb_factor),'\n');
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     lnsafterarchopen =[
+    ");"
     "end top_fil;"
     "architecture rtl of top_fil is"
     "constant cc_fil_ppf : t_fil_ppf := (wb_factor, nof_chan, nof_bands, nof_taps, nof_streams, backoff_w, in_dat_w, out_dat_w, coef_dat_w);"
@@ -47,25 +49,23 @@ function top_fil_code_gen(wb_factor)
     "in_val => in_val,"
     "out_dat_arr => out_dat_arr,"
     "out_val => out_val);"];
-    portdec = join(mknprts(wb_factor),'\n');
     archdec = join(mkarch(wb_factor),'\n');
     Vfile = fopen(vhdlfile,'w');
     if(Vfile == -1)
         error("Cannot open vhdl file");
     end
     fprintf(Vfile,'%s\n',lnsuptoportdec{:});
-    fprintf(Vfile,'%s\n',portdec{:});
+    fprintf(Vfile,portdec{:});
     fprintf(Vfile,'%s\n',lnsafterarchopen{:});
-    fprintf(Vfile,'%s\n',archdec{:});
+    fprintf(Vfile,archdec{:});
     fprintf(Vfile,"\nend architecture rtl;");
     fclose(Vfile);
-    
 end
 
 function chararr = mknprts(wb_factor)
     chararr = strings(2*wb_factor,0);
-    indatchar = "in_dat_arr_%c    : in std_logic_vector(in_dat_w-1 DOWNTO 0);"
-    outdatchar = "out_dat_arr_%c   : out std_logic_vector(out_dat_w -1 DOWNTO 0);"
+    indatchar = "in_dat_arr_%c    : in std_logic_vector(in_dat_w-1 DOWNTO 0);";
+    outdatchar = "out_dat_arr_%c   : out std_logic_vector(out_dat_w -1 DOWNTO 0);";
     i=1;
     for j=0:1:wb_factor-1
         jj = int2str(j);
@@ -82,8 +82,8 @@ end
 
 function achararr = mkarch(wb_factor)
     achararr = strings(2*wb_factor,0);
-    imap_c = "in_dat_arr(%c) <= in_dat_arr_%c;"
-    omap_c = "out_dat_arr_%c <= out_dat_arr(%c);"
+    imap_c = "in_dat_arr(%c) <= in_dat_arr_%c;";
+    omap_c = "out_dat_arr_%c <= out_dat_arr(%c);";
     l=1;
     for m=0:1:wb_factor-1
         mm = int2str(m);
