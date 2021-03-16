@@ -20,6 +20,7 @@ function top_fil_code_gen(wb_factor)
     "g_ram_primitive     : string             := ""auto"");          --! ram primitive function for use"
     "port("
     "clk            : in  std_logic;"
+    "ce             : in  std_logic           := '1';"
     "rst            : in  std_logic;"
     "in_val         : in  std_logic;"
     "out_val        : out std_logic;"];
@@ -44,6 +45,7 @@ function top_fil_code_gen(wb_factor)
     "g_ram_primitive     => g_ram_primitive)"
     "port map("
     "clk => clk,"
+    " ce => ce,"
     "rst => rst,"
     "in_dat_arr => in_dat_arr,"
     "in_val => in_val,"
