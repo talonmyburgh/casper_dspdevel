@@ -81,6 +81,7 @@ entity fil_ppf_single is
   );                                                                    
   port (
     clk         : in  std_logic;
+    ce          : in  std_logic;
     rst         : in  std_logic;
     -- mm_clk         : in  std_logic;
     -- mm_rst         : in  std_logic;
@@ -137,7 +138,8 @@ begin
       g_ram_primitive => g_ram_primitive
     )                                                                                               
     port map (                                                                                                                                                                     
-      clk       => clk,                                                                               
+      clk       => clk,
+      clken     => ce,                                                                               
       wr_en     => taps_wren,                                                                              
       wr_adr    => taps_wraddr,                                                                            
       wr_dat    => taps_mem_in_vec((I+1)*c_taps_mem_data_w-1 downto I*c_taps_mem_data_w),                                                                            
@@ -180,6 +182,7 @@ begin
     port map
     (
       clk =>        clk,
+      clken =>      ce,
       wr_en =>      '0',
       wr_dat =>     (others =>'0'),
       wr_adr =>     open,
@@ -234,6 +237,7 @@ begin
   )
   port map (
     clk          => clk,
+    ce           => ce,
     rst          => rst,
     in_dat       => in_dat,
     in_val       => in_val,

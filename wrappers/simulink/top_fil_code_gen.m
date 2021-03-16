@@ -10,7 +10,7 @@ function top_fil_code_gen(wb_factor)
     "use common_pkg_lib.common_pkg.ALL; "
     "use casper_ram_lib.common_ram_pkg.ALL;"
     "use work.fil_pkg.ALL;"
-    "entity fil_ppf_wide is generic ("
+    "entity top_fil is generic ("
     "g_big_endian_wb_in  : boolean            := false;              --! input endian"
     "g_big_endian_wb_out : boolean            := false;              --! output endian"
     "g_fil_ppf           : t_fil_ppf          := c_fil_ppf;          --! data widths and filter information"
