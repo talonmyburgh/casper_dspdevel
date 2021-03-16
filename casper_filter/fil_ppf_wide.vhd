@@ -127,6 +127,7 @@ entity fil_ppf_wide is
   );
   port (
     clk            : in  std_logic;
+    ce             : in  std_logic;
     rst            : in  std_logic;
     -- mm_clk         : in  std_logic;
     -- mm_rst         : in  std_logic;
@@ -244,6 +245,7 @@ begin
     port map (
       clk            => clk,
       rst            => rst,
+      ce             => ce,
       -- mm_clk         => mm_clk,
       -- mm_rst         => mm_rst,
       -- ram_coefs_mosi => ram_coefs_mosi_arr(P), 
