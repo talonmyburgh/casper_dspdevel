@@ -1,24 +1,3 @@
--------------------------------------------------------------------------------
--- Author: Harm Jan Pepping : pepping at astron.nl: 2012
--- Copyright (C) 2012
--- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
--- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
---
--- This program is free software: you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation, either version 3 of the License, or
--- (at your option) any later version.
---
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
---
--- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
---
--------------------------------------------------------------------------------
-
 library ieee, common_pkg_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
@@ -29,6 +8,7 @@ package fil_pkg is
   CONSTANT in_dat_w : natural := 8;
   CONSTANT out_dat_w : natural := 16;
   CONSTANT coef_dat_w : natural := 16;
+  CONSTANT c_coefs_file : string := "filtercoeff.mem";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
   CONSTANT wb_factor : natural := 1;
@@ -37,7 +17,6 @@ package fil_pkg is
   CONSTANT nof_taps  : natural := 4;
   CONSTANT nof_streams : natural := 1;
   CONSTANT backoff_w : natural := 0;
-  CONSTANT c_coefs_file : string := "filtercoeff.mem";
 
   -- Parameters for the (wideband) poly phase filter. 
   type t_fil_ppf is record

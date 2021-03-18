@@ -5,7 +5,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
+CONSTANT wb_factor      : natural :=2;       -- = default 1, wideband factor
 CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=10;       -- = 13, number of output bits
 CONSTANT stage_dat_w    : natural :=14;       -- = 18, data width used between the stages(= DSP multiplier-width)
