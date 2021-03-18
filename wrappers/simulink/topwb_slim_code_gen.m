@@ -287,7 +287,10 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
     linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
     linefive = sprintf("CONSTANT nof_points     : natural := %d;       -- = 1024, N point FFT",nof_points);
     fid = fopen(vhdlgenfileloc,'r');
-    lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
+    if fid==-1
+        error("Cannot open vhdl pkg file");
+    end
+    lines = textscan(fid, '%s', 'delimiter', '\n', 'CollectOutput',true);
     lines = lines{1};
     fclose(fid);
 

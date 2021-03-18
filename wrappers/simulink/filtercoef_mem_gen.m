@@ -1,4 +1,4 @@
-function memfile = filtercoef_mem_gen(N,taps,win,fwidth,signed,bit_width,fraction_width)
+function filtercoef_mem_gen(N,taps,win,fwidth,signed,bit_width,fraction_width)
     fixarray = fi(coefcalc(N,taps,win,fwidth),signed,bit_width,fraction_width);
     memfile = sprintf("filter_coefs_%d_%d_%s_%.2f.mem",N,taps,win,fwidth);
     Mfile = fopen(memfile,'w');
@@ -9,7 +9,6 @@ function memfile = filtercoef_mem_gen(N,taps,win,fwidth,signed,bit_width,fractio
        fprintf(Mfile,'%s\n',hex(fixarray(i))); 
     end
     fclose(Mfile);
-    return;
 end
 function coefs = coefcalc(N, taps, win, fwidth)
 %coefgen - Generate filterbank coeficients CASPER styles.
