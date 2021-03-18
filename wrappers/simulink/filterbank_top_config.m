@@ -5,7 +5,7 @@ function filterbank_top_config(this_block)
 
   this_block.setEntityName('filterbank_top');
   filterbank_blk = this_block.blockName;
-  filterbank_blk_parent = get_param(casper_filterbank,'Parent');
+  filterbank_blk_parent = get_param(filterbank_blk,'Parent');
 
   function boolval =  checkbox2bool(bxval)
     if strcmp(bxval, 'on')
@@ -35,25 +35,33 @@ function filterbank_top_config(this_block)
   i_d_w = get_param(filterbank_blk_parent,'in_dat_w');
   o_d_w = get_param(filterbank_blk_parent,'out_dat_w');
   c_d_w = get_param(filterbank_blk_parent,'coef_dat_w');
+  win = get_param(filterbank_blk_parent, 'win');
+  fwidth = get_param(filterbank_blk_parent, 'fwidth');
   nof_taps = get_param(filterbank_blk_parent,'nof_taps');
   nof_streams = get_param(filterbank_blk_parent,'nof_streams');
   backoff_w = get_param(filterbank_blk_parent,'backoff_w');
   technology = get_param(filterbank_blk_parent,'technology');
-  ram_primitive = get_param(filterank_blk_parent,'ram_primitive');
+  ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
-  top_fil_code_gen(wb_factor, in_dat_w, out_dat_w, coef_dat_w);
+  top_fil_code_gen(wb_factor,str2double(nof_bands),str2double(nof_taps),win,...
+      str2double(fwidth),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
-  %Create std_logic_vector ports
-  this_block.addSimulinkInport('in_dat_0');
-  this_block.addSimulinkOutport('out_dat_0');
-
-  %std logic signals
+  %Input signals
   this_block.addSimulinkInport('rst');
   this_block.addSimulinkInport('in_val');
+  for i=0:wb_factor-1
+      this_block.addSimulinkInport(sprintf('in_dat_%d',i));
+  end
+  
+  %Output signals
+  
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
   out_val_port.setType('UFix_1_0');
   out_val_port.useHDLVector(false);
+  for i=0:wb_factor-1
+      this_block.addSimulinkOutport(sprintf('out_dat_%d',i));
+  end
 
 
   % System Generator has to assume that your entity has a combinational feed through; 
@@ -63,13 +71,13 @@ function filterbank_top_config(this_block)
   if (this_block.inputTypesKnown)
     % do input type checking, dynamic output type and generic setup in this code block.
 
-    if (this_block.port('rst').width ~= 1);
+    if (this_block.port('rst').width ~= 1)
       this_block.setError('Input data type for port "rst" must have width=1.');
     end
 
     this_block.port('rst').useHDLVector(false);
 
-    if (this_block.port('in_val').width ~= 1);
+    if (this_block.port('in_val').width ~= 1)
       this_block.setError('Input data type for port "in_val" must have width=1.');
     end
 
@@ -111,36 +119,36 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
-this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
-this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
-this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
-this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree.vhd'],'casper_adder_lib');
-this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree_a_str.vhd'],'casper_adder_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_crw_crw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_cr_cw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_rw_rw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_r_w.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
-this_block.addFileToLibrary([filepath '/../../casper_filter/fil_pkg.vhd'],'casper_filter_lib');
-this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
-this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
-this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
-this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_wide.vhd'],'casper_filter_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_mult_infer.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'simulink_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree_a_str.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_cr_cw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_rw_rw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_r_w.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_pkg.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_wide.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_mult_infer.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'simulink_lib');
 return;
-
+end
 
 % ------------------------------------------------------------
 
@@ -167,4 +175,4 @@ function setup_as_single_rate(block,clkname,cename)
   return; 
 
 % ------------------------------------------------------------
-
+end

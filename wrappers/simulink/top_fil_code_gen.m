@@ -71,7 +71,7 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, in_dat_w,
     fclose(Vfile);
 
     %Generate coefficients mem file for the filter:
-    filter_coeff_mem_gen(nof_bands,nof_taps,win,fwidth,true,coef_dat_w, coef_dat_w-1);
+    coef_dat_file=filtercoef_mem_gen(nof_bands,nof_taps,win,fwidth,true,coef_dat_w, coef_dat_w-1);
 
     %Update fil_pkg.vhd:
     updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, coef_dat_file)
@@ -115,11 +115,14 @@ function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, coef_dat_fil
     lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
     linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
     linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
-    linefour  = sprintf("CONSTANT c_coefs_file : string := ""%s"";",coef_dat_file)
-    fid=fopen(vhdlgenfileloc,'r');
-    lines = textscan(fid,'%s', 'Delimeter','\n','CollectOutput',true);
+    linefour  = sprintf("CONSTANT c_coefs_file : string := ""%s"";",coef_dat_file);
+    fid = fopen(vhdlgenfileloc,'r');
+    if fid==-1
+        error("Cannot open vhdl pkg file");
+    end
+    lines = textscan(fid,'%s', 'delimiter','\n','CollectOutput',true);
     lines = lines{1};
-    fclose{fid};
+    fclose(fid);
 
     fid=fopen(vhdlgenfileloc,'w');
     for jj = 1:insertloc
