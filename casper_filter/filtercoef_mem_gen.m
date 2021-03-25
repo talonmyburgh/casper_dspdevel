@@ -1,3 +1,5 @@
+% Not used but could come in useful for coefficient generation in the future. Mem file and coefficient generation
+% is done by wrappers/simulink/fil_ppf_create.py
 function memfile = filtercoef_mem_gen(N,taps,win,fwidth,signed,bit_width,fraction_width)
     fixarray = fi(coefcalc(N,taps,win,fwidth),signed,bit_width,fraction_width);
     memfile = sprintf("filter_coefs_%d_%d_%s_%.2f.mem",N,taps,win,fwidth);
