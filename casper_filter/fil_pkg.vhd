@@ -8,7 +8,7 @@ package fil_pkg is
 CONSTANT in_dat_w : natural := 8;
 CONSTANT out_dat_w : natural := 10;
 CONSTANT coef_dat_w : natural :=12;
-CONSTANT c_coefs_file : string := "filter_coefs_1024_4_hanning_0.00.mem";
+CONSTANT c_coefs_file : string := "./hex/";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT wb_factor : natural := 1;
