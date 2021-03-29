@@ -75,7 +75,7 @@ entity fil_ppf_single is
     g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
-    g_coefs_file_prefix : string             := "./hex/pfir_coeffs";    -- Relative path to the mem files that contain the initial data for the coefficients memories
+    g_coefs_file_prefix : string             := "./pfir_coeffs_hann_t4_p1024_b16_wb4";    -- Relative path to the mem files that contain the initial data for the coefficients memories
     g_technology        : natural            := 0;
     g_ram_primitive     : string             := "auto" 
   );                                                                    
@@ -96,7 +96,7 @@ end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
   
-  constant c_coefs_postfix   : string := sel_a_b(g_technologY = '0', ".mem", ".mif") 
+  constant c_coefs_postfix   : string := sel_a_b(g_technology = 0, ".mem", ".mif"); 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              

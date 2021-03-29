@@ -5,13 +5,13 @@ use common_pkg_lib.common_pkg.all;
 package fil_pkg is
 
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT in_dat_w : natural := 8;
-CONSTANT out_dat_w : natural := 10;
-CONSTANT coef_dat_w : natural :=12;
-CONSTANT c_coefs_file : string := "./hex/";
+CONSTANT in_dat_w : natural := 12;
+CONSTANT out_dat_w : natural := 14;
+CONSTANT coef_dat_w : natural :=16;
+CONSTANT c_coefs_file : string := "./pfir_coeffs_hann_t4_p1024_b16_wb4";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT wb_factor : natural := 1;
+CONSTANT wb_factor : natural := 4;
 CONSTANT nof_chan : natural := 0;
 CONSTANT nof_bands : natural := 1024;
 CONSTANT nof_taps  : natural := 4;
@@ -31,7 +31,7 @@ out_dat_w      : natural; -- = 16, number of output bits per stream
 coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
 end record;
 
-constant c_fil_ppf : t_fil_ppf := (1, 0, 1024, 4, 1, 0, 8, 16, 16);
+constant c_fil_ppf : t_fil_ppf := (wb_factor, nof_chan, nof_bands, nof_taps, nof_streams, backoff_w, in_dat_w, out_dat_w, coef_dat_w);
 TYPE t_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 TYPE t_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
 TYPE t_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR(coef_dat_w -1 DOWNTO 0);
