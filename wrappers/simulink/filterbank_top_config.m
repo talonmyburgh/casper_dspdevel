@@ -43,8 +43,9 @@ function filterbank_top_config(this_block)
   technology = get_param(filterbank_blk_parent,'technology');
   ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
-  top_fil_code_gen(wb_factor,str2double(nof_bands),str2double(nof_taps),win,...
-      str2double(fwidth),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
+  %Generate the top level vhdl file as well as the mem files. Returned is the location of the mem files for adding to the project.
+  mem_files = top_fil_code_gen(wb_factor,str2double(nof_bands),str2double(nof_taps),win,...
+      str2double(fwidth),str2double(technology),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
   %Input signals
   this_block.addSimulinkInport('rst');
@@ -54,7 +55,6 @@ function filterbank_top_config(this_block)
   end
   
   %Output signals
-  
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
   out_val_port.setType('UFix_1_0');
@@ -62,7 +62,6 @@ function filterbank_top_config(this_block)
   for i=0:wb_factor-1
       this_block.addSimulinkOutport(sprintf('out_dat_%d',i));
   end
-
 
   % System Generator has to assume that your entity has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
@@ -119,6 +118,20 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
+  %Add files:
+  this_block.addFile([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd']); %weirdly this file should come first... but then the compile order changes.
+  %add mem files
+  if strcmp(technology, '0')
+    ext = 'mem';
+  elseif strcmp(technology,'1')
+    ext = 'mif';
+  else
+    error('Invalid technology option provided. Options are: 0 or 1.')
+  end
+  for i=0:(wb_factor*nof_taps -1)
+    this_block.addFile([mem_files sprintf('_%d.%s',i,ext)])
+  end
+
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
@@ -146,7 +159,6 @@ function filterbank_top_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_mult_infer.vhd'],'casper_multiplier_lib');
   this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
-  this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'simulink_lib');
 return;
 end
 
