@@ -1,4 +1,4 @@
-function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, in_dat_w, out_dat_w, coef_dat_w)
+function memfiles = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, in_dat_w, out_dat_w, coef_dat_w)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('top_fil_code_gen'));
     filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
@@ -71,10 +71,13 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, in_dat_w,
     fclose(Vfile);
 
     %Generate coefficients mem file for the filter:
-    coef_dat_file=filtercoef_mem_gen(nof_bands,nof_taps,win,fwidth,true,coef_dat_w, coef_dat_w-1);
+    command = sprintf("python3 -o %s -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V %s",filepath, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth, "False")';
+    [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
 
     %Update fil_pkg.vhd:
-    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, coef_dat_file)
+    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, coef_dat_file, cmdout)
+
+    memfiles = [filepath cmdout]
 end
 
 function chararr = mknprts(wb_factor)
@@ -109,13 +112,13 @@ function achararr = mkarch(wb_factor)
     end
 end
 
-function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, coef_dat_file)
+function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, mem_file_prefix)
     insertloc = 7;
     vhdlgenfileloc = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
     lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
     linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
     linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
-    linefour  = sprintf("CONSTANT c_coefs_file : string := ""%s"";",coef_dat_file);
+    linefour  = sprintf("CONSTANT c_coefs_file : string := ""%s"";",mem_file_prefix);
     fid = fopen(vhdlgenfileloc,'r');
     if fid==-1
         error("Cannot open vhdl pkg file");

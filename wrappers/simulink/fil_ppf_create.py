@@ -91,10 +91,12 @@ def run(argv):
         wb_big_endian = False
         window_func = ''
         fwidth = 1.0
+        verbose = False
 
-    usage_str = 'USAGE: fil_ppf_create_mifs.py -f <input path and file name> -o <output path> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth>\n'
+    usage_str = 'USAGE: fil_ppf_create_mifs.py -f <input path and file name> -o <output path> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth> -V <verbose>\n'
+
     try:
-        opts, _ = getopt.getopt(sys.argv[1:], 'hf:o:t:p:w:c:v:W:F:')
+        opts, _ = getopt.getopt(sys.argv[1:], 'hf:o:t:p:w:c:v:W:F:V:')
     except getopt.GetoptError:
         print(usage_str)
         sys.exit(2)
@@ -129,9 +131,10 @@ def run(argv):
             pfir.window_func = arg
         elif opt == '-F':
             pfir.fwidth = float(arg)
+        elif opt == '-V':
+            pfir.verbose = False
 
     # Generate name of output hex files
-    # Create folder named hex at the location specified for the storage of bram files (unless it already exists).
     directoryname = '/hex'
     pathforstore = os.path.join(pfir.outdestfolder, directoryname)
     if not os.path.exists(pathforstore):
@@ -179,16 +182,7 @@ def run(argv):
         windowval = WinDic[pfir.window_func](alltaps)
         totalcoeffs = (windowval*np.sinc(pfir.fwidth *
                        (np.arange(alltaps)/(pfir.nof_points) - pfir.nof_taps/2)))
-        #scalefac = nextpow2(np.max(np.sum(np.abs(totalcoeffs)))) #not useful here
         return totalcoeffs
-
-    # def nextpow2(val):
-    #     i = 0
-    #     while(True):
-    #         if(2**i >= val):
-    #             return i
-    #         else:
-    #             i += 1
 
     def writemem(pfir, pfir_coefs_flip):
         for k in range(pfir.wb_factor):
@@ -255,12 +249,15 @@ def run(argv):
     elif pfir.infilename == '' and pfir.window_func != '':
         c_nof_files = pfir.wb_factor * pfir.nof_taps
         c_file_nof_points = pfir.nof_points//pfir.wb_factor
-        print('Creating wb_factor * nof_taps (= %d*%d) = %d MIF-files for PFIR with coefficients from input file %s.' %
-              (pfir.wb_factor, pfir.nof_taps, c_nof_files, pfir.infilename))
-        print('. With %d points per tap' % pfir.nof_points)
-        print('. With %d points per MIF-file' % c_file_nof_points)
-        print('. With %d bit coefficient in RAM' % (pfir.coef_w))
-        print('\n')
+        if pfir.verbose == 'True':
+            print('Creating wb_factor * nof_taps (= %d*%d) = %d MIF-files for PFIR with coefficients from input file %s.' %
+                  (pfir.wb_factor, pfir.nof_taps, c_nof_files, pfir.infilename))
+            print('. With %d points per tap' % pfir.nof_points)
+            print('. With %d points per file' % c_file_nof_points)
+            print('. With %d bit coefficient in RAM' % (pfir.coef_w))
+            print('\n')
+        elif pfir.verbose == 'False':
+            None
         s = gen_coefs(pfir)
         s = (s*(2**(pfir.coef_w-1))).astype(int)
         s = s & (2**pfir.coef_w-1)
@@ -292,5 +289,8 @@ def run(argv):
     else:
         None
 
+    return pfir.outfilename
+
+
 if __name__ == "__main__":
-    run(sys.argv[1:])
+    print(run(sys.argv[1:]))
