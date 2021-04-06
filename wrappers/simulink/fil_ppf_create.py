@@ -107,11 +107,15 @@ def run(argv):
             print(usage_str)
             sys.exit()
         elif opt == '-f':
+            print("here")
             pfir.infilename = arg
             pfir.filename = os.path.basename(arg)
             pfir.name = os.path.splitext(pfir.filename)[0]
         elif opt == '-o':
-            pfir.outdestfolder = arg
+            if arg == '':
+                pfir.outdestfoler = os.path.dirname(os.path.realpath(__file__))
+            else:
+                pfir.outdestfolder = os.path.abspath(os.path.join(os.getcwd(), arg))
         elif opt == '-t':
             pfir.nof_taps = int(arg)
         elif opt == '-p':
@@ -135,8 +139,8 @@ def run(argv):
             pfir.verbose = False
 
     # Generate name of output hex files
-    directoryname = '/hex'
-    pathforstore = os.path.join(pfir.outdestfolder, directoryname)
+    directoryname = './hex'
+    pathforstore = os.path.abspath(os.path.join(pfir.outdestfolder, directoryname))
     if not os.path.exists(pathforstore):
         os.mkdir(pathforstore)
         print("Directory ", pathforstore, " created!")
@@ -148,7 +152,7 @@ def run(argv):
         pfir.outfilename = pfir.infilename.split(
             '.')[0] + '_wb%d' % pfir.wb_factor
     else:
-        pfir.outfilename = "pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
+        pfir.outfilename = pathforstore +"/pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
             pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
 
     def fetchdatcoeffs(pfir):
