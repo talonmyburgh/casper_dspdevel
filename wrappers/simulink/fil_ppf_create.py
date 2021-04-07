@@ -143,9 +143,11 @@ def run(argv):
     pathforstore = os.path.abspath(os.path.join(pfir.outdestfolder, directoryname))
     if not os.path.exists(pathforstore):
         os.mkdir(pathforstore)
-        print("Directory ", pathforstore, " created!")
+        if pfir.verbose:
+            print("Directory ", pathforstore, " created!")
     else:
-        print("Directory ", pathforstore, " already exists!")
+        if pfir.verbose:
+            print("Directory ", pathforstore, " already exists!")
 
     # Create base file name for the memory files. If an input file was provided it serves as a basename, else, one must be generated.
     if pfir.infilename != '':

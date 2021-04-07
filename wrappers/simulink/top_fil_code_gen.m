@@ -71,13 +71,14 @@ function memfiles = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     fclose(Vfile);
 
     %Generate coefficients mem file for the filter:
-    command = sprintf("python3 -o %s -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V %s",filepath, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth, "False")';
+    pyscriptloc = [filepathscript , '/fil_ppf_create.py'];
+    command = sprintf("python3 %s -o %s -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V %s", pyscriptloc, filepath, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth, "False")';
     [~,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
 
     %Update fil_pkg.vhd:
     updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, cmdout);
 
-    memfiles = [filepath cmdout];
+    memfiles = cmdout;
 end
 
 function chararr = mknprts(wb_factor)
