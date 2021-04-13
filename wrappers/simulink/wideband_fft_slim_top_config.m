@@ -290,6 +290,7 @@ function wideband_fft_slim_top_config(this_block)
   %  |    this_block.addFile('b.vhd');
   %  |    this_block.addFile('a.vhd');
   %  |-------------
+this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_wb_fft_slim_top.vhd'],'xil_defaultlib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
@@ -343,7 +344,6 @@ this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_wide_unit.vhd'],'casper_wb_barebones_lib');
-this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_wb_fft_slim_top.vhd'],'simulink_lib');
 return;
 end
 % ------------------------------------------------------------
