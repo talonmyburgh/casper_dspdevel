@@ -279,8 +279,8 @@ function achararr = mkarch(wbfctr)
 end
 
 function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
-    insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhdl file so the line numbers change
-    vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhdl'];
+    insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
+    vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
     lineone = sprintf("CONSTANT wb_factor      : natural :=%d;       -- = default 1, wideband factor",wb_factor);
     linetwo = sprintf("CONSTANT in_dat_w       : natural :=%d;       -- = 8,  number of input bits",in_dat_w);
     linethree = sprintf("CONSTANT out_dat_w      : natural :=%d;       -- = 13, number of output bits",out_dat_w);

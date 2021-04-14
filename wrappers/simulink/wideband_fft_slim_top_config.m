@@ -322,7 +322,7 @@ this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vh
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhdl'],'casper_wb_barebones_lib');
+this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
