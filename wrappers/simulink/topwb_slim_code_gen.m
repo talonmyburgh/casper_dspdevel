@@ -42,12 +42,12 @@ function topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stag
 		"clk : in std_logic;"
 		"ce : in std_logic;"
 		"rst : in std_logic;"
-		"in_sync : in std_logic;"
-        "in_valid : in std_logic;"
+		"in_sync : in std_logic :='0';"
+        "in_valid : in std_logic :='0';"
         "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
         "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
-        "out_sync : out std_logic;"
-        "out_valid : out std_logic;"
+        "out_sync : out std_logic := '0';"
+        "out_valid : out std_logic := '0';"
         "in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);"
 		"in_sop : in std_logic;"
 		"in_eop : in std_logic;"
@@ -99,12 +99,12 @@ function topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stag
 		"clk : in std_logic;"
 		"ce : in std_logic;"
 		"rst : in std_logic;"
-		"in_sync : in std_logic;"
-        "in_valid : in std_logic;"
+		"in_sync : in std_logic:='0';"
+        "in_valid : in std_logic:='0';"
         "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
         "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
-        "out_sync : out std_logic;"
-        "out_valid : out std_logic;"];
+        "out_sync : out std_logic:='0';"
+        "out_valid : out std_logic:='0';"];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     
     portdec = join(mknprts(wb_factor),'\n');                               %fetch port declarations
