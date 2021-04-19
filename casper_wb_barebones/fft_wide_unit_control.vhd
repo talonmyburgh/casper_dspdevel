@@ -74,6 +74,7 @@ architecture rtl of fft_wide_unit_control is
 	constant c_ctrl_fifo_depth : natural := 16; -- Depth of the bsn and err fifo.  
 
 	type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+	
 	type state_type is (s_idle, s_run, s_hold);
 
 	type reg_type is record
@@ -87,8 +88,10 @@ architecture rtl of fft_wide_unit_control is
 		packet_cnt     : integer;       -- Counter to create the packets. 
 		state          : state_type;    -- The state machine. 
 	end record;
+	
+	constant reg_default : reg_type := ((others=>c_bb_sosi_rst_out),(others=>(others=>(others=>'0'))),(others=>(others=>(others=>'0'))),(others=>'0'),(others=>'0'),(others=>'0'),'0',0,s_idle);
 
-	signal r, rin   : reg_type;
+	signal r, rin   : reg_type := reg_default;
 	signal bsn      : std_logic_vector(c_dp_stream_bsn_w - 1 downto 0);
 	signal sync_bsn : std_logic_vector(c_dp_stream_bsn_w - 1 downto 0);
 	signal err      : std_logic_vector(c_dp_stream_error_w - 1 downto 0);
