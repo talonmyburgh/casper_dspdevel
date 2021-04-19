@@ -1,8 +1,7 @@
-function topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
+function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('topwb_slim_code_gen'));
-    filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
-    vhdlfile = filepath+"/"+bdroot+"_wb_fft_slim_top.vhd";                 %filename for vhd file
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec_w_xtra = ["library ieee, casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
