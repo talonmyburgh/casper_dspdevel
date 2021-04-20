@@ -78,7 +78,7 @@ function memfiles = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     %Update fil_pkg.vhd:
     updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, cmdout);
 
-    memfiles = cmdout;
+    memfiles = strtrim(cmdout);
 end
 
 function chararr = mknprts(wb_factor)

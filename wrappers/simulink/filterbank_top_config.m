@@ -37,14 +37,14 @@ function filterbank_top_config(this_block)
   c_d_w = get_param(filterbank_blk_parent,'coef_dat_w');
   win = get_param(filterbank_blk_parent, 'win');
   fwidth = get_param(filterbank_blk_parent, 'fwidth');
-  nof_taps = get_param(filterbank_blk_parent,'nof_taps');
+  nof_taps = str2double(get_param(filterbank_blk_parent,'nof_taps'));
   nof_streams = get_param(filterbank_blk_parent,'nof_streams');
   backoff_w = get_param(filterbank_blk_parent,'backoff_w');
   technology = get_param(filterbank_blk_parent,'technology');
   ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
   %Generate the top level vhdl file as well as the mem files. Returned is the location of the mem files for adding to the project.
-  mem_files = top_fil_code_gen(wb_factor,str2double(nof_bands),str2double(nof_taps),win,...
+  mem_files = top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
       str2double(fwidth),str2double(technology),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
   %Input signals
@@ -112,7 +112,7 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_wb_factor','natural',num2str(wb_factor));
   this_block.addGeneric('g_nof_chan','natural',nof_chan);
   this_block.addGeneric('g_nof_bands','natural',nof_bands);
-  this_block.addGeneric('g_nof_taps','natural',nof_taps);
+  this_block.addGeneric('g_nof_taps','natural',num2str(nof_taps));
   this_block.addGeneric('g_nof_stream','natural',nof_streams);
   this_block.addGeneric('g_backoff_w','natural',backoff_w);
   this_block.addGeneric('g_technology','natural',technology);
@@ -126,10 +126,10 @@ function filterbank_top_config(this_block)
   elseif strcmp(technology,'1')
     ext = 'mif';
   else
-    error('Invalid technology option provided. Options are: 0 or 1.')
+    error('Invalid technology option provided. Options are: 0 or 1.');
   end
   for i=0:(wb_factor*nof_taps -1)
-    this_block.addFile([mem_files sprintf('_%d.%s',i,ext)])
+    this_block.addFile([mem_files sprintf('_%d.%s',i,ext)]);
   end
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');

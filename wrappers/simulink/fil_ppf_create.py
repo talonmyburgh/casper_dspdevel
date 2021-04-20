@@ -179,7 +179,7 @@ def run(argv):
 
     def gen_coefs(pfir):
         WinDic = {  # dictionary of various filter types
-            'hann': np.hanning,
+            'hanning': np.hanning,
             'hamming': np.hamming,
             'bartlett': np.bartlett,
             'blackman': np.blackman,
@@ -203,7 +203,7 @@ def run(argv):
                 # append MEM index in range(c_nof_files)
                 t_outfilename = pfir.outfilename + \
                     '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
-                with open(t_outfilename, 'w') as fp:
+                with open(t_outfilename, 'w+') as fp:
                     for i in range(c_file_nof_points):
                         s = '%x\n' % (
                             pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
@@ -222,7 +222,7 @@ def run(argv):
                 # append MIF index in range(c_nof_files)
                 t_outfilename = pfir.outfilename + \
                     '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
-                with open(t_outfilename, 'w') as fp:
+                with open(t_outfilename, 'w+') as fp:
                     s = 'WIDTH=%d;\n' % pfir.coef_w
                     fp.write(s)
                     s = 'DEPTH=%d;\n' % c_file_nof_points
