@@ -76,9 +76,8 @@ function memfiles = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     [~,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
 
     %Update fil_pkg.vhd:
-    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, cmdout);
-
     memfiles = strtrim(cmdout);
+    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, memfiles);
 end
 
 function chararr = mknprts(wb_factor)
