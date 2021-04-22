@@ -3,7 +3,7 @@ function filterbank_top_config(this_block)
   filepath = fileparts(which('filterbank_top_config'));
   this_block.setTopLevelLanguage('VHDL');
 
-  this_block.setEntityName('filterbank_top');
+  this_block.setEntityName('top_fil');
   filterbank_blk = this_block.blockName;
   filterbank_blk_parent = get_param(filterbank_blk,'Parent');
 
@@ -113,13 +113,13 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_nof_chan','natural',nof_chan);
   this_block.addGeneric('g_nof_bands','natural',nof_bands);
   this_block.addGeneric('g_nof_taps','natural',num2str(nof_taps));
-  this_block.addGeneric('g_nof_stream','natural',nof_streams);
+  this_block.addGeneric('g_nof_streams','natural',nof_streams);
   this_block.addGeneric('g_backoff_w','natural',backoff_w);
   this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
   %Add files:
-  this_block.addFile([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd']); %weirdly this file should come first... but then the compile order changes.
+  this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
   %add mem files
   if strcmp(technology, '0')
     ext = 'mem';
@@ -128,6 +128,7 @@ function filterbank_top_config(this_block)
   else
     error('Invalid technology option provided. Options are: 0 or 1.');
   end
+  fprintf([mem_files sprintf('_%d.%s',0,ext) '\n'])
   for i=0:(wb_factor*nof_taps -1)
     this_block.addFile([mem_files sprintf('_%d.%s',i,ext)]);
   end
