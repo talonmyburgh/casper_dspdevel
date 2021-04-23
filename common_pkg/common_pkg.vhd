@@ -1801,8 +1801,10 @@ PACKAGE BODY common_pkg IS
 		-- extend sign bit or keep LS part
 		IF w > s'LENGTH THEN
 			RETURN RESIZE(s, w);        -- extend sign bit
-		ELSE
-			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
+		ELSIF w = s'LENGTH THEN
+		    RETURN s;
+		ELSE  -- w < s'LENGTH
+			RETURN SIGNED(RESIZE(UNSIGNED(s), w));  -- keep LSbits (= vec[w-1:0]), instead of keep sign bit (= vec[sign, w-2:0]) as RESIZE() does.
 		END IF;
 	END;
 
