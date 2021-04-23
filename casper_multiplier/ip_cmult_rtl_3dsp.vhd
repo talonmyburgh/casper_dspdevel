@@ -1,6 +1,7 @@
 library ieee, common_pkg_lib;
 USE ieee.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
+USE common_pkg_lib.common_pkg.ALL;
 USE common_pkg_lib.common_str_pkg.ALL;
 
 entity ip_cmult_rtl_3dsp is
@@ -31,19 +32,6 @@ entity ip_cmult_rtl_3dsp is
 end entity ip_cmult_rtl_3dsp;
 
 architecture RTL of ip_cmult_rtl_3dsp is
-	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
-	BEGIN
-		-- extend sign bit or keep LS part
-		IF w > s'LENGTH THEN
-			RETURN RESIZE(s, w);        -- extend sign bit
-		ELSIF w = s'LENGTH THEN
-			RETURN s;
-		ELSE
-			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
-
-		END IF;
-	END;
-
 	CONSTANT c_prod_w  : NATURAL := g_in_a_w + g_in_b_w + 1;
 	CONSTANT c_sum_w   : NATURAL := c_prod_w + 1;
 	Constant c_a_sum_w : NATURAL := g_in_a_w + 1;
@@ -126,10 +114,11 @@ begin
 				reg_sum_im    <= nxt_sum_im;
 				reg_result_re <= nxt_result_re; -- result sum after optional register stage
 				reg_result_im <= nxt_result_im;
-				report (int_to_str(to_integer(nxt_k1))&" "&int_to_str(to_integer(nxt_k2))&" "&int_to_str(to_integer(nxt_k3)));
-				report ("k1 terms: ar "&int_to_str(to_integer(nxt_ar))&" ai "&int_to_str(to_integer(nxt_ai))&" br "&int_to_str(to_integer(nxt_br)));
-				report ("nxt_sum_re: "&int_to_str(to_integer(nxt_sum_re)));
-				report ("nxt_sum_im: "&int_to_str(to_integer(nxt_sum_im)));
+				--Comment to avoid many logging in Modelsim transcript window
+				--report (int_to_str(to_integer(nxt_k1))&" "&int_to_str(to_integer(nxt_k2))&" "&int_to_str(to_integer(nxt_k3)));
+				--report ("k1 terms: ar "&int_to_str(to_integer(nxt_ar))&" ai "&int_to_str(to_integer(nxt_ai))&" br "&int_to_str(to_integer(nxt_br)));
+				--report ("nxt_sum_re: "&int_to_str(to_integer(nxt_sum_re)));
+				--report ("nxt_sum_im: "&int_to_str(to_integer(nxt_sum_im)));
 			END IF;
 		END IF;
 	END PROCESS;
