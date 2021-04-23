@@ -1,0 +1,16 @@
+altera_lnsim_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/altera_lnsim_ver
+altera_mf_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/altera_mf_ver
+altera_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/altera_ver
+lpm_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/lpm_ver
+sgate_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/sgate_ver
+stratixiv_hssi_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/stratixiv_hssi_ver
+stratixiv_pcie_hip_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/stratixiv_pcie_hip_ver
+stratixiv_ver = $MODEL_TECH_ALTERA_LIB/verilog_libs/stratixiv_ver
+altera = $MODEL_TECH_ALTERA_LIB/vhdl_libs/altera
+altera_lnsim = $MODEL_TECH_ALTERA_LIB/vhdl_libs/altera_lnsim
+altera_mf = $MODEL_TECH_ALTERA_LIB/vhdl_libs/altera_mf
+lpm = $MODEL_TECH_ALTERA_LIB/vhdl_libs/lpm
+sgate = $MODEL_TECH_ALTERA_LIB/vhdl_libs/sgate
+stratixiv = $MODEL_TECH_ALTERA_LIB/vhdl_libs/stratixiv
+stratixiv_hssi = $MODEL_TECH_ALTERA_LIB/vhdl_libs/stratixiv_hssi
+stratixiv_pcie_hip = $MODEL_TECH_ALTERA_LIB/vhdl_libs/stratixiv_pcie_hip
