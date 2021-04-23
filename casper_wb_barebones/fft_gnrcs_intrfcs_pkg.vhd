@@ -101,8 +101,8 @@ function fft_shiftreglen_par(wb_factor,pts : natural) return natural;
 
 -- Calculate the shiftregister and ovflw register sizes for both FFT's.
 CONSTANT c_stages      : NATURAL := ceil_log2(nof_points);
-CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
-CONSTANT c_stages_par  : NATURAL := fft_shiftreglen_par(wb_factor,nof_points);
+CONSTANT c_stages_pipe : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
+CONSTANT c_stages_par  : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
 END fft_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
@@ -137,4 +137,8 @@ sr_len := ceil_log2(wb_factor);
 end if;
 return sr_len;
 end;
+
+CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
+CONSTANT c_stages_par  : NATURAL := fft_shiftreglen_par(wb_factor,nof_points);
+
 END fft_gnrcs_intrfcs_pkg;
