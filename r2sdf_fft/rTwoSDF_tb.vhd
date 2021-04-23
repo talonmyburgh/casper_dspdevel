@@ -71,7 +71,7 @@ use common_pkg_lib.tb_common_pkg.all;
 use work.rTwoSDFPkg.all;
 use work.twiddlesPkg.all;
 
-entity tb_rTwoSDF is
+entity rTwoSDF_tb is
 	generic(
 		-- generics for tb
 		g_in_en             : natural := 1; -- 1 = always active, others = random control
@@ -83,9 +83,9 @@ entity tb_rTwoSDF is
 		g_out_dat_w         : natural := 14;
 		g_guard_w           : natural := 2 -- guard bits are used to avoid overflow in single FFT stage
 	);
-end entity tb_rTwoSDF;
+end entity rTwoSDF_tb;
 
-architecture tb of tb_rTwoSDF is
+architecture tb of rTwoSDF_tb is
 
 	constant c_clk_period : time := 20 ns;
 
