@@ -23,11 +23,11 @@ USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 context vunit_lib.vunit_context;
 
-ENTITY tb_common_counter IS
+ENTITY common_counter_tb IS
 	GENERIC(runner_cfg : string);
-END tb_common_counter;
+END common_counter_tb;
 
-ARCHITECTURE tb OF tb_common_counter IS
+ARCHITECTURE tb OF common_counter_tb IS
 
 	CONSTANT clk_period : TIME := 10 ns;
 
