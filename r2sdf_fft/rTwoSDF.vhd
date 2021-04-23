@@ -140,7 +140,6 @@ begin
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
-				g_scale_enable   => sel_a_b(stage <= g_guard_w, FALSE, TRUE), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
 				g_variant        => g_variant,
 				g_use_dsp        => g_use_dsp,
 				g_pipeline       => pipeline
@@ -148,6 +147,7 @@ begin
 			port map(
 				clk     => clk,
 				rst     => rst,
+				scale   => sel_a_b(stage <= g_guard_w, '0', '1'), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
 				in_re   => data_re(stage),
 				in_im   => data_im(stage),
 				in_val  => data_val(stage),
