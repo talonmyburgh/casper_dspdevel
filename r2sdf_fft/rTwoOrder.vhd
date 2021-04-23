@@ -60,7 +60,7 @@ entity rTwoOrder is
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
-		ce      : in  std_logic;        --! Clock enable
+		ce      : in  std_logic := '1'; --! Clock enable
 		rst     : in  std_logic;        --! Reset signal
 		in_dat  : in  std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Input data signal
 		in_val  : in  std_logic;        --! In val (for delay)
