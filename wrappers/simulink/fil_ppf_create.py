@@ -92,11 +92,12 @@ def run(argv):
         window_func = ''
         fwidth = 1.0
         verbose = False
+        gen_files = True
 
-    usage_str = 'USAGE: fil_ppf_create_mifs.py -f <input path and file name> -o <output path> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth> -V <verbose>\n'
+    usage_str = 'USAGE: fil_ppf_create_mifs.py -f <input path and file name> -o <output path> -g <gen files> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth> -V <verbose>\n'
 
     try:
-        opts, _ = getopt.getopt(sys.argv[1:], 'hf:o:t:p:w:c:v:W:F:V:')
+        opts, _ = getopt.getopt(sys.argv[1:], 'hf:o:g:t:p:w:c:v:W:F:V:')
     except getopt.GetoptError:
         print(usage_str)
         sys.exit(2)
@@ -116,6 +117,8 @@ def run(argv):
                 pfir.outdestfoler = os.path.dirname(os.path.realpath(__file__))
             else:
                 pfir.outdestfolder = os.path.abspath(os.path.join(os.getcwd(), arg))
+        elif opt == '-g':
+            pfir.gen_files = bool(int(arg))
         elif opt == '-t':
             pfir.nof_taps = int(arg)
         elif opt == '-p':
@@ -136,26 +139,28 @@ def run(argv):
         elif opt == '-F':
             pfir.fwidth = float(arg)
         elif opt == '-V':
-            pfir.verbose = False
+            pfir.verbose = bool(arg)
 
-    # Generate name of output hex files
-    directoryname = './hex'
-    pathforstore = os.path.abspath(os.path.join(pfir.outdestfolder, directoryname))
-    if not os.path.exists(pathforstore):
-        os.mkdir(pathforstore)
-        if pfir.verbose:
-            print("Directory ", pathforstore, " created!")
-    else:
-        if pfir.verbose:
-            print("Directory ", pathforstore, " already exists!")
+    # Generate name of output hex files if output files are required:
+    if pfir.gen_files:
+        directoryname = './hex'
+        pathforstore = os.path.abspath(os.path.join(pfir.outdestfolder, directoryname))
+        if not os.path.exists(pathforstore):
+            os.mkdir(pathforstore)
+            if pfir.verbose:
+                print("Directory ", pathforstore, " created!")
+        else:
+            if pfir.verbose:
+                print("Directory ", pathforstore, " already exists!")
 
     # Create base file name for the memory files. If an input file was provided it serves as a basename, else, one must be generated.
-    if pfir.infilename != '':
-        pfir.outfilename = pfir.infilename.split(
-            '.')[0] + '_wb%d' % pfir.wb_factor
-    else:
-        pfir.outfilename = pathforstore +"/pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
-            pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
+    if pfir.gen_files:
+        if pfir.infilename != '':
+            pfir.outfilename = pfir.infilename.split(
+                '.')[0] + '_wb%d' % pfir.wb_factor
+        else:
+            pfir.outfilename = pathforstore +"/pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
+                pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
 
     def fetchdatcoeffs(pfir):
         c_nof_files = pfir.wb_factor * pfir.nof_taps
@@ -191,6 +196,8 @@ def run(argv):
         return totalcoeffs
 
     def writemem(pfir, pfir_coefs_flip):
+        if not pfir.gen_files:
+            coefs = []
         for k in range(pfir.wb_factor):
             if pfir.wb_big_endian == True:
                 # reverse, to fit big endian time to wideband input data mapping t[0,1,2,3] = P[3,2,1,0]
@@ -200,14 +207,24 @@ def run(argv):
                 kk = k
 
             for j in range(pfir.nof_taps):
+                coefs_tmp = []
                 # append MEM index in range(c_nof_files)
-                t_outfilename = pfir.outfilename + \
-                    '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
-                with open(t_outfilename, 'w+') as fp:
+                if pfir.gen_files:
+                    t_outfilename = pfir.outfilename + \
+                        '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
+                    with open(t_outfilename, 'w+') as fp:
+                        for i in range(c_file_nof_points):
+                            s = '%x\n' % (
+                                pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
+                            fp.write(s)
+                else:
                     for i in range(c_file_nof_points):
-                        s = '%x\n' % (
-                            pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
-                        fp.write(s)
+                        s = ('%%0%dx' % np.ceil(pfir.coef_w/4)) % (
+                                pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
+                        coefs_tmp.append(s)
+                    coefs.append(",".join(coefs_tmp))
+        if not pfir.gen_files:
+            return coefs
 
     def writemif(pfir, pfir_coefs_flip):
         for k in range(pfir.wb_factor):
@@ -255,14 +272,14 @@ def run(argv):
     elif pfir.infilename == '' and pfir.window_func != '':
         c_nof_files = pfir.wb_factor * pfir.nof_taps
         c_file_nof_points = pfir.nof_points//pfir.wb_factor
-        if pfir.verbose == 'True':
+        if pfir.verbose:
             print('Creating wb_factor * nof_taps (= %d*%d) = %d MIF-files for PFIR with coefficients from input file %s.' %
                   (pfir.wb_factor, pfir.nof_taps, c_nof_files, pfir.infilename))
             print('. With %d points per tap' % pfir.nof_points)
             print('. With %d points per file' % c_file_nof_points)
             print('. With %d bit coefficient in RAM' % (pfir.coef_w))
             print('\n')
-        elif pfir.verbose == 'False':
+        elif pfir.verbose:
             None
         s = gen_coefs(pfir)
         s = (s*(2**(pfir.coef_w-1))).astype(int)
@@ -272,10 +289,6 @@ def run(argv):
 
     # if the filepath is provided, we'll use the dat inputs to write out the mem/mif files.
     elif pfir.infilename != '' and pfir.window_func == '':
-        pfir_coefs = fetchdatcoeffs(pfir)
-
-    # If both an input file and window function are provided, use input dat file.
-    else:
         pfir_coefs = fetchdatcoeffs(pfir)
 
 ###############################################################################################################
@@ -288,15 +301,17 @@ def run(argv):
             pfir_coefs_flip.append(
                 pfir_coefs[j*pfir.nof_points + pfir.nof_points-1-i])
 
-    if pfir.ext == 'mem':
+    if pfir.ext == 'mem' and pfir.gen_files:
         writemem(pfir, pfir_coefs_flip)
+        return pfir.outfilename
+    elif pfir.ext == 'mem' and not pfir.gen_files:
+        coefs = writemem(pfir, pfir_coefs_flip)
+        return coefs
     elif pfir.ext == 'mif':
         writemif(pfir, pfir_coefs_flip)
+        return pfir.outfilename
     else:
         None
-
-    return pfir.outfilename
-
 
 if __name__ == "__main__":
     print(run(sys.argv[1:]))
