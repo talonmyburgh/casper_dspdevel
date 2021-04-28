@@ -31,7 +31,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_fifo_fill_sc IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_data_w         : NATURAL := 16;
 		g_bsn_w          : NATURAL := 1;
 		g_empty_w        : NATURAL := 1;
@@ -73,7 +72,6 @@ BEGIN
 
 	u_dp_fifo_fill_core : ENTITY work.dp_fifo_fill_core
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_use_dual_clock => FALSE,
 			g_data_w         => g_data_w,
 			g_bsn_w          => g_bsn_w,

@@ -30,7 +30,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_fifo_sc IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_note_is_ful    : BOOLEAN := TRUE; -- when TRUE report NOTE when FIFO goes full, fifo overflow is always reported as FAILURE
 		g_use_lut        : BOOLEAN := FALSE; -- when TRUE then force using LUTs instead of block RAM
 		g_data_w         : NATURAL := 16; -- Should be 2 times the c_complex_w if g_use_complex = TRUE
@@ -70,7 +69,6 @@ BEGIN
 
 	u_dp_fifo_core : ENTITY work.dp_fifo_core
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_note_is_ful    => g_note_is_ful,
 			g_use_dual_clock => FALSE,
 			g_use_lut_sc     => g_use_lut,

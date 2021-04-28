@@ -80,8 +80,7 @@ entity fft_r2_wide is
 		g_ovflw_behav    : string  := "WRAP";        								--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round      : string  := "ROUND";        								--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_ram_primitive  : string  := "auto";        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive : string  := "auto";        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_technology     : natural := 0       										--! = 0 for Xilinx, 1 for Alterra
+		g_fifo_primitive : string  := "auto"        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
 	port(
 		clken      		 : in  std_logic;											--! Clock enable
@@ -203,8 +202,7 @@ begin
 				g_use_variant  	 => g_use_variant,
 				g_use_dsp	   	 => g_use_dsp,
 				g_ovflw_behav  	 => g_ovflw_behav,
-				g_use_round    	 => g_use_round,
-				g_technology 	 => g_technology
+				g_use_round    	 => g_use_round
 			)
 			port map(
 				clken   		 => clken,
@@ -281,8 +279,7 @@ begin
 				g_use_variant  		=> g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
 				g_ovflw_behav  		=> g_ovflw_behav,
-				g_use_round    		=> g_use_round,
-				g_technology 		=> g_technology
+				g_use_round    		=> g_use_round
 			)
 			port map(
 				clk        			=> clk,
@@ -321,8 +318,7 @@ begin
 					g_use_variant 		=> g_use_variant,
 					g_use_dsp	   		=> g_use_dsp,
 					g_ovflw_behav  		=> g_ovflw_behav,
-					g_use_round    		=> g_use_round,
-					g_technology 		=> g_technology
+					g_use_round    		=> g_use_round
 				)
 				port map(
 					clken   	=> clken,
@@ -357,8 +353,7 @@ begin
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
 				g_use_dsp	   		=> g_use_dsp,
 				g_ovflw_behav  		=> g_ovflw_behav,
-				g_use_round			=> g_use_round,
-				g_technology 	 	=> g_technology
+				g_use_round			=> g_use_round
 			)
 			port map(
 				clk        => clk,

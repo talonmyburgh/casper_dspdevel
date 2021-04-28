@@ -25,7 +25,6 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_ram_crw_crw IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --0 for Xilinx, 1 for Alterra
 		g_ram            : t_c_mem := c_mem_ram;
 		g_init_file      : STRING  := "UNUSED";
 		g_true_dual_port : BOOLEAN := TRUE;
@@ -76,7 +75,6 @@ BEGIN
 	gen_true_dual_port : IF g_true_dual_port = TRUE GENERATE
 		u_ram : ENTITY work.tech_memory_ram_crw_crw
 			GENERIC MAP(
-				g_technology    => g_technology,
 				g_adr_w         => g_ram.adr_w,
 				g_dat_w         => g_ram.dat_w,
 				g_nof_words     => g_ram.nof_dat,
@@ -103,7 +101,6 @@ BEGIN
 	gen_simple_dual_port : IF g_true_dual_port = FALSE GENERATE
 		u_ram : ENTITY work.tech_memory_ram_cr_cw
 			GENERIC MAP(
-				g_technology    => g_technology,
 				g_adr_w         => g_ram.adr_w,
 				g_dat_w         => g_ram.dat_w,
 				g_nof_words     => g_ram.nof_dat,
