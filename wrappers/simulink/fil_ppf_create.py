@@ -93,8 +93,8 @@ def run(argv):
         fwidth = 1.0
         verbose = False
         gen_files = True
-
-    usage_str = 'USAGE: fil_ppf_create_mifs.py -f <input path and file name> -o <output path> -g <gen files> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth> -V <verbose>\n'
+    
+    usage_str = 'USAGE: fil_ppf_create.py -f <input path and file name> -o <output path> -g <gen files> -t <nof taps> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -W <window function> -F <fwidth> -V <verbose>\n'
 
     try:
         opts, _ = getopt.getopt(sys.argv[1:], 'hf:o:g:t:p:w:c:v:W:F:V:')
@@ -139,7 +139,7 @@ def run(argv):
         elif opt == '-F':
             pfir.fwidth = float(arg)
         elif opt == '-V':
-            pfir.verbose = bool(arg)
+            pfir.verbose = bool(int(arg))
 
     # Generate name of output hex files if output files are required:
     if pfir.gen_files:
@@ -279,8 +279,6 @@ def run(argv):
             print('. With %d points per file' % c_file_nof_points)
             print('. With %d bit coefficient in RAM' % (pfir.coef_w))
             print('\n')
-        elif pfir.verbose:
-            None
         s = gen_coefs(pfir)
         s = (s*(2**(pfir.coef_w-1))).astype(int)
         s = s & (2**pfir.coef_w-1)
