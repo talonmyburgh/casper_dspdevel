@@ -8,13 +8,16 @@ package fil_pkg is
 CONSTANT in_dat_w : natural := 12;
 CONSTANT out_dat_w : natural := 14;
 CONSTANT coef_dat_w : natural :=16;
+CONSTANT nof_taps  : natural := 4;
+CONSTANT wb_factor : natural := 4;
+type t_coefs_init_param is array (0 to 8-1) of string(0 to 159-1);
+constant c_coefs_init_param : t_coefs_init_param := ();
+--Used by altera imp
 CONSTANT c_coefs_file : string := "./pfir_coeffs_hann_t4_p1024_b16_wb4";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT wb_factor : natural := 4;
 CONSTANT nof_chan : natural := 0;
 CONSTANT nof_bands : natural := 1024;
-CONSTANT nof_taps  : natural := 4;
 CONSTANT nof_streams : natural := 1;
 CONSTANT backoff_w : natural := 0;
 
@@ -54,6 +57,5 @@ end record;
 constant c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
 
 end package fil_pkg;
-
 package body fil_pkg is
 end fil_pkg;

@@ -38,6 +38,7 @@ ENTITY tech_memory_ram_crw_crw IS
 		g_nof_words     : NATURAL := 2**5;
 		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 		g_init_file     : STRING  := "UNUSED";
+		g_init_param	: STRING  := "";
 		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
@@ -69,6 +70,7 @@ BEGIN
 				g_nof_words     => g_nof_words,
 				g_rd_latency    => g_rd_latency,
 				g_init_file     => g_init_file,
+				g_init_param	=> g_init_param,
 				g_ram_primitive => g_ram_primitive
 			)
 			port map(
