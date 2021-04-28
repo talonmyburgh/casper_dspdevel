@@ -44,7 +44,6 @@ entity fft_r2_bf_par is
 		g_use_variant  : STRING     	:= "4DSP";
 		g_ovflw_behav  : string			:= "WRAP";
 		g_use_round	   : string			:= "ROUND";
-		g_technology   : natural        := 0;
 		g_use_dsp      : STRING         := "yes"
 	);
 	port(
@@ -241,7 +240,6 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity r2sdf_fft_lib.rTwoWMul
 		generic map(
-			g_technology => g_technology,
 			g_use_dsp    => g_use_dsp,
 			g_variant    => g_use_variant,
 			g_stage      => g_stage,

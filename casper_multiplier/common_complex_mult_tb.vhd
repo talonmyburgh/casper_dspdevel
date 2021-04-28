@@ -55,8 +55,6 @@ ARCHITECTURE tb OF common_complex_mult_tb IS
 	CONSTANT c_max : INTEGER := 2**(g_in_dat_w - 1) - 1;
 	CONSTANT c_min : INTEGER := -2**(g_in_dat_w - 1);
 
-	CONSTANT c_technology : NATURAL := 0;
-
 	SIGNAL tb_end : STD_LOGIC := '0';
 	SIGNAL rst    : STD_LOGIC;
 	SIGNAL clk    : STD_LOGIC := '0';
@@ -218,7 +216,6 @@ BEGIN
 
 	u_dut_rtl : ENTITY work.common_complex_mult
 		GENERIC MAP(
-			g_technology       => c_technology,
 			g_variant          => "4DSP",
 			g_in_a_w           => g_in_dat_w,
 			g_in_b_w           => g_in_dat_w,
@@ -245,7 +242,6 @@ BEGIN
 
 	u_dut_ip : ENTITY work.common_complex_mult
 		GENERIC MAP(
-			g_technology       => c_technology,
 			g_variant          => "3DSP",
 			g_in_a_w           => g_in_dat_w,
 			g_in_b_w           => g_in_dat_w,

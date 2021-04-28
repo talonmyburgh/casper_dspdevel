@@ -18,16 +18,16 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, technology_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
+USE technology_lib.technology_select_pkg.ALL;
 
 ENTITY tech_complex_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_use_variant for given g_technology
-		g_technology       : NATURAL := 0;
+		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_use_variant for given technology
 		g_use_variant      : STRING  := "4DSP";
 		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
@@ -67,8 +67,7 @@ ARCHITECTURE str of tech_complex_mult is
 
 begin
 
-	gen_xilinx_cmult_ip_infer : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_use_variant = "4DSP") generate -- @suppress "Redundant boolean equality check with true"
-
+	gen_ip_xpm_rtl_4dsp : IF c_tech_select_default = c_tech_xpm AND g_use_variant = "4DSP" GENERATE  -- Xilinx
 		u1 : ip_cmult_rtl_4dsp
 			generic map(
 				g_use_dsp          => g_use_dsp,
@@ -94,7 +93,7 @@ begin
 			);
 	end generate;
 
-	gen_xilinx_cmult_ip_rtl : IF (g_sim = FALSE OR (g_sim = TRUE AND g_sim_level = 0)) AND (g_technology = 0 AND g_use_variant = "3DSP") GENERATE -- @suppress "Redundant boolean equality check with true"
+	gen_ip_xpm_rtl_3dsp : IF c_tech_select_default = c_tech_xpm AND g_use_variant = "3DSP" GENERATE  -- Xilinx
 		u1 : ip_cmult_rtl_3dsp
 			generic map(
 				g_use_dsp          => g_use_dsp,

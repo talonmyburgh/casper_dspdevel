@@ -52,7 +52,6 @@ USE casper_ram_lib.common_ram_pkg.ALL;
 
 ENTITY st_calc IS
   GENERIC (
-    g_technology   : NATURAL := 0;
     g_nof_mux      : NATURAL := 1;
     g_nof_stat     : NATURAL := 512;
     g_in_dat_w     : NATURAL := 18;  -- = input data width
@@ -192,7 +191,6 @@ BEGIN
   --mul: ENTITY common_lib.common_complex_mult(str)
   mul: ENTITY casper_multiplier_lib.common_complex_mult
   GENERIC MAP (
-    g_technology       => g_technology,
     g_variant          => "IP",
     g_in_a_w           => in_ar'LENGTH,
     g_in_b_w           => in_br'LENGTH,
@@ -235,7 +233,6 @@ BEGIN
   -- accumulator memory for real part  
   ram_re: ENTITY casper_ram_lib.common_ram_r_w
   GENERIC MAP (
-    g_technology => g_technology,
     g_ram        => c_mem_acc,
     g_init_file  => "UNUSED",
     g_ram_primitive => g_ram_primitive
@@ -281,7 +278,6 @@ BEGIN
     -- dual port memory
     ram_im: ENTITY casper_ram_lib.common_ram_r_w
     GENERIC MAP (
-      g_technology => g_technology,
       g_ram        => c_mem_acc,
       g_init_file  => "UNUSED",
       g_ram_primitive => g_ram_primitive

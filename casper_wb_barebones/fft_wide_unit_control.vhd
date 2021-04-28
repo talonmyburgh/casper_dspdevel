@@ -52,8 +52,7 @@ entity fft_wide_unit_control is
 		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_technology     : natural := 0       --! = 0 for Xilinx, 1 for Alterra
+		g_fifo_primitive : string  := "auto"        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
 	port(
 		rst          : in  std_logic := '0';

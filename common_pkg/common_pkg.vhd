@@ -1798,14 +1798,12 @@ PACKAGE BODY common_pkg IS
 
 	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
 	BEGIN
-		-- extend sign bit or keep LS part
-		IF w > s'LENGTH THEN
-			RETURN RESIZE(s, w);        -- extend sign bit
-		ELSIF w = s'LENGTH THEN
-		    RETURN s;
-		ELSE  -- w < s'LENGTH
-			RETURN SIGNED(RESIZE(UNSIGNED(s), w));  -- keep LSbits (= vec[w-1:0]), instead of keep sign bit (= vec[sign, w-2:0]) as RESIZE() does.
-		END IF;
+		-- left extend with sign bit or keep sign bit and LS part (same as RESIZE for SIGNED)
+		-- If w < s'LENGTH then assume caller ensures that the actual s values
+		-- will still fit in the w bits. Otherwise the result will wrap and
+		-- there is nothing more that this RESIZE_NUM() can improve compared
+		-- to RESIZE().
+		RETURN RESIZE(s, w);
 	END;
 
 	FUNCTION RESIZE_UVEC(sl : STD_LOGIC; w : NATURAL) RETURN STD_LOGIC_VECTOR IS

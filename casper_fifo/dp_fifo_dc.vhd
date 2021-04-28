@@ -30,7 +30,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_fifo_dc IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_data_w         : NATURAL := 16; -- Should be 2 times the c_complex_w if g_use_complex = TRUE
 		g_bsn_w          : NATURAL := 1;
 		g_empty_w        : NATURAL := 1;
@@ -71,7 +70,6 @@ BEGIN
 
 	u_dp_fifo_core : ENTITY work.dp_fifo_core
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_use_dual_clock => TRUE,
 			g_data_w         => g_data_w,
 			g_bsn_w          => g_bsn_w,

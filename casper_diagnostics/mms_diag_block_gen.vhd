@@ -103,7 +103,6 @@ USE work.diag_pkg.ALL;
 
 ENTITY mms_diag_block_gen IS
   GENERIC (
-    g_technology         : NATURAL := 0;
     -- Generate configurations
     g_use_usr_input      : BOOLEAN := FALSE;
     g_use_bg             : BOOLEAN := TRUE;
@@ -242,7 +241,6 @@ BEGIN
       gen_buffer_ram : IF g_use_bg_buffer_ram=TRUE GENERATE
         u_buffer_ram : ENTITY casper_ram_lib.common_ram_crw_crw
         GENERIC MAP (
-          g_technology => g_technology,
           g_ram        => c_buf,
           -- Sequence number and ".hex" extension are added to the relative path in case a ram file is provided. 
           g_init_file  => sel_a_b(g_file_name_prefix = "UNUSED", g_file_name_prefix, g_file_name_prefix & "_" & NATURAL'IMAGE(g_file_index_arr(I)) & c_post_buf_file)    
@@ -351,7 +349,6 @@ BEGIN
       
       u_dp_mux : ENTITY casper_multiplexer_lib.dp_mux
       GENERIC MAP (
-        g_technology        => g_technology,
         -- MUX
         g_mode              => 4,                                 -- g_mode=4 for framed input select via sel_ctrl
         g_nof_input         => c_mux_nof_input,                   -- >= 1

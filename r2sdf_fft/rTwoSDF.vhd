@@ -79,7 +79,6 @@ entity rTwoSDF is
 		g_bf_in_a_zdly  : natural := 0;
 		g_bf_out_d_zdly : natural := 0;
 		--generics for rTwoOrder
-		g_technology    : natural := 0; --! 0 for Xilinx products, 1 for Alterra 
 		g_ram_primitive : STRING  := "auto"
 	);
 	port(
@@ -175,7 +174,6 @@ begin
 
 		u_cplx : entity work.rTwoOrder
 			generic map(
-				g_technology    => g_technology,
 				g_nof_points    => g_nof_points,
 				g_nof_chan      => g_nof_chan,
 				g_dat_w         => 2 * g_stage_dat_w,

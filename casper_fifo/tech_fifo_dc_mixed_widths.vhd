@@ -22,9 +22,7 @@ LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE work.tech_fifo_component_pkg.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-
---USE technology_lib.technology_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
+USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
 --LIBRARY ip_stratixiv_fifo_lib;
@@ -34,7 +32,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY tech_fifo_dc_mixed_widths IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --c_tech_select_default;
 		g_nof_words      : NATURAL := 16; -- FIFO size in nof wr_dat words
 		g_wrdat_w        : NATURAL := 12;
 		g_rddat_w        : NATURAL := 10;
@@ -58,7 +55,7 @@ END tech_fifo_dc_mixed_widths;
 ARCHITECTURE str OF tech_fifo_dc_mixed_widths IS
 
 BEGIN
-	gen_ip_xilinx : IF g_technology = 0 GENERATE
+	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
 		u0 : component ip_xilinx_fifo_dc_mixed_widths
 			generic map(
 				g_nof_words      => g_nof_words,
@@ -81,28 +78,10 @@ BEGIN
 			);
 	END GENERATE;
 
-	gen_ip_stratixiv : IF g_technology = 1 GENERATE
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_fifo_dc_mixed_widths
 			GENERIC MAP(g_nof_words, g_wrdat_w, g_rddat_w)
 			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
 	END GENERATE;
-
-	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
-	--    u0 : ip_arria10_fifo_dc_mixed_widths
-	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
-	--
-	--  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
-	--    u0 : ip_arria10_e3sge3_fifo_dc_mixed_widths
-	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
-	--  
-	--  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
-	--    u0 : ip_arria10_e1sg_fifo_dc_mixed_widths
-	--    GENERIC MAP (g_nof_words, g_wrdat_w, g_rddat_w)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
 
 END ARCHITECTURE;

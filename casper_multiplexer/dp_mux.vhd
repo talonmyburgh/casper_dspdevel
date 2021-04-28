@@ -86,7 +86,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_mux IS
   GENERIC (
-    g_technology        : NATURAL := 0; --c_tech_select_default;
     -- MUX
     g_mode              : NATURAL := 0;
     g_nof_input         : NATURAL := 2;                   -- >= 1
@@ -214,7 +213,6 @@ BEGIN
     gen_fifo : IF g_use_fifo=TRUE GENERATE
       u_fill : ENTITY casper_fifo_lib.dp_fifo_fill
       GENERIC MAP (
-        g_technology     => g_technology,
         g_bsn_w          => g_bsn_w,
         g_data_w         => g_data_w,
         g_empty_w        => g_empty_w,

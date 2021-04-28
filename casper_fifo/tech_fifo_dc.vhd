@@ -22,9 +22,7 @@ LIBRARY ieee, common_pkg_lib;
 USE ieee.std_logic_1164.all;
 USE work.tech_fifo_component_pkg.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-
---USE technology_lib.technology_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
+USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
 --LIBRARY ip_stratixiv_fifo_lib;
@@ -34,7 +32,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY tech_fifo_dc IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --c_tech_select_default;
 		g_use_eab        : STRING  := "ON";
 		g_dat_w          : NATURAL;
 		g_nof_words      : NATURAL;
@@ -59,7 +56,7 @@ ARCHITECTURE str OF tech_fifo_dc IS
 
 BEGIN
 
-	gen_ip_xilinx : IF g_technology = 0 GENERATE
+	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
 		u1 : ip_xilinx_fifo_dc
 			generic map(
 				g_dat_w          => g_dat_w,
@@ -81,28 +78,10 @@ BEGIN
 			);
 	end generate;
 
-	gen_ip_stratixiv : IF g_technology = 1 GENERATE
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_fifo_dc
 			GENERIC MAP(g_dat_w, g_nof_words)
 			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
 	END GENERATE;
-
-	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
-	--    u0 : ip_arria10_fifo_dc
-	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
-	--
-	--  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
-	--    u0 : ip_arria10_e3sge3_fifo_dc
-	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
-	--  
-	--  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
-	--    u0 : ip_arria10_e1sg_fifo_dc
-	--    GENERIC MAP (g_use_eab, g_dat_w, g_nof_words)
-	--    PORT MAP (aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);
-	--  END GENERATE;
 
 END ARCHITECTURE;

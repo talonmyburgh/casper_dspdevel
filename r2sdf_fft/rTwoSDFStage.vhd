@@ -34,8 +34,7 @@ entity rTwoSDFStage is
 		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
-		g_pipeline       : t_fft_pipeline := c_fft_pipeline;	--! internal pipeline settings
-		g_technology	 : natural		  := 0
+		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
 	);
 	port(
 		clk     		 : in  std_logic;        				--! Input clock
@@ -154,7 +153,6 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
-			g_technology => g_technology,
 			g_variant 	 => g_variant,
 			g_stage   	 => g_stage,
 			g_use_dsp 	 => g_use_dsp,
