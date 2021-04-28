@@ -42,15 +42,19 @@ type t_fft is record
     out_gain_w     : natural;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
     stage_dat_w    : natural;       -- = 18, data width used between the stages(= DSP multiplier-width)
     guard_w        : natural;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
-    --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
-    --   12.3.2], therefore use input guard_w = 2.
-guard_enable   : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
---   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
---   doing the input guard and par fft section doing the output compensation)
+                                    --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
+                                    --   12.3.2], therefore use input guard_w = 2.
+    guard_enable   : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
+                                    --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
+                                    --   doing the input guard and par fft section doing the output compensation)
+    stat_data_w    : positive;      -- = 56
+    stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := (use_reorder, use_fft_shift, use_separate, nof_chan, wb_factor, twiddle_offset, nof_points, in_dat_w, out_dat_w, out_gain_w, stage_dat_w, guard_w, guard_enable);
+constant c_fft : t_fft := (use_reorder, use_fft_shift, use_separate, nof_chan, wb_factor, twiddle_offset, nof_points, in_dat_w, out_dat_w, out_gain_w, stage_dat_w, guard_w, guard_enable, 56, 2);
 
+-- Check consistancy of the FFT parameters
+function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
 
 type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
 type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(stage_dat_w-1 DOWNTO 0);
@@ -106,6 +110,24 @@ CONSTANT c_stages_par  : NATURAL;  -- use deferred constant (with value in BODY)
 END fft_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
+
+	function fft_r2_parameter_asserts(g_fft : t_fft) return boolean is
+	begin
+		-- nof_points
+		assert g_fft.nof_points = 2**true_log2(g_fft.nof_points) report "fft_r2: nof_points must be a power of 2" severity failure;
+		-- wb_factor
+		assert g_fft.wb_factor = 2**true_log2(g_fft.wb_factor) report "fft_r2: wb_factor must be a power of 2" severity failure;
+		-- use_reorder
+		if g_fft.use_reorder = false then
+			assert g_fft.use_separate = false report "fft_r2 : without use_reorder there cannot be use_separate for two real inputs" severity failure;
+			assert g_fft.use_fft_shift = false report "fft_r2 : without use_reorder there cannot be use_fft_shift for complex input" severity failure;
+		end if;
+		-- use_separate
+		if g_fft.use_separate = true then
+			assert g_fft.use_fft_shift = false report "fft_r2 : with use_separate there cannot be use_fft_shift for two real inputs" severity failure;
+		end if;
+		return true;
+	end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
 constant c_w   : natural                            := bin'length;
