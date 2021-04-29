@@ -46,8 +46,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_complex_mult IS
 	GENERIC(
-		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; --! 0: Simulate variant passed via g_use_variant for given technology
+		g_use_ip           : BOOLEAN := TRUE;  -- Use IP component when TRUE, else rtl component when FALSE
 		g_use_variant      : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
 		g_use_dsp          : STRING  := "YES";
 		g_in_a_w           : POSITIVE;  --! Input A-bitwidth
@@ -112,8 +111,7 @@ BEGIN
 
 	u_complex_mult : ENTITY work.tech_complex_mult
 		GENERIC MAP(
-			g_sim              => g_sim,
-			g_sim_level        => g_sim_level,
+			g_use_ip           => g_use_ip,
 			g_use_variant      => g_use_variant,
 			g_use_dsp          => g_use_dsp,
 			g_in_a_w           => g_in_a_w,

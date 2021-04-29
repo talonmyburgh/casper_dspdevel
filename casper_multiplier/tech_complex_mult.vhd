@@ -30,8 +30,7 @@ LIBRARY ip_xpm_mult_lib;
 
 ENTITY tech_complex_mult IS
 	GENERIC(
-		g_sim              : BOOLEAN := TRUE;
-		g_sim_level        : NATURAL := 0; -- 0: Simulate variant passed via g_use_variant for given technology
+		g_use_ip           : BOOLEAN := TRUE;  -- Use IP component when TRUE, else rtl component when FALSE
 		g_use_variant      : STRING  := "4DSP";
 		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;
@@ -64,10 +63,15 @@ ARCHITECTURE str of tech_complex_mult is
 	--! . if both inputs > 18b then another IP needs to be regenerated and that will use 16 real multipliers and some extra LUTs and registers
 	--! . if the output is set to 18b+18b + 1b =37b to account for the sum then another IP needs to be regenerated and that will use some extra registers
 	--! ==> for inputs <= 18b this ip_complex_mult is appropriate and it can not be made parametrisable to fit also inputs > 18b.
+  CONSTANT c_dsp_dat_w    : NATURAL  := 18;
+  CONSTANT c_dsp_prod_w   : NATURAL  := 2*c_dsp_dat_w;
 
-	-- sim_model=1
-	SIGNAL result_re_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
-	SIGNAL result_im_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
+  SIGNAL ar        : STD_LOGIC_VECTOR(c_dsp_dat_w-1 DOWNTO 0);
+  SIGNAL ai        : STD_LOGIC_VECTOR(c_dsp_dat_w-1 DOWNTO 0);
+  SIGNAL br        : STD_LOGIC_VECTOR(c_dsp_dat_w-1 DOWNTO 0);
+  SIGNAL bi        : STD_LOGIC_VECTOR(c_dsp_dat_w-1 DOWNTO 0);
+  SIGNAL mult_re   : STD_LOGIC_VECTOR(c_dsp_prod_w-1 DOWNTO 0);
+  SIGNAL mult_im   : STD_LOGIC_VECTOR(c_dsp_prod_w-1 DOWNTO 0);
 
 begin
 
@@ -123,48 +127,61 @@ begin
 			);
 	end generate;
 
-	-------------------------------------------------------------------------------
-	-- Model: forward concatenated inputs to the 'result' output
-	-- 
-	-- Example:
-	--                                    ______ 
-	-- Input B.real (in_br) = 0x1111 --> |      |
-	--        .imag (in_bi) = 0xBBBB --> |      |
-	--                                   | mult | --> Output result.real = 0x11110000
-	-- Input A.real (in_ar) = 0x0000 --> |      |                  .imag = 0xBBBBAAAA
-	--        .imag (in_ai) = 0xAAAA --> |______|
-	-- 
-	-- Note: this model is synthsizable as well.
-	-- 
-	-------------------------------------------------------------------------------
-	gen_sim_level_1 : IF g_sim = TRUE AND g_sim_level = 1 GENERATE --FIXME: g_sim required? This is synthesizable.
+  gen_ip_stratixiv_ip_4dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "4DSP" AND g_use_ip = TRUE GENERATE
+    -- Adapt DSP input widths
+    ar <= RESIZE_SVEC(in_ar, c_dsp_dat_w);
+    ai <= RESIZE_SVEC(in_ai, c_dsp_dat_w);
+    br <= RESIZE_SVEC(in_br, c_dsp_dat_w);
+    bi <= RESIZE_SVEC(in_bi, c_dsp_dat_w) WHEN g_conjugate_b=FALSE ELSE TO_SVEC(-TO_SINT(in_bi), c_dsp_dat_w);
 
-		result_re_undelayed <= in_br & in_ar;
-		result_im_undelayed <= in_bi & in_ai;
+    u0 : ip_stratixiv_complex_mult
+    PORT MAP (
+         aclr        => rst,
+         clock       => clk,
+         dataa_imag  => ai,
+         dataa_real  => ar,
+         datab_imag  => bi,
+         datab_real  => br,
+         ena         => clken,
+         result_imag => mult_im,
+         result_real => mult_re
+         );
 
-		u_common_pipeline_re : entity common_components_lib.common_pipeline
-			generic map(
-				g_pipeline  => 3,
-				g_in_dat_w  => g_in_b_w + g_in_a_w,
-				g_out_dat_w => g_out_p_w
-			)
-			port map(
-				clk     => clk,
-				in_dat  => result_re_undelayed,
-				out_dat => result_re
-			);
+    -- Back to true input widths and then resize for output width
+    result_re <= RESIZE_SVEC(mult_re, g_out_p_w);
+    result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
+  END GENERATE;
 
-		u_common_pipeline_im : entity common_components_lib.common_pipeline
-			generic map(
-				g_pipeline  => 3,
-				g_in_dat_w  => g_in_b_w + g_in_a_w,
-				g_out_dat_w => g_out_p_w
-			)
-			port map(
-				clk     => clk,
-				in_dat  => result_im_undelayed,
-				out_dat => result_im
-			);
+  gen_ip_stratixiv_rtl_4dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "4DSP" AND g_use_ip = FALSE GENERATE
+    u0 : ip_stratixiv_complex_mult_rtl
+    GENERIC MAP(
+      g_in_a_w           => g_in_a_w,
+      g_in_b_w           => g_in_b_w,
+      g_out_p_w          => g_out_p_w,
+      g_conjugate_b      => g_conjugate_b,
+      g_pipeline_input   => g_pipeline_input,
+      g_pipeline_product => g_pipeline_product,
+      g_pipeline_adder   => g_pipeline_adder,
+      g_pipeline_output  => g_pipeline_output
+    )
+    PORT MAP(
+      rst        => rst,
+      clk        => clk,
+      clken      => clken,
+      in_ar      => in_ar,
+      in_ai      => in_ai,
+      in_br      => in_br,
+      in_bi      => in_bi,
+      result_re  => result_re,
+      result_im  => result_im
+      );
+  END GENERATE;
 
-	END GENERATE;
+  gen_ip_stratixiv_rtl_3dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "3DSP" GENERATE
+     -- Cannot simply instantiate the RTL of ip_cmult_rtl_3dsp here, because that is kept in ip_xpm_mult_lib
+     -- for c_tech_xpm, which is not available for c_tech_stratixiv. A way is to copy this RTL file also to
+     -- the ip_stratixiv_mult_lib, but for now only give a FAILURE on 3DSP.
+     ASSERT FALSE REPORT "g_use_variant = 3DSP is not supported for yet for gen_ip_stratixiv_rtl_3dsp" SEVERITY FAILURE;
+  END GENERATE;
+
 end str;

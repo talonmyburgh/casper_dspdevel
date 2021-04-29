@@ -109,6 +109,7 @@ begin
 	gen_rtl : if g_stage = 1 or c_in_dat_w > c_dsp_mult_w or c_lat < c_dsp_mult_lat generate
 		u_CmplxMul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
+				g_use_ip           => FALSE,
 				g_use_variant      => g_variant,
 				g_use_dsp          => g_use_dsp,
 				g_in_a_w           => c_in_dat_w,
@@ -138,6 +139,7 @@ begin
 	gen_ip : if g_stage > 1 and c_in_dat_w <= c_dsp_mult_w and c_lat >= c_dsp_mult_lat generate
 		u_cmplx_mul : entity casper_multiplier_lib.common_complex_mult
 			generic map(
+				g_use_ip           => TRUE,
 				g_use_dsp          => g_use_dsp,
 				g_use_variant      => g_variant,
 				g_in_a_w           => in_re'length,
