@@ -5,6 +5,10 @@ USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
 USE technology_lib.technology_select_pkg.ALL;
 
+-- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
+LIBRARY ip_stratixiv_mult_lib;
+LIBRARY ip_xpm_mult_lib;
+
 ENTITY tech_mult IS
 	GENERIC(
 		g_sim              : BOOLEAN := TRUE;
