@@ -18,17 +18,15 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY ieee, common_pkg_lib;
+LIBRARY ieee, common_pkg_lib, technology_lib;
 USE ieee.std_logic_1164.all;
 USE work.tech_fifo_component_pkg.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_stratixiv_fifo_lib;
---LIBRARY ip_arria10_fifo_lib;
---LIBRARY ip_arria10_e3sge3_fifo_lib;
---LIBRARY ip_arria10_e1sg_fifo_lib;
+LIBRARY ip_xpm_fifo_lib;
+LIBRARY ip_stratixiv_fifo_lib;
 
 ENTITY tech_fifo_sc IS
 	GENERIC(

@@ -24,10 +24,8 @@ USE work.tech_memory_component_pkg.ALL;
 USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_stratixiv_ram_lib;
---LIBRARY ip_arria10_ram_lib;
---LIBRARY ip_arria10_e3sge3_ram_lib;
---LIBRARY ip_arria10_e1sg_ram_lib;
+LIBRARY ip_xpm_ram_lib;
+LIBRARY ip_stratixiv_ram_lib;
 
 ENTITY tech_memory_ram_cr_cw IS
 	GENERIC(
