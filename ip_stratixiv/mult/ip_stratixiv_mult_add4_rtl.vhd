@@ -19,10 +19,10 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_lib;
+LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
-USE common_lib.common_pkg.ALL;
+USE common_pkg_lib.common_pkg.ALL;
 
 -- Function:
 -- . res = (a0 * b0 +- a1 * b1) +- (a2 * b2 +- a3 * b3)
