@@ -90,8 +90,8 @@ end;
 architecture rtl of rTwoBF is
 
 	signal in_a_dly  : std_logic_vector(in_a'range);
+	signal out_c_buf : std_logic_vector(out_c'range);
 	signal out_d_ely : std_logic_vector(out_d'range);
-	signal ovflw_det : std_logic_vector(1 DOWNTO 0);
 
 begin
 
@@ -123,10 +123,11 @@ begin
 	------------------------------------------------------------------------------------
 	-- PRE-EMPT overflow in addition and subtraction
 	------------------------------------------------------------------------------------
-	ovflw <= (S_ADD_OVFLW_DET(in_a_dly, in_b) or S_SUB_OVFLW_DET(in_a_dly, in_b));
+	ovflw <= (S_ADD_OVFLW_DET(in_a_dly, in_b, out_c_buf) or S_SUB_OVFLW_DET(in_a_dly, in_b, out_d_ely));
 
 	-- BF function: add, subtract or pass the data on dependent on in_sel
-	out_c     <= ADD_SVEC(in_a_dly, in_b, out_c'length) when in_sel = '1' else in_a_dly;
+	out_c_buf <= ADD_SVEC(in_a_dly, in_b, out_c'length) when in_sel = '1' else in_a_dly;
+	out_c 		<= out_c_buf;
 	out_d_ely <= SUB_SVEC(in_a_dly, in_b, out_d'length) when in_sel = '1' else in_b;
 
 end rtl;
