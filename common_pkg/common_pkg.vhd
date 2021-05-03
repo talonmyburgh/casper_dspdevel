@@ -1947,7 +1947,7 @@ PACKAGE BODY common_pkg IS
 		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
 		VARIABLE sub_a_b_sign: SIGNED(a'RANGE) := a_sign - b_sign;
 	BEGIN
-		IF (a_sign = 0) or (b_sign = 0)THEN
+		IF (b_sign = 0)THEN
 			RETURN '0'; -- no overflow can occur when either is 0
 		ELSIF (a_sign < 0 and b_sign < 0) xor (a_sign >= 0 and b_sign >= 0) THEN
 			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
