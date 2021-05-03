@@ -1931,11 +1931,11 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		IF (a_sign = 0) or (b_sign = 0)THEN
 			RETURN '0'; -- no overflow can occur when either is 0
-		ELSIF (a_sign < 0 and b_sign > 0) xor (a_sign > 0 and b_sign < 0) THEN
+		ELSIF (a_sign < 0 and b_sign >= 0) xor (a_sign >= 0 and b_sign < 0) THEN
 			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
-		ELSIF (sum_a_b_sign < 0 and a_sign > 0 and b_sign > 0) THEN 
+		ELSIF (sum_a_b_sign < 0 and a_sign >= 0 and b_sign >= 0) THEN 
 			RETURN '1';	-- overflow has occured - note wrapping
-		ELSIF (sum_a_b_sign > 0 and a_sign < 0 and b_sign < 0) THEN
+		ELSIF (sum_a_b_sign >= 0 and a_sign < 0 and b_sign < 0) THEN
 			RETURN '1'; -- overflow has occured - note wrapping
 		ELSE 
 			RETURN '0';
@@ -1949,11 +1949,11 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		IF (a_sign = 0) or (b_sign = 0)THEN
 			RETURN '0'; -- no overflow can occur when either is 0
-		ELSIF (a_sign < 0 and b_sign < 0) xor (a_sign > 0 and b_sign > 0) THEN
+		ELSIF (a_sign < 0 and b_sign < 0) xor (a_sign >= 0 and b_sign >= 0) THEN
 			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
 		ELSIF (sub_a_b_sign < 0 and b_sign < 0) THEN
 			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
-		ELSIF (sub_a_b_sign > 0 and b_sign > 0) THEN
+		ELSIF (sub_a_b_sign >= 0 and b_sign >= 0) THEN
 			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
 		ELSE 
 			RETURN '0';
