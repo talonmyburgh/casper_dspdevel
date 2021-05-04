@@ -51,7 +51,6 @@ use casper_ram_lib.common_ram_pkg.all;
 
 entity rTwoOrder is
 	generic(
-		g_technology    : natural := 0; --! 0 for Xilinx products, 1 for Alterra 
 		g_nof_points    : natural := 1024; --! Number of FFT points
 		g_bit_flip      : boolean := true; --! Flip bits
 		g_nof_chan      : natural := 0; --! Number of FFT channels
@@ -60,7 +59,7 @@ entity rTwoOrder is
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
-		ce      : in  std_logic;        --! Clock enable
+		ce      : in  std_logic := '1'; --! Clock enable
 		rst     : in  std_logic;        --! Reset signal
 		in_dat  : in  std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Input data signal
 		in_val  : in  std_logic;        --! In val (for delay)
@@ -170,7 +169,6 @@ begin
 		);
 	u_buff : ENTITY casper_ram_lib.common_paged_ram_r_w
 		GENERIC MAP(
-			g_technology    => g_technology,
 			g_str           => "use_adr",
 			g_data_w        => c_dat_w,
 			g_nof_pages     => 2,

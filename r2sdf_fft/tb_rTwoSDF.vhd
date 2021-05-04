@@ -252,7 +252,9 @@ begin
     g_out_dat_w   => g_out_dat_w, 
     g_stage_dat_w => c_stage_dat_w,
     g_guard_w     => g_guard_w,
-    g_nof_points  => g_nof_points
+    g_nof_points  => g_nof_points,
+    -- generics for rTwoSDFStage
+    g_variant     => "4DSP"   -- Use 3DSP or 4DSP for multiplication
   )
   port map(
     clk       => clk,

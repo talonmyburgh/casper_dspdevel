@@ -67,7 +67,6 @@ USE work.diag_pkg.ALL;
 
 ENTITY mms_diag_data_buffer IS
   GENERIC (    
-    g_technology   : NATURAL := 0;
     -- Generate configurations
     g_use_db       : BOOLEAN := TRUE;
     g_use_rx_seq   : BOOLEAN := FALSE;
@@ -164,7 +163,6 @@ BEGIN
     
       u_diag_data_buffer : ENTITY work.diag_data_buffer
       GENERIC MAP (
-        g_technology  => g_technology,
         g_data_w      => g_data_w, 
         g_nof_data    => g_buf_nof_data,
         g_use_in_sync => g_buf_use_sync   -- when TRUE start filling the buffer at the in_sync, else after the last word was read

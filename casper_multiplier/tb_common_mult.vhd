@@ -55,8 +55,6 @@ ARCHITECTURE tb OF tb_common_mult IS
   CONSTANT c_min         : INTEGER := -c_max_p;
   CONSTANT c_max_n       : INTEGER := -2**(g_in_dat_w-1);
 
-  CONSTANT c_technology  : NATURAL := 0;
-
   FUNCTION func_sresult(in_a, in_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR IS
     CONSTANT c_res_w  : NATURAL := 2*g_in_dat_w;  -- use sufficiently large result width
     VARIABLE v_a      : STD_LOGIC_VECTOR(g_in_dat_w-1 DOWNTO 0);
@@ -248,7 +246,6 @@ BEGIN
 
   u_sdut_rtl : ENTITY work.common_mult
   GENERIC MAP (
-    g_technology       => c_technology,
     g_variant          => "RTL",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,
@@ -270,7 +267,6 @@ BEGIN
 
   u_udut_rtl : ENTITY work.common_mult
   GENERIC MAP (
-    g_technology       => c_technology,
     g_variant          => "RTL",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,
@@ -292,7 +288,6 @@ BEGIN
 
   u_sdut_ip : ENTITY work.common_mult
   GENERIC MAP (
-    g_technology       => c_technology,
     g_variant          => "IP",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,
@@ -314,7 +309,6 @@ BEGIN
 
   u_udut_ip : ENTITY work.common_mult
   GENERIC MAP (
-    g_technology       => c_technology,
     g_variant          => "IP",
     g_in_a_w           => g_in_dat_w,
     g_in_b_w           => g_in_dat_w,

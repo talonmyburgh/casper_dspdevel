@@ -18,17 +18,18 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, astron_mm_lib, astron_ram_lib;
+LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, casper_mm_lib, casper_ram_lib;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL; 
 use IEEE.std_logic_textio.all;
 USE STD.textio.all;
 USE common_pkg_lib.common_pkg.ALL;     
-USE astron_ram_lib.common_ram_pkg.ALL; 
+USE casper_ram_lib.common_ram_pkg.ALL;
 USE common_pkg_lib.tb_common_pkg.ALL;     
-USE astron_mm_lib.tb_common_mem_pkg.ALL;
+USE casper_mm_lib.tb_common_mem_pkg.ALL;
 USE dp_pkg_lib.dp_stream_pkg.ALL; 
-USE work.fft_pkg.ALL;    
+--USE work.fft_pkg.ALL;
+USE work.fft_gnrcs_intrfcs_pkg.ALL;
 
 PACKAGE tb_fft_pkg IS   
 
@@ -553,7 +554,7 @@ PACKAGE BODY tb_fft_pkg IS
     VARIABLE v_nof_stats      : NATURAL := c_fft.nof_points/c_fft.wb_factor;
     VARIABLE v_statistics_arr : t_slv_64_arr(statistics_arr'RANGE);
   BEGIN                                                                            
-    v_offset := c_fft_lane*c_fft.stat_data_sz*v_nof_stats;
+    --v_offset := c_fft_lane*c_fft.stat_data_sz*v_nof_stats;
     proc_read_subband_stats(v_nof_stats, v_offset, clk, mm_mosi, mm_miso, v_statistics_arr);
     statistics_arr <= v_statistics_arr;
     proc_common_wait_some_cycles(clk, 1);  -- ensure that the last statistics_arr value gets assigned too

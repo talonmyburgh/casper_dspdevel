@@ -79,7 +79,6 @@ begin
 
 	dut : entity work.common_ram_crw_crw
 		generic map(
-			g_technology     => 0,
 			g_ram            => c_mem_ram,
 			g_init_file      => "UNUSED",
 			g_true_dual_port => True,

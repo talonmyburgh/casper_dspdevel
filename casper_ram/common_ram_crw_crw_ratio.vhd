@@ -26,7 +26,6 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_ram_crw_crw_ratio IS
 	GENERIC(
-		g_technology : NATURAL := 0;
 		g_ram_a      : t_c_mem := c_mem_ram; -- settings for port a
 		g_ram_b      : t_c_mem := c_mem_ram; -- data width and address range for port b
 		g_init_file  : STRING  := "UNUSED"
@@ -83,7 +82,6 @@ BEGIN
 	-- memory access
 	u_ramk : ENTITY work.tech_memory_ram_crwk_crw
 		GENERIC MAP(
-			g_technology  => g_technology,
 			g_adr_a_w     => g_ram_a.adr_w,
 			g_adr_b_w     => g_ram_b.adr_w,
 			g_dat_a_w     => g_ram_a.dat_w,

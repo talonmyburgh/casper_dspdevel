@@ -33,7 +33,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_paged_ram_rw_rw IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_str            : STRING  := "use_ofs";
 		g_data_w         : NATURAL := 17;
 		g_nof_pages      : NATURAL := 2; -- >= 2
@@ -71,7 +70,6 @@ BEGIN
 
 	u_crw_crw : ENTITY work.common_paged_ram_crw_crw
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_str            => g_str,
 			g_data_w         => g_data_w,
 			g_nof_pages      => g_nof_pages,

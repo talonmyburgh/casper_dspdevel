@@ -18,21 +18,17 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY ieee;
+LIBRARY ieee, technology_lib;
 USE ieee.std_logic_1164.all;
 USE work.tech_memory_component_pkg.ALL;
---USE technology_lib.technology_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
+USE technology_lib.technology_select_pkg.ALL;
 
 -- Declare IP libraries to ensure default binding in simulation. The IP library clause is ignored by synthesis.
---LIBRARY ip_stratixiv_ram_lib;
---LIBRARY ip_arria10_ram_lib;
---LIBRARY ip_arria10_e3sge3_ram_lib;
---LIBRARY ip_arria10_e1sg_ram_lib;
+LIBRARY ip_xpm_ram_lib;
+LIBRARY ip_stratixiv_ram_lib;
 
 ENTITY tech_memory_ram_crw_crw IS
 	GENERIC(
-		g_technology    : NATURAL := 0; --c_tech_select_default;
 		g_adr_w         : NATURAL := 10;
 		g_dat_w         : NATURAL := 18;
 		g_nof_words     : NATURAL := 2**5;
@@ -61,7 +57,7 @@ END tech_memory_ram_crw_crw;
 ARCHITECTURE str OF tech_memory_ram_crw_crw IS
 
 BEGIN
-	gen_ip_xilinx : IF g_technology = 0 GENERATE
+	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
 		u1 : ip_xpm_ram_crw_crw
 			generic map(
 				g_adr_w         => g_adr_w,
@@ -89,29 +85,11 @@ BEGIN
 			);
 	END GENERATE;
 
-	--
-	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE
-	--		u0 : ip_stratixiv_ram_crw_crw
-	--			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
-	--			PORT MAP(address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
-	--	END GENERATE;
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
+			u0 : ip_stratixiv_ram_crw_crw
+				GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
+				PORT MAP(address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
+	END GENERATE;
 
-	--  gen_ip_arria10 : IF g_technology=c_tech_arria10 GENERATE
-	--    u0 : ip_arria10_ram_crw_crw
-	--    GENERIC MAP (FALSE, g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
-	--    PORT MAP (address_a, address_b, clock_a, clock_b, data_a, data_b, wren_a, wren_b, q_a, q_b);
-	--  END GENERATE;
-	--  
-	--  gen_ip_arria10_e3sge3 : IF g_technology=c_tech_arria10_e3sge3 GENERATE
-	--    u0 : ip_arria10_e3sge3_ram_crw_crw
-	--    GENERIC MAP (FALSE, g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
-	--    PORT MAP (address_a, address_b, clock_a, clock_b, data_a, data_b, wren_a, wren_b, q_a, q_b);
-	--  END GENERATE;
-	--  
-	--  gen_ip_arria10_e1sg : IF g_technology=c_tech_arria10_e1sg GENERATE
-	--    u0 : ip_arria10_e1sg_ram_crw_crw
-	--    GENERIC MAP (FALSE, g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
-	--    PORT MAP (address_a, address_b, clock_a, clock_b, data_a, data_b, wren_a, wren_b, q_a, q_b);
-	--  END GENERATE;
 
 END ARCHITECTURE;
