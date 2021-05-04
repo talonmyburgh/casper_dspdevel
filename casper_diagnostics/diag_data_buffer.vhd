@@ -52,7 +52,6 @@ USE work.diag_pkg.ALL;
 
 ENTITY diag_data_buffer IS
   GENERIC (
-    g_technology  : NATURAL := 0;
     g_data_w      : NATURAL := 32;
     g_nof_data    : NATURAL := 1024;
     g_use_in_sync : BOOLEAN := FALSE   -- when TRUE start filling the buffer at the in_sync, else after the last word was read
@@ -192,7 +191,6 @@ BEGIN
 
   u_buf : ENTITY casper_ram_lib.common_ram_crw_crw_ratio
   GENERIC MAP (
-    g_technology => g_technology,
     g_ram_a     => c_buf_mm,
     g_ram_b     => c_buf_st,
     g_init_file => "UNUSED"

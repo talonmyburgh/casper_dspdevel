@@ -21,9 +21,10 @@
 --! @brief RTL Complex Multiplier using 4 mults and 2 adds -> 4 dsp48 chips
 
 --! Library IEEE
-LIBRARY IEEE;
+LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
+USE common_pkg_lib.common_pkg.ALL;
 
 --! Function: Signed complex multiply
 --!   p = a * b       when g_conjugate_b = FALSE
@@ -95,15 +96,6 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	------------------------------------------------------------------------------
 	-- Functions
 	------------------------------------------------------------------------------
-	FUNCTION RESIZE_NUM(s : SIGNED; w : NATURAL) RETURN SIGNED IS
-	BEGIN
-		-- extend sign bit or keep LS part
-		IF w > s'LENGTH THEN
-			RETURN RESIZE(s, w);        -- extend sign bit
-		ELSE
-			RETURN SIGNED(RESIZE(UNSIGNED(s), w)); -- keep LSbits (= vec[w-1:0])
-		END IF;
-	END;
 
 	------------------------------------------------------------------------------
 	-- Constants

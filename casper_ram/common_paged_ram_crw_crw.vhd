@@ -43,7 +43,6 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_paged_ram_crw_crw IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_str            : STRING  := "use_ofs";
 		g_data_w         : NATURAL := 12;
 		g_nof_pages      : NATURAL := 3; -- >= 2
@@ -226,7 +225,6 @@ BEGIN
 		gen_pages : FOR I IN 0 TO g_nof_pages - 1 GENERATE
 			u_ram : ENTITY work.common_ram_crw_crw
 				GENERIC MAP(
-					g_technology     => g_technology,
 					g_ram            => c_page_ram,
 					g_init_file      => "UNUSED",
 					g_true_dual_port => g_true_dual_port,
@@ -275,7 +273,6 @@ BEGIN
 	gen_adr : IF g_str = "use_adr" GENERATE
 		u_mem : ENTITY work.common_ram_crw_crw
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_ram            => c_mem_ram,
 				g_init_file      => "UNUSED",
 				g_true_dual_port => g_true_dual_port,
@@ -307,7 +304,6 @@ BEGIN
 	gen_ofs : IF g_str = "use_ofs" GENERATE
 		u_buf : ENTITY work.common_ram_crw_crw
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_ram            => c_buf_ram,
 				g_init_file      => "UNUSED",
 				g_true_dual_port => g_true_dual_port,

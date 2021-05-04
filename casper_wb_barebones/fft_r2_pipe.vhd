@@ -61,8 +61,7 @@ entity fft_r2_pipe is
 		g_use_dsp        	 : string  		  				:= "yes";        			--! = "yes" or "no"
 		g_ovflw_behav    	 : string  		  				:= "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round      	 : string  		  				:= "ROUND";        			--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  	 : string  		  				:= "auto";					--! = "auto", "distributed", "ultra" or "block"
-		g_technology     	 : natural 		  				:= 0       					--! = 0 for Xilinx, 1 for Alterra
+		g_ram_primitive  	 : string  		  				:= "auto"					--! = "auto", "distributed", "ultra" or "block"
 	);
 	port(
 		clken    			 : in  std_logic;											--! Clock enable

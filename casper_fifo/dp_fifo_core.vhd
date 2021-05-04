@@ -47,7 +47,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_fifo_core IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_note_is_ful    : BOOLEAN := TRUE; -- when TRUE report NOTE when FIFO goes full, fifo overflow is always reported as FAILURE
 		g_use_dual_clock : BOOLEAN := FALSE;
 		g_use_lut_sc     : BOOLEAN := FALSE; -- when TRUE then force using LUTs instead of block RAM for single clock FIFO (bot available for dual clock FIFO)
@@ -170,7 +169,6 @@ BEGIN
 	gen_common_fifo_sc : IF g_use_dual_clock = FALSE GENERATE
 		u_common_fifo_sc : ENTITY work.common_fifo_sc
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_note_is_ful    => g_note_is_ful,
 				g_use_lut        => g_use_lut_sc,
 				g_dat_w          => c_fifo_dat_w,
@@ -196,7 +194,6 @@ BEGIN
 	gen_common_fifo_dc : IF g_use_dual_clock = TRUE GENERATE
 		u_common_fifo_dc : ENTITY work.common_fifo_dc
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_dat_w          => c_fifo_dat_w,
 				g_nof_words      => g_fifo_size,
 				g_fifo_primitive => g_fifo_primitive

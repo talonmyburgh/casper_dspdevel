@@ -54,7 +54,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY st_sst IS
   GENERIC (
-    g_technology    : NATURAL := 0;
     g_nof_stat      : NATURAL := 512;   -- nof accumulators
     g_xst_enable    : BOOLEAN := FALSE; -- when set to true, an extra memory is instantiated to hold the imaginary part of the cross-correlation results
     g_in_data_w     : NATURAL := 18;    -- width o dth edata to be accumulated
@@ -204,7 +203,6 @@ BEGIN
   
   st_calc : ENTITY work.st_calc 
   GENERIC MAP (
-    g_technology   => g_technology,
     g_nof_mux      => 1,
     g_nof_stat     => g_nof_stat,
     g_in_dat_w     => g_in_data_w,
@@ -233,7 +231,6 @@ BEGIN
   
   stat_reg_re : ENTITY casper_ram_lib.common_ram_crw_crw_ratio
   GENERIC MAP (
-    g_technology => g_technology,
     g_ram_a      => c_mm_ram,
     g_ram_b      => c_stat_ram,
     g_init_file  => "UNUSED"
@@ -285,7 +282,6 @@ BEGIN
   
     stat_reg_im : ENTITY casper_ram_lib.common_ram_crw_crw_ratio
     GENERIC MAP (
-      g_technology => g_technology,
       g_ram_a      => c_mm_ram,
       g_ram_b      => c_stat_ram,
       g_init_file  => "UNUSED"

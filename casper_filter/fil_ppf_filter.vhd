@@ -37,7 +37,6 @@ use work.fil_pkg.ALL;
 entity fil_ppf_filter is
   generic (
     g_use_dsp          : STRING  := "YES";
-    g_technology       : NATURAL := 0;
     g_fil_ppf          : t_fil_ppf; 
     g_fil_ppf_pipeline : t_fil_ppf_pipeline
   );

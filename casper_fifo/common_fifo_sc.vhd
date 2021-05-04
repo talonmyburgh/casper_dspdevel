@@ -27,7 +27,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_fifo_sc IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --c_tech_select_default;
 		g_note_is_ful    : BOOLEAN := TRUE; -- when TRUE report NOTE when FIFO goes full, fifo overflow is always reported as FAILURE
 		g_fail_rd_emp    : BOOLEAN := FALSE; -- when TRUE report FAILURE when read from an empty FIFO
 		g_use_lut        : BOOLEAN := FALSE; -- when TRUE then force using LUTs via Altera eab="OFF",
@@ -165,7 +164,6 @@ BEGIN
 	-- 0 <          usedw < some threshold < g_nof_words can be used as FIFO almost_empty
 	u_fifo : ENTITY work.tech_fifo_sc
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_use_eab        => c_use_eab,
 			g_dat_w          => g_dat_w,
 			g_nof_words      => g_nof_words,
