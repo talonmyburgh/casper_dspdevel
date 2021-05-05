@@ -9,7 +9,7 @@ CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
 CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=10;       -- = 13, number of output bits
 CONSTANT stage_dat_w    : natural :=14;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 1024;       -- = 1024, N point FFT
+CONSTANT nof_points     : natural := 64;       -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -51,7 +51,7 @@ type t_fft is record
     stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := (use_reorder, use_fft_shift, use_separate, nof_chan, wb_factor, twiddle_offset, nof_points, in_dat_w, out_dat_w, out_gain_w, stage_dat_w, guard_w, guard_enable, 56, 2);
+constant c_fft : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
