@@ -67,7 +67,7 @@ fi
 for altera_dir in ${ALTERA_DIR}/*; do
     if [[ -d "${altera_dir}" ]] &&  [[ ! -h "${altera_dir}" ]]; then
         echo "copy git hdl_user_components.ipx to ${altera_dir}/ip/altera/user_components.ipx"
-        cp ${RADIOHDL_WORK}/quartus/hdl_user_components.ipx $altera_dir/ip/altera/user_components.ipx
+        cp ${RADIOHDL_WORK}/intel/hdl_user_components.ipx $altera_dir/ip/altera/user_components.ipx
     fi
 done
 
