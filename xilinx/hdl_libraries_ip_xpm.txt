@@ -1,0 +1,1 @@
+xpm = $RADIOHDL_WORK/../xpm_vhdl/build/xpmhdl/modelsim/xpm/work
