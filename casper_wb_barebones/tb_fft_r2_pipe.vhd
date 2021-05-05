@@ -192,6 +192,9 @@ architecture tb of tb_fft_r2_pipe is
   signal input_data_a_arr       : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- one value per line (A via re input)
   signal input_data_b_arr       : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- one value per line (B via im input)
   signal input_data_c_arr       : t_integer_arr(0 to g_data_file_nof_lines*c_nof_complex-1) := (OTHERS=>0);  -- two values per line (re, im)
+  
+  signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := (others=>'1');
+  signal ovflw                  : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := (others=>'0');
 
   signal expected_data_a_arr    : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- half spectrum, two values per line (re, im)
   signal expected_data_a_re_arr : t_integer_arr(0 to g_data_file_nof_lines/c_nof_complex-1) := (OTHERS=>0);  -- half spectrum, re
@@ -329,13 +332,16 @@ begin
     g_fft      => g_fft
   )
   port map (
+    clken    => '1',
     clk      => clk,
     rst      => rst,
     in_re    => in_dat_a,
     in_im    => in_dat_b,
+    shiftreg => shiftreg,
     in_val   => in_val,
     out_re   => out_re,
     out_im   => out_im,
+    ovflw    => ovflw,
     out_val  => out_val
   );
 
