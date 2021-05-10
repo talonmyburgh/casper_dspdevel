@@ -8,3 +8,4 @@ casper_ram/BRAM_*Macro.vhd
 */vunit_out
 */*.xml
 .vscode
+build/*

@@ -27,7 +27,6 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_fifo_dc IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --c_tech_select_default;
 		g_note_is_ful    : BOOLEAN := TRUE; -- when TRUE report NOTE when FIFO goes full, fifo overflow is always reported as FAILURE
 		g_fail_rd_emp    : BOOLEAN := FALSE; -- when TRUE report FAILURE when read from an empty FIFO
 		g_dat_w          : NATURAL := 36;
@@ -116,7 +115,6 @@ BEGIN
 
 	u_fifo : ENTITY work.tech_fifo_dc
 		GENERIC MAP(
-			g_technology     => g_technology,
 			g_dat_w          => g_dat_w,
 			g_nof_words      => c_nof_words,
 			g_fifo_primitive => g_fifo_primitive

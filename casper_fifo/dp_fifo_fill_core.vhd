@@ -64,7 +64,6 @@ USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 ENTITY dp_fifo_fill_core IS
 	GENERIC(
-		g_technology     : NATURAL := 0;
 		g_use_dual_clock : BOOLEAN := FALSE;
 		g_data_w         : NATURAL := 16;
 		g_bsn_w          : NATURAL := 1;
@@ -157,7 +156,6 @@ BEGIN
 	gen_dp_fifo_sc : IF g_use_dual_clock = FALSE GENERATE
 		u_dp_fifo_sc : ENTITY work.dp_fifo_sc
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_data_w         => g_data_w,
 				g_bsn_w          => g_bsn_w,
 				g_empty_w        => g_empty_w,
@@ -195,7 +193,6 @@ BEGIN
 	gen_dp_fifo_dc : IF g_use_dual_clock = TRUE GENERATE
 		u_dp_fifo_dc : ENTITY work.dp_fifo_dc
 			GENERIC MAP(
-				g_technology     => g_technology,
 				g_data_w         => g_data_w,
 				g_bsn_w          => g_bsn_w,
 				g_empty_w        => g_empty_w,

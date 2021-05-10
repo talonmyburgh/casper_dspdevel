@@ -35,10 +35,10 @@ USE common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 USE common_pkg_lib.tb_common_pkg.ALL;
 context vunit_lib.vunit_context;
 
-ENTITY tb_rTwoOrder IS
-END tb_rTwoOrder;
+ENTITY rTwoOrder_tb IS
+END rTwoOrder_tb;
 
-ARCHITECTURE tb OF tb_rTwoOrder IS
+ARCHITECTURE tb OF rTwoOrder_tb IS
 
 	CONSTANT c_clk_period : TIME := 10 ns;
 
@@ -98,7 +98,6 @@ BEGIN
 	-- device under test
 	u_dut : ENTITY work.rTwoOrder
 		GENERIC MAP(
-			g_technology => 0,
 			g_nof_points => c_nof_points,
 			g_bit_flip   => false,
 			g_nof_chan   => 7

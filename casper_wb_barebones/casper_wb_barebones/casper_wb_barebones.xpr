@@ -37,7 +37,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="79"/>
+    <Option Name="WTXSimLaunchSim" Val="105"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -118,6 +118,27 @@
       <File Path="$PPRDIR/../../casper_multiplier/tech_mult_component.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../technology/technology_select_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="technology_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperunb1.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="technology_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperxpm.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="technology_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -276,7 +297,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../fft_gnrcs_intrfcs_pkg.vhdl">
+      <File Path="$PPRDIR/../fft_gnrcs_intrfcs_pkg.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -303,7 +324,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_requantize/r_shift_requantize.vhdl">
+      <File Path="$PPRDIR/../../casper_requantize/r_shift_requantize.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_requantize_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -392,35 +413,35 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_multiplier/ip_cmult_rtl_3dsp.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_multiplier/ip_cmult_rtl_4dsp.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_fifo/ip_xilinx_fifo_sc.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_fifo_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_ram/ip_xpm_ram_cr_cw.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_ram/ip_xpm_ram_crw_crw.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -429,6 +450,22 @@
       </File>
       <File Path="$PSRCDIR/sources_1/new/wb_slim_fft_top.vhd">
         <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_pkg/common_lfsr_sequences_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_pkg_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_pkg/dp_stream_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_pkg_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -447,7 +484,46 @@
     </FileSet>
     <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
       <Filter Type="Srcs"/>
+      <File Path="$PPRDIR/../../casper_mm/tb_common_mem_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_pkg/tb_common_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_pkg_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_fft_pkg.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_fft_r2_pipe.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_tb_fft_r2_pipe.vhd">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../fft_wide_unit_tb.vhdl">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -455,9 +531,8 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="fft_wide_unit_tb"/>
+        <Option Name="TopModule" Val="tb_tb_fft_r2_pipe"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
-        <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="TransportPathDelay" Val="0"/>
         <Option Name="TransportIntDelay" Val="0"/>
         <Option Name="SelectedSimModel" Val="rtl"/>
@@ -466,6 +541,7 @@
         <Option Name="PamSignalDriverFile" Val="xil_bypass_driver"/>
         <Option Name="PamPseudoTop" Val="pseudo_tb"/>
         <Option Name="SrcSet" Val="sources_1"/>
+        <Option Name="NLNetlistMode" Val="funcsim"/>
       </Config>
     </FileSet>
     <FileSet Name="utils_1" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">

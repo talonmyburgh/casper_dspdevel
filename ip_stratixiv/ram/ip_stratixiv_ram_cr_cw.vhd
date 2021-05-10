@@ -38,9 +38,6 @@ USE common_pkg_lib.common_pkg.ALL;
 LIBRARY altera_mf;
 USE altera_mf.all;
 
---LIBRARY technology_lib;
---USE technology_lib.technology_pkg.ALL;
-
 ENTITY ip_stratixiv_ram_cr_cw IS
 	GENERIC(
 		g_adr_w      : NATURAL := 5;
