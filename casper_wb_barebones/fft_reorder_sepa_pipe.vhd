@@ -49,7 +49,7 @@ entity fft_reorder_sepa_pipe is
 		g_ram_primitive      : string  := "auto"
 	);
 	port(
-		clken   : in  std_logic;
+		clken   : in  std_logic := '1';
 		clk     : in  std_logic;
 		rst     : in  std_logic;
 		in_dat  : in  std_logic_vector;
