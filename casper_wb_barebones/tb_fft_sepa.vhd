@@ -27,15 +27,15 @@
 -- > Testbench is selftesting. 
 -- First frame contains always some errors. 
 
-library IEEE, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_ram_lib, astron_mm_lib;
+library IEEE, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.ALL;
-use astron_mm_lib.tb_common_mem_pkg.ALL; 
+use casper_mm_lib.tb_common_mem_pkg.ALL; 
 use dp_pkg_lib.dp_stream_pkg.ALL;
-use astron_diagnostics_lib.diag_pkg.ALL;   
+use casper_diagnostics_lib.diag_pkg.ALL;   
 
 entity tb_fft_sepa is
 end tb_fft_sepa;
@@ -57,7 +57,7 @@ architecture tb of tb_fft_sepa is
   constant c_bst_skip_nof_sync         : natural := 3;
   constant c_nof_accum_per_sync        : natural := 10;
   constant c_bsn_init                  : natural := 32; 
-  constant c_bg_prefix                 : string := "data/to_separate";
+  constant c_bg_prefix                 : string := "to_separate";
   
   signal tb_end    : std_logic := '0';
   signal rst       : std_logic;
@@ -118,7 +118,7 @@ begin
     wait;    
   end process;
 
-  u_block_generator : entity astron_diagnostics_lib.mms_diag_block_gen 
+  u_block_generator : entity casper_diagnostics_lib.mms_diag_block_gen 
   generic map(    
     g_nof_streams        => 1,
     g_buf_dat_w          => c_nof_complex*c_in_dat_w, 
@@ -144,6 +144,7 @@ begin
   -- device under test
   u_dut : entity work.fft_sepa
   port map (
+    clken    => std_logic'('1'),
     clk      => clk,
     rst      => rst,
     in_dat   => in_dat, 

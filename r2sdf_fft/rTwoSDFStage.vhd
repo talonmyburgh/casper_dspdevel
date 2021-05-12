@@ -30,7 +30,7 @@ entity rTwoSDFStage is
 		g_stage          : natural        := 8; 				--! Stage number
 		g_stage_offset   : natural        := 0; 				--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; 				--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_variant        : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
+		g_use_variant    : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
 		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
@@ -51,10 +51,7 @@ entity rTwoSDFStage is
 end entity rTwoSDFStage;
 
 architecture str of rTwoSDFStage is
-
-	-- The amplification factor per stage is 2, therefor bit growth defintion of 1.
-	-- Scale enable is defined by generic.
-    constant c_rtwo_stage_bit_growth : natural := 1;
+	
 	-- counter for ctrl_sel 
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
@@ -153,10 +150,10 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
-			g_variant 	 => g_variant,
-			g_stage   	 => g_stage,
-			g_use_dsp 	 => g_use_dsp,
-			g_lat     	 => g_pipeline.mul_lat
+			g_use_variant	=> g_use_variant,
+			g_stage   	 	=> g_stage,
+			g_use_dsp 	 	=> g_use_dsp,
+			g_lat     	 	=> g_pipeline.mul_lat
 		)
 		port map(
 			clk       => clk,

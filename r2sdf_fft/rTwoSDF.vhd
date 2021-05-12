@@ -26,7 +26,7 @@
 -- Remarks: doc/readme.txt
 
 --! Library: IEEE, common_pkg_lib, casper_requantize_lib
-library ieee, common_pkg_lib, casper_requantize_lib;
+library ieee, common_pkg_lib, casper_requantize_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 use work.twiddlesPkg.all;
@@ -70,6 +70,8 @@ entity rTwoSDF is
 		-- generics for rTwoSDFStage
 		g_variant       : string  := "3DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
+		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		-- pipeline generics
 		g_stage_lat     : natural := 1; --! stage latencies
 		g_weight_lat    : natural := 1;
@@ -82,21 +84,28 @@ entity rTwoSDF is
 		g_ram_primitive : STRING  := "auto"
 	);
 	port(
-		clk     : in  std_logic;        --! Clock input
-		ce      : in  std_logic := '1'; --! Clock enable
-		rst     : in  std_logic := '0'; --! Reset input (resets on high)
-		in_re   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Real input (data width = g_in_dat_w)
-		in_im   : in  std_logic_vector(g_in_dat_w - 1 downto 0); --! Imag input (data width = g_in_dat_w)
-		in_val  : in  std_logic := '1'; --! Input select for delay component (i.e. accept input to delay)
-		out_re  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output real value (data width = g_out_dat_w)
-		out_im  : out std_logic_vector(g_out_dat_w - 1 downto 0); --! Output imag value (data width = g_out_dat_w)
-		out_val : out std_logic         --!Output valid signal (valid when high)
+		clk     	: in  std_logic;        							--! Clock input
+		ce      	: in  std_logic := '1'; 							--! Clock enable
+		rst     	: in  std_logic := '0'; 							--! Reset input (resets on high)
+		in_re   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Real input (data width = g_in_dat_w)
+		in_im   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Imag input (data width = g_in_dat_w)
+		in_val  	: in  std_logic := '1'; 							--! Input select for delay component (i.e. accept input to delay)
+		shiftreg	: in  std_logic_vector(c_nof_stages - 1 downto 0); 	--! Shift register for specifying scaling at each of the r2SDFStages.
+		out_re  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output real value (data width = g_out_dat_w)
+		out_im  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output imag value (data width = g_out_dat_w)
+		ovflw		: out std_logic_vector(c_nof_stages - 1 downto 0);  --! Overflow register for specifying at which stage overflow may have occured.
+		out_val 	: out std_logic         							--!Output valid signal (valid when high)
 	);
 end entity rTwoSDF;
 
 architecture str of rTwoSDF is
 
-	constant c_nof_stages     : natural := ceil_log2(g_nof_points);
+	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
+
+	
+	constant c_pipeline_remove_lsb : natural := 0;
+
 	constant c_stage_offset   : natural := 0; -- In "normal" pipelined fft operation the stage offset is 0
 	constant c_twiddle_offset : natural := 0; -- In "normal" pipelined fft operation the twiddle offset is 0
 
@@ -139,19 +148,22 @@ begin
 				g_stage          => stage,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
-				g_variant        => g_variant,
+				g_use_variant    => g_variant,
 				g_use_dsp        => g_use_dsp,
+				g_ovflw_behav	 => g_ovflw_behav,
+				g_use_round		 => g_use_round, 
 				g_pipeline       => pipeline
 			)
 			port map(
 				clk     => clk,
 				rst     => rst,
-				scale   => sel_a_b(stage <= g_guard_w, '0', '1'), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
+				scale   => shiftreg(stage-1), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
 				in_re   => data_re(stage),
 				in_im   => data_im(stage),
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
+				ovflw	=> ovflw(stage-1),
 				out_val => data_val(stage - 1)
 			);
 	end generate;
@@ -197,18 +209,17 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
+			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => g_stage_dat_w,
 			g_out_dat_w           => g_out_dat_w
 		)
 		port map(
 			clk     => clk,
-			clken   => ce,
 			in_dat  => raw_out_re,
 			out_dat => out_re,
 			out_ovr => open
@@ -218,23 +229,32 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
-			g_pipeline_remove_lsb => 0,
+			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
 			g_in_dat_w            => g_stage_dat_w,
 			g_out_dat_w           => g_out_dat_w
 		)
 		port map(
 			clk     => clk,
-			clken   => ce,
 			in_dat  => raw_out_im,
 			out_dat => out_im,
 			out_ovr => open
 		);
 
+
 	-- Valid Output
-	out_val <= raw_out_val;
+	u_out_val : entity common_components_lib.common_pipeline_sl
+	generic map(
+		g_pipeline => c_pipeline_remove_lsb
+	)
+	port map(
+		rst     => rst,
+		clk     => clk,
+		in_dat  => raw_out_val,
+		out_dat => out_val
+	);
 end str;
