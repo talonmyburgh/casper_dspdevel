@@ -27,16 +27,16 @@
 -- Testbench is selftesting. 
 -- Run testbench for different values of c_seperate and c_reorder. (Recompile is required) 
 
-library IEEE, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_mm_lib, astron_ram_lib;
+library IEEE, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_mm_lib, casper_ram_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.ALL;  
-use astron_mm_lib.tb_common_mem_pkg.ALL; 
+use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
-use astron_diagnostics_lib.diag_pkg.ALL;   
+use casper_diagnostics_lib.diag_pkg.ALL;
 
 entity tb_fft_reorder_sepa_pipe is
 end tb_fft_reorder_sepa_pipe;
@@ -121,7 +121,7 @@ BEGIN
     wait;    
   end process;
   
-  u_block_generator : entity astron_diagnostics_lib.mms_diag_block_gen 
+  u_block_generator : entity casper_diagnostics_lib.mms_diag_block_gen
   generic map(    
     g_nof_streams        => 1,
     g_buf_dat_w          => c_nof_complex*c_in_dat_w, 
