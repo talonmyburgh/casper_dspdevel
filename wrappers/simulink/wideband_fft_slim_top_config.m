@@ -61,7 +61,6 @@ function wideband_fft_slim_top_config(this_block)
   use_round = get_param(wb_fft_blk_parent,'use_round');
   ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
   fifo_primitive = get_param(wb_fft_blk_parent,'fifo_primitive');
-  technology = get_param(wb_fft_blk_parent,'technology');
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
@@ -278,7 +277,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('use_round','String',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
   this_block.addGeneric('fifo_primitive','String',fifo_primitive);
-  this_block.addGeneric('technology','natural',technology);
   
 
   % Add addtional source files as needed.
