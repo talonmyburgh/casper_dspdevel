@@ -12,9 +12,15 @@ with open('./tmp.txt', mode="r") as hierarchyfile:
     hier_lines = hierarchyfile.readlines()
     for i, hline in enumerate(hier_lines):
         # split the full path for each file to get folder_name (used to define library name) and file_name
-        splt_hier = hier_lines[i].strip().split('/')[-2:]
-        # alter lines = this_block.addFileToLibrary(filename = getenv('HDL_DSP_DEVEL')+/foldername/filename, libname = foldername + _lib)
-        hier_lines[i] = "this_block.addFileToLibrary(\'"+ hier_lines[i].strip() + "\',\'"+splt_hier[0]+"_lib\');\n"
+        splt_hier = hier_lines[i].strip().split('/')[-3:]
+        if (splt_hier[0] == "ip_xpm"):
+            libname = "\'" + splt_hier[0] + "_" + splt_hier[1] + "_lib\'"
+            localpath = "filepath \'/../../" + splt_hier[0] + "/" + splt_hier[1] + "/" + splt_hier[2] + "\'" 
+            hier_lines[i] = "this_block.addFileToLibrary([" + localpath + "]," + libname + ");\n"
+        else:
+            libname = "\'" + splt_hier[1] + "_lib\'"
+            localpath = "filepath \'/../../" + splt_hier[1] + "/" + splt_hier[2] + "\'" 
+            hier_lines[i] = "this_block.addFileToLibrary([" + localpath + "]," + libname + ");\n"
 hierarchyfile.close()
 
 # open matlab config file in read mode
