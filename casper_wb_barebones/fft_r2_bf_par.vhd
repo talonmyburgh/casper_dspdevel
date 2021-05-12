@@ -240,23 +240,23 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity r2sdf_fft_lib.rTwoWMul
 		generic map(
-			g_use_dsp    => g_use_dsp,
-			g_variant    => g_use_variant,
-			g_stage      => g_stage,
-			g_lat        => g_pipeline.mul_lat
+			g_use_dsp    	=> g_use_dsp,
+			g_use_variant	=> g_use_variant,
+			g_stage      	=> g_stage,
+			g_lat        	=> g_pipeline.mul_lat
 		)
 		port map(
-			clk       	 => clk,
-			rst       	 => rst,
-			weight_re 	 => weight_re,
-			weight_im 	 => weight_im,
-			in_re     	 => dif_out_re,
-			in_im     	 => dif_out_im,
-			in_val    	 => mul_in_val,
-			in_sel    	 => '1',           -- Always select the multiplier output
-			out_re    	 => mul_out_re,
-			out_im    	 => mul_out_im,
-			out_val   	 => mul_out_val
+			clk       	 	=> clk,
+			rst       	 	=> rst,
+			weight_re 	 	=> weight_re,
+			weight_im 	 	=> weight_im,
+			in_re     	 	=> dif_out_re,
+			in_im     	 	=> dif_out_im,
+			in_val    	 	=> mul_in_val,
+			in_sel    	 	=> '1',           -- Always select the multiplier output
+			out_re    	 	=> mul_out_re,
+			out_im    	 	=> mul_out_im,
+			out_val   	 	=> mul_out_val
 		);
 
 	weight_re <= wRe(wMap(g_element, g_stage));

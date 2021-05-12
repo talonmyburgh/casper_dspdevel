@@ -299,8 +299,6 @@ this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
-this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg_casperunb1.vhd'],'technology_lib');
-this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg_casperxpm.vhd'],'technology_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
