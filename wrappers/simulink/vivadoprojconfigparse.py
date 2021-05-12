@@ -1,8 +1,9 @@
 import os
 import sys
+import glob
 
 # launch vivado in tcl mode and execute tcl script to write out hierarchy to txt file
-vivcommand = 'C:\Xilinx\Vivado\2020.1\bin\vivado.bat -mode batch -source getprojhierarchy.tcl -tclargs '+sys.argv[1]
+vivcommand = os.path.abspath('C:/Xilinx/Vivado/2020.1/bin/vivado.bat') +' -mode batch -source getprojhierarchy.tcl -tclargs '+os.path.abspath(sys.argv[1])
 os.system(vivcommand)
 
 # open hierarchy txt file
@@ -13,8 +14,7 @@ with open('./tmp.txt', mode="r") as hierarchyfile:
         # split the full path for each file to get folder_name (used to define library name) and file_name
         splt_hier = hier_lines[i].strip().split('/')[-2:]
         # alter lines = this_block.addFileToLibrary(filename = getenv('HDL_DSP_DEVEL')+/foldername/filename, libname = foldername + _lib)
-        hier_lines[i] = "this_block.addFileToLibrary([filepath \'/../../" + splt_hier[0] + \
-            "/" + splt_hier[1] + "\'],\'"+splt_hier[0]+"_lib\');\n"
+        hier_lines[i] = "this_block.addFileToLibrary(\'"+ hier_lines[i].strip() + "\',\'"+splt_hier[0]+"_lib\');\n"
 hierarchyfile.close()
 
 # open matlab config file in read mode
@@ -40,10 +40,14 @@ with open(sys.argv[2], mode='r') as mlibfile:
 mlibfile.close()
 
 # open config file in write mode
-with open(sys.argv[2], mode='w') as mlibfile:
+with open(os.path.abspath(sys.argv[2]), mode='w') as mlibfile:
     if lines:
         # writeout
         mlibfile.writelines(lines)
-os.system('rm .\tmp.txt')
-os.system('rm .\vivado*.jou')
-os.system('rm .\vivado*.log')
+
+filesToRemove = ['./tmp.txt'] + glob.glob('./vivado*.jou') + glob.glob('./vivado*.log')
+for rmFiles in filesToRemove:
+    try:
+        os.remove(rmFiles)
+    except:
+        print("Error while deleting file : ", rmFiles)
