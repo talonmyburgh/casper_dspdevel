@@ -72,7 +72,7 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
 
     %Generate coefficients mem file for the filter:
     pyscriptloc = [filepathscript , '/fil_ppf_create.py'];
-    command = sprintf("python %s -g 0 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth)';
+    command = sprintf("python %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth)';
     [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
     
     if(status ~= 0)
@@ -80,10 +80,8 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     end
     
     %Update fil_pkg.vhd:
-    memstrngs = strtrim(replace(replace(cmdout,"'",'"'),["[","]"],["(",")"]));
-    instances = strfind(memstrngs,'"');
-    i_len = instances(2)-instances(1)-1;
-    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, memstrngs,i_len);
+    coef_filepath_stem = strtrim(cmdout);
+    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem);
 end
 
 function chararr = mknprts(wb_factor)
@@ -118,14 +116,13 @@ function achararr = mkarch(wb_factor)
     end
 end
 
-function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, memstrings,init_param_len)
+function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem)
     insertloc = 7;
     vhdlgenfileloc = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
     lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
     linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
     linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
-    linefour = sprintf("type t_coefs_init_param is array (0 to %d -1) of string(0 to %d-1);",wb_factor*nof_taps, init_param_len);
-    linefive = sprintf("constant c_coefs_init_param : t_coefs_init_param := %s;",memstrings);
+    linefour = sprintf("CONSTANT c_coefs_file : string := ""%s"";", coef_filepath_stem);
     fid = fopen(vhdlgenfileloc,'r');
     if fid==-1
         error("Cannot open vhdl pkg file");
@@ -142,8 +139,7 @@ function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb
     fprintf(fid,'%s\n',linetwo);
     fprintf(fid,'%s\n',linethree);
     fprintf(fid,'%s\n',linefour);
-    fprintf(fid,'%s\n',linefive);
-    for jj = insertloc + 6 : length(lines)
+    for jj = insertloc + 5 : length(lines)
         fprintf(fid,'%s\n',lines{jj});
     end
     fclose(fid);
