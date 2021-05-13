@@ -178,7 +178,6 @@ begin
       g_technology    =>     g_technology,
       g_ram           =>     c_coef_mem,
       g_init_file     =>     sel_a_b(g_coefs_file_prefix = "UNUSED", g_coefs_file_prefix, g_coefs_file_prefix & "_" & NATURAL'IMAGE(g_file_index_arr(I)) & c_coefs_postfix),
-      g_init_param    =>     sel_a_b(g_coefs_file_prefix = "UNUSED", c_coefs_init_param(I),""), --Here since we are not using coefficient memory files, it is assumed we're using constants.
       g_ram_primitive =>     g_ram_primitive
     )
     port map
