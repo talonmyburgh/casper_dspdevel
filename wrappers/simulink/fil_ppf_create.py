@@ -114,7 +114,7 @@ def run(argv):
             pfir.name = os.path.splitext(pfir.filename)[0]
         elif opt == '-o':
             if arg == '':
-                pfir.outdestfolder = os.path.dirname(os.path.realpath(__file__))
+                pfir.outdestfolder = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
             else:
                 pfir.outdestfolder = os.path.abspath(os.path.join(os.getcwd(), arg))
         elif opt == '-g':
@@ -159,8 +159,9 @@ def run(argv):
             pfir.outfilename = pfir.infilename.split(
                 '.')[0] + '_wb%d' % pfir.wb_factor
         else:
-            pfir.outfilename = pathforstore +"/pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
+            pfir.outfilename = os.path.join(pathforstore, "pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
                 pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
+            )
 
     def fetchdatcoeffs(pfir):
         c_nof_files = pfir.wb_factor * pfir.nof_taps
