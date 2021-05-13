@@ -114,7 +114,7 @@ def run(argv):
             pfir.name = os.path.splitext(pfir.filename)[0]
         elif opt == '-o':
             if arg == '':
-                pfir.outdestfoler = os.path.dirname(os.path.realpath(__file__))
+                pfir.outdestfolder = os.path.dirname(os.path.realpath(__file__))
             else:
                 pfir.outdestfolder = os.path.abspath(os.path.join(os.getcwd(), arg))
         elif opt == '-g':
