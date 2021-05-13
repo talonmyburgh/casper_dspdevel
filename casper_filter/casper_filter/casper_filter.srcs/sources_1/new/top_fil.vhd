@@ -10,15 +10,15 @@ library IEEE, common_pkg_lib, casper_ram_lib, casper_mm_lib;
     entity top_fil is generic (
     g_big_endian_wb_in  : boolean            := false;              -- input endian
     g_big_endian_wb_out : boolean            := false;              -- output endian
-    g_in_dat_w          : natural            := 12;                   -- input data width
-    g_coef_dat_w        : natural            := 16;                  -- coefficient data width
-    g_out_dat_w         : natural            := 14;                  -- output data width
-    g_wb_factor         : natural            := 4;                  -- wideband factor
-    g_nof_chan          : natural            := 0;                  -- number of channels
-    g_nof_bands         : natural            := 1024;               -- number of bands
-    g_nof_taps          : natural            := 4;                  -- number of taps
-    g_nof_streams       : natural            := 1;                  -- number of streams
-    g_backoff_w         : natural            := 0;                  -- backoff width
+    g_in_dat_w          : natural            := coef_dat_w;         -- input data width
+    g_coef_dat_w        : natural            := in_dat_w;           -- coefficient data width
+    g_out_dat_w         : natural            := out_dat_w;          -- output data width
+    g_wb_factor         : natural            := wb_factor;          -- wideband factor
+    g_nof_chan          : natural            := nof_chan;           -- number of channels
+    g_nof_bands         : natural            := nof_bands;          -- number of bands
+    g_nof_taps          : natural            := nof_taps;           -- number of taps
+    g_nof_streams       : natural            := nof_streams;        -- number of streams
+    g_backoff_w         : natural            := backoff_w;          -- backoff width
     g_technology        : natural            := 0;                  -- 0 for Xilinx, 1 for Altera
     g_ram_primitive     : string             := "auto");            -- ram primitive function for use
     port(
