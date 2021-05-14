@@ -1931,8 +1931,8 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		IF (a_sign >= 0 xor b_sign >= 0) THEN
 			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
-		ELSIF (sum_a_b_sign >= 0 xor (a_sign >= 0 and b_sign >= 0)) THEN 
-			RETURN '1';	-- overflow has occured - note wrapping
+		ELSIF (sum_a_b_sign >= 0 xor a_sign >= 0) THEN -- signs are same so use either a_sign|b_sign
+			RETURN '1';	-- overflow has occured - note sum wrapped to a different sign than inputs
 		ELSE 
 			RETURN '0';
 		END IF;
