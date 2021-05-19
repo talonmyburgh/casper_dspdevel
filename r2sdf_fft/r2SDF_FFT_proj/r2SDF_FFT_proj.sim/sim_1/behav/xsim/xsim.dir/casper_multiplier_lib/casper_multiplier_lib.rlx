@@ -1,9 +1,0 @@
-0.6
-2019.1
-May 24 2019
-14:51:52
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/common_complex_mult.vhd,1593526466,vhdl,/home/talon/Documents/CASPERWORK/casper_dspdevel/r2sdf_fft/rTwoWMul.vhd,,,common_complex_mult,,,,,,,,
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/ip_cmult_rtl_3dsp.vhd,1593801173,vhdl,,,,ip_cmult_rtl_3dsp,,,,,,,,
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/ip_cmult_rtl_4dsp.vhd,1593100599,vhdl,,,,ip_cmult_rtl_4dsp,,,,,,,,
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd,1594044390,vhdl,/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/common_complex_mult.vhd,,,tech_complex_mult,,,,,,,,
-/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_mult_component.vhd,1593447154,vhdl,/home/talon/Documents/CASPERWORK/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd,,,tech_mult_component_pkg,,,,,,,,

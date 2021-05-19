@@ -61,7 +61,6 @@ function wideband_fft_slim_top_config(this_block)
   use_round = get_param(wb_fft_blk_parent,'use_round');
   ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
   fifo_primitive = get_param(wb_fft_blk_parent,'fifo_primitive');
-  technology = get_param(wb_fft_blk_parent,'technology');
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
@@ -278,7 +277,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('use_round','String',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
   this_block.addGeneric('fifo_primitive','String',fifo_primitive);
-  this_block.addGeneric('technology','natural',technology);
   
 
   % Add addtional source files as needed.
@@ -300,13 +298,15 @@ this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vh
 this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_component_pkg.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_rl_decrease.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_rd.vhd'],'casper_fifo_lib');
-this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_component_pkg.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_sc.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_sc.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
@@ -317,16 +317,15 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
-this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_r2_bf_par.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_r2_par.vhd'],'casper_wb_barebones_lib');
@@ -339,12 +338,12 @@ this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_r2_pipe.vh
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_sepa_wide.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_r2_wide.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_wide_unit_control.vhd'],'casper_wb_barebones_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_3dsp.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_cmult_rtl_4dsp.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../casper_fifo/ip_xilinx_fifo_sc.vhd'],'casper_fifo_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
-this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_wide_unit.vhd'],'casper_wb_barebones_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd'],'ip_xpm_mult_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd'],'ip_xpm_mult_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd'],'ip_xpm_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
 return;
 end
 % ------------------------------------------------------------

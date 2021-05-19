@@ -151,6 +151,9 @@ architecture tb of rTwoSDF_tb is
 	signal gold_re        : integer;
 	signal gold_im        : integer;
 
+	signal shiftreg		  : std_logic_vector(c_nof_stages -1 downto 0) := "1111111100";
+	signal ovflw		  : std_logic_vector(c_nof_stages -1 downto 0);
+
 begin
 
 	clk    <= (not clk) or tb_end after c_clk_period / 2;
@@ -253,15 +256,17 @@ begin
 			g_nof_points  => g_nof_points
 		)
 		port map(
-			clk     => clk,
-			ce      => ce,
-			rst     => rst,
-			in_re   => in_re,
-			in_im   => in_im,
-			in_val  => in_val,
-			out_re  => out_re,
-			out_im  => out_im,
-			out_val => out_val
+			clk     	=> clk,
+			ce      	=> ce,
+			rst     	=> rst,
+			in_re   	=> in_re,
+			in_im   	=> in_im,
+			in_val  	=> in_val,
+			shiftreg 	=> shiftreg,
+			out_re  	=> out_re,
+			out_im  	=> out_im,
+			ovflw		=> ovflw,
+			out_val 	=> out_val
 		);
 
 	-- Read golden file with the expected DUT output
@@ -320,9 +325,9 @@ begin
 		if rising_edge(clk) then
 			if out_val = '1' and gold_index <= gold_index_max then
 				-- only write when out_val='1', because then the file is independent of cycles with invalid out_dat
-				assert out_sync = gold_sync report "Output sync error" severity failure;
-				assert TO_SINT(out_re) = gold_re report "Output real data error" severity failure;
-				assert TO_SINT(out_im) = gold_im report "Output imag data error" severity failure;
+				assert out_sync = gold_sync report "Output sync error";
+				assert TO_SINT(out_re) = gold_re report "Output real data error";
+				assert TO_SINT(out_im) = gold_im report "Output imag data error";
 			end if;
 		end if;
 	end process;
