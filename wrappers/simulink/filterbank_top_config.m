@@ -44,7 +44,7 @@ function filterbank_top_config(this_block)
   ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
   %Generate the top level vhdl file as well as the mem files. Returned is the location of the mem files for adding to the project.
-  mem_files = top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
+  top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
       str2double(fwidth),str2double(technology),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
   %Input signals
