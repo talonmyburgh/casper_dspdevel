@@ -75,7 +75,7 @@ entity fil_ppf_single is
     g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
-    g_coefs_file_prefix : string             := "./pfir_coeffs_hann_t4_p1024_b16_wb4";    -- Relative path to the mem files that contain the initial data for the coefficients memories
+    g_coefs_file_prefix : string             := c_coefs_file;    -- Relative path to the mem files that contain the initial data for the coefficients memories
     g_technology        : natural            := 0;
     g_ram_primitive     : string             := "auto" 
   );                                                                    
@@ -133,9 +133,10 @@ begin
   ---------------------------------------------------------------
   gen_taps_mems : for I in 0 to g_fil_ppf.nof_streams-1 generate
     u_taps_mem : entity casper_ram_lib.common_ram_r_w                                                          
-    generic map (                                                                                     
-      g_ram       => c_taps_mem,                                                                           
-      g_init_file => "UNUSED",     -- assume block RAM gets initialized to '0' by default in simulation
+    generic map (
+      g_technology    => g_technology,                                                                                     
+      g_ram           => c_taps_mem,                                                                           
+      g_init_file     => "UNUSED",     -- assume block RAM gets initialized to '0' by default in simulation
       g_ram_primitive => g_ram_primitive
     )                                                                                               
     port map (                                                                                                                                                                     
@@ -186,7 +187,7 @@ begin
       clken =>      ce,
       wr_en =>      '0',
       wr_dat =>     (others =>'0'),
-      wr_adr =>     open,
+      wr_adr =>     (others =>'0'),
       rd_adr =>     coef_rdaddr,
       rd_en =>      '1',
       rd_dat =>     coef_vec((I+1)*c_coef_mem_data_w-1 downto I*c_coef_mem_data_w),

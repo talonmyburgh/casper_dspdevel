@@ -120,14 +120,6 @@ function filterbank_top_config(this_block)
 
   %Add files:
   this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
-  %add mem files
-  if strcmp(technology, '0')
-    ext = 'mem';
-  elseif strcmp(technology,'1')
-    ext = 'mif';
-  else
-    error('Invalid technology option provided. Options are: 0 or 1.');
-  end
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');

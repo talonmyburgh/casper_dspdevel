@@ -37,7 +37,7 @@ END tb_tb_fil_ppf_single;
 ARCHITECTURE tb OF tb_tb_fil_ppf_single IS
   
   CONSTANT c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
-  CONSTANT c_prefix           : string  := "hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_prefix           : string  := c_coefs_file;
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
   
