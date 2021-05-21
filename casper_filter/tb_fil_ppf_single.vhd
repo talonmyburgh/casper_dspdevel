@@ -129,16 +129,16 @@
 --   > observe out_dat in analogue format in Wave window
 --   > testbench is selftesting.
 --
-library ieee, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_ram_lib, astron_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
+-- use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fil_pkg.all;
 
@@ -316,7 +316,7 @@ begin
   begin
     for J in 0 to g_fil_ppf.nof_taps-1 loop
       -- Read coeffs per tap from MIF file
-      proc_common_read_mif_file(c_mif_file_prefix & "_" & integer'image(J) & ".mif", mif_coefs_arr);
+      proc_common_read_mif_file(c_mif_file_prefix & "_" & integer'image(J) & ".mem", mif_coefs_arr);
       wait for 1 ns;
       -- Expand the channels (for one stream)
       for I in 0 to g_fil_ppf.nof_bands-1 loop
@@ -338,8 +338,8 @@ begin
       v_mif_base  := J*c_mif_coef_mem_span;
       v_coef_offset := g_fil_ppf.nof_bands*(J+1)-1;
       for I in 0 to c_nof_bands_per_mif-1 loop
-        proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
-        proc_mem_mm_bus_rd_latency(1, clk);
+--        proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
+--        proc_mem_mm_bus_rd_latency(1, clk);
         v_coef_index := v_coef_offset - I;
         read_coefs_arr(v_coef_index) <= TO_SINT(ram_coefs_miso.rddata(g_fil_ppf.coef_dat_w-1 DOWNTO 0));
       end loop;
@@ -376,12 +376,13 @@ begin
     g_coefs_file_prefix => c_mif_file_prefix
   )
   port map (
-    dp_clk         => clk,
-    dp_rst         => rst,
-    mm_clk         => clk,
-    mm_rst         => rst,
-    ram_coefs_mosi => ram_coefs_mosi,
-    ram_coefs_miso => ram_coefs_miso,
+    clk         => clk,
+    rst         => rst,
+    ce          => '1',
+    -- mm_clk         => clk,
+    -- mm_rst         => rst,
+    -- ram_coefs_mosi => ram_coefs_mosi,
+    -- ram_coefs_miso => ram_coefs_miso,
     in_dat         => in_dat,
     in_val         => in_val,
     out_dat        => out_dat,
