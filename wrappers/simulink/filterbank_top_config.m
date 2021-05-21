@@ -128,10 +128,6 @@ function filterbank_top_config(this_block)
   else
     error('Invalid technology option provided. Options are: 0 or 1.');
   end
-  fprintf([mem_files sprintf('_%d.%s',0,ext) '\n'])
-  for i=0:(wb_factor*nof_taps -1)
-    this_block.addFile([mem_files sprintf('_%d.%s',i,ext)]);
-  end
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
