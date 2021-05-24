@@ -125,6 +125,9 @@ architecture rtl of fil_ppf_single is
   signal taps_mem_in_vec    : std_logic_vector(c_taps_mem_data_w*g_fil_ppf.nof_streams-1 downto 0);
   signal coef_rdaddr        : std_logic_vector(c_coef_mem_addr_w-1 downto 0);     
   signal coef_vec           : std_logic_vector(c_coef_mem_data_w*g_fil_ppf.nof_taps-1 downto 0);
+
+  signal wr_dat           :std_logic_vector(c_coef_mem_data_w-1 DOWNTO 0) := (others => '0');
+  signal wr_adr           :std_logic_vector(c_coef_mem_addr_w-1 DOWNTO 0) := (others => '0');
                                                                                                                  
 begin 
 
@@ -186,8 +189,8 @@ begin
       clk =>        clk,
       clken =>      ce,
       wr_en =>      '0',
-      wr_dat =>     (others =>'0'),
-      wr_adr =>     (others =>'0'),
+      wr_dat =>     wr_dat,
+      wr_adr =>     wr_adr,
       rd_adr =>     coef_rdaddr,
       rd_en =>      '1',
       rd_dat =>     coef_vec((I+1)*c_coef_mem_data_w-1 downto I*c_coef_mem_data_w),
@@ -199,18 +202,20 @@ begin
   -- gen_coef_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
   --   u_coef_mem : entity casper_ram_lib.common_ram_crw_crw
   --   generic map (
+  --     g_technology => g_technology,
   --     g_ram        => c_coef_mem,                                                  
-  --     g_init_file  => g_coefs_file    
+  --     g_init_file  => g_coefs_file_prefix,
+  --     g_ram_primitive => g_ram_primitive    
   --   )
   --   port map (
   --     -- MM side
-  --     clk_a     => mm_clk,
-  --     wr_en_a   => ram_coefs_mosi_arr(I).wr,
-  --     wr_dat_a  => ram_coefs_mosi_arr(I).wrdata(g_fil_ppf.coef_dat_w-1 downto 0),
-  --     adr_a     => ram_coefs_mosi_arr(I).address(c_coef_mem.adr_w-1 downto 0),
-  --     rd_en_a   => ram_coefs_mosi_arr(I).rd,
-  --     rd_dat_a  => ram_coefs_miso_arr(I).rddata(g_fil_ppf.coef_dat_w-1 downto 0),
-  --     rd_val_a  => ram_coefs_miso_arr(I).rdval,
+  --     clk_a     => '0',                                                                     --mm_clk,
+  --     wr_en_a   => '0',                                                                     --ram_coefs_mosi_arr(I).wr,
+  --     wr_dat_a  => (others=>'0'),                                                           --ram_coefs_mosi_arr(I).wrdata(g_fil_ppf.coef_dat_w-1 downto 0),
+  --     adr_a     => (others=>'0'),                                                           --ram_coefs_mosi_arr(I).address(c_coef_mem.adr_w-1 downto 0),
+  --     rd_en_a   => '0',                                                                     --ram_coefs_mosi_arr(I).rd,
+  --     rd_dat_a  => (others=>'0'),                                                           --ram_coefs_miso_arr(I).rddata(g_fil_ppf.coef_dat_w-1 downto 0),
+  --     rd_val_a  => '0',                                                                     --ram_coefs_miso_arr(I).rdval,
   --     -- Datapath side
   --     clk_b     => dp_clk,
   --     wr_en_b   => '0',
