@@ -6,12 +6,12 @@ package fil_pkg is
 
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
 CONSTANT in_dat_w : natural := 8;
-CONSTANT out_dat_w : natural := 8;
-CONSTANT coef_dat_w : natural :=8;
-CONSTANT c_coefs_file : string := "D:\\Development\\OpenSource\\casper_dspdevel\\wrappers\\simulink\\hex\\pfir_coeffs_hanning_t2_p128_b8_wb1";
+CONSTANT out_dat_w : natural := 10;
+CONSTANT coef_dat_w : natural :=12;
+CONSTANT c_coefs_file : string := "C:\\Users\\mybur\\Work\\filter\\src\\hex\\mem\\hex\\run_pfir_coeff_m_incrementing_8taps_64points_16b_wb1";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT wb_factor: natural :=2;
+CONSTANT wb_factor: natural :=1;
 CONSTANT nof_taps : natural :=4; 
 CONSTANT nof_chan : natural := 0;
 CONSTANT nof_bands : natural := 256;
