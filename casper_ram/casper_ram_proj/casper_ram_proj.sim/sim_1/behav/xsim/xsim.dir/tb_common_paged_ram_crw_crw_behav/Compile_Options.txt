@@ -1,1 +1,0 @@
--wto "6056f71df73a47be873e49aa656d4c01" --incr --debug "typical" --relax --mt "8" -L "common_pkg_lib" -L "casper_ram_lib" -L "common_components_lib" -L "secureip" -L "xpm" --snapshot "tb_common_paged_ram_crw_crw_behav" "casper_ram_lib.tb_common_paged_ram_crw_crw" -log "elaborate.log" 
