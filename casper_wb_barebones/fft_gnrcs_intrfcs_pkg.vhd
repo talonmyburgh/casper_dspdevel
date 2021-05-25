@@ -6,10 +6,10 @@ USE common_pkg_lib.common_pkg.ALL;
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
 CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
-CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
-CONSTANT out_dat_w      : natural :=10;       -- = 13, number of output bits
-CONSTANT stage_dat_w    : natural :=14;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 64;       -- = 1024, N point FFT
+CONSTANT in_dat_w       : natural :=18;       -- = 8,  number of input bits
+CONSTANT out_dat_w      : natural :=18;       -- = 13, number of output bits
+CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT nof_points     : natural := 8192;       -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -25,7 +25,7 @@ CONSTANT out_gain_w             : natural :=0;       -- = 0, output gain factor 
 CONSTANT guard_w                : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
 --   12.3.2], therefore use input guard_w = 2.
-CONSTANT guard_enable   : boolean :=true;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
+CONSTANT guard_enable   : boolean :=false;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
 --   doing the input guard and par fft section doing the output compensation)
 
