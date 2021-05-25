@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/casper_dspdevel_functional/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.xpr">
+<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="da9415ca2ef24a008afeb622337b604c"/>
@@ -123,20 +123,6 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../technology/technology_select_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="technology_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperunb1.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="technology_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperxpm.vhd">
         <FileInfo>
           <Attr Name="Library" Val="technology_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>

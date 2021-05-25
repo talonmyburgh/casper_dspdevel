@@ -26,7 +26,7 @@
  
 clear all;  close all;  clc;
 j=  1i; 
-K=  12;   % N= pow2(K) point FFT
+K=  14;   % N= pow2(K) point FFT
 B=  18;   % B= twiddle bit width
 N=  2.^K;
 
@@ -45,12 +45,12 @@ sdfWi = Wi(1:(N/2),2)*S_;   % Wi scaled W_0 to W_(N/2)
 for ii=1:size(sdfWr,1)
   wRe(ii,:)= dec2bit(sdfWr(ii),B);
   wIm(ii,:)= dec2bit(sdfWi(ii),B);
-end;
+end
 
 'dec to binary: 2s  complement'
 for ii=1:size(wRe,1)
   sdfWr_true(ii,1)= bin2dec(wRe(ii,:));
-end;
+end
 
 % cross checking realTwiddle vs (realTw->bin->obtained realTw)
   sdfWr_true((N/4)+2:N/2,1)=sdfWr_true((N/4)+2:N/2) - 2*S_;
@@ -61,7 +61,7 @@ wMap=getTwiddleMap(N)+1;   % for R2SDF
 if(1)
   'writing vhdl file'  
   writeVhdl(wRe, wIm, wMap);  % write weights and index into VHDL
-end;
+end
 
 if(0)
   'test signal (shifted impulse reponse)'
@@ -72,4 +72,4 @@ if(0)
   plot((x),'K-'); hold on;
   plot(real(((Wr)*x')),'B*-')
   plot(imag(((Wi)*x')),'r*-')
-end;
+end

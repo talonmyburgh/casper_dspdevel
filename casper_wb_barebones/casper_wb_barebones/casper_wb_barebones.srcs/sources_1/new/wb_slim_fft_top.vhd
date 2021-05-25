@@ -31,7 +31,7 @@ entity wideband_fft_top is
 		rst : in std_logic := '0';
 		in_sync : in std_logic := '1';
 		in_valid : in std_logic := '1';
-		in_shiftreg : in std_logic_vector(c_stages -1 DOWNTO 0) := "1111111111";
+		in_shiftreg : in std_logic_vector(c_stages -1 DOWNTO 0) := "1111111111111";
         out_sync : out std_logic;
         out_valid : out std_logic;
         out_ovflw : out STD_LOGIC_VECTOR(c_stages -1 DOWNTO 0);
