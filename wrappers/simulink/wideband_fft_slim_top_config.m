@@ -42,7 +42,6 @@ function wideband_fft_slim_top_config(this_block)
   use_reorder = get_param(wb_fft_blk_parent,'use_reorder');
   use_fft_shift = get_param(wb_fft_blk_parent,'use_fft_shift');
   use_separate = get_param(wb_fft_blk_parent,'use_separate');
-  nof_chan = get_param(wb_fft_blk_parent,'nof_chan');
   wb_factor = str2double(get_param(wb_fft_blk_parent,'wb_factor'));
   if wb_factor<1
        error("Cannot have wideband factor <1"); 
@@ -261,7 +260,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.addGeneric('use_reorder','boolean',bool2str(use_reorder));
   this_block.addGeneric('use_fft_shift','boolean',bool2str(use_fft_shift));
   this_block.addGeneric('use_separate','boolean',bool2str(use_separate));
-  this_block.addGeneric('nof_chan','natural',nof_chan);
   this_block.addGeneric('wb_factor','natural',num2str(wb_factor));
   this_block.addGeneric('twiddle_offset','natural',twiddle_offset);
   this_block.addGeneric('nof_points','natural',nof_points);
