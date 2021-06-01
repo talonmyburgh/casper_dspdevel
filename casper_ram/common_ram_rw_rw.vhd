@@ -28,7 +28,6 @@ ENTITY common_ram_rw_rw IS
 		g_technology     : NATURAL := 0;
 		g_ram            : t_c_mem := c_mem_ram;
 		g_init_file      : STRING  := "UNUSED";
-		g_init_param	 : STRING  := "";
 		g_true_dual_port : BOOLEAN := TRUE;
 		g_ram_primitive  : STRING  := "auto"
 	);
@@ -61,7 +60,6 @@ BEGIN
 			g_technology     => g_technology,
 			g_ram            => g_ram,
 			g_init_file      => g_init_file,
-			g_init_param	 => g_init_param,
 			g_true_dual_port => g_true_dual_port,
 			g_ram_primitive  => g_ram_primitive
 		)
