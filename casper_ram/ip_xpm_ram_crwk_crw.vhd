@@ -21,7 +21,6 @@ ENTITY ip_xpm_ram_crwk_crw IS
 		g_nof_words_b   : NATURAL := 2**7;
 		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 		g_init_file     : STRING  := "UNUSED";
-		g_init_param	: STRING  := "";	--used to pass data to BRAM explicitely (not via a file)
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
@@ -68,7 +67,7 @@ begin
 			CLOCKING_MODE           => "independant_clock", -- String
 			ECC_MODE                => "no_ecc", -- String
 			MEMORY_INIT_FILE        => c_initfile, -- String
-			MEMORY_INIT_PARAM       => g_init_param, -- String
+			MEMORY_INIT_PARAM       => "0", -- String
 			MEMORY_OPTIMIZATION     => "true", -- String
 			MEMORY_PRIMITIVE        => g_ram_primitive, -- String
 			MEMORY_SIZE             => c_memsize, -- DECIMAL

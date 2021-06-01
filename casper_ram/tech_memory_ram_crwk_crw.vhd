@@ -41,7 +41,6 @@ ENTITY tech_memory_ram_crwk_crw IS      -- support different port data widths an
 		g_nof_words_b   : NATURAL := 2**7;
 		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 		g_init_file     : STRING  := "UNUSED";
-		g_init_param	: STRING  := "";
 		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
@@ -76,7 +75,6 @@ BEGIN
 				g_nof_words_b   => g_nof_words_b,
 				g_rd_latency    => g_rd_latency,
 				g_init_file     => g_init_file,
-				g_init_param	=> g_init_param,
 				g_ram_primitive => g_ram_primitive
 			)
 			port map(

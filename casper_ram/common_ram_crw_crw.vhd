@@ -28,7 +28,6 @@ ENTITY common_ram_crw_crw IS
 		g_technology     : NATURAL := 0; --0 for Xilinx, 1 for Alterra
 		g_ram            : t_c_mem := c_mem_ram;
 		g_init_file      : STRING  := "UNUSED";
-		g_init_param	 : STRING  := "";
 		g_true_dual_port : BOOLEAN := TRUE;
 		g_ram_primitive  : STRING  := "auto"
 	);
@@ -83,7 +82,6 @@ BEGIN
 				g_nof_words     => g_ram.nof_dat,
 				g_rd_latency    => c_rd_latency,
 				g_init_file     => g_init_file,
-				g_init_param	=> g_init_param,
 				g_ram_primitive => g_ram_primitive
 			)
 			PORT MAP(
@@ -110,7 +108,6 @@ BEGIN
 				g_dat_w         => g_ram.dat_w,
 				g_nof_words     => g_ram.nof_dat,
 				g_init_file     => g_init_file,
-				g_init_param	=> g_init_param,
 				g_ram_primitive => g_ram_primitive
 			)
 			PORT MAP(

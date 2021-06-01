@@ -148,7 +148,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_nof_words     : NATURAL;
 			g_rd_latency    : NATURAL;
 			g_init_file     : STRING;
-			g_init_param	: STRING;
 			g_ram_primitive : STRING
 		);
 		port(
@@ -171,7 +170,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_nof_words     : NATURAL;
 			g_rd_latency    : NATURAL;
 			g_init_file     : STRING;
-			g_init_param	: STRING;
 			g_ram_primitive : STRING
 		);
 		port(
@@ -202,7 +200,6 @@ PACKAGE tech_memory_component_pkg IS
 			g_nof_words_b   : NATURAL;
 			g_rd_latency    : NATURAL;
 			g_init_file     : STRING;
-			g_init_param	: STRING;
 			g_ram_primitive : STRING
 		);
 		port(
