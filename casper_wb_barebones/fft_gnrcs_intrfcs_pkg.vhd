@@ -9,7 +9,7 @@ CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
 CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=16;       -- = 13, number of output bits
 CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 64;       -- = 1024, N point FFT
+CONSTANT nof_points     : natural := 128;       -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
