@@ -107,6 +107,7 @@ BEGIN
 				g_adr_w         => g_ram.adr_w,
 				g_dat_w         => g_ram.dat_w,
 				g_nof_words     => g_ram.nof_dat,
+				g_rd_latency    => c_rd_latency,
 				g_init_file     => g_init_file,
 				g_ram_primitive => g_ram_primitive
 			)
