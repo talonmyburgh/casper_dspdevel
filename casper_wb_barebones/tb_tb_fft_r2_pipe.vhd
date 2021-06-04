@@ -38,7 +38,7 @@ END tb_tb_fft_r2_pipe;
 
 ARCHITECTURE tb OF tb_tb_fft_r2_pipe IS
   
---  CONSTANT c_fft_two_real                        : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
+--CONSTANT c_fft_two_real                        : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
 --  CONSTANT c_fft_two_real_more_channels          : t_fft := ( true, false,  true, 1, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
   CONSTANT c_fft_complex                         : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
 --  CONSTANT c_fft_complex_more_channels           : t_fft := ( true, false, false, 1, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
@@ -50,7 +50,7 @@ ARCHITECTURE tb OF tb_tb_fft_r2_pipe IS
   CONSTANT c_diff_margin    : natural := 2;
   
   -- Real input  
-  CONSTANT c_impulse_chirp  : string := "data/run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
+  CONSTANT c_impulse_chirp  : string := "run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
   CONSTANT c_sinusoid_chirp : string := "data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat";         -- 25600 lines
   CONSTANT c_noise          : string := "data/run_pfft_m_noise_8b_128points_16b.dat";                  --  1280 lines
   CONSTANT c_dc_agwn        : string := "data/run_pfft_m_dc_agwn_8b_128points_16b.dat";                --  1280 lines
@@ -107,7 +107,7 @@ BEGIN
 --  u_rnd_two_real_channels : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real_more_channels, c_diff_margin, c_noise,           1280, c_dc_agwn,        1280, c_unused, 0,  1280, TRUE);
   
   -- Complex input data
-  u_act_complex_chirp              : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex,                         c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800, 12800, FALSE);
+ u_act_complex_chirp              : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex,                         c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800, 12800, FALSE);
 --  u_act_complex_channels           : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex_more_channels,           c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800,  1280, FALSE);
 --  u_act_complex_fft_shift_chirp    : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex_fft_shift,               c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800, 12800, FALSE);
 --  u_act_complex_fft_shift_channels : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex_fft_shift_more_channels, c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800,  1280, FALSE);
