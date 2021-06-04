@@ -314,7 +314,8 @@ begin
 		-- Modulo N addressing is done with the TO_UVEC function.
 		rd_adr_up   <= TO_UVEC(r.count_up, c_adr_points_w + 1); -- eg.    0 .. 512
 		rd_adr_down <= TO_UVEC(r.count_down, c_adr_points_w + 1); -- eg. 1024 .. 513, use 1 bit more to avoid truncation warning on 1024 ^= 0
-		rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
+		rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else 
+					TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
 		-- The data that is read from the memory is fed to the separate block
 		-- that performs the 2nd stage of separation. The output of the 
 		-- separate unit is connected to the output of rtwo_order_separate unit. 
