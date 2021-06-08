@@ -306,13 +306,13 @@ def run(argv):
 
     if pfir.ext == 'mem' and pfir.gen_files:
         writemem(pfir, pfir_coefs_flip)
-        return escape(pfir.outfilename)
+        return escape(pfir.outfilename.replace('\\', '/'))
     elif pfir.ext == 'mem' and not pfir.gen_files:
         coefs = writemem(pfir, pfir_coefs_flip)
         return coefs
     elif pfir.ext == 'mif':
         writemif(pfir, pfir_coefs_flip)
-        return pfir.outfilename
+        return pfir.outfilename.replace('\\', '/')
     else:
         None
 
