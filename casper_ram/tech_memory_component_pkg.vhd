@@ -220,6 +220,23 @@ PACKAGE tech_memory_component_pkg IS
 		);
 	end component ip_xpm_ram_crwk_crw;
 
+	component ip_xpm_rom_cr is
+		generic(
+			g_adr_w         : NATURAL := 10;
+			g_dat_w         : NATURAL := 22;
+			g_nof_words     : NATURAL := 2**5;
+			g_rd_latency    : NATURAL := 2; -- choose 1 or 2
+			g_init_file     : STRING  := "UNUSED";
+			g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
+		);
+		port(
+			rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+			rdclock   : IN  STD_LOGIC;
+			rdclocken : IN  STD_LOGIC := '1';
+			q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+		);
+	end component ip_xpm_rom_cr;
+
 	-----------------------------------------------------------------------------
 	-- ip_arria10
 	-----------------------------------------------------------------------------
