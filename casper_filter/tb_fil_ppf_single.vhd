@@ -188,10 +188,10 @@ architecture tb of tb_fil_ppf_single is
   constant c_nof_mif_files       : natural := g_fil_ppf.nof_taps;
   constant c_mif_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_mif_coef_mem_span   : natural := 2**c_mif_coef_mem_addr_w;                       -- mif coef mem span for one tap
-  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
-                                                                    "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
-                                                                    "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
-  constant c_mif_file_prefix     : string  := c_coefs_file_prefix & "_" & "1wb";
+  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix;-- & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
+                                                                  --  "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
+                                                                  --  "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
+  constant c_mif_file_prefix     : string  := c_coefs_file_prefix;-- & "_" & "1wb";
   constant c_mif_file_index_arr  : t_nat_natural_arr := array_init(0, c_nof_mif_files, 1);
   
   constant c_fil_prod_w          : natural := g_fil_ppf.in_dat_w + g_fil_ppf.coef_dat_w - 1;  -- skip double sign bit
