@@ -158,7 +158,7 @@ def run(argv):
         if pfir.infilename != '':
             if pfir.verbose:
                 print("Filename will be composed from input filename")
-            pfir.outfilename = os.path.join(pathforstore,pfir.infilename.split(
+            pfir.outfilename = os.path.join(pathforstore,pfir.filename.split(
                 '.')[0] + '_wb%d' % pfir.wb_factor)
         else:
             if pfir.verbose:
