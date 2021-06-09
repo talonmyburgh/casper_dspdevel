@@ -951,7 +951,7 @@ PACKAGE BODY tb_common_pkg IS
 		IF file_status = OPEN_OK THEN
 			REPORT "COMMON : File opened " SEVERITY NOTE;
 		ELSE
-			REPORT "COMMON : Unable to open file " SEVERITY FAILURE;
+			REPORT "COMMON : Unable to open file '" & file_name & "'" SEVERITY FAILURE;
 		END IF;
 	END proc_common_open_file;
 
