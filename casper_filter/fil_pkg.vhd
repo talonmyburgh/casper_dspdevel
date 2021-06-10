@@ -8,7 +8,7 @@ package fil_pkg is
 CONSTANT in_dat_w : natural := 8;
 CONSTANT out_dat_w : natural := 10;
 CONSTANT coef_dat_w : natural :=12;
-CONSTANT c_coefs_file : string := "C:\\Users\\mybur\\Work\\filter\\src\\hex\\mem\\hex\\run_pfir_coeff_m_incrementing_8taps_64points_16b_wb1";
+CONSTANT c_coefs_file : string := "C:/Users/mybur/Work/hex/pfir_coeffs_hanning_t4_p246_b12_wb1";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT wb_factor: natural :=1;
