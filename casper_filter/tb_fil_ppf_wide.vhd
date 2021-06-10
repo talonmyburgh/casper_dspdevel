@@ -32,16 +32,16 @@
 --   > run -all
 --   > testbench is selftesting. 
 --
-library ieee, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_ram_lib, astron_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib;-- astron_mm_lib;
 use IEEE.std_logic_1164.all;                                            
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use std.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
+--use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fil_pkg.all;
 
@@ -77,7 +77,7 @@ entity tb_fil_ppf_wide is
       --                                  does not remove any of the data in order to be able to verify with the original coefficients values. 
       --   coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
       -- end record;
-    g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
+--    g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
     g_enable_in_val_gaps : boolean := FALSE
   );
 end entity tb_fil_ppf_wide;
@@ -97,10 +97,10 @@ architecture tb of tb_fil_ppf_wide is
   constant c_mif_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_mif_coef_mem_span   : natural := 2**c_mif_coef_mem_addr_w;                       -- mif coef mem span for one tap
 
-  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
-                                                                    "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
-                                                                    "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
-  constant c_mif_file_prefix     : string  := c_coefs_file_prefix & "_" & integer'image(g_fil_ppf.wb_factor) & "wb";
+--  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
+--                                                                    "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
+--                                                                    "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
+--  constant c_mif_file_prefix     : string  := c_coefs_file_prefix & "_" & integer'image(g_fil_ppf.wb_factor) & "wb";
   
   constant c_fil_prod_w          : natural := g_fil_ppf.in_dat_w + g_fil_ppf.coef_dat_w - 1;  -- skip double sign bit
   constant c_fil_sum_w           : natural := c_fil_prod_w;                                   -- DC gain = 1
@@ -123,15 +123,15 @@ architecture tb of tb_fil_ppf_wide is
   signal rst            : std_logic := '0';
   signal random         : std_logic_vector(15 DOWNTO 0) := (OTHERS=>'0');  -- use different lengths to have different random sequences
 
-  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
-  signal ram_coefs_miso : t_mem_miso;
+--  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
+--  signal ram_coefs_miso : t_mem_miso;
 
-  signal in_dat_arr      : t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
+  signal in_dat_arr      : t_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
   signal in_val          : std_logic; 
   signal in_val_cnt      : natural := 0;
   signal in_gap          : std_logic := '0'; 
                          
-  signal out_dat_arr     : t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
+  signal out_dat_arr     : t_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
   signal out_val         : std_logic; 
   signal out_val_cnt     : natural := 0;
                          
@@ -168,7 +168,7 @@ begin
     for I in 0 to c_nof_valid_per_tap-1 loop
       for P in 0 to g_fil_ppf.wb_factor-1 loop
         for S in 0 to g_fil_ppf.nof_streams-1 loop
-          in_dat_arr(P*g_fil_ppf.nof_streams + S) <= TO_UVEC(c_in_ampl, c_fil_slv_w); 
+          in_dat_arr(P*g_fil_ppf.nof_streams + S) <= TO_UVEC(c_in_ampl, g_fil_ppf.in_dat_w); 
           in_val                                  <= '1';                      
         end loop;
       end loop;
