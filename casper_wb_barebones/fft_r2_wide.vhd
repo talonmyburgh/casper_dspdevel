@@ -163,6 +163,12 @@ architecture rtl of fft_r2_wide is
 
 	constant c_out_scale_w : integer := c_fft_r2_par.out_dat_w - g_fft.out_dat_w - g_fft.out_gain_w; -- Estimate number of LSBs to throw away when > 0 or insert when < 0
 
+	-- Handle the case of multiple piped ffts
+	type t_fft_slv_arr_ovflw IS ARRAY (g_fft.wb_factor - 1 downto 0) OF STD_LOGIC_VECTOR(c_stages_pipe-1 DOWNTO 0);
+	type t_fft_slv_arr_ovflw_wb IS ARRAY (c_stages_pipe-1 DOWNTO 0) OF STD_LOGIC_VECTOR(g_fft.wb_factor - 1 downto 0);
+	signal fft_pipe_ovflw_arr : t_fft_slv_arr_ovflw;
+	signal fft_pipe_ovflw_wb_arr : t_fft_slv_arr_ovflw_wb;
+
 	signal in_fft_pipe_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
 	signal in_fft_pipe_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
 
@@ -326,13 +332,21 @@ begin
 					rst     	=> rst,
 					in_re   	=> in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
 					in_im   	=> in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					shiftreg	=> shiftreg(c_stages-1 DOWNTO c_stages_par), -- Only c_stages_par of shiftreg
+					shiftreg	=> shiftreg(c_stages-1 DOWNTO c_stages_par), -- Only c_stages_pipe of shiftreg
 					in_val  	=> in_val,
 					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
 					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					ovflw		=> ovflw(c_stages-1 DOWNTO c_stages_par),
+					ovflw			=> fft_pipe_ovflw_arr(I),
 					out_val 	=> int_val(I)
 				);
+		end generate;
+
+		-- Transpose the fft_pipe_ovflw_arr so it's possible to OR the overflow across each pipeline instance
+		gen_pipelined_ovflws : for I in c_stages_pipe - 1 downto 0 generate
+			gen_pipelined_wb_ovflws : for J in g_fft.wb_factor - 1 downto 0 generate
+				fft_pipe_ovflw_wb_arr(I)(J) <= fft_pipe_ovflw_arr(J)(I);
+			end generate;
+			ovflw(I+c_stages_par) <= '0' when TO_UINT(fft_pipe_ovflw_wb_arr(I)) = 0 else '1';
 		end generate;
 
 		---------------------------------------------------------------
