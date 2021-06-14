@@ -144,20 +144,30 @@ end;
 
 -- Functions for stage length calculations for wideband FFT
 function fft_shiftreglen_pipe(wb_factor,pts : natural) return natural is
+	variable sr_len : natural;
 begin
-return ceil_log2(nof_points/wb_factor);
+	if(wb_factor = 1) then
+		sr_len := ceil_log2(pts);
+	elsif(wb_factor>1 and wb_factor < pts) then
+		sr_len := ceil_log2(pts/wb_factor);
+	else
+		sr_len := 0;
+	end if;
+	return sr_len;
 end;
 
 -- Calculate the length of the shiftregister and ovflw register for par fft
 function fft_shiftreglen_par(wb_factor,pts :natural) return natural is
 variable sr_len : natural;
 begin
-if(wb_factor = pts) then
-sr_len := ceil_log2(nof_points);
-elsif(wb_factor>1 and wb_factor < pts) then
-sr_len := ceil_log2(wb_factor);
-end if;
-return sr_len;
+	if(wb_factor = pts) then
+		sr_len := ceil_log2(pts);
+	elsif(wb_factor>1 and wb_factor < pts) then
+		sr_len := ceil_log2(wb_factor);
+	else
+		sr_len := 0;
+	end if;
+	return sr_len;
 end;
 
 CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
