@@ -145,6 +145,10 @@ architecture str of fft_r2_par is
 	type t_data_arr2 is array (c_nof_stages downto 0) of t_stage_dat_arr(g_fft.nof_points - 1 downto 0);
 	type t_val_arr is array (c_nof_stages downto 0) of std_logic_vector(g_fft.nof_points - 1 downto 0);
 
+	-- Handle the overflow from multiple BFs per stage
+	type t_par_slv_arr_bf_ovflw IS ARRAY (c_nof_stages-1 DOWNTO 0) OF STD_LOGIC_VECTOR(c_nof_bf_per_stage - 1 downto 0);
+	signal fft_par_bf_ovflw_arr : t_par_slv_arr_bf_ovflw;
+
 	signal data_re    : t_data_arr2;
 	signal data_im    : t_data_arr2;
 	signal data_val   : t_val_arr;
@@ -200,10 +204,11 @@ begin
 					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
 					y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
 					y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-					ovflw	 => ovflw(stage - 1),				-- Record if overflow occured at stage
+					ovflw	 => fft_par_bf_ovflw_arr(stage - 1)(element),				-- Record if overflow occured at stage
 					out_val  => data_val(stage - 1)(element)
-                );
-        end generate;
+			);
+		end generate;
+		ovflw(stage - 1) <= '0' when TO_UINT(fft_par_bf_ovflw_arr(stage - 1)) = 0 else '1';
 	end generate;
 
 	--------------------------------------------------------------------------------
