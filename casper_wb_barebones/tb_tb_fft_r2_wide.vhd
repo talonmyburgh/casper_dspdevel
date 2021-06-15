@@ -29,11 +29,11 @@
 --   > as 4
 --   > run -all
 
-LIBRARY IEEE, common_pkg_lib, astron_r2sdf_fft_lib;
+LIBRARY IEEE, common_pkg_lib, r2sdf_fft_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.all;
-USE astron_r2sdf_fft_lib.rTwoSDFPkg.all;
-USE work.fft_pkg.all;
+USE r2sdf_fft_lib.rTwoSDFPkg.all;
+USE work.fft_gnrcs_intrfcs_pkg.all;
               
 ENTITY tb_tb_fft_r2_wide IS
 END tb_tb_fft_r2_wide;
