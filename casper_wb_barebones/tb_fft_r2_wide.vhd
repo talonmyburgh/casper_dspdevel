@@ -40,18 +40,19 @@
 --   > observe the *_scope signals as radix decimal, format analogue format
 --     signals in the Wave window
 --
-library ieee, common_pkg_lib, astron_r2sdf_fft_lib, astron_ram_lib, astron_mm_lib, astron_sim_tools_lib;
+library ieee, common_pkg_lib, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib, casper_sim_tools_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use std.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
-use astron_r2sdf_fft_lib.rTwoSDFPkg.all;
-use work.fft_pkg.all;
+use casper_mm_lib.tb_common_mem_pkg.ALL;
+use r2sdf_fft_lib.rTwoSDFPkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
+-- use work.fft_pkg.all;
 use work.tb_fft_pkg.all;
 
 entity tb_fft_r2_wide is
@@ -189,8 +190,8 @@ architecture tb of tb_fft_r2_wide is
   signal t_blk                  : integer := 0;  -- block time counter
 
   -- Input
-  signal in_re_arr              : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
-  signal in_im_arr              : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
+  signal in_re_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
+  signal in_im_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
   signal in_re_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_im_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_val                 : std_logic:= '0';
@@ -203,8 +204,8 @@ architecture tb of tb_fft_r2_wide is
   signal in_val_scope           : std_logic:= '0';
 
   -- Output
-  signal out_re_arr             : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
+  signal out_re_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
+  signal out_im_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
   signal out_re_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_im_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_val                : std_logic:= '0';  -- for parallel output
@@ -283,11 +284,11 @@ begin
     for J in 0 to g_data_file_nof_lines/g_fft.wb_factor-1 loop  -- serial
       for I in 0 to g_fft.wb_factor-1 loop  -- parallel
         if c_in_complex then
-          in_re_arr(I) <= to_fft_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)));
-          in_im_arr(I) <= to_fft_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1));
+          in_re_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)));
+          in_im_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1));
         else
-          in_re_arr(I) <= to_fft_svec(input_data_a_arr(J*g_fft.wb_factor+I));
-          in_im_arr(I) <= to_fft_svec(input_data_b_arr(J*g_fft.wb_factor+I));
+          in_re_arr(I) <= to_fft_in_svec(input_data_a_arr(J*g_fft.wb_factor+I));
+          in_im_arr(I) <= to_fft_in_svec(input_data_b_arr(J*g_fft.wb_factor+I));
         end if;
       end loop;
       in_val <= '1';
@@ -316,12 +317,15 @@ begin
   )
   port map(
     clk        => clk,
+    clken        => '1',
     rst        => rst,
+    shiftreg   => (0=>'0', 1=>'0', others=>'1'),
     in_re_arr  => in_re_arr,
     in_im_arr  => in_im_arr,
     in_val     => in_val,
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,
+    ovflw => open,
     out_val    => out_val
   );
   
@@ -448,7 +452,7 @@ begin
     end loop;
   end process;
 
-  u_in_re_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_in_re_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fft.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -469,7 +473,7 @@ begin
     out_val   => in_val_scope
   );
 
-  u_in_im_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_in_im_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fft.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -490,7 +494,7 @@ begin
     out_val   => open
   );
 
-  u_out_re_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_out_re_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fft.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -511,7 +515,7 @@ begin
     out_val   => out_val_c
   );
 
-  u_out_im_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_out_im_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fft.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
