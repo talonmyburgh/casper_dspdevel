@@ -95,6 +95,7 @@ TYPE t_bb_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_out;
 
 -- short hand to create an svec from integer of bit width in_dat_w
 function to_fft_in_svec(n : integer) return std_logic_vector;
+function to_fft_stg_svec(n : integer) return std_logic_vector;
 
 -- FFT shift swaps right and left half of bin axis to shift zero-frequency component to center of spectrum
 function fft_shift(bin : std_logic_vector) return std_logic_vector;
@@ -129,6 +130,11 @@ end;
 function to_fft_in_svec(n : integer) return std_logic_vector is
 begin
 	return RESIZE_SVEC(TO_SVEC(n, in_dat_w), in_dat_w);
+end;
+
+function to_fft_stg_svec(n : integer) return std_logic_vector is
+begin
+	return RESIZE_SVEC(TO_SVEC(n, stage_dat_w), stage_dat_w);
 end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
