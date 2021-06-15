@@ -67,13 +67,13 @@ entity fft_r2_pipe is
 		clken    			 : in  std_logic;											--! Clock enable
 		clk      			 : in  std_logic;											--! Clock
 		rst      			 : in  std_logic := '0';									--! Reset
-		shiftreg 			 : in  std_logic_vector(c_stages_pipe -1 downto 0);			--! Shift register
+		shiftreg 			 : in  std_logic_vector(ceil_log2(g_fft.nof_points) -1 downto 0);			--! Shift register
 		in_re    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input real signal
 		in_im    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input imaginary signal
 		in_val   			 : in  std_logic := '1';									--! In data valid
 		out_re   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output real signal
 		out_im   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output imaginary signal
-		ovflw	 			 : out std_logic_vector(c_stages_pipe - 1 downto 0);		--! Overflow register (detects overflow in add/sub of butterfly)
+		ovflw	 			 : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);		--! Overflow register (detects overflow in add/sub of butterfly)
 		out_val  			 : out std_logic											--! Output data valid
 	);
 end entity fft_r2_pipe;
@@ -138,7 +138,7 @@ begin
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
-				ovflw	=> ovflw(stage -1),
+				ovflw	=> ovflw(stage - 1),
 				out_val => data_val(stage - 1)
 			);
 	end generate;
