@@ -101,15 +101,15 @@ entity tb_fft_r2_par is
     --g_data_file_b           : string := "data/run_pfft_m_impulse_chirp_8b_128points_16b.dat";
     --g_data_file_b_nof_lines : natural := 25600;
 
-    g_data_file_a           : string := "data/run_pfft_m_sinusoid_8b_32points_16b.dat";
+    g_data_file_a           : string := "run_pfft_m_sinusoid_8b_32points_16b.dat";
     g_data_file_a_nof_lines : natural := 160;
     g_data_file_b           : string := "UNUSED";
     g_data_file_b_nof_lines : natural := 0;
     
     -- One complex input data file C used when g_fft.use_separate = false
-    --g_data_file_c           : string := "data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";
+    --g_data_file_c           : string := "run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";
     --g_data_file_c_nof_lines : natural := 12800;
-    g_data_file_c           : string := "data/run_pfft_complex_m_phasor_8b_64points_16b.dat";
+    g_data_file_c           : string := "run_pfft_complex_m_phasor_8b_64points_16b.dat";
     g_data_file_c_nof_lines : natural := 320;
     
     g_data_file_nof_lines   : natural := 160;
@@ -187,16 +187,16 @@ architecture tb of tb_fft_r2_par is
   signal in_dat_b               : std_logic_vector(c_in_dat_w-1 downto 0);
   signal in_dat_b_scope         : integer;
   signal in_val_ab              : std_logic:= '0';
-  signal in_re_arr              : t_fft_slv_arr(g_fft.nof_points-1 downto 0);
-  signal in_im_arr              : t_fft_slv_arr(g_fft.nof_points-1 downto 0);
+  signal in_re_arr              : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
+  signal in_im_arr              : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
   signal in_val                 : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_gap                 : std_logic := '0';
 
   -- Output control
 
-  signal out_re_arr             : t_fft_slv_arr(g_fft.nof_points-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr(g_fft.nof_points-1 downto 0);
+  signal out_re_arr             : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
+  signal out_im_arr             : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
   signal out_val                : std_logic:= '0';  -- for parallel output
   signal out_val_cnt            : natural := 0;
   signal out_channel            : natural := 0;     -- not used for parallel FFT, set at default 0
@@ -243,6 +243,7 @@ architecture tb of tb_fft_r2_par is
   signal diff_re_b_scope        : integer := 0;
   signal diff_im_b_scope        : integer := 0;
 
+
 begin
 
   clk <= (not clk) or tb_end after c_clk_period/2;
@@ -276,11 +277,11 @@ begin
     for B in 0 to g_data_file_nof_lines/g_fft.nof_points-1 loop  -- serial
       for I in 0 to g_fft.nof_points-1 loop  -- parallel
         if c_in_complex then
-          in_re_arr(I) <= to_fft_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)));
-          in_im_arr(I) <= to_fft_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)+1));
+          in_re_arr(I) <= to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)));
+          in_im_arr(I) <= to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)+1));
         else
-          in_re_arr(I) <= to_fft_svec(input_data_a_arr(B*g_fft.nof_points+I));
-          in_im_arr(I) <= to_fft_svec(input_data_b_arr(B*g_fft.nof_points+I));
+          in_re_arr(I) <= to_fft_stg_svec(input_data_a_arr(B*g_fft.nof_points+I));
+          in_im_arr(I) <= to_fft_stg_svec(input_data_b_arr(B*g_fft.nof_points+I));
         end if;
       end loop;
       in_val <= '1';
@@ -310,9 +311,11 @@ begin
     rst        => rst,
     in_re_arr  => in_re_arr,
     in_im_arr  => in_im_arr,
+    shiftreg   => (0=>'0', 1=>'0', others=>'1'),
     in_val     => in_val,
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,
+    ovflw      => open,
     out_val    => out_val
   );
   
