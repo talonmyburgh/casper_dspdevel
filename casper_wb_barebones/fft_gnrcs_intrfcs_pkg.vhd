@@ -93,6 +93,9 @@ CONSTANT c_bb_sosi_rst_out : t_bb_sosi_out := ('0', (OTHERS=>'0'), (OTHERS=>'0')
 TYPE t_bb_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_in;
 TYPE t_bb_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_out;
 
+-- short hand to create an svec from integer of bit width in_dat_w
+function to_fft_in_svec(n : integer) return std_logic_vector;
+
 -- FFT shift swaps right and left half of bin axis to shift zero-frequency component to center of spectrum
 function fft_shift(bin : std_logic_vector) return std_logic_vector;
 function fft_shift(bin, w : natural) return natural;
@@ -121,6 +124,11 @@ if g_fft.use_separate = true then
 assert g_fft.use_fft_shift = false report "fft_r2 : with use_separate there cannot be use_fft_shift for two real inputs" severity failure;
 end if;
 return true;
+end;
+
+function to_fft_in_svec(n : integer) return std_logic_vector is
+begin
+	return RESIZE_SVEC(TO_SVEC(n, in_dat_w), in_dat_w);
 end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
