@@ -5,11 +5,9 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
 CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
 CONSTANT out_dat_w      : natural :=16;       -- = 13, number of output bits
 CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 128;       -- = 1024, N point FFT
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -103,10 +101,6 @@ function fft_shift(bin, w : natural) return natural;
 function fft_shiftreglen_pipe(wb_factor, pts : natural) return natural;
 function fft_shiftreglen_par(wb_factor,pts : natural) return natural;
 
--- Calculate the shiftregister and ovflw register sizes for both FFT's.
-CONSTANT c_stages      : NATURAL := ceil_log2(nof_points);
-CONSTANT c_stages_pipe : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
-CONSTANT c_stages_par  : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
 END fft_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
@@ -169,8 +163,5 @@ begin
 	end if;
 	return sr_len;
 end;
-
-CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
-CONSTANT c_stages_par  : NATURAL := fft_shiftreglen_par(wb_factor,nof_points);
 
 END fft_gnrcs_intrfcs_pkg;
