@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/casper_dspdevel_functional/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.xpr">
+<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wb_barebones/casper_wb_barebones/casper_wb_barebones.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="da9415ca2ef24a008afeb622337b604c"/>
@@ -37,7 +37,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="105"/>
+    <Option Name="WTXSimLaunchSim" Val="158"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -123,20 +123,6 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../technology/technology_select_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="technology_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperunb1.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="technology_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../technology/technology_select_pkg_casperxpm.vhd">
         <FileInfo>
           <Attr Name="Library" Val="technology_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -470,6 +456,18 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../data/run_pfft_m_impulse_chirp_8b_128points_16b.dat">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="wideband_fft_top"/>
@@ -516,6 +514,291 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../tb_fft_r2_par.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_tb_fft_r2_par.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_mm/common_field_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/tech_fifo_dc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/common_fifo_dc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_mm/common_mem_mux.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_components/common_switch.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_components/common_spulse.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_mm/common_reg_cross_domain.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_mm/common_reg_r_w.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_mm/common_reg_r_w_dc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_mm_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/diag_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/diag_block_gen.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/diag_block_gen_reg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/diag_tx_seq.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_latency_increase.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_latency_adapter.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_core.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_dc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_sc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_ctrl.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_input.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_fill_core.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_fill_sc.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_fifo/dp_fifo_fill.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_multiplexer/dp_frame_busy.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_multiplexer_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_multiplexer/dp_frame_busy_arr.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_multiplexer_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_multiplexer/dp_mux.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_multiplexer_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_pipeline/dp_pipeline.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_pipeline_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_pipeline/dp_pipeline_arr.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_pipeline_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_xonoff.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/mms_diag_tx_seq.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_diagnostics/mms_diag_block_gen.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_diagnostics_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_fft_sepa.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_adder/tb_common_add_sub.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_adder_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_adder/tb_tb_common_add_sub.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_adder_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../fft_wide_unit_tb.vhdl">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
@@ -525,6 +808,13 @@
       </File>
       <File Path="$PPRDIR/../data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat">
         <FileInfo>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../tb_fft_reorder_sepa_pipe.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>

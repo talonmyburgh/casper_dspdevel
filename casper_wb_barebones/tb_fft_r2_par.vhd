@@ -53,18 +53,18 @@
 -- . Use separate dut_clk and tb_clk (both directly related to clk), to be
 --   able to disable the dut_clk during verification to significantly speed
 --   up the simulation.
-library ieee, common_pkg_lib, astron_r2sdf_fft_lib, astron_ram_lib, astron_mm_lib;
+library ieee, common_pkg_lib, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use std.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
-use astron_r2sdf_fft_lib.rTwoSDFPkg.all;
-use work.fft_pkg.all;
+use casper_mm_lib.tb_common_mem_pkg.ALL;
+use r2sdf_fft_lib.rTwoSDFPkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 use work.tb_fft_pkg.all;
 
 entity tb_fft_r2_par is
