@@ -73,6 +73,7 @@ architecture str of fft_wide_unit is
 
 	type reg_type is record
 		in_bb_sosi_arr :  t_bb_sosi_arr_in(g_fft.wb_factor -1 downto 0);
+		shiftreg	   :  std_logic_vector(c_stages - 1 downto 0);
 	end record;
 
 	signal r, rin : reg_type;
@@ -88,12 +89,13 @@ begin
 	begin
 		v             := r;
 		v.in_bb_sosi_arr := in_bb_sosi_arr;
+		v.shiftreg	  := shiftreg;
 		rin           <= v;
 	end process comb;
 
-	regs : process(clk)
+	regs : process(clken, clk)
 	begin
-		if rising_edge(clk) then
+		if rising_edge(clk) and clken = '1' then
 			r <= rin;
 		end if;
 	end process;
@@ -102,14 +104,13 @@ begin
 	-- PREPARE INPUT DATA FOR WIDEBAND FFT
 	---------------------------------------------------------------
 	-- Extract the data from the in_bb_sosi_arr records and resize it 
-	-- to fit the format of the fft_r2_wide unit. Uses a default 32bit
-	-- length... should probably try enable an optimisation to pick
-	-- closest bitwidth.
+	-- to fit the format of the fft_r2_wide unit. 
 
 	gen_prep_fft_data : for I in 0 to g_fft.wb_factor - 1 generate
 		fft_in_re_arr(I) <= r.in_bb_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0);
 		fft_in_im_arr(I) <= r.in_bb_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0);
 	end generate;
+	fft_shiftreg <= r.shiftreg(c_stages - 1 downto 0);
 
 	---------------------------------------------------------------
 	-- THE WIDEBAND FFT
@@ -130,7 +131,7 @@ begin
 			clken      => clken,
 			clk        => clk,
 			rst        => rst,
-			shiftreg   => shiftreg,
+			shiftreg   => fft_shiftreg,
 			in_re_arr  => fft_in_re_arr,
 			in_im_arr  => fft_in_im_arr,
 			in_val     => r.in_bb_sosi_arr(0).valid,
