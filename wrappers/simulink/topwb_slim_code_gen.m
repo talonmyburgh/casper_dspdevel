@@ -1,7 +1,14 @@
-function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
-    %gather all the string arrays required to write full file:
+function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
+
+    %Locate where this matlab script is
     filepathscript = fileparts(which('topwb_slim_code_gen'));
-  
+    %where the top vhdl file will be generated
+    vhdlfilefolder = [fileparts(which(bdroot)) '/tmp_dspdevel'];
+    if ~exist(vhdlfilefolder, 'dir')
+        mkdir(vhdlfilefolder)
+    end
+    %and what it will be named
+    vhdlfile = [vhdlfilefolder '/' bdroot '_wb_fft_slim_top.vhd'];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec_w_xtra = ["library ieee, casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
@@ -222,7 +229,7 @@ function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_d
     fclose(Vfile);
     
     %update generics package
-    updatepkg(filepathscript,wb_factor,in_dat_w,out_dat_w,stage_dat_w,nof_points);
+    updatepkg(filepathscript,vhdlfilefolder,wb_factor,in_dat_w,out_dat_w,stage_dat_w,nof_points);
 end
 
 function chararr = mknprts(wbfctr)
@@ -271,20 +278,21 @@ function achararr = mkarch(wbfctr)
    end
 end
 
-function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
+function updatepkg(filepathscript, vhdlfilefolder, wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
-    vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgsource = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
     lineone = sprintf("CONSTANT wb_factor      : natural :=%d;       -- = default 1, wideband factor",wb_factor);
     linetwo = sprintf("CONSTANT in_dat_w       : natural :=%d;       -- = 8,  number of input bits",in_dat_w);
     linethree = sprintf("CONSTANT out_dat_w      : natural :=%d;       -- = 13, number of output bits",out_dat_w);
     linefour = sprintf("CONSTANT stage_dat_w    : natural :=%d;       -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
     linefive = sprintf("CONSTANT nof_points     : natural := %d;       -- = 1024, N point FFT",nof_points);
-    fid = fopen(vhdlgenfileloc,'r');
+    fid = fopen(pkgsource,'r');
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
     lines = lines{1};
     fclose(fid);
 
-    fid = fopen(vhdlgenfileloc, 'w');
+    fid = fopen(pkgdest, 'w');
     for jj = 1: insertloc
         fprintf(fid,'%s\n',lines{jj});
     end
