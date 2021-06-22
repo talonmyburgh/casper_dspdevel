@@ -119,7 +119,12 @@ begin
 			out_d  => bf_im
 		);
 	
-	ovflw <= (ovflw_det(0) or ovflw_det(1));
+	registered_ovflw : process (clk, ovflw_det)
+	begin
+		if clk = '1' then
+			ovflw <= (ovflw_det(0) or ovflw_det(1));
+		end if;
+	end process;
 	------------------------------------------------------------------------------
 	-- feedback fifo
 	------------------------------------------------------------------------------
