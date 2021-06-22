@@ -14,7 +14,6 @@ function wideband_fft_slim_top_config(this_block)
   this_block.setEntityName('wideband_fft_slim_top');
   wb_fft_blk = this_block.blockName;
   wb_fft_blk_parent = get_param(wb_fft_blk, 'Parent');
-  vhdlfile = [fileparts(which(bdroot)) '/' bdroot '_wb_fft_slim_top.vhd'];
   
   %constant widths for 
   dp_stream_bsn = 64;
@@ -71,7 +70,7 @@ function wideband_fft_slim_top_config(this_block)
   end
   num_stages = stagecalc(nof_points);
   %Update the vhdl top file with the required ports per wb_factor:
-  topwb_slim_code_gen(vhdlfile,wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(nof_points));
+  vhdlfile = topwb_slim_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(nof_points));
 
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
@@ -287,6 +286,10 @@ function wideband_fft_slim_top_config(this_block)
   %  |    this_block.addFile('b.vhd');
   %  |    this_block.addFile('a.vhd');
   %  |-------------
+
+%get location of generated hdl source files:
+srcloc = fileparts(vhdlfile);
+
 this_block.addFileToLibrary(vhdlfile,'xil_defaultlib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
@@ -319,7 +322,7 @@ this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
-this_block.addFileToLibrary([filepath '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_barebones_lib');
+this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_barebones_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
