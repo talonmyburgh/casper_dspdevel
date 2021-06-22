@@ -12,28 +12,28 @@ function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_d
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
 "entity wideband_fft_slim_top is"
 "	generic("
-		"use_reorder    : boolean := use_reorder;       -- = false for bit-reversed output, true for normal output"
-		"use_fft_shift  : boolean := use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
-		"use_separate   : boolean := use_separate;       -- = false for complex input, true for two real inputs"
-		"wb_factor      : natural := wb_factor;       -- = default 1, wideband factor"
-		"twiddle_offset : natural := twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
-		"nof_points     : natural := nof_points;       -- = 1024, N point FFT"
-		"in_dat_w       : natural := in_dat_w;       -- = 8,  number of input bits"
-		"out_dat_w      : natural := out_dat_w;       -- = 13, number of output bits"
-		"out_gain_w     : natural := out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
-		"stage_dat_w    : natural := stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)"
-		"guard_w        : natural := guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
+		"use_reorder    : boolean := c_use_reorder;       -- = false for bit-reversed output, true for normal output"
+		"use_fft_shift  : boolean := c_use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
+		"use_separate   : boolean := c_use_separate;       -- = false for complex input, true for two real inputs"
+		"wb_factor      : natural := c_wb_factor;       -- = default 1, wideband factor"
+		"twiddle_offset : natural := c_twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
+		"nof_points     : natural := c_nof_points;       -- = 1024, N point FFT"
+		"in_dat_w       : natural := c_in_dat_w;       -- = 8,  number of input bits"
+		"out_dat_w      : natural := c_out_dat_w;       -- = 13, number of output bits"
+		"out_gain_w     : natural := c_out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
+		"stage_dat_w    : natural := c_stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)"
+		"guard_w        : natural := c_guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
                                                 "--   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
                                                 "--   12.3.2], therefore use input guard_w = 2."
-		"guard_enable   : boolean := guard_enable;       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
+		"guard_enable   : boolean := c_guard_enable;       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
                                                 "--   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
                                                 "--   doing the input guard and par fft section doing the output compensation)"
-        "use_variant    : string  := ""4DSP"";        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
-        "use_dsp        : string  := ""YES"";        --! = ""yes"" or ""no"""
-        "ovflw_behav    : string  := ""WRAP"";        --! = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
-        "use_round      : string  := ""ROUND"";        --! = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
-        "ram_primitive  : string  := ""auto"";        --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-        "fifo_primitive : string  := ""auto""        --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"                                        
+        "use_variant    : string;        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
+        "use_dsp        : string;        --! = ""yes"" or ""no"""
+        "ovflw_behav    : string;        --! = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
+        "use_round      : string;        --! = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
+        "ram_primitive  : string;        --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
+        "fifo_primitive : string         --! = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"                                        
 	");"
 	"port("
 		"clk : in std_logic;"
@@ -41,8 +41,8 @@ function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_d
 		"rst : in std_logic;"
 		"in_sync : in std_logic :='0';"
         "in_valid : in std_logic :='0';"
-        "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
-        "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
+        "in_shiftreg : in std_logic_vector(ceil_log2(nof_points)-1 DOWNTO 0) := (others =>'1');"
+        "out_ovflw    : out std_logic_vector(ceil_log2(nof_points)-1 DOWNTO 0);"
         "out_sync : out std_logic := '0';"
         "out_valid : out std_logic := '0';"
         "in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);"
@@ -67,20 +67,20 @@ function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_d
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
 "entity wideband_fft_slim_top is"
 "	generic("
-        "use_reorder    : boolean := use_reorder;       -- = false for bit-reversed output, true for normal output"
-        "use_fft_shift  : boolean := use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
-        "use_separate   : boolean := use_separate;       -- = false for complex input, true for two real inputs"
-        "wb_factor      : natural := wb_factor;       -- = default 1, wideband factor"
-        "twiddle_offset : natural := twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
-        "nof_points     : natural := nof_points;       -- = 1024, N point FFT"
-        "in_dat_w       : natural := in_dat_w;       -- = 8,  number of input bits"
-        "out_dat_w      : natural := out_dat_w;       -- = 13, number of output bits"
-        "out_gain_w     : natural := out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
-        "stage_dat_w    : natural := stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)"
-        "guard_w        : natural := guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
+        "use_reorder    : boolean := c_use_reorder;       -- = false for bit-reversed output, true for normal output"
+        "use_fft_shift  : boolean := c_use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
+        "use_separate   : boolean := c_use_separate;       -- = false for complex input, true for two real inputs"
+        "wb_factor      : natural := c_wb_factor;       -- = default 1, wideband factor"
+        "twiddle_offset : natural := c_twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT"
+        "nof_points     : natural := c_nof_points;       -- = 1024, N point FFT"
+        "in_dat_w       : natural := c_in_dat_w;       -- = 8,  number of input bits"
+        "out_dat_w      : natural := c_out_dat_w;       -- = 13, number of output bits"
+        "out_gain_w     : natural := c_out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
+        "stage_dat_w    : natural := c_stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)"
+        "guard_w        : natural := c_guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
                                                     "--   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
                                                     "--   12.3.2], therefore use input guard_w = 2."
-        "guard_enable   : boolean := guard_enable;       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
+        "guard_enable   : boolean := c_guard_enable;       -- = true when input needs guarding, false when input requires no guarding but scaling must be"
                                                     "--   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
                                                     "--   doing the input guard and par fft section doing the output compensation)"
         "use_variant    : string  := ""4DSP"";        --! = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
@@ -96,8 +96,8 @@ function topwb_slim_code_gen(vhdlfile, wb_factor, xtra_dat_sigs, in_dat_w, out_d
 		"rst : in std_logic;"
 		"in_sync : in std_logic:='0';"
         "in_valid : in std_logic:='0';"
-        "in_shiftreg : in std_logic_vector(c_stages-1 DOWNTO 0) := (others =>'1');"
-        "out_ovflw    : out std_logic_vector(c_stages-1 DOWNTO 0);"
+        "in_shiftreg : in std_logic_vector(ceil_log2(c_nof_stages)-1 DOWNTO 0) := (others =>'1');"
+        "out_ovflw    : out std_logic_vector(ceil_log2(c_nof_stages)-1 DOWNTO 0);"
         "out_sync : out std_logic:='0';"
         "out_valid : out std_logic:='0';"];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -274,9 +274,13 @@ end
 function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
     vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
-    lineone = sprintf(  "CONSTANT c_in_dat_w              : natural := %d;    -- = 8,  number of input bits",in_dat_w);
-    linetwo = sprintf(  "CONSTANT c_out_dat_w             : natural := %d;    -- = 13, number of output bits",out_dat_w);
-    linethree = sprintf("CONSTANT c_stage_dat_w           : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+    lineone = sprintf(  "CONSTANT c_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
+    linetwo = sprintf(  "CONSTANT c_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
+    linethree = sprintf("CONSTANT c_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+    linefour = sprintf( "CONSTANT c_wb_factor      : natural := %d;    -- = default 1, wideband factor",wb_factor);
+    linefive = sprintf( "CONSTANT c_nof_points     : natural := %d;    -- = 1024, N point FFT",nof_points);
+
+    fid = fopen(vhdlgenfileloc,'r');
     
     fid = fopen(vhdlgenfileloc,'r');
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
@@ -290,6 +294,8 @@ function updatepkg(filepathscript,wb_factor, in_dat_w,out_dat_w, stage_dat_w, no
     fprintf(fid,'%s\n', lineone);
     fprintf(fid,'%s\n',linetwo);
     fprintf(fid,'%s\n',linethree);
+    fprintf(fid,'%s\n',linefour);
+    fprintf(fid,'%s\n',linefive);
     for jj = insertloc+6 : length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
