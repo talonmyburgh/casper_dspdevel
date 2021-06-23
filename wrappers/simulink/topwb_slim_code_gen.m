@@ -280,16 +280,14 @@ end
 
 function updatepkg(filepathscript, vhdlfilefolder, wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
-    vhdlgenfileloc = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgsource = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
     lineone = sprintf(  "CONSTANT c_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
     linetwo = sprintf(  "CONSTANT c_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
     linethree = sprintf("CONSTANT c_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
     linefour = sprintf( "CONSTANT c_wb_factor      : natural := %d;    -- = default 1, wideband factor",wb_factor);
     linefive = sprintf( "CONSTANT c_nof_points     : natural := %d;    -- = 1024, N point FFT",nof_points);
-
-    fid = fopen(vhdlgenfileloc,'r');
-    
-    fid = fopen(vhdlgenfileloc,'r');
+    fid = fopen(pkgsource,'r');
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
     lines = lines{1};
     fclose(fid);
