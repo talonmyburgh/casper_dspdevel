@@ -41,21 +41,22 @@ library ieee, common_pkg_lib, casper_counter_lib, common_components_lib, casper_
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
-use work.fft_pkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_sepa_wide is
 	generic(
-		g_fft : t_fft := c_fft          -- generics for the FFT
+		g_fft 			: t_fft  := c_fft;          -- generics for the FFT
+		g_ram_primitive : string := "auto"
 	);
 	port(
 		clken      : in  std_logic;
 		clk        : in  std_logic;
 		rst        : in  std_logic := '0';
-		in_re_arr  : in  t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
-		in_im_arr  : in  t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
+		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
 		in_val     : in  std_logic := '1';
-		out_re_arr : out t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
-		out_im_arr : out t_fft_slv_arr(g_fft.wb_factor - 1 downto 0);
+		out_re_arr : out t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+		out_im_arr : out t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
 		out_val    : out std_logic
 	);
 
@@ -142,7 +143,8 @@ begin
 				g_page_sz       => c_page_size,
 				g_wr_start_page => 0,
 				g_rd_start_page => 1,
-				g_rd_latency    => 1
+				g_rd_latency    => 1,
+				g_ram_primitive => g_ram_primitive
 			)
 			port map(
 				rst          => rst,
@@ -321,9 +323,8 @@ begin
 
 	-- Split the concatenated array into a real and imaginary array for the output
 	gen_output_arrays : for I in g_fft.wb_factor - 1 downto 0 generate
-		out_re_arr(I) <= resize_fft_svec(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0));
-		out_im_arr(I) <= resize_fft_svec(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w));
+		out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), g_fft.stage_dat_w);
+		out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), g_fft.stage_dat_w);
 	end generate;
 
 end rtl;
-
