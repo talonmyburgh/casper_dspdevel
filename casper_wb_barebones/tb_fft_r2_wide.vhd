@@ -91,7 +91,7 @@ entity tb_fft_r2_wide is
     --g_data_file_b_nof_lines : natural := 0;
     
     -- * 32 points = 16 subbands
-    g_data_file_a           : string := "data/run_pfft_m_sinusoid_chirp_8b_32points_16b.dat";
+    g_data_file_a           : string := "run_pfft_m_sinusoid_chirp_8b_32points_16b.dat";
     g_data_file_a_nof_lines : natural := 6400;
     --g_data_file_a           : string := "data/run_pfft_m_sinusoid_8b_32points_16b.dat";
     --g_data_file_a_nof_lines : natural := 160;
@@ -111,7 +111,7 @@ entity tb_fft_r2_wide is
     --g_data_file_c_nof_lines : natural := 640;
 
     -- * 32 points = 32 channels
-    g_data_file_c           : string := "data/run_pfft_complex_m_phasor_chirp_8b_32points_16b.dat";
+    g_data_file_c           : string := "run_pfft_complex_m_phasor_chirp_8b_32points_16b.dat";
     g_data_file_c_nof_lines : natural := 6400;
     --g_data_file_c           : string := "data/run_pfft_complex_m_phasor_8b_32points_16b.dat";
     --g_data_file_c_nof_lines : natural := 160;
@@ -402,14 +402,14 @@ begin
   ---------------------------------------------------------------
   -- p_verify_output
   gen_verify_two_real : if not c_in_complex generate
-    assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity error;
-    assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity error;
-    assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity error;
-    assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity error;
+    assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error"; --severity error;
+    assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error"; --severity error;
+    assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error"; --severity error;
+    assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error"; --severity error;
   end generate;
   gen_verify_complex : if c_in_complex generate
-    assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity error;
-    assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity error;
+    assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error"; --severity error;
+    assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error"; --severity error;
   end generate;
 
   ---------------------------------------------------------------
