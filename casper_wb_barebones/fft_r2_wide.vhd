@@ -73,12 +73,12 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_wide is
 	generic(
 		g_fft          : t_fft          := c_fft; 									--! generics for the FFT
-		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; 							--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline; 							--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; 					--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline; 					--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
 		g_use_variant    : string  := "4DSP";        								--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  := "yes";        								--! = "yes" or "no"
 		g_ovflw_behav    : string  := "WRAP";        								--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  := "ROUND";        								--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_use_round      : string  := "ROUND";        							--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_ram_primitive  : string  := "auto";        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_fifo_primitive : string  := "auto"        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
@@ -86,13 +86,13 @@ entity fft_r2_wide is
 		clken      		 : in  std_logic;											--! Clock enable
 		clk        		 : in  std_logic;											--! Clock
 		rst        		 : in  std_logic := '0';									--! Reset
-		shiftreg   		 : in  std_logic_vector(c_stages - 1 DOWNTO 0); 			--! Shift register
+		shiftreg   		 : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); 			--! Shift register
 		in_re_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);		--! Input real data (wb_factor wide)
 		in_im_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);		--! Input imag data (wb_factor wide)
 		in_val     		 : in  std_logic := '1';									--! In data valid
 		out_re_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);		--! Output real data (wb_factor wide)
 		out_im_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);		--! Output imag data (wb_factor wide)
-		ovflw 	   		 : out std_logic_vector(c_stages - 1 DOWNTO 0);				--! Overflow register
+		ovflw 	   		 : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0);				--! Overflow register
 		out_val    		 : out std_logic											--! Out data valid
 	);
 end entity fft_r2_wide;
@@ -163,9 +163,12 @@ architecture rtl of fft_r2_wide is
 
 	constant c_out_scale_w : integer := c_fft_r2_par.out_dat_w - g_fft.out_dat_w - g_fft.out_gain_w; -- Estimate number of LSBs to throw away when > 0 or insert when < 0
 
+	constant c_nof_stages : natural := ceil_log2(g_fft.nof_points);
+	constant c_nof_stages_pipe : natural := fft_shiftreglen_pipe(g_fft.wb_factor,g_fft.nof_points);
+	constant c_nof_stages_par : natural := fft_shiftreglen_par(g_fft.wb_factor,g_fft.nof_points);
 	-- Handle the case of multiple piped ffts
-	type t_fft_slv_arr_ovflw IS ARRAY (g_fft.wb_factor - 1 downto 0) OF STD_LOGIC_VECTOR(c_stages_pipe-1 DOWNTO 0);
-	type t_fft_slv_arr_ovflw_wb IS ARRAY (c_stages_pipe-1 DOWNTO 0) OF STD_LOGIC_VECTOR(g_fft.wb_factor - 1 downto 0);
+	type t_fft_slv_arr_ovflw IS ARRAY (g_fft.wb_factor - 1 downto 0) OF STD_LOGIC_VECTOR(c_nof_stages_pipe-1 DOWNTO 0);
+	type t_fft_slv_arr_ovflw_wb IS ARRAY (c_nof_stages_pipe-1 DOWNTO 0) OF STD_LOGIC_VECTOR(g_fft.wb_factor - 1 downto 0);
 	signal fft_pipe_ovflw_arr : t_fft_slv_arr_ovflw;
 	signal fft_pipe_ovflw_wb_arr : t_fft_slv_arr_ovflw_wb;
 
@@ -332,7 +335,7 @@ begin
 					rst     	=> rst,
 					in_re   	=> in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
 					in_im   	=> in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					shiftreg	=> shiftreg(c_stages-1 DOWNTO c_stages_par), -- Only c_stages_pipe of shiftreg
+					shiftreg	=> shiftreg(c_nof_stages-1 DOWNTO c_nof_stages_par), -- Only c_nof_stages_pipe of shiftreg
 					in_val  	=> in_val,
 					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
 					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
@@ -342,11 +345,11 @@ begin
 		end generate;
 
 		-- Transpose the fft_pipe_ovflw_arr so it's possible to OR the overflow across each pipeline instance
-		gen_pipelined_ovflws : for I in c_stages_pipe - 1 downto 0 generate
+		gen_pipelined_ovflws : for I in c_nof_stages_pipe - 1 downto 0 generate
 			gen_pipelined_wb_ovflws : for J in g_fft.wb_factor - 1 downto 0 generate
 				fft_pipe_ovflw_wb_arr(I)(J) <= fft_pipe_ovflw_arr(J)(I);
 			end generate;
-			ovflw(I+c_stages_par) <= '0' when TO_UINT(fft_pipe_ovflw_wb_arr(I)) = 0 else '1';
+			ovflw(I+c_nof_stages_par) <= '0' when TO_UINT(fft_pipe_ovflw_wb_arr(I)) = 0 else '1';
 		end generate;
 
 		---------------------------------------------------------------
@@ -366,7 +369,7 @@ begin
 				g_fft      			=> c_fft_r2_par, -- generics for the FFT
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
 				g_use_dsp	   		=> g_use_dsp,
-				g_ovflw_behav  		=> g_ovflw_behav,
+				g_ovflw_behav  	=> g_ovflw_behav,
 				g_use_round			=> g_use_round
 			)
 			port map(
@@ -374,11 +377,11 @@ begin
 				rst        => rst,
 				in_re_arr  => in_fft_par_re_arr,
 				in_im_arr  => in_fft_par_im_arr,
-				shiftreg   => shiftreg(c_stages_par-1 DOWNTO 0), -- Only c_stage_par of shiftreg
+				shiftreg   => shiftreg(c_nof_stages_par-1 DOWNTO 0), -- Only c_stage_par of shiftreg
 				in_val     => int_val(0),
 				out_re_arr => fft_out_re_arr,
 				out_im_arr => fft_out_im_arr,
-				ovflw	   => ovflw(c_stages_par-1 DOWNTO 0),
+				ovflw	   	 => ovflw(c_nof_stages_par-1 DOWNTO 0),
 				out_val    => fft_out_val
 			);
 

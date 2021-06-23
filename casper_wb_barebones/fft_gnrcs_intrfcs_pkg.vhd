@@ -5,27 +5,27 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT wb_factor      : natural :=1;       -- = default 1, wideband factor
-CONSTANT in_dat_w       : natural :=8;       -- = 8,  number of input bits
-CONSTANT out_dat_w      : natural :=16;       -- = 13, number of output bits
-CONSTANT stage_dat_w    : natural :=18;       -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT nof_points     : natural := 128;       -- = 1024, N point FFT
+CONSTANT c_in_dat_w       : natural := 8;       -- = 8,  number of input bits
+CONSTANT c_out_dat_w      : natural := 16;      -- = 13, number of output bits
+CONSTANT c_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT c_wb_factor      : natural := 1;    -- = default 1, wideband factor",wb_factor);
+CONSTANT c_nof_points     : natural := 1024;    -- = 1024, N point FFT",nof_points);
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
 CONSTANT c_dp_stream_empty_w    : NATURAL :=  16;  --  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
 CONSTANT c_dp_stream_channel_w  : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping types of streams on to channels 
 CONSTANT c_dp_stream_error_w    : NATURAL :=  32;  -- 32 is sufficient for several levels of hierarchy in mapping error numbers, e.g. 32 different one-hot encoded errors, bit [0] = 0 = OK 
-CONSTANT use_reorder            : boolean := false;       -- = false for bit-reversed output, true for normal output
-CONSTANT use_fft_shift          : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-CONSTANT use_separate           : boolean := true;       -- = false for complex input, true for two real inputs
-CONSTANT nof_chan               : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
-CONSTANT twiddle_offset         : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
-CONSTANT out_gain_w             : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-CONSTANT guard_w                : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
+CONSTANT c_use_reorder          : boolean := false;       -- = false for bit-reversed output, true for normal output
+CONSTANT c_use_fft_shift        : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+CONSTANT c_use_separate         : boolean := true;       -- = false for complex input, true for two real inputs
+CONSTANT c_nof_chan             : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
+CONSTANT c_twiddle_offset       : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
+CONSTANT c_out_gain_w           : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+CONSTANT c_guard_w              : natural :=2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
 --   12.3.2], therefore use input guard_w = 2.
-CONSTANT guard_enable   : boolean :=false;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
+CONSTANT c_guard_enable   : boolean :=false;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
 --   doing the input guard and par fft section doing the output compensation)
 
@@ -51,21 +51,21 @@ stat_data_w    : positive;      -- = 56
 stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);
+constant c_fft : t_fft := ( true, false, false, 0, c_wb_factor, 0, c_nof_points, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
 
-type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(stage_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_stage_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);
 
 -- barebones t_dp_sosi record
 TYPE t_bb_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                          -- ctrl
-re       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);               -- data
-im       : STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);               -- data
+re       : STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);             -- data
+im       : STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);             -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -80,8 +80,8 @@ CONSTANT c_bb_sosi_rst_in : t_bb_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), 
 TYPE t_bb_sosi_out IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC;   
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                        -- ctrl
-re       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);              -- data
-im       : STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);              -- data
+re       : STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);            -- data
+im       : STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);            -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -95,6 +95,10 @@ CONSTANT c_bb_sosi_rst_out : t_bb_sosi_out := ('0', (OTHERS=>'0'), (OTHERS=>'0')
 TYPE t_bb_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_in;
 TYPE t_bb_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_bb_sosi_out;
 
+-- short hand to create an svec from integer of bit width in_dat_w
+function to_fft_in_svec(n : integer) return std_logic_vector;
+function to_fft_stg_svec(n : integer) return std_logic_vector;
+
 -- FFT shift swaps right and left half of bin axis to shift zero-frequency component to center of spectrum
 function fft_shift(bin : std_logic_vector) return std_logic_vector;
 function fft_shift(bin, w : natural) return natural;
@@ -103,10 +107,6 @@ function fft_shift(bin, w : natural) return natural;
 function fft_shiftreglen_pipe(wb_factor, pts : natural) return natural;
 function fft_shiftreglen_par(wb_factor,pts : natural) return natural;
 
--- Calculate the shiftregister and ovflw register sizes for both FFT's.
-CONSTANT c_stages      : NATURAL := ceil_log2(nof_points);
-CONSTANT c_stages_pipe : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
-CONSTANT c_stages_par  : NATURAL;  -- use deferred constant (with value in BODY), to avoid Modelsim compile error: Cannot call subprogram before it is elaborated.
 END fft_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY fft_gnrcs_intrfcs_pkg is
@@ -127,6 +127,16 @@ if g_fft.use_separate = true then
 assert g_fft.use_fft_shift = false report "fft_r2 : with use_separate there cannot be use_fft_shift for two real inputs" severity failure;
 end if;
 return true;
+end;
+
+function to_fft_in_svec(n : integer) return std_logic_vector is
+begin
+	return RESIZE_SVEC(TO_SVEC(n, c_in_dat_w), c_in_dat_w);
+end;
+
+function to_fft_stg_svec(n : integer) return std_logic_vector is
+begin
+	return RESIZE_SVEC(TO_SVEC(n, c_stage_dat_w), c_stage_dat_w);
 end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
@@ -169,8 +179,5 @@ begin
 	end if;
 	return sr_len;
 end;
-
-CONSTANT c_stages_pipe : NATURAL := fft_shiftreglen_pipe(wb_factor,nof_points);
-CONSTANT c_stages_par  : NATURAL := fft_shiftreglen_par(wb_factor,nof_points);
 
 END fft_gnrcs_intrfcs_pkg;

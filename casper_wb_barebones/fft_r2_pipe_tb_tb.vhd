@@ -51,14 +51,14 @@ ARCHITECTURE tb OF fft_r2_pipe_tb_tb IS
   CONSTANT c_diff_margin    : natural := 2;
   
   -- Real input  
-  CONSTANT c_impulse_chirp  : string := "data/run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
-  CONSTANT c_sinusoid_chirp : string := "data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat";         -- 25600 lines
-  CONSTANT c_noise          : string := "data/run_pfft_m_noise_8b_128points_16b.dat";                  --  1280 lines
-  CONSTANT c_dc_agwn        : string := "data/run_pfft_m_dc_agwn_8b_128points_16b.dat";                --  1280 lines
+  CONSTANT c_impulse_chirp  : string := "run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
+  CONSTANT c_sinusoid_chirp : string := "run_pfft_m_sinusoid_chirp_8b_128points_16b.dat";         -- 25600 lines
+  CONSTANT c_noise          : string := "run_pfft_m_noise_8b_128points_16b.dat";                  --  1280 lines
+  CONSTANT c_dc_agwn        : string := "run_pfft_m_dc_agwn_8b_128points_16b.dat";                --  1280 lines
   -- Complex input  
-  CONSTANT c_phasor_chirp   : string := "data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";    -- 12800 lines
-  CONSTANT c_phasor         : string := "data/run_pfft_complex_m_phasor_8b_64points_16b.dat";          --   320 lines
-  CONSTANT c_noise_complex  : string := "data/run_pfft_complex_m_noise_complex_8b_64points_16b.dat";   --   620 lines
+  CONSTANT c_phasor_chirp   : string := "run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";    -- 12800 lines
+  CONSTANT c_phasor         : string := "run_pfft_complex_m_phasor_8b_64points_16b.dat";          --   320 lines
+  CONSTANT c_noise_complex  : string := "run_pfft_complex_m_noise_complex_8b_64points_16b.dat";   --   620 lines
   -- Zero input
   CONSTANT c_zero           : string := "UNUSED";
   CONSTANT c_unused         : string := "UNUSED";
