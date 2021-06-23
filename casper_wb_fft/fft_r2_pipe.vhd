@@ -44,36 +44,44 @@
 --
 --          At the output will find: 
 --
---          c0f0 c0f1 c0f2 ... c0f15 c1f0 c1f1 c1f2 ... c1f15  (c0f0 means channel 0, frequency bin 0)
---
---           
+--          c0f0 c0f1 c0f2 ... c0f15 c1f0 c1f1 c1f2 ... c1f15  (c0f0 means channel 0, frequency bin 0)     
 
 library ieee, common_pkg_lib, common_components_lib, casper_requantize_lib, r2sdf_fft_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
-use work.fft_pkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_pipe is
 	generic(
-		g_fft                : t_fft          := c_fft; -- generics for the FFT
-		g_pipeline           : t_fft_pipeline := c_fft_pipeline; -- generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
-		g_dont_flip_channels : boolean        := false -- generic to prevent re-ordering of the channels
+		g_fft                : t_fft          				:= c_fft; 		 			--! generics for the FFT
+		g_pipeline           : t_fft_pipeline 				:= c_fft_pipeline; 			--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
+		g_dont_flip_channels : boolean        				:= false; 					--! generic to prevent re-ordering of the channels
+		g_use_variant    	 : string  		  				:= "4DSP";        			--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        	 : string  		  				:= "yes";        			--! = "yes" or "no"
+		g_ovflw_behav    	 : string  		  				:= "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      	 : string  		  				:= "ROUND";        			--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  	 : string  		  				:= "auto"					--! = "auto", "distributed", "ultra" or "block"
 	);
 	port(
-		clken   : in  std_logic;
-		clk     : in  std_logic;
-		rst     : in  std_logic := '0';
-		in_re   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_im   : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-		in_val  : in  std_logic := '1';
-		out_re  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_im  : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);
-		out_val : out std_logic
+		clken    			 : in  std_logic;											--! Clock enable
+		clk      			 : in  std_logic;											--! Clock
+		rst      			 : in  std_logic := '0';									--! Reset
+		shiftreg 			 : in  std_logic_vector(ceil_log2(g_fft.nof_points) -1 downto 0);			--! Shift register
+		in_re    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input real signal
+		in_im    			 : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0);		--! Input imaginary signal
+		in_val   			 : in  std_logic := '1';									--! In data valid
+		out_re   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output real signal
+		out_im   			 : out std_logic_vector(g_fft.out_dat_w - 1 downto 0);		--! Output imaginary signal
+		ovflw	 			 : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);		--! Overflow register (detects overflow in add/sub of butterfly)
+		out_val  			 : out std_logic											--! Output data valid
 	);
 end entity fft_r2_pipe;
 
 architecture str of fft_r2_pipe is
+
+	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
 
 	constant c_pipeline_remove_lsb : natural := 0;
 
@@ -87,15 +95,16 @@ architecture str of fft_r2_pipe is
 	-- . the data output of the last stage has index 0
 	type t_data_arr is array (c_nof_stages downto 0) of std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 
-	signal data_re  : t_data_arr;
-	signal data_im  : t_data_arr;
-	signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+	signal data_re     : t_data_arr;
+	signal data_im     : t_data_arr;
+	signal data_val    : std_logic_vector(c_nof_stages downto 0) := (others => '0');
 
 	signal out_cplx    : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
 	signal in_cplx     : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
 	signal raw_out_re  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 	signal raw_out_im  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 	signal raw_out_val : std_logic;
+	signal shift_bool  : boolean;
 
 begin
 
@@ -108,13 +117,16 @@ begin
 	-- pipelined FFT stages
 	------------------------------------------------------------------------------
 	gen_fft : for stage in c_nof_stages downto 1 generate
-		u_stage : entity r2sdf_fft_lib.rTwoSDFStage
-			generic map(
-				g_nof_chan       => g_fft.nof_chan,
-				g_stage          => stage,
-				g_stage_offset   => c_stage_offset,
+        u_stage : entity r2sdf_fft_lib.rTwoSDFStage
+            generic map(
+                g_nof_chan       => g_fft.nof_chan,
+                g_stage          => stage,
+                g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
-				g_scale_enable   => sel_a_b(stage <= g_fft.guard_w, FALSE, TRUE),
+				g_use_variant	 => g_use_variant,
+				g_use_dsp        => g_use_dsp,
+				g_ovflw_behav	 => g_ovflw_behav,
+				g_use_round		 => g_use_round, 
 				g_pipeline       => g_pipeline
 			)
 			port map(
@@ -122,9 +134,11 @@ begin
 				rst     => rst,
 				in_re   => data_re(stage),
 				in_im   => data_im(stage),
+				scale   => shiftreg(stage-1),
 				in_val  => data_val(stage),
 				out_re  => data_re(stage - 1),
 				out_im  => data_im(stage - 1),
+				ovflw	=> ovflw(stage - 1),
 				out_val => data_val(stage - 1)
 			);
 	end generate;
@@ -142,7 +156,8 @@ begin
 				g_separate           => g_fft.use_separate,
 				g_dont_flip_channels => g_dont_flip_channels,
 				g_nof_points         => g_fft.nof_points,
-				g_nof_chan           => g_fft.nof_chan
+				g_nof_chan           => g_fft.nof_chan,
+				g_ram_primitive 	 => g_ram_primitive
 			)
 			port map(
 				clken   => clken,
@@ -172,9 +187,9 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
@@ -192,9 +207,9 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => TRUE,
+			g_lsb_round           => c_round,
 			g_lsb_round_clip      => FALSE,
-			g_msb_clip            => FALSE,
+			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
 			g_pipeline_remove_lsb => c_pipeline_remove_lsb,
 			g_pipeline_remove_msb => 0,
@@ -219,6 +234,4 @@ begin
 			in_dat  => raw_out_val,
 			out_dat => out_val
 		);
-
 end str;
-
