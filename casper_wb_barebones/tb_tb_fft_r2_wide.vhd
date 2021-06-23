@@ -40,13 +40,13 @@ END tb_tb_fft_r2_wide;
 
 ARCHITECTURE tb OF tb_tb_fft_r2_wide IS
   
-  CONSTANT c_fft_wb4_two_real          : t_fft := ( true, false,  true, 0, 4, 0, 128, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_wb4_complex_fft_shift : t_fft := ( true,  true, false, 0, 4, 0,  64, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_wb4_complex_flipped   : t_fft := (false, false, false, 0, 4, 0,  64, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_wb4_complex           : t_fft := ( true, false, false, 0, 4, 0,  64, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb4_two_real          : t_fft := ( true, false,  true, 0, 4, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb4_complex_fft_shift : t_fft := ( true,  true, false, 0, 4, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb4_complex_flipped   : t_fft := (false, false, false, 0, 4, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb4_complex           : t_fft := ( true, false, false, 0, 4, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
                      
-  CONSTANT c_fft_wb1_complex           : t_fft := ( true, false, false, 0, 1, 0,  64, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_wb64_complex          : t_fft := ( true, false, false, 0,64, 0,  64, in_dat_w, out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb1_complex           : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_wb64_complex          : t_fft := ( true, false, false, 0,64, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
   
   CONSTANT c_diff_margin    : natural := 2;
   
@@ -144,6 +144,6 @@ BEGIN
 --  u_rnd_complex_noise     : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb4_complex,           c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, TRUE);
 
   -- Extreme wb_factor=1 and wb_factor=nof_points
-  u_act_wb1_complex_noise     : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex,       c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE);
+--  u_act_wb1_complex_noise     : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex,       c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE);
   u_act_wb64_complex_noise    : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb64_complex,      c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE);
 END tb;
