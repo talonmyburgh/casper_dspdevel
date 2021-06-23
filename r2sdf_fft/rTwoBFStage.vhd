@@ -121,7 +121,7 @@ begin
 	
 	registered_ovflw : process (clk, ovflw_det)
 	begin
-		if clk = '1' then
+		if rising_edge(clk) then
 			ovflw <= (ovflw_det(0) or ovflw_det(1));
 		end if;
 	end process;
