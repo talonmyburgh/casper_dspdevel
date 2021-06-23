@@ -195,6 +195,7 @@ architecture tb of tb_fft_r2_wide is
 	signal in_val     : std_logic := '0';
 	signal in_val_cnt : natural   := 0;
 	signal in_gap     : std_logic := '0';
+	signal shift_reg	: std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0) := (1=>'0', 0=>'0', others=>'1');
 
 	-- Input in sclk domain  
 	signal in_re_scope  : integer;
@@ -301,6 +302,7 @@ begin
 		in_val        <= '0';
 		proc_common_wait_some_cycles(clk, c_dut_clk_latency); -- wait for DUT latency
 		tb_end_almost <= '1';
+		shift_reg <= (others => '0');
 		proc_common_wait_some_cycles(clk, 100);
 		tb_end        <= '1';
 		wait;
@@ -317,12 +319,14 @@ begin
 			clken      => '1',
 			clk        => clk,
 			rst        => rst,
+			shiftreg	 => shift_reg,
 			in_re_arr  => in_re_arr,
 			in_im_arr  => in_im_arr,
 			in_val     => in_val,
 			out_re_arr => out_re_arr,
 			out_im_arr => out_im_arr,
-			out_val    => out_val
+			out_val    => out_val,
+			ovflw			 => open
 		);
 
 	-- Data valid count
