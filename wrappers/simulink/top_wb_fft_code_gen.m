@@ -1,23 +1,23 @@
-function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, nof_points)
+function vhdlfile = top_wb_fft_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w)
 
     %Locate where this matlab script is
-    filepathscript = fileparts(which('topwb_slim_code_gen'));
+    filepathscript = fileparts(which('top_wb_fft_code_gen'));
     %where the top vhdl file will be generated
     vhdlfilefolder = [fileparts(which(bdroot)) '/tmp_dspdevel'];
     if ~exist(vhdlfilefolder, 'dir')
         mkdir(vhdlfilefolder)
     end
     %and what it will be named
-    vhdlfile = [vhdlfilefolder '/' bdroot '_wb_fft_slim_top.vhd'];
+    vhdlfile = [vhdlfilefolder '/' bdroot '_wb_fft_top.vhd'];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-    lnsuptoportdec_w_xtra = ["library ieee, casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
+    lnsuptoportdec_w_xtra = ["library ieee, casper_wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
 "use ieee.numeric_std.all;"
 "use common_pkg_lib.common_pkg.all;"
-"use casper_wb_barebones_lib.fft_gnrcs_intrfcs_pkg.all;"
+"use casper_wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
-"entity wideband_fft_slim_top is"
+"entity wideband_fft_top is"
 "	generic("
 		"use_reorder    : boolean := c_use_reorder;       -- = false for bit-reversed output, true for normal output"
 		"use_fft_shift  : boolean := c_use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
@@ -65,14 +65,14 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
 		"out_err : out STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);"
 		"out_channel : out STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);"];
     
-    lnsuptoportdec_w_o_xtra = ["library ieee,casper_wb_barebones_lib, r2sdf_fft_lib, common_pkg_lib;"
+    lnsuptoportdec_w_o_xtra = ["library ieee,casper_wb_fft_lib, r2sdf_fft_lib, common_pkg_lib;"
 "use ieee.std_logic_1164.all;"
 "use ieee.numeric_std.all;"
 "use common_pkg_lib.common_pkg.all;"
-"use casper_wb_barebones_lib.fft_gnrcs_intrfcs_pkg.all;"
+"use casper_wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
 "use r2sdf_fft_lib.rTwoSDFPkg.all;"
 "--Purpose: A Simulink necessary wrapper for the fft_wide_unit. Serves to expose all signals and generics individually."
-"entity wideband_fft_slim_top is"
+"entity wideband_fft_top is"
 "	generic("
         "use_reorder    : boolean := c_use_reorder;       -- = false for bit-reversed output, true for normal output"
         "use_fft_shift  : boolean := c_use_fft_shift;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
@@ -103,8 +103,8 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
 		"rst : in std_logic;"
 		"in_sync : in std_logic:='0';"
         "in_valid : in std_logic:='0';"
-        "in_shiftreg : in std_logic_vector(ceil_log2(c_nof_stages)-1 DOWNTO 0) := (others =>'1');"
-        "out_ovflw    : out std_logic_vector(ceil_log2(c_nof_stages)-1 DOWNTO 0);"
+        "in_shiftreg : in std_logic_vector(ceil_log2(nof_points)-1 DOWNTO 0) := (others =>'1');"
+        "out_ovflw    : out std_logic_vector(ceil_log2(nof_points)-1 DOWNTO 0);"
         "out_sync : out std_logic:='0';"
         "out_valid : out std_logic:='0';"];
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
@@ -113,8 +113,8 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     lnsafterarchopen_w_xtradat = [");"
-        "end entity wideband_fft_slim_top;"
-        "architecture RTL of wideband_fft_slim_top is"
+        "end entity wideband_fft_top;"
+        "architecture RTL of wideband_fft_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,0,wb_factor,twiddle_offset,"
         "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable, 56, 2);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
@@ -122,7 +122,7 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "constant c_fft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "begin"
-        "fft_wide_unit : entity casper_wb_barebones_lib.fft_wide_unit"
+        "fft_wide_unit : entity casper_wb_fft_lib.fft_wide_unit"
         "generic map("
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
@@ -165,8 +165,8 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
 		];
     
     lnsafterarchopen_w_o_xtradat = [");"
-        "end entity wideband_fft_slim_top;"
-        "architecture RTL of wideband_fft_slim_top is"
+        "end entity wideband_fft_top;"
+        "architecture RTL of wideband_fft_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,0,wb_factor,twiddle_offset,"
         "nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable, 56, 2);"
         "signal in_bb_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
@@ -174,7 +174,7 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "constant c_fft_pipeline : t_fft_pipeline := c_fft_pipeline;"
         "begin"
-        "fft_wide_unit : entity casper_wb_barebones_lib.fft_wide_unit"
+        "fft_wide_unit : entity casper_wb_fft_lib.fft_wide_unit"
         "generic map("
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
@@ -229,7 +229,7 @@ function vhdlfile = topwb_slim_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
     fclose(Vfile);
     
     %update generics package
-    updatepkg(filepathscript,vhdlfilefolder,wb_factor,in_dat_w,out_dat_w,stage_dat_w,nof_points);
+    updatepkg(filepathscript,vhdlfilefolder,in_dat_w,out_dat_w,stage_dat_w);
 end
 
 function chararr = mknprts(wbfctr)
@@ -278,30 +278,33 @@ function achararr = mkarch(wbfctr)
    end
 end
 
-function updatepkg(filepathscript, vhdlfilefolder, wb_factor, in_dat_w,out_dat_w, stage_dat_w, nof_points)
+function updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage_dat_w)
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
-    pkgsource = [filepathscript '/../../casper_wb_barebones/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgsource = [filepathscript '/../../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
     lineone = sprintf(  "CONSTANT c_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
     linetwo = sprintf(  "CONSTANT c_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
     linethree = sprintf("CONSTANT c_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
-    linefour = sprintf( "CONSTANT c_wb_factor      : natural := %d;    -- = default 1, wideband factor",wb_factor);
-    linefive = sprintf( "CONSTANT c_nof_points     : natural := %d;    -- = 1024, N point FFT",nof_points);
+
     fid = fopen(pkgsource,'r');
+    if(fid == -1) 
+        error("Cannot open vhdl file: %s",pkgsource); 
+    end
     lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
     lines = lines{1};
     fclose(fid);
 
     fid = fopen(pkgdest, 'w');
+    if(fid == -1) 
+        error("Cannot open vhdl file: %s",pkgdest); 
+    end
     for jj = 1: insertloc
         fprintf(fid,'%s\n',lines{jj});
     end
     fprintf(fid,'%s\n', lineone);
     fprintf(fid,'%s\n',linetwo);
     fprintf(fid,'%s\n',linethree);
-    fprintf(fid,'%s\n',linefour);
-    fprintf(fid,'%s\n',linefive);
-    for jj = insertloc+6 : length(lines)
+    for jj = insertloc+4 : length(lines)
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);

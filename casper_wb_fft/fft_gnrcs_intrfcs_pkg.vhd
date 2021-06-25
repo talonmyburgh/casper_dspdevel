@@ -8,8 +8,6 @@ PACKAGE fft_gnrcs_intrfcs_pkg Is
 CONSTANT c_in_dat_w       : natural := 8;       -- = 8,  number of input bits
 CONSTANT c_out_dat_w      : natural := 16;      -- = 13, number of output bits
 CONSTANT c_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
-CONSTANT c_wb_factor      : natural := 1;    -- = default 1, wideband factor",wb_factor);
-CONSTANT c_nof_points     : natural := 1024;    -- = 1024, N point FFT",nof_points);
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -19,6 +17,8 @@ CONSTANT c_dp_stream_error_w    : NATURAL :=  32;  -- 32 is sufficient for sever
 CONSTANT c_use_reorder          : boolean := false;       -- = false for bit-reversed output, true for normal output
 CONSTANT c_use_fft_shift        : boolean := false;       -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
 CONSTANT c_use_separate         : boolean := true;       -- = false for complex input, true for two real inputs
+CONSTANT c_wb_factor      		: natural := 1;   		-- = default 1, wideband factor",wb_factor);
+CONSTANT c_nof_points     		: natural := 1024;    	-- = 1024, N point FFT",nof_points);
 CONSTANT c_nof_chan             : natural := 0;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
 CONSTANT c_twiddle_offset       : natural := 0;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
 CONSTANT c_out_gain_w           : natural :=0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
@@ -60,7 +60,7 @@ type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_in_dat_w
 type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_stage_dat_w-1 DOWNTO 0);
 type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);
 
--- barebones t_dp_sosi record
+--t_dp_sosi record
 TYPE t_bb_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                          -- ctrl
@@ -76,7 +76,7 @@ END RECORD;
 
 CONSTANT c_bb_sosi_rst_in : t_bb_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
 
--- barebones t_dp_sosi record
+--t_dp_sosi record
 TYPE t_bb_sosi_out IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC;   
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                        -- ctrl
