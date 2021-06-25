@@ -1,7 +1,7 @@
-function wb_slim_subsys2bb_knit()
+function wb_fft_subsys2bb_knit()
     %fetch wideband parameters to figure out which ports to draw
     subsysblk = gcb;
-    wb_fft_bb = [subsysblk '/wb_fft_slim'];
+    wb_fft_bb = [subsysblk '/wb_fft'];
     wb_factor = str2double(get_param(subsysblk,'wb_factor'));
     xtra_dat_sigs = checkbox2bool(get_param(subsysblk,'xtra_dat_sigs'));
     
