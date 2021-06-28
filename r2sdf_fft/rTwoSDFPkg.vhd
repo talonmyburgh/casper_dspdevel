@@ -38,9 +38,7 @@ package rTwoSDFPkg is
 		bf_in_a_zdly  : natural;        -- = 0
 		bf_out_d_zdly : natural;        -- = 0
 	end record;
-	CONSTANT c_nof_points : NATURAL := 1024;
 	constant c_fft_pipeline : t_fft_pipeline := (1, 1, 4, 1, 1, 0, 0);
-	CONSTANT c_nof_stages : NATURAL := ceil_log2(c_nof_points); 
 
 end package rTwoSDFPkg;
 

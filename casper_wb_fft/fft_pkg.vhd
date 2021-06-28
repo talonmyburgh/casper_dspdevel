@@ -47,7 +47,7 @@ package fft_pkg is
 		stat_data_sz   : positive;      -- = 2
 	end record;
 
-	constant c_fft : t_fft := (true, false, true, 0, 4, 0, 1024, 8, 14, 0, c_dsp_mult_w, 2, true, 56, 2);
+	constant c_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 8, 14, 0, c_dsp_mult_w, 2, true, 56, 2);
 
 	-- Check consistancy of the FFT parameters
 	function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure

@@ -36,7 +36,7 @@ library ieee, common_pkg_lib, casper_counter_lib, casper_ram_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
-use work.fft_pkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_reorder_sepa_pipe is
 	generic(
@@ -45,10 +45,11 @@ entity fft_reorder_sepa_pipe is
 		g_fft_shift          : boolean := false; -- apply fft_shift to have negative bin frequencies first for complex input
 		g_dont_flip_channels : boolean := false; -- set true to preserve the channel interleaving when g_bit_flip is true, otherwise the channels get separated in time when g_bit_flip is true
 		g_separate           : boolean := true; -- apply separation bins for two real inputs
-		g_nof_chan           : natural := 0 -- Exponent of nr of subbands (0 means 1 subband, 1 => 2 sb, 2 => 4 sb, etc )
+		g_nof_chan           : natural := 0; -- Exponent of nr of subbands (0 means 1 subband, 1 => 2 sb, 2 => 4 sb, etc )
+		g_ram_primitive      : string  := "auto"
 	);
 	port(
-		clken   : in  std_logic;
+		clken   : in  std_logic := '1';
 		clk     : in  std_logic;
 		rst     : in  std_logic;
 		in_dat  : in  std_logic_vector;
@@ -192,7 +193,8 @@ begin
 			g_page_sz       => c_page_size,
 			g_wr_start_page => 0,
 			g_rd_start_page => 1,
-			g_rd_latency    => 1
+			g_rd_latency    => 1,
+			g_ram_primitive => g_ram_primitive
 		)
 		port map(
 			rst          => rst,
@@ -312,7 +314,8 @@ begin
 		-- Modulo N addressing is done with the TO_UVEC function.
 		rd_adr_up   <= TO_UVEC(r.count_up, c_adr_points_w + 1); -- eg.    0 .. 512
 		rd_adr_down <= TO_UVEC(r.count_down, c_adr_points_w + 1); -- eg. 1024 .. 513, use 1 bit more to avoid truncation warning on 1024 ^= 0
-		rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
+		rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else 
+					TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
 		-- The data that is read from the memory is fed to the separate block
 		-- that performs the 2nd stage of separation. The output of the 
 		-- separate unit is connected to the output of rtwo_order_separate unit. 
