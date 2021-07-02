@@ -96,7 +96,7 @@ end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
   
-  constant c_coefs_postfix   : string := sel_a_b(g_technology = 0, ".mem", ".mif"); 
+  constant c_coefs_postfix   : string  := sel_a_b(g_technology = 0, ".mem", ".mif"); 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              
@@ -181,7 +181,12 @@ begin
     generic map (
       g_technology    =>     g_technology,
       g_ram           =>     c_coef_mem,
-      g_init_file     =>     sel_a_b(g_coefs_file_prefix = "UNUSED", g_coefs_file_prefix, g_coefs_file_prefix & "_" & NATURAL'IMAGE(g_file_index_arr(I)) & c_coefs_postfix),
+      g_init_file     =>     sel_a_b(g_coefs_file_prefix = "UNUSED", 
+                             g_coefs_file_prefix, 
+                             g_coefs_file_prefix 
+                             & "_" & integer'image(g_fil_ppf.wb_factor) 
+                             & "wb" & "_" 
+                             & NATURAL'IMAGE(g_file_index_arr(I)) & c_coefs_postfix),
       g_ram_primitive =>     g_ram_primitive,
       g_true_dual_port =>    FALSE
     )
