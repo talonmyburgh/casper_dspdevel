@@ -95,7 +95,7 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor, xtra_dat_sigs, in_dat_w, out_
         "ovflw_behav    : string;  -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
         "use_round      : string;  -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
         "ram_primitive  : string;  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-        "fifo_primitive : string;  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"     
+        "fifo_primitive : string  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"     
 	");"
 	"port("
 		"clk            : in std_logic;"
