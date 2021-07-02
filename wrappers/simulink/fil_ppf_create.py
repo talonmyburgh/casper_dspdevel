@@ -81,7 +81,7 @@ def run(argv):
     class pfir:
         infilename = ''
         outdestfolder = ''
-        outfilename = ''
+        outfileprefix = ''
         filename = ''
         nof_taps = 0
         nof_points = 0
@@ -158,12 +158,12 @@ def run(argv):
         if pfir.infilename != '':
             if pfir.verbose:
                 print("Filename will be composed from input filename")
-            pfir.outfilename = os.path.join(pathforstore,pfir.filename.split(
-                '.')[0] + '_wb%d' % pfir.wb_factor)
+            pfir.outfileprefix = os.path.join(pathforstore,pfir.filename.split(
+                '.')[0])
         else:
             if pfir.verbose:
                 print("No input filename specified - will create one from the provided paramenters.")
-            pfir.outfilename = os.path.join(pathforstore, "pfir_coeffs_%s_t%d_p%d_b%d_wb%d" % (
+            pfir.outfileprefix = os.path.join(pathforstore, "pfir_coeffs_%s_%dt_%dp_%db_%dwb" % (
                 pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
             )
 
@@ -215,7 +215,7 @@ def run(argv):
                 coefs_tmp = []
                 # append MEM index in range(c_nof_files)
                 if pfir.gen_files:
-                    t_outfilename = pfir.outfilename + \
+                    t_outfilename = pfir.outfileprefix + '_%dwb' % pfir.wb_factor + \
                         '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
                     with open(t_outfilename, 'w+') as fp:
                         for i in range(pfir.file_nof_points):
@@ -242,7 +242,7 @@ def run(argv):
 
             for j in range(pfir.nof_taps):
                 # append MIF index in range(c_nof_files)
-                t_outfilename = pfir.outfilename + \
+                t_outfilename = pfir.outfileprefix + '_%dwb' % pfir.wb_factor +\
                     '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
                 with open(t_outfilename, 'w+') as fp:
                     s = 'WIDTH=%d;\n' % pfir.coef_w
@@ -306,13 +306,13 @@ def run(argv):
 
     if pfir.ext == 'mem' and pfir.gen_files:
         writemem(pfir, pfir_coefs_flip)
-        return escape(pfir.outfilename.replace('\\', '/'))
+        return escape(pfir.outfileprefix.replace('\\', '/'))
     elif pfir.ext == 'mem' and not pfir.gen_files:
         coefs = writemem(pfir, pfir_coefs_flip)
         return coefs
     elif pfir.ext == 'mif':
         writemif(pfir, pfir_coefs_flip)
-        return pfir.outfilename.replace('\\', '/')
+        return pfir.outfileprefix.replace('\\', '/')
     else:
         None
 

@@ -292,6 +292,9 @@ PACKAGE tb_common_pkg IS
 	PROCEDURE proc_common_read_mif_file(file_name           : IN STRING;
 	                                    SIGNAL return_array : OUT t_integer_arr);
 
+	PROCEDURE proc_common_read_mem_file(file_name           : IN STRING;
+	                                    SIGNAL return_array : OUT t_integer_arr);									
+
 	-- Complex multiply function with conjugate option for input b
 	FUNCTION func_complex_multiply(in_ar, in_ai, in_br, in_bi : STD_LOGIC_VECTOR; conjugate_b : BOOLEAN; str : STRING; g_out_dat_w : NATURAL) RETURN STD_LOGIC_VECTOR;
 
@@ -1192,6 +1195,36 @@ PACKAGE BODY tb_common_pkg IS
 		-- Close the file 
 		proc_common_close_file(v_file_status, v_in_file);
 	END proc_common_read_mif_file;
+
+	------------------------------------------------------------------------------
+	-- PROCEDURE: Reads the data column from a .mem file and returns it in an 
+	--            array of integers
+	------------------------------------------------------------------------------
+	PROCEDURE proc_common_read_mem_file(file_name           : IN STRING;
+	                                    SIGNAL return_array : OUT t_integer_arr) IS
+		VARIABLE v_file_status : FILE_OPEN_STATUS;
+		FILE 	 v_in_file     : TEXT;
+		VARIABLE v_line        : LINE;
+		VARIABLE v_string      : STRING(1 TO 80);
+		VARIABLE I 			   : NATURAL := 0;
+	BEGIN
+		-- Open the .mem file for reading
+		proc_common_open_file(v_file_status, v_in_file, file_name, READ_MODE);
+		-- Read the header - there is none
+		-- Read the data till the end of the file          
+		WHILE NOT endfile(v_in_file) LOOP
+			readline(v_in_file, v_line);
+			-- Skip empty lines
+			IF v_line.all'length = 0 then
+				next;
+			END IF;
+			proc_common_readline_file(v_file_status, v_in_file, v_string); -- Read the next line from the file. 
+			return_array(I) <= func_hexstring_to_integer(v_string);
+			I := I+1;         
+		END LOOP;
+		-- Close the file 
+		proc_common_close_file(v_file_status, v_in_file);
+	END proc_common_read_mem_file;
 
 	------------------------------------------------------------------------------
 	-- FUNCTION: Complex multiply with conjugate option for input b

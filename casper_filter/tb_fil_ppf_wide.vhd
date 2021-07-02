@@ -77,8 +77,9 @@ entity tb_fil_ppf_wide is
       --                                  does not remove any of the data in order to be able to verify with the original coefficients values. 
       --   coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
       -- end record;
---    g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
-    g_enable_in_val_gaps : boolean := FALSE
+    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
+    g_enable_in_val_gaps : boolean := FALSE;
+    g_technology         : natural := 0
   );
 end entity tb_fil_ppf_wide;
 
@@ -86,32 +87,30 @@ architecture tb of tb_fil_ppf_wide is
   
   constant c_clk_period : time    := 10 ns;
   
-  constant c_nof_channels        : natural := 2**g_fil_ppf.nof_chan;
-  constant c_nof_coefs           : natural := g_fil_ppf.nof_taps * g_fil_ppf.nof_bands;       -- nof PFIR coef
-  constant c_nof_coefs_per_wb    : natural := c_nof_coefs / g_fil_ppf.wb_factor;
-  constant c_nof_data_in_filter  : natural := c_nof_coefs * c_nof_channels;                   -- nof PFIR coef expanded for all channels
-  constant c_nof_data_per_tap    : natural := c_nof_data_in_filter / g_fil_ppf.nof_taps;
-  constant c_nof_valid_in_filter : natural := c_nof_data_in_filter / g_fil_ppf.wb_factor;
-  constant c_nof_valid_per_tap   : natural := c_nof_data_per_tap / g_fil_ppf.wb_factor;
-  constant c_nof_bands_per_mif   : natural := g_fil_ppf.nof_bands / g_fil_ppf.wb_factor;
-  constant c_mif_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
-  constant c_mif_coef_mem_span   : natural := 2**c_mif_coef_mem_addr_w;                       -- mif coef mem span for one tap
+  constant c_nof_channels         : natural := 2**g_fil_ppf.nof_chan;
+  constant c_nof_coefs            : natural := g_fil_ppf.nof_taps * g_fil_ppf.nof_bands;       -- nof PFIR coef
+  constant c_nof_coefs_per_wb     : natural := c_nof_coefs / g_fil_ppf.wb_factor;
+  constant c_nof_data_in_filter   : natural := c_nof_coefs * c_nof_channels;                   -- nof PFIR coef expanded for all channels
+  constant c_nof_data_per_tap     : natural := c_nof_data_in_filter / g_fil_ppf.nof_taps;
+  constant c_nof_valid_in_filter  : natural := c_nof_data_in_filter / g_fil_ppf.wb_factor;
+  constant c_nof_valid_per_tap    : natural := c_nof_data_per_tap / g_fil_ppf.wb_factor;
+  constant c_nof_bands_per_file   : natural := g_fil_ppf.nof_bands / g_fil_ppf.wb_factor;
+  constant c_file_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
+  constant c_file_coef_mem_span   : natural := 2**c_file_coef_mem_addr_w;                       -- mif coef mem span for one tap
 
---  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
---                                                                    "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
---                                                                    "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
---  constant c_mif_file_prefix     : string  := c_coefs_file_prefix & "_" & integer'image(g_fil_ppf.wb_factor) & "wb";
+  constant c_coefs_file_prefix    : string  := g_coefs_file_prefix;
+  constant c_memory_file_prefix   : string  := c_coefs_file_prefix & "_" & integer'image(g_fil_ppf.wb_factor) & "wb";
   
-  constant c_fil_prod_w          : natural := g_fil_ppf.in_dat_w + g_fil_ppf.coef_dat_w - 1;  -- skip double sign bit
-  constant c_fil_sum_w           : natural := c_fil_prod_w;                                   -- DC gain = 1
-  constant c_fil_lsb_w           : natural := c_fil_sum_w - g_fil_ppf.out_dat_w;              -- nof LSbits that get rounded for out_dat
-  constant c_in_ampl             : natural := 2**c_fil_lsb_w;                                 -- scale in_dat to compensate for rounding
+  constant c_fil_prod_w           : natural := g_fil_ppf.in_dat_w + g_fil_ppf.coef_dat_w - 1;  -- skip double sign bit
+  constant c_fil_sum_w            : natural := c_fil_prod_w;                                   -- DC gain = 1
+  constant c_fil_lsb_w            : natural := c_fil_sum_w - g_fil_ppf.out_dat_w;              -- nof LSbits that get rounded for out_dat
+  constant c_in_ampl              : natural := 2**c_fil_lsb_w;                                 -- scale in_dat to compensate for rounding
   
-  constant c_gap_factor          : natural := sel_a_b(g_enable_in_val_gaps, 3, 1);
+  constant c_gap_factor           : natural := sel_a_b(g_enable_in_val_gaps, 3, 1);
   
   -- input/output data width
-  constant c_in_dat_w            : natural := g_fil_ppf.in_dat_w;   
-  constant c_out_dat_w           : natural := g_fil_ppf.out_dat_w;
+  constant c_in_dat_w             : natural := g_fil_ppf.in_dat_w;   
+  constant c_out_dat_w            : natural := g_fil_ppf.out_dat_w;
 
   type t_wb_integer_arr2 is array(integer range <>) of t_integer_arr(c_nof_valid_in_filter-1 downto 0);
   
@@ -135,8 +134,8 @@ architecture tb of tb_fil_ppf_wide is
   signal out_val         : std_logic; 
   signal out_val_cnt     : natural := 0;
                          
-  signal mif_coefs_arr   : t_integer_arr(c_nof_bands_per_mif-1 downto 0) := (OTHERS=>0);            -- = PFIR coef for 1 wb, 1 tap as read from 1 MIF file
-  signal mif_dat_arr2    : t_wb_integer_arr2(0 to g_fil_ppf.wb_factor-1) := (OTHERS=>(OTHERS=>0));  -- = PFIR coef for all taps as read from all MIF files and expanded for all channels
+  signal memory_coefs_arr   : t_integer_arr(c_nof_bands_per_file-1 downto 0) := (OTHERS=>0);            -- = PFIR coef for 1 wb, 1 tap as read from 1 MIF file
+  signal memory_dat_arr2    : t_wb_integer_arr2(0 to g_fil_ppf.wb_factor-1) := (OTHERS=>(OTHERS=>0));  -- = PFIR coef for all taps as read from all MIF files and expanded for all channels
 
   signal ref_coefs_arr   : t_integer_arr(c_nof_coefs-1 downto 0) := (OTHERS=>0);                    -- = PFIR coef for all taps as read from the coefs file
   signal ref_dat_arr2    : t_wb_integer_arr2(0 to g_fil_ppf.wb_factor-1) := (OTHERS=>(OTHERS=>0));  -- = PFIR coef for all taps as read from the coefs file expanded for all channels
@@ -229,17 +228,21 @@ begin
     wait;
   end process;
 
-  p_create_ref_from_mif_file : PROCESS
+  p_create_ref_from_memory_file : PROCESS
   begin
     for P in 0 to g_fil_ppf.wb_factor-1 loop
       for J in 0 to g_fil_ppf.nof_taps-1 loop
-        -- Read coeffs per wb and per tap from MIF file
-        proc_common_read_mif_file(c_mif_file_prefix & "_" & integer'image(P*g_fil_ppf.nof_taps+J) & ".mif", mif_coefs_arr);
+        -- Read coeffs per wb and per tap from MEMORY file
+        if g_technology = 1 then
+          proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(P*g_fil_ppf.nof_taps+J) & ".mif", memory_coefs_arr);
+        elsif g_technology = 0 then
+          proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(P*g_fil_ppf.nof_taps+J) & ".mem", memory_coefs_arr);
+        end if;
         wait for 1 ns;
         -- Expand the channels (for one stream)
-        for I in 0 to c_nof_bands_per_mif-1 loop
+        for I in 0 to c_nof_bands_per_file-1 loop
           for K in 0 to c_nof_channels-1 loop
-            mif_dat_arr2(P)(J*c_nof_valid_per_tap + I*c_nof_channels + K) <= TO_SINT(TO_SVEC(mif_coefs_arr(I), g_fil_ppf.coef_dat_w));
+            memory_dat_arr2(P)(J*c_nof_valid_per_tap + I*c_nof_channels + K) <= TO_SINT(TO_SVEC(memory_coefs_arr(I), g_fil_ppf.coef_dat_w));
           end loop;
         end loop;
       end loop;
@@ -247,30 +250,30 @@ begin
     wait;
   end process;
 
-  p_coefs_memory_read : process
-    variable v_mif_index   : natural;
-    variable v_mif_base    : natural;
-    variable v_coef_offset : natural;
-    variable v_coef_index  : natural;
-  begin
-    ram_coefs_mosi <= c_mem_mosi_rst;
-    for P in 0 to g_fil_ppf.wb_factor-1 loop
-      for J in 0 to g_fil_ppf.nof_taps-1 loop
-        v_mif_index := P*g_fil_ppf.nof_taps+J;
-        v_mif_base  := v_mif_index*c_mif_coef_mem_span;
-        v_coef_offset := g_fil_ppf.nof_bands*(J+1)-1-P;  -- coeff in MIF are in flipped order, unflip this in v_coef_index
-        for I in 0 to c_nof_bands_per_mif-1 loop
-          proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
-          proc_mem_mm_bus_rd_latency(1, clk);
-          v_coef_index := v_coef_offset - I*g_fil_ppf.wb_factor;
-          read_coefs_arr(v_coef_index) <= TO_SINT(ram_coefs_miso.rddata(g_fil_ppf.coef_dat_w-1 DOWNTO 0));
-        end loop;
-      end loop;
-    end loop;
-    proc_common_wait_some_cycles(clk, 1);
-    tb_end_mm <= '1';
-    wait;
-  end process;
+--  p_coefs_memory_read : process
+--    variable v_mif_index   : natural;
+--    variable v_mif_base    : natural;
+--    variable v_coef_offset : natural;
+--    variable v_coef_index  : natural;
+--  begin
+--    ram_coefs_mosi <= c_mem_mosi_rst;
+--    for P in 0 to g_fil_ppf.wb_factor-1 loop
+--      for J in 0 to g_fil_ppf.nof_taps-1 loop
+--        v_mif_index := P*g_fil_ppf.nof_taps+J;
+--        v_mif_base  := v_mif_index*c_file_coef_mem_span;
+--        v_coef_offset := g_fil_ppf.nof_bands*(J+1)-1-P;  -- coeff in MIF are in flipped order, unflip this in v_coef_index
+--        for I in 0 to c_nof_bands_per_file-1 loop
+--          proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
+--          proc_mem_mm_bus_rd_latency(1, clk);
+--          v_coef_index := v_coef_offset - I*g_fil_ppf.wb_factor;
+--          read_coefs_arr(v_coef_index) <= TO_SINT(ram_coefs_miso.rddata(g_fil_ppf.coef_dat_w-1 DOWNTO 0));
+--        end loop;
+--      end loop;
+--    end loop;
+--    proc_common_wait_some_cycles(clk, 1);
+--    tb_end_mm <= '1';
+--    wait;
+--  end process;
 
   ---------------------------------------------------------------  
   -- DUT = Device Under Test
@@ -281,15 +284,17 @@ begin
     g_big_endian_wb_out => g_big_endian_wb_out,
     g_fil_ppf           => g_fil_ppf,
     g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
-    g_coefs_file_prefix => c_mif_file_prefix 
+    g_coefs_file_prefix => c_coefs_file_prefix,
+    g_technology        => g_technology
   )
   port map (
-    dp_clk         => clk,
-    dp_rst         => rst,
-    mm_clk         => clk,
-    mm_rst         => rst,
-    ram_coefs_mosi => ram_coefs_mosi, 
-    ram_coefs_miso => ram_coefs_miso, 
+    clk            => clk,
+    ce             => '1',
+    rst            => rst,
+    -- mm_clk         => clk,
+    -- mm_rst         => rst,
+    -- ram_coefs_mosi => ram_coefs_mosi, 
+    -- ram_coefs_miso => ram_coefs_miso, 
     in_dat_arr     => in_dat_arr,
     in_val         => in_val,
     out_dat_arr    => out_dat_arr,
