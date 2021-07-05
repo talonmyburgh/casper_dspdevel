@@ -239,46 +239,8 @@ begin
 		gen_fft_pipe_inputs : for I in 0 to g_fft.wb_factor - 1 generate
 			par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), g_fft.stage_dat_w);
 			par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), g_fft.stage_dat_w);
-		
-		--REQUANTIZE (though chronologically before the par FFT, we're requantising its output)
-		u_requantize_par_output_re : entity casper_requantize_lib.common_requantize
-				generic map(
-					g_representation      => "SIGNED",
-					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => c_round,
-					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => c_clip,
-					g_msb_clip_symmetric  => FALSE,
-					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
-					g_pipeline_remove_msb => 0,
-					g_in_dat_w            => g_fft.stage_dat_w,
-					g_out_dat_w           => g_fft.out_dat_w
-				)
-				port map(
-					clk     			  => clk,
-					in_dat  			  => par_stg_fft_re_out(I),
-					out_dat 			  => out_re_arr(I),
-					out_ovr 			  => open
-				);
-		u_requantize_par_output_im : entity casper_requantize_lib.common_requantize
-				generic map(
-					g_representation      => "SIGNED",
-					g_lsb_w               => c_out_scale_w,
-					g_lsb_round           => c_round,
-					g_lsb_round_clip      => FALSE,
-					g_msb_clip            => c_clip,
-					g_msb_clip_symmetric  => FALSE,
-					g_pipeline_remove_lsb => c_pipeline_remove_lsb,
-					g_pipeline_remove_msb => 0,
-					g_in_dat_w            => g_fft.stage_dat_w,
-					g_out_dat_w           => g_fft.out_dat_w
-				)
-				port map(
-					clk     			  => clk,
-					in_dat  			  => par_stg_fft_im_out(I),
-					out_dat 			  => out_im_arr(I),
-					out_ovr 			  => open
-				);
+			out_re_arr(I) 			 <= RESIZE_SVEC(par_stg_fft_re_out(I), g_fft.out_dat_w);
+			out_im_arr(I) 			 <= RESIZE_SVEC(par_stg_fft_im_out(I), g_fft.out_dat_w);
 		end generate;
 
 		u_fft_r2_par : entity work.fft_r2_par
