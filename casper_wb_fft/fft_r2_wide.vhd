@@ -276,7 +276,7 @@ begin
 				port map(
 					clk     			  => clk,
 					in_dat  			  => par_stg_fft_im_out(I),
-					out_dat 			  => out_re_arr(I),
+					out_dat 			  => out_im_arr(I),
 					out_ovr 			  => open
 				);
 		end generate;
