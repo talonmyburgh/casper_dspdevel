@@ -35,9 +35,9 @@ ENTITY tb_tb_fil_ppf_single IS
 END tb_tb_fil_ppf_single;
 
 ARCHITECTURE tb OF tb_tb_fil_ppf_single IS
-  
-  CONSTANT c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
-  CONSTANT c_prefix           : string  := "hex/run_pfir_coeff_m_incrementing";
+
+  CONSTANT c_prefix           : string  := c_coefs_file;
+  CONSTANT c_technology       : natural := 0;
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
   
@@ -73,10 +73,10 @@ BEGIN
 --g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
 --g_enable_in_val_gaps : boolean := FALSE
 
-  u_act           : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, 8, 23, 16), c_prefix, FALSE);
-  u_rnd_quant     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, 8, 16, 16), c_prefix, TRUE);
-  u_rnd_9taps     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, 8, 17, 16), c_prefix, TRUE);
-  u_rnd_3streams  : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, 8, 18, 16), c_prefix, TRUE);
-  u_rnd_4channels : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, 8, 22, 16), c_prefix, TRUE);
+  u_act           : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE, 0);
+  -- u_rnd_quant     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
+  -- u_rnd_9taps     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
+  -- u_rnd_3streams  : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
+  -- u_rnd_4channels : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
   
 END tb;

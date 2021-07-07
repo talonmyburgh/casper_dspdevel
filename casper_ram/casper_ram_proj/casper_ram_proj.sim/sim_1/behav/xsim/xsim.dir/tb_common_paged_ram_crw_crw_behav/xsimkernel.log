@@ -1,7 +1,0 @@
-Running: xsim.dir/tb_common_paged_ram_crw_crw_behav/xsimk -simmode gui -wdb tb_common_paged_ram_crw_crw_behav.wdb -simrunnum 0 -socket 33375
-Design successfully loaded
-Design Loading Memory Usage: 44392 KB (Peak: 44392 KB)
-Design Loading CPU Usage: 20 ms
-Simulation completed
-Simulation Memory Usage: 134740 KB (Peak: 183660 KB)
-Simulation CPU Usage: 40 ms

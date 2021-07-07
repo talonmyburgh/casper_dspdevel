@@ -72,7 +72,7 @@ function casper_wb_fft_config(this_block)
   %Update the vhdl top file with the required ports per wb_factor:
   vhdlfile = top_wb_fft_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
 
-  % System Generator has to assume that your entity  has a combinational feed through; 
+  % System Generator has to assume that your entity has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
   this_block.tagAsCombinational;
 

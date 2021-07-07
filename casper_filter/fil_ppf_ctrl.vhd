@@ -43,7 +43,8 @@ entity fil_ppf_ctrl is
   );
   port (       
     rst         : in  std_logic := '0';  
-    clk         : in  std_logic;         
+    clk         : in  std_logic;
+    ce          : in  std_logic;         
     in_dat      : in  std_logic_vector;
     in_val      : in  std_logic;         
     taps_in_vec : in  std_logic_vector;
@@ -140,10 +141,12 @@ begin
     
   end process comb;
   
-  regs : process(clk)
-  begin 
-    if rising_edge(clk) then 
-      r <= rin; 
+  regs : process(clk, ce)
+  begin
+    if (ce = '1') then
+      if rising_edge(clk) then 
+        r <= rin; 
+      end if;
     end if; 
   end process; 
   
