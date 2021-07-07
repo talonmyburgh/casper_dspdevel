@@ -1,5 +1,7 @@
-function filtercoef_mem_gen(N,taps,win,fwidth,sign,b_width,f_width)
-    fixarray = fi(coefcalc(N,taps,win,fwidth),sign,b_width,f_width);
+% Not used but could come in useful for coefficient generation in the future. Mem file and coefficient generation
+% is done by wrappers/simulink/fil_ppf_create.py
+function memfile = filtercoef_mem_gen(N,taps,win,fwidth,signed,bit_width,fraction_width)
+    fixarray = fi(coefcalc(N,taps,win,fwidth),signed,bit_width,fraction_width);
     memfile = sprintf("filter_coefs_%d_%d_%s_%.2f.mem",N,taps,win,fwidth);
     Mfile = fopen(memfile,'w');
     if(Mfile == -1)
@@ -9,11 +11,10 @@ function filtercoef_mem_gen(N,taps,win,fwidth,sign,b_width,f_width)
        fprintf(Mfile,'%s\n',hex(fixarray(i))); 
     end
     fclose(Mfile);
+    return;
 end
 function coefs = coefcalc(N, taps, win, fwidth)
 %coefgen - Generate filterbank coeficients CASPER styles.
-%
-% Syntax: coefs = coefgen(N, taps, )
     alltaps = N*taps;
     if strcmp(win,'hanning')
         windowval = transpose(hanning(alltaps));

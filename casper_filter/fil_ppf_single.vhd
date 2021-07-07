@@ -75,15 +75,18 @@ entity fil_ppf_single is
     g_fil_ppf           : t_fil_ppf          := c_fil_ppf;    
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
-    g_coefs_file        : string                                        -- Relative path to the mem files that contain the initial data for the coefficients memories 
-  );                                                                    -- The sequence number and ".mif"-extension are added within the entity.
+    g_coefs_file_prefix : string             := c_coefs_file;    -- Relative path to the mem files that contain the initial data for the coefficients memories
+    g_technology        : natural            := 0;
+    g_ram_primitive     : string             := "auto" 
+  );                                                                    
   port (
-    dp_clk         : in  std_logic;
-    dp_rst         : in  std_logic;
-    mm_clk         : in  std_logic;
-    mm_rst         : in  std_logic;
-    ram_coefs_mosi : in  t_mem_mosi;               
-    ram_coefs_miso : out t_mem_miso := c_mem_miso_rst;
+    clk         : in  std_logic;
+    ce          : in  std_logic;
+    rst         : in  std_logic;
+    -- mm_clk         : in  std_logic;
+    -- mm_rst         : in  std_logic;
+    -- ram_coefs_mosi : in  t_mem_mosi;               
+    -- ram_coefs_miso : out t_mem_miso := c_mem_miso_rst;
     in_dat         : in  std_logic_vector(g_fil_ppf.nof_streams*g_fil_ppf.in_dat_w-1 downto 0);
     in_val         : in  std_logic;  
     out_dat        : out std_logic_vector(g_fil_ppf.nof_streams*g_fil_ppf.out_dat_w-1 downto 0);
@@ -92,7 +95,8 @@ entity fil_ppf_single is
 end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
-   
+  
+  constant c_coefs_postfix   : string  := sel_a_b(g_technology = 0, ".mem", ".mif"); 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              
@@ -112,8 +116,8 @@ architecture rtl of fil_ppf_single is
                                     nof_dat   => g_fil_ppf.nof_bands,
                                     init_sl   => '0');  -- use '0' instead of 'X' to avoid RTL RAM simulation warnings due to read before write
 
-  signal ram_coefs_mosi_arr : t_mem_mosi_arr(g_fil_ppf.nof_taps-1 downto 0);                               
-  signal ram_coefs_miso_arr : t_mem_miso_arr(g_fil_ppf.nof_taps-1 downto 0) := (others => c_mem_miso_rst); 
+  -- signal ram_coefs_mosi_arr : t_mem_mosi_arr(g_fil_ppf.nof_taps-1 downto 0);                               
+  -- signal ram_coefs_miso_arr : t_mem_miso_arr(g_fil_ppf.nof_taps-1 downto 0) := (others => c_mem_miso_rst); 
   signal taps_wren          : std_logic;
   signal taps_rdaddr        : std_logic_vector(c_taps_mem_addr_w-1 downto 0); 
   signal taps_wraddr        : std_logic_vector(c_taps_mem_addr_w-1 downto 0);
@@ -121,6 +125,9 @@ architecture rtl of fil_ppf_single is
   signal taps_mem_in_vec    : std_logic_vector(c_taps_mem_data_w*g_fil_ppf.nof_streams-1 downto 0);
   signal coef_rdaddr        : std_logic_vector(c_coef_mem_addr_w-1 downto 0);     
   signal coef_vec           : std_logic_vector(c_coef_mem_data_w*g_fil_ppf.nof_taps-1 downto 0);
+
+  signal wr_dat           :std_logic_vector(c_coef_mem_data_w-1 DOWNTO 0) := (others => '0');
+  signal wr_adr           :std_logic_vector(c_coef_mem_addr_w-1 DOWNTO 0) := (others => '0');
                                                                                                                  
 begin 
 
@@ -129,12 +136,15 @@ begin
   ---------------------------------------------------------------
   gen_taps_mems : for I in 0 to g_fil_ppf.nof_streams-1 generate
     u_taps_mem : entity casper_ram_lib.common_ram_r_w                                                          
-    generic map (                                                                                     
-      g_ram       => c_taps_mem,                                                                           
-      g_init_file => "UNUSED"     -- assume block RAM gets initialized to '0' by default in simulation
+    generic map (
+      g_technology    => g_technology,                                                                                     
+      g_ram           => c_taps_mem,                                                                           
+      g_init_file     => "UNUSED",     -- assume block RAM gets initialized to '0' by default in simulation
+      g_ram_primitive => g_ram_primitive
     )                                                                                               
     port map (                                                                                                                                                                     
-      clk       => dp_clk,                                                                               
+      clk       => clk,
+      clken     => ce,                                                                               
       wr_en     => taps_wren,                                                                              
       wr_adr    => taps_wraddr,                                                                            
       wr_dat    => taps_mem_in_vec((I+1)*c_taps_mem_data_w-1 downto I*c_taps_mem_data_w),                                                                            
@@ -149,49 +159,81 @@ begin
   ---------------------------------------------------------------
   -- Combine the internal array of mm interfaces for the coefficents 
   -- memory to one array that is connected to the port of the fil_ppf
-  u_mem_mux_coef : entity casper_mm_lib.common_mem_mux
-  generic map (    
-    g_nof_mosi    => g_fil_ppf.nof_taps,
-    g_mult_addr_w => c_coef_mem_addr_w
-  )
-  port map (
-    mosi     => ram_coefs_mosi,
-    miso     => ram_coefs_miso,
-    mosi_arr => ram_coefs_mosi_arr,
-    miso_arr => ram_coefs_miso_arr
-  );
+  -- u_mem_mux_coef : entity casper_mm_lib.common_mem_mux
+  -- generic map (    
+  --   g_nof_mosi    => g_fil_ppf.nof_taps,
+  --   g_mult_addr_w => c_coef_mem_addr_w
+  -- )
+  -- port map (
+  --   mosi     => ram_coefs_mosi,
+  --   miso     => ram_coefs_miso,
+  --   mosi_arr => ram_coefs_mosi_arr,
+  --   miso_arr => ram_coefs_miso_arr
+  -- );
 
   ---------------------------------------------------------------
   -- GENERATE THE COEFFICIENT MEMORIES
   ---------------------------------------------------------------
   -- For every tap a unique memory is instantiated that holds
   -- the corresponding coefficients for all the bands. 
-  gen_coef_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
-    u_coef_mem : entity casper_ram_lib.common_ram_crw_crw
+  gen_coefs_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
+    u_coef_mem : entity casper_ram_lib.common_ram_r_w
     generic map (
-      g_ram        => c_coef_mem,
-      -- Sequence number and ".hex" extensie are added to the relative path in case a ram file is provided.                                                          
-      g_init_file  => g_coefs_file    
+      g_technology    =>     g_technology,
+      g_ram           =>     c_coef_mem,
+      g_init_file     =>     sel_a_b(g_coefs_file_prefix = "UNUSED", 
+                             g_coefs_file_prefix, 
+                             g_coefs_file_prefix 
+                             & "_" & integer'image(g_fil_ppf.wb_factor) 
+                             & "wb" & "_" 
+                             & NATURAL'IMAGE(g_file_index_arr(I)) & c_coefs_postfix),
+      g_ram_primitive =>     g_ram_primitive,
+      g_true_dual_port =>    FALSE
     )
-    port map (
-      -- MM side
-      clk_a     => mm_clk,
-      wr_en_a   => ram_coefs_mosi_arr(I).wr,
-      wr_dat_a  => ram_coefs_mosi_arr(I).wrdata(g_fil_ppf.coef_dat_w-1 downto 0),
-      adr_a     => ram_coefs_mosi_arr(I).address(c_coef_mem.adr_w-1 downto 0),
-      rd_en_a   => ram_coefs_mosi_arr(I).rd,
-      rd_dat_a  => ram_coefs_miso_arr(I).rddata(g_fil_ppf.coef_dat_w-1 downto 0),
-      rd_val_a  => ram_coefs_miso_arr(I).rdval,
-      -- Datapath side
-      clk_b     => dp_clk,
-      wr_en_b   => '0',
-      wr_dat_b  => (others =>'0'),
-      adr_b     => coef_rdaddr,
-      rd_en_b   => '1',
-      rd_dat_b  => coef_vec((I+1)*c_coef_mem_data_w-1 downto I*c_coef_mem_data_w),
-      rd_val_b  => open
+    port map
+    (
+      clk =>        clk,
+      clken =>      ce,
+      wr_en =>      '0',
+      wr_dat =>     wr_dat,
+      wr_adr =>     wr_adr,
+      rd_adr =>     coef_rdaddr,
+      rd_en =>      '1',
+      rd_dat =>     coef_vec((I+1)*c_coef_mem_data_w-1 downto I*c_coef_mem_data_w),
+      rd_val =>     open
     );
-  end generate;              
+  end generate;
+
+
+  -- gen_coef_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
+  --   u_coef_mem : entity casper_ram_lib.common_ram_crw_crw
+  --   generic map (
+  --     g_technology => g_technology,
+  --     g_ram        => c_coef_mem,                                                  
+  --     g_init_file  => g_coefs_file_prefix,
+  --     g_ram_primitive => g_ram_primitive    
+  --   )
+  --   port map (
+  --     -- MM side
+  --     clk_a     => '0',                                                                     --mm_clk,
+  --     clken_a   => '0',
+  --     wr_en_a   => '0',                                                                     --ram_coefs_mosi_arr(I).wr,
+  --     wr_dat_a  => wr_dat,                                                           --ram_coefs_mosi_arr(I).wrdata(g_fil_ppf.coef_dat_w-1 downto 0),
+  --     adr_a     => wr_adr,                                                           --ram_coefs_mosi_arr(I).address(c_coef_mem.adr_w-1 downto 0),
+  --     rd_en_a   => '0',                                                                     --ram_coefs_mosi_arr(I).rd,
+  --     rd_dat_a  => open,                                                           --ram_coefs_miso_arr(I).rddata(g_fil_ppf.coef_dat_w-1 downto 0),
+  --     rd_val_a  => open,                                                                     --ram_coefs_miso_arr(I).rdval,
+  --     -- Datapath side
+  --     clk_b     => clk,
+  --     clken_b   => ce,
+  --     wr_en_b   => '0',
+  --     wr_dat_b  => wr_dat,
+  --     adr_b     => coef_rdaddr,
+  --     rd_en_b   => '1',
+  --     rd_dat_b  => coef_vec((I+1)*c_coef_mem_data_w-1 downto I*c_coef_mem_data_w),
+  --     rd_val_b  => open
+  --   );
+  -- end generate;              
   
   -- Address the coefficients, taking into account the nof_chan. The coefficients will only be
   -- updated if all 2**nof_chan time-multiples signals are processed. 
@@ -209,8 +251,9 @@ begin
     g_fil_ppf          => g_fil_ppf
   )
   port map (
-    clk          => dp_clk,
-    rst          => dp_rst,
+    clk          => clk,
+    ce           => ce,
+    rst          => rst,
     in_dat       => in_dat,
     in_val       => in_val,
     taps_rdaddr  => taps_rdaddr,
@@ -233,8 +276,8 @@ begin
       g_fil_ppf          => g_fil_ppf
     )
     port map (
-      clk       => dp_clk,  
-      rst       => dp_rst,
+      clk       => clk,  
+      rst       => rst,
       taps      => taps_mem_out_vec((I+1)*c_taps_mem_data_w-1 downto I*c_taps_mem_data_w),
       coefs     => coef_vec,
       result    => out_dat((I+1)*g_fil_ppf.out_dat_w-1 downto I*g_fil_ppf.out_dat_w)
