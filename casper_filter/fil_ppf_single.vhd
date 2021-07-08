@@ -136,8 +136,7 @@ begin
   ---------------------------------------------------------------
   gen_taps_mems : for I in 0 to g_fil_ppf.nof_streams-1 generate
     u_taps_mem : entity casper_ram_lib.common_ram_r_w                                                          
-    generic map (
-      g_technology    => g_technology,                                                                                     
+    generic map (                                                                                    
       g_ram           => c_taps_mem,                                                                           
       g_init_file     => "UNUSED",     -- assume block RAM gets initialized to '0' by default in simulation
       g_ram_primitive => g_ram_primitive
@@ -179,7 +178,6 @@ begin
   gen_coefs_mems : for I in 0 to g_fil_ppf.nof_taps-1 generate
     u_coef_mem : entity casper_ram_lib.common_ram_r_w
     generic map (
-      g_technology    =>     g_technology,
       g_ram           =>     c_coef_mem,
       g_init_file     =>     sel_a_b(g_coefs_file_prefix = "UNUSED", 
                              g_coefs_file_prefix, 
