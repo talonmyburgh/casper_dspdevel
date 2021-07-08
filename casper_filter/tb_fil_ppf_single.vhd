@@ -129,16 +129,16 @@
 --   > observe out_dat in analogue format in Wave window
 --   > testbench is selftesting.
 --
-library ieee, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_ram_lib, astron_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib; -- casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
+-- use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fil_pkg.all;
 
@@ -171,8 +171,9 @@ entity tb_fil_ppf_single is
       --                                  does not remove any of the data in order to be able to verify with the original coefficients values.
       --   coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
       -- end record;
-    g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
-    g_enable_in_val_gaps : boolean := FALSE
+    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
+    g_enable_in_val_gaps : boolean := FALSE;
+    g_technology         : natural := 0
   );
 end entity tb_fil_ppf_single;
 
@@ -180,19 +181,17 @@ architecture tb of tb_fil_ppf_single is
 
   constant c_clk_period          : time    := 10 ns;
 
-  constant c_nof_channels        : natural := 2**g_fil_ppf.nof_chan;
-  constant c_nof_coefs           : natural := g_fil_ppf.nof_taps * g_fil_ppf.nof_bands;       -- nof PFIR coef
-  constant c_nof_data_in_filter  : natural := c_nof_coefs * c_nof_channels;                   -- nof PFIR coef expanded for all channels
-  constant c_nof_data_per_tap    : natural := g_fil_ppf.nof_bands * c_nof_channels;
-  constant c_nof_bands_per_mif   : natural := g_fil_ppf.nof_bands;
-  constant c_nof_mif_files       : natural := g_fil_ppf.nof_taps;
-  constant c_mif_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
-  constant c_mif_coef_mem_span   : natural := 2**c_mif_coef_mem_addr_w;                       -- mif coef mem span for one tap
-  constant c_coefs_file_prefix   : string  := g_coefs_file_prefix & "_" & integer'image(g_fil_ppf.nof_taps) & "taps" &
-                                                                    "_" & integer'image(g_fil_ppf.nof_bands) & "points" &
-                                                                    "_" & integer'image(g_fil_ppf.coef_dat_w) & "b";
-  constant c_mif_file_prefix     : string  := c_coefs_file_prefix & "_" & "1wb";
-  constant c_mif_file_index_arr  : t_nat_natural_arr := array_init(0, c_nof_mif_files, 1);
+  constant c_nof_channels           : natural := 2**g_fil_ppf.nof_chan;
+  constant c_nof_coefs              : natural := g_fil_ppf.nof_taps * g_fil_ppf.nof_bands;       -- nof PFIR coef
+  constant c_nof_data_in_filter     : natural := c_nof_coefs * c_nof_channels;                   -- nof PFIR coef expanded for all channels
+  constant c_nof_data_per_tap       : natural := g_fil_ppf.nof_bands * c_nof_channels;
+  constant c_nof_bands_per_file     : natural := g_fil_ppf.nof_bands;
+  constant c_nof_memory_files       : natural := g_fil_ppf.nof_taps;
+  constant c_file_coef_mem_addr_w   : natural := ceil_log2(g_fil_ppf.nof_bands);
+  constant c_file_coef_mem_span     : natural := 2**c_file_coef_mem_addr_w;                       -- file coef mem span for one tap
+  constant c_coefs_file_prefix      : string  := g_coefs_file_prefix;
+  constant c_memory_file_prefix     : string  := c_coefs_file_prefix & "_" & "1wb";
+  constant c_file_index_arr         : t_nat_natural_arr := array_init(0, c_nof_memory_files, 1);
   
   constant c_fil_prod_w          : natural := g_fil_ppf.in_dat_w + g_fil_ppf.coef_dat_w - 1;  -- skip double sign bit
   constant c_fil_sum_w           : natural := c_fil_prod_w;                                   -- DC gain = 1
@@ -225,8 +224,8 @@ architecture tb of tb_fil_ppf_single is
   signal out_val        : std_logic;
   signal out_val_cnt    : natural := 0;
 
-  signal mif_coefs_arr  : t_integer_arr(g_fil_ppf.nof_bands-1 downto 0) := (OTHERS=>0);   -- = PFIR coef for 1 tap as read from 1 MIF file
-  signal mif_dat_arr    : t_integer_arr(c_nof_data_in_filter-1 downto 0) := (OTHERS=>0);  -- = PFIR coef for all taps as read from all MIF files and expanded for all channels
+  signal memory_coefs_arr  : t_integer_arr(g_fil_ppf.nof_bands-1 downto 0) := (OTHERS=>0);   -- = PFIR coef for 1 tap as read from 1 MIF file
+  signal file_dat_arr    : t_integer_arr(c_nof_data_in_filter-1 downto 0) := (OTHERS=>0);  -- = PFIR coef for all taps as read from all MIF files and expanded for all channels
 
   signal ref_coefs_arr  : t_integer_arr(c_nof_coefs-1 downto 0) := (OTHERS=>0);           -- = PFIR coef for all taps as read from the coefs file
   signal ref_dat_arr    : t_integer_arr(c_nof_data_in_filter-1 downto 0) := (OTHERS=>0);  -- = PFIR coef for all taps as read from the coefs file expanded for all channels
@@ -312,58 +311,62 @@ begin
     wait;
   end process;
 
-  p_create_ref_from_mif_file : PROCESS
+  p_create_ref_from_memory_file : PROCESS
   begin
     for J in 0 to g_fil_ppf.nof_taps-1 loop
-      -- Read coeffs per tap from MIF file
-      proc_common_read_mif_file(c_mif_file_prefix & "_" & integer'image(J) & ".mif", mif_coefs_arr);
+      -- Read coeffs per tap from MEMORY file
+      if g_technology = 1 then
+        proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(J) & ".mif", memory_coefs_arr);
+      elsif g_technology = 0 then
+        proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(J) & ".mem", memory_coefs_arr);
+      end if;
       wait for 1 ns;
       -- Expand the channels (for one stream)
       for I in 0 to g_fil_ppf.nof_bands-1 loop
         for K in 0 to c_nof_channels-1 loop
-          mif_dat_arr(J*c_nof_data_per_tap + I*c_nof_channels + K) <= TO_SINT(TO_SVEC(mif_coefs_arr(I), g_fil_ppf.coef_dat_w));
+          file_dat_arr(J*c_nof_data_per_tap + I*c_nof_channels + K) <= TO_SINT(TO_SVEC(memory_coefs_arr(I), g_fil_ppf.coef_dat_w));
         end loop;
       end loop;
     end loop;
     wait;
   end process;
 
-  p_coefs_memory_read : process
-    variable v_mif_base    : natural;
-    variable v_coef_offset : natural;
-    variable v_coef_index  : natural;
-  begin
-    ram_coefs_mosi <= c_mem_mosi_rst;
-    for J in 0 to g_fil_ppf.nof_taps-1 loop
-      v_mif_base  := J*c_mif_coef_mem_span;
-      v_coef_offset := g_fil_ppf.nof_bands*(J+1)-1;
-      for I in 0 to c_nof_bands_per_mif-1 loop
-        proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
-        proc_mem_mm_bus_rd_latency(1, clk);
-        v_coef_index := v_coef_offset - I;
-        read_coefs_arr(v_coef_index) <= TO_SINT(ram_coefs_miso.rddata(g_fil_ppf.coef_dat_w-1 DOWNTO 0));
-      end loop;
-    end loop;
-    proc_common_wait_some_cycles(clk, 1);
-    tb_end_mm <= '1';
-    wait;
-  end process;
+--   p_coefs_memory_read : process
+--     variable v_mif_base    : natural;
+--     variable v_coef_offset : natural;
+--     variable v_coef_index  : natural;
+--   begin
+--     ram_coefs_mosi <= c_mem_mosi_rst;
+--     for J in 0 to g_fil_ppf.nof_taps-1 loop
+--       v_mif_base  := J*c_mif_coef_mem_span;
+--       v_coef_offset := g_fil_ppf.nof_bands*(J+1)-1;
+--       for I in 0 to c_nof_bands_per_mif-1 loop
+-- --        proc_mem_mm_bus_rd(v_mif_base+I, clk, ram_coefs_miso, ram_coefs_mosi);
+-- --        proc_mem_mm_bus_rd_latency(1, clk);
+--         v_coef_index := v_coef_offset - I;
+--         read_coefs_arr(v_coef_index) <= TO_SINT(ram_coefs_miso.rddata(g_fil_ppf.coef_dat_w-1 DOWNTO 0));
+--       end loop;
+--     end loop;
+--     proc_common_wait_some_cycles(clk, 1);
+--     tb_end_mm <= '1';
+--     wait;
+--   end process;
 
-  p_verify_ref_coeff_versus_mif_files : PROCESS
+  p_verify_ref_coeff_versus_coef_files : PROCESS
   begin
     -- Wait until the coeff dat file and coeff MIF files have been read
     proc_common_wait_until_low(clk, rst);
-    assert mif_dat_arr = ref_dat_arr   report "Coefs file does not match coefs MIF files"   severity error;
+    assert file_dat_arr = ref_dat_arr   report "Coefs file does not match coefs memory files"   severity error;
     wait;
   end process;
 
-  p_verify_ref_coeff_versus_mm_ram : PROCESS
-  begin
-    -- Wait until the coeff dat file has been read and the coeff have been read via MM
-    proc_common_wait_until_high(clk, tb_end_almost);
-    assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity error;
-    wait;
-  end process;
+  -- p_verify_ref_coeff_versus_mm_ram : PROCESS
+  -- begin
+  --   -- Wait until the coeff dat file has been read and the coeff have been read via MM
+  --   proc_common_wait_until_high(clk, tb_end_almost);
+  --   assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity error;
+  --   wait;
+  -- end process;
 
   ---------------------------------------------------------------
   -- DUT = Device Under Test
@@ -372,16 +375,18 @@ begin
   generic map (
     g_fil_ppf           => g_fil_ppf,
     g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
-    g_file_index_arr    => c_mif_file_index_arr,
-    g_coefs_file_prefix => c_mif_file_prefix
+    g_file_index_arr    => c_file_index_arr,
+    g_coefs_file_prefix => c_coefs_file_prefix,
+    g_technology        => g_technology
   )
   port map (
-    dp_clk         => clk,
-    dp_rst         => rst,
-    mm_clk         => clk,
-    mm_rst         => rst,
-    ram_coefs_mosi => ram_coefs_mosi,
-    ram_coefs_miso => ram_coefs_miso,
+    clk         => clk,
+    rst         => rst,
+    ce          => '1',
+    -- mm_clk         => clk,
+    -- mm_rst         => rst,
+    -- ram_coefs_mosi => ram_coefs_mosi,
+    -- ram_coefs_miso => ram_coefs_miso,
     in_dat         => in_dat,
     in_val         => in_val,
     out_dat        => out_dat,

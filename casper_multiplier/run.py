@@ -43,6 +43,15 @@ lib2.add_source_files("../common_components/*.vhd")
 # Create library 'casper_common_pkg_lib'
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
 lib3.add_source_files("../common_pkg/*.vhd")
+
+lib4 = vu.add_library("technology_lib",allow_duplicate = True)
+lib4.add_source_files("../technology/*.vhd")
+
+lib5 = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
+lib5.add_source_files("../ip_xpm/mult/*.vhd")
+
+lib6 = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
+lib6.add_source_files("../ip_stratixiv/mult/*.vhd")
        
 # Run vunit function
 vu.set_compile_option("ghdl.flags", ["-frelaxed"])

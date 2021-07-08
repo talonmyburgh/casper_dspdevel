@@ -36,8 +36,8 @@ END tb_tb_fil_ppf_wide;
 
 ARCHITECTURE tb OF tb_tb_fil_ppf_wide IS
   
-  CONSTANT c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
-  CONSTANT c_prefix           : string  := "hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_prefix           : string  := c_coefs_file;
+  CONSTANT c_technology       : natural := 0;
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
   
@@ -76,19 +76,19 @@ BEGIN
 --g_enable_in_val_gaps : boolean := FALSE
 
   -- verify fil_ppf_wide for wb_factor=1, so effectively same as using fil_ppf_single directly
-  u1_act           : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, 8, 23, 16), c_prefix, FALSE);
-  u1_rnd_quant     : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, 8, 16, 16), c_prefix, TRUE);
-  u1_rnd_9taps     : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, 8, 17, 16), c_prefix, TRUE);
-  u1_rnd_3streams  : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, 8, 18, 16), c_prefix, TRUE);
-  u1_rnd_4channels : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, 8, 22, 16), c_prefix, TRUE);
+--  u1_act           : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE);
+--  u1_rnd_quant     : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u1_rnd_9taps     : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u1_rnd_3streams  : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u1_rnd_4channels : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
   
   -- verify fil_ppf_wide for wb_factor>1
-  u4_act           : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, 8, 23, 16), c_prefix, FALSE);
-  u4_act_be_le     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE, FALSE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, 8, 23, 16), c_prefix, FALSE);
-  u4_act_le_le     : ENTITY work.tb_fil_ppf_wide GENERIC MAP (FALSE, FALSE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, 8, 23, 16), c_prefix, FALSE);
-  u4_rnd_quant     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, 8, 16, 16), c_prefix, TRUE);
-  u4_rnd_9taps     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 9, 1, 0, 8, 17, 16), c_prefix, TRUE);
-  u4_rnd_3streams  : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 9, 3, 0, 8, 18, 16), c_prefix, TRUE);
-  u4_rnd_4channels : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 2, 64, 9, 3, 0, 8, 22, 16), c_prefix, TRUE);
+  u4_act           : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (1, 0 , 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE, 0);
+--  u4_act_be_le     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE, FALSE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE);
+--  u4_act_le_le     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( FALSE, FALSE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE);
+--  u4_rnd_quant     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u4_rnd_9taps     : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u4_rnd_3streams  : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
+--  u4_rnd_4channels : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, (1, 1, 1, 1, 1, 1, 0), (4, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE);
   
 END tb;
