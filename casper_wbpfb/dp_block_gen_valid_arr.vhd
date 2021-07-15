@@ -137,11 +137,13 @@
 --   front of this dp_block_gen_valid_arr. However the advantage of
 --   dp_sync_checker is that it provides monitoring and control via MM.
 
-LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, common_components_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, wb_fft_lib, casper_filter_lib;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-USE dp_pkg_lib.dp_stream_pkg.ALL; 
+USE work.wbpfb_gnrcs_intrfcs_pkg.ALL;
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.all; 
+USE casper_filter_lib.fil_pkg.all;
 
 ENTITY dp_block_gen_valid_arr IS
   GENERIC (
@@ -156,10 +158,10 @@ ENTITY dp_block_gen_valid_arr IS
     rst         : IN  STD_LOGIC;
     clk         : IN  STD_LOGIC;
     -- Streaming sink
-    snk_in      : IN  t_dp_sosi;  -- = snk_in_arr(0)
-    snk_in_arr  : IN  t_dp_sosi_arr(g_nof_streams-1 DOWNTO 0);
+    snk_in      : IN  t_fft_sosi_out;  -- = snk_in_arr(0)
+    snk_in_arr  : IN  t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
     -- Streaming source
-    src_out_arr : OUT t_dp_sosi_arr(g_nof_streams-1 DOWNTO 0);
+    src_out_arr : OUT t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
     -- Control
     enable      : IN  STD_LOGIC := '1'  -- can connect via MM or could also connect to a src_in.xon
   );
@@ -190,17 +192,17 @@ ARCHITECTURE rtl OF dp_block_gen_valid_arr IS
     state       : t_state;
     data_cnt    : NATURAL RANGE 0 TO g_nof_data_per_block;
     blk_cnt     : NATURAL RANGE 0 TO g_nof_blk_per_sync;
-    reg_sosi    : t_dp_sosi;
+    reg_sosi    : t_fft_sosi_out;
   END RECORD;
   
-  CONSTANT c_reg_rst  : t_reg := (s_sop, 0, 0, c_dp_sosi_rst);
+  CONSTANT c_reg_rst  : t_reg := (s_sop, 0, 0, c_fft_sosi_rst_out);
 
-  SIGNAL in_sosi         : t_dp_sosi;
+  SIGNAL in_sosi         : t_fft_sosi_out;
   SIGNAL in_sync_wr_en   : STD_LOGIC_VECTOR(g_nof_pages_bsn-1 DOWNTO 0);
   SIGNAL in_bsn_buffer   : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);
   
-  SIGNAL out_sosi        : t_dp_sosi;
-  SIGNAL nxt_src_out_arr : t_dp_sosi_arr(g_nof_streams-1 DOWNTO 0);
+  SIGNAL out_sosi        : t_fft_sosi_out;
+  SIGNAL nxt_src_out_arr : t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
     
   -- Define the local registers in t_reg record
   SIGNAL r         : t_reg;
@@ -212,7 +214,7 @@ BEGIN
   BEGIN
     IF rst='1' THEN
       r           <= c_reg_rst;
-      src_out_arr <= (OTHERS=>c_dp_sosi_rst);
+      src_out_arr <= (OTHERS=>c_fft_sosi_rst_out);
     ELSIF rising_edge(clk) THEN
       r           <= nxt_r;
       src_out_arr <= nxt_src_out_arr;
@@ -280,7 +282,7 @@ BEGIN
               nxt_r.reg_sosi.sync <= '1';               -- output sync for this block
               nxt_r.reg_sosi.bsn  <= in_sosi.bsn;       -- output input bsn at sync
             ELSE
-              nxt_r.reg_sosi.bsn  <= TO_DP_BSN(r.blk_cnt);  -- output local bsn for the subsequent blocks
+              nxt_r.reg_sosi.bsn  <= RESIZE_UVEC(TO_SVEC(r.blk_cnt, 32), c_dp_stream_bsn_w);  -- output local bsn for the subsequent blocks
             END IF;
           
             nxt_r.reg_sosi.valid <= '1';
