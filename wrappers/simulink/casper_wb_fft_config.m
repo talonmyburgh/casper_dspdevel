@@ -54,6 +54,7 @@ function casper_wb_fft_config(this_block)
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
   variant = get_param(wb_fft_blk_parent,'use_variant');
+  technology = get_param(wb_fft_blk_parent,'vendor_technology');
   use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
   ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
   use_round = get_param(wb_fft_blk_parent,'use_round');
@@ -290,6 +291,16 @@ function casper_wb_fft_config(this_block)
 %get location of generated hdl source files:
 srcloc = fileparts(vhdlfile);
 
+% Copy across the technology_select_pkg as per mask's vendor_technology
+source_technology_select_pkg = '';
+if strcmp(technology, 'Xilinx')
+  source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperxpm.vhd'];
+end % if technology Xilinx
+if strcmp(technology, 'UniBoard')
+  source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperunb1.vhd'];
+end % if technology UniBoard
+copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
+
 this_block.addFileToLibrary(vhdlfile,'xil_defaultlib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
@@ -299,7 +310,7 @@ this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vh
 this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
-this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
+this_block.addFileToLibrary([srcloc '/technology_select_pkg.vhd'],'technology_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
