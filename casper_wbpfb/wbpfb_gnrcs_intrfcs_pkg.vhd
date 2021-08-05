@@ -7,6 +7,7 @@ use casper_filter_lib.fil_pkg.all;
 
 PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
 
+  CONSTANT c_wbpfb_nof_wb_streams : natural := 1;
   -- Parameters for the (wideband) poly phase filter. 
   type t_wpfb is record  
     -- General parameters for the wideband poly phase filter
@@ -15,27 +16,28 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
     nof_chan          : natural;            -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan     
     nof_wb_streams    : natural;            -- = 1, the number of parallel wideband streams. The filter coefficients are shared on every wb-stream.
     
-    -- Parameters for the poly phase filter
-    nof_taps          : natural;            -- = 16, the number of FIR taps per subband
-    fil_backoff_w     : natural;            -- = 0, number of bits for input backoff to avoid output overflow
-    fil_in_dat_w      : natural;
-    fil_out_dat_w     : natural;
-    coef_dat_w        : natural;                                  
-    -- Parameters for the FFT         
-    use_reorder       : boolean;            -- = false for bit-reversed output, true for normal output
-    use_fft_shift     : boolean;            -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-    use_separate      : boolean;            -- = false for complex input, true for two real inputs
-    stage_dat_w       : natural;            -- = 18, number of bits that are used inter-stage
-    guard_w           : natural;            -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
-                                            --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
-                                            --   12.3.2], therefore use input guard_w = 2.
-    guard_enable      : boolean;            -- = true when input needs guarding, false when input requires no guarding but scaling must be
-                                            --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
-                                            --   doing the input guard and par fft section doing the output compensation)
-    fft_in_dat_w      : natural;
-    fft_out_dat_w     : natural;
-    fft_out_gain_w    : natural;
-
+   -- Parameters for the poly phase filter
+    nof_taps          : natural;        -- = 16, the number of FIR taps per subband
+    fil_backoff_w     : natural;        -- = 0, number of bits for input backoff to avoid output overflow
+    fil_in_dat_w      : natural;        -- = 8, number of input bits
+    fil_out_dat_w     : natural;        -- = 16, number of output bits
+    coef_dat_w        : natural;        -- = 16, data width of the FIR coefficients
+                                     
+   -- Parameters for the FFT         
+    use_reorder       : boolean;        -- = false for bit-reversed output, true for normal output
+    use_fft_shift     : boolean;        -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+    use_separate      : boolean;        -- = false for complex input, true for two real inputs
+    fft_in_dat_w      : natural;        -- = 16, number of input bits
+    fft_out_dat_w     : natural;        -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13
+    fft_out_gain_w    : natural;        -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+    stage_dat_w       : natural;        -- = 18, number of bits that are used inter-stage
+    guard_w           : natural;  -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
+                                 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
+                                 --   12.3.2], therefore use input guard_w = 2.
+    guard_enable      : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be
+                                 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
+                                 --   doing the input guard and par fft section doing the output compensation)
+    -- Statistics information
     stat_data_w       : positive;           -- = 56
     stat_data_sz      : positive;           -- = 2
     nof_blk_per_sync  : natural;            -- = 800000, number of FFT output blocks per sync interval, used to pass on BSN
@@ -45,6 +47,14 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
     fft_pipeline      : t_fft_pipeline;     -- Pipeline settings for the parallel FFT
     fil_pipeline      : t_fil_ppf_pipeline; -- Pipeline settings for the filter units 
   end record;
+
+  constant c_wpfb : t_wpfb := (c_fft_wb_factor, c_fft_nof_points, c_fft_nof_chan,
+                              c_wbpfb_nof_wb_streams, c_fil_nof_taps, c_fil_backoff_w,
+                              c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w,
+                              c_fft_use_reorder, c_fft_use_fft_shift, c_fft_use_separate,
+                              c_fft_in_dat_w, c_fft_out_dat_w, c_fft_out_gain_w,
+                              c_fft_stage_dat_w, c_fft_guard_w, c_fft_guard_enable,
+                              56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
 
 ----------------------------------------------------------------------------------------------------------
 -- SOSI/SISO Arrays
@@ -70,23 +80,7 @@ err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (
 END RECORD;
 CONSTANT c_fil_sosi_rst_in : t_fil_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
 
---t_dp_sosi record fil. Since this always comes from the filterbank output, its bitwidth is the fil_out_dat_w
-TYPE t_fil_sosi_out IS RECORD  -- Source Out or Sink In
-sync     : STD_LOGIC;   
-bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
-re       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);        -- data
-im       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);        -- data
-valid    : STD_LOGIC;                                           -- ctrl
-sop      : STD_LOGIC;                                           -- ctrl
-eop      : STD_LOGIC;                                           -- ctrl
-empty    : STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0);    -- info at eop
-channel  : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);  -- info at sop
-err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (name field 'err' to avoid the 'error' keyword)
-END RECORD;
-CONSTANT c_fil_sosi_rst_fil : t_fil_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
-
 TYPE t_fil_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_in;
-TYPE t_fil_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_out;
 
 ----------------------------------------------------------------------------------------------------------
 -- Function declarations
