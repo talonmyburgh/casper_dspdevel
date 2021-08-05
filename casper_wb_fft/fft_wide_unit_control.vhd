@@ -46,12 +46,11 @@ entity fft_wide_unit_control is
 	generic(
 		g_fft      : t_fft   := c_fft;
 		g_nof_ffts : natural := 1;
-		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_variant    : string  := "4DSP";       --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
-		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
-		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_ovflw_behav    : string  := "WRAP";       --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";      --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  := "auto";       --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_fifo_primitive : string  := "auto"        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
 	port(
@@ -88,7 +87,7 @@ architecture rtl of fft_wide_unit_control is
 		state          : state_type;    -- The state machine. 
 	end record;
 	
-	constant reg_default : reg_type := ((others=>c_bb_sosi_rst_out),(others=>(others=>(others=>'0'))),(others=>(others=>(others=>'0'))),(others=>'0'),(others=>'0'),(others=>'0'),'0',0,s_idle);
+	constant reg_default : reg_type := ((others=>c_fft_sosi_rst_out),(others=>(others=>(others=>'0'))),(others=>(others=>(others=>'0'))),(others=>'0'),(others=>'0'),(others=>'0'),'0',0,s_idle);
 
 	signal r, rin   : reg_type := reg_default;
 	signal bsn      : std_logic_vector(c_dp_stream_bsn_w - 1 downto 0);
@@ -277,7 +276,7 @@ begin
 		end case;
 
 		if (rst = '1') then
-			v.out_sosi_arr  := (others => c_bb_sosi_rst_out);
+			v.out_sosi_arr  := (others => c_fft_sosi_rst_out);
 			v.val_dly       := (others => '0');
 			v.sop_dly       := (others => '0');
 			v.eop_dly       := (others => '0');
