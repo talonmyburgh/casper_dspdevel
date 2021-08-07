@@ -82,11 +82,30 @@ CONSTANT c_fil_sosi_rst_in : t_fil_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0')
 
 TYPE t_fil_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_in;
 
+--t_dp_sosi record in. Since this always goes into the filterbank first, its bitwidth is the fil_in_dat_w
+TYPE t_fil_sosi_out IS RECORD  -- Source Out or Sink In
+sync     : STD_LOGIC; 
+bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
+re       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);         -- data
+im       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);         -- data
+valid    : STD_LOGIC;                                           -- ctrl
+sop      : STD_LOGIC;                                           -- ctrl
+eop      : STD_LOGIC;                                           -- ctrl
+empty    : STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0);    -- info at eop
+channel  : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);  -- info at sop
+err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (name field 'err' to avoid the 'error' keyword)
+END RECORD;
+CONSTANT c_fil_sosi_rst_out : t_fil_sosi_out := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
+
+TYPE t_fil_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_out;
+
 ----------------------------------------------------------------------------------------------------------
 -- Function declarations
 ----------------------------------------------------------------------------------------------------------
 function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural;
 function func_wpfb_set_nof_block_per_sync(wpfb : t_wpfb; nof_block_per_sync : NATURAL) return t_wpfb;
+FUNCTION func_dp_stream_bsn_set(st_sosi : t_fft_sosi_out; bsn : STD_LOGIC_VECTOR) RETURN t_fft_sosi_out;
+FUNCTION func_dp_stream_arr_combine_data_info_ctrl(dp : t_fft_sosi_arr_out; info, ctrl : t_fft_sosi_out) RETURN t_fft_sosi_arr_out;
 
 END wbpfb_gnrcs_intrfcs_pkg;
 
@@ -117,5 +136,30 @@ function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural is
     v_wpfb.nof_blk_per_sync := nof_block_per_sync;
     return v_wpfb;
   end func_wpfb_set_nof_block_per_sync;  
+
+  FUNCTION func_dp_stream_bsn_set(st_sosi : t_fft_sosi_out; bsn : STD_LOGIC_VECTOR) RETURN t_fft_sosi_out IS
+    VARIABLE v_rec : t_fft_sosi_out := st_sosi;
+  BEGIN
+    v_rec.bsn := RESIZE_UVEC(bsn, c_dp_stream_bsn_w);
+    RETURN v_rec;
+  END func_dp_stream_bsn_set;
+
+-- Functions to combinatorially hold the data fields and to set or reset the info and control fields in an sosi array
+FUNCTION func_dp_stream_arr_combine_data_info_ctrl(dp : t_fft_sosi_arr_out; info, ctrl : t_fft_sosi_out) RETURN t_fft_sosi_arr_out IS
+VARIABLE v_dp : t_fft_sosi_arr_out(dp'RANGE) := dp;       -- hold sosi data
+BEGIN
+FOR I IN dp'RANGE LOOP                          -- set sosi info
+  v_dp(I).bsn     := info.bsn;      -- sop
+  v_dp(I).channel := info.channel;  -- sop
+  v_dp(I).empty   := info.empty;    -- eop
+  v_dp(I).err     := info.err;      -- eop
+  -- set sosi ctrl
+  v_dp(I).valid := ctrl.valid;
+  v_dp(I).sop   := ctrl.sop;
+  v_dp(I).eop   := ctrl.eop;
+  v_dp(I).sync  := ctrl.sync;
+END LOOP;
+RETURN v_dp;
+END func_dp_stream_arr_combine_data_info_ctrl;
 
 END wbpfb_gnrcs_intrfcs_pkg;

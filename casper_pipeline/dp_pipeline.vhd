@@ -77,6 +77,28 @@ ENTITY dp_pipeline_one IS
 END dp_pipeline_one;
 
 
+LIBRARY IEEE, common_pkg_lib, wb_fft_lib, wpfb_lib;
+USE IEEE.std_logic_1164.all;
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
+USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL;
+
+ENTITY dp_pipeline_fft_out IS
+  GENERIC (
+    g_pipeline   : NATURAL := 1  -- 0 for wires, > 0 for registers, 
+  );
+  PORT (
+    rst          : IN  STD_LOGIC;
+    clk          : IN  STD_LOGIC;
+    -- ST sink
+    snk_out      : OUT t_dp_siso;
+    snk_in       : IN  t_fft_sosi_out;
+    -- ST source
+    src_in       : IN  t_dp_siso := c_dp_siso_rdy;
+    src_out      : OUT t_fft_sosi_out
+  );
+END dp_pipeline_fft_out;
+
+
 LIBRARY IEEE, common_pkg_lib, dp_pkg_lib;
 USE IEEE.std_logic_1164.all;
 USE dp_pkg_lib.dp_stream_pkg.ALL;
@@ -138,6 +160,46 @@ BEGIN
   
   -- Input control
   u_hold_input : ENTITY dp_components_lib.dp_hold_input
+  PORT MAP (
+    rst              => rst,
+    clk              => clk,
+    -- ST sink
+    snk_out          => snk_out,
+    snk_in           => snk_in,
+    -- ST source
+    src_in           => src_in,
+    next_src_out     => nxt_src_out,
+    pend_src_out     => OPEN,
+    src_out_reg      => i_src_out
+  );  
+    
+END str;
+
+LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, dp_components_lib;
+USE IEEE.std_logic_1164.all;
+USE dp_pkg_lib.dp_stream_pkg.ALL;
+
+ARCHITECTURE str OF dp_pipeline_fft_out IS
+
+  SIGNAL nxt_src_out      : t_fft_sosi_out;
+  SIGNAL i_src_out        : t_fft_sosi_out;
+  
+BEGIN
+
+  src_out <= i_src_out;
+
+  -- Pipeline register
+  p_clk : PROCESS(rst, clk)
+  BEGIN
+    IF rst='1' THEN
+      i_src_out <= c_fft_sosi_rst_out;
+    ELSIF rising_edge(clk) THEN
+      i_src_out <= nxt_src_out;
+    END IF;
+  END PROCESS;
+  
+  -- Input control
+  u_hold_input : ENTITY dp_components_lib.dp_hold_input_fft_out
   PORT MAP (
     rst              => rst,
     clk              => clk,
