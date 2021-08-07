@@ -68,7 +68,7 @@ ARCHITECTURE tb OF tb_tb_wbpfb_unit_wide IS
   -- wb 4, two real
   CONSTANT c_wb4_two_real_1024        : t_wpfb := (4, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
-                                                   true, false, true, 16, 16, 1, c_stage_dat_extra_w, 2, true, 56, 2, c_nof_blk_per_sync,
+                                                   true, false, true, 16, 16, 1, c_dsp_mult_w, 2, true, 56, 2, c_nof_blk_per_sync,
                                                    c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
   CONSTANT c_wb4_two_real             : t_wpfb := (4, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
@@ -188,7 +188,7 @@ ARCHITECTURE tb OF tb_tb_wbpfb_unit_wide IS
   CONSTANT c_sinusoid_chirp_1024 : string := "data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b_16b.dat";   -- 204800 lines
   CONSTANT c_sinusoid_chirp      : string := "data/run_pfb_m_sinusoid_chirp_8b_16taps_32points_16b_16b.dat";     --   6400 lines
   CONSTANT c_sinusoid_1024       : string := "data/run_pfb_m_sinusoid_8b_16taps_1024points_16b_16b.dat";         --  51200 lines
-  CONSTANT c_sinusoid_1024_v2    : string := "data/run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b_16b.dat";      --  51200 lines
+  CONSTANT c_sinusoid_1024_v2    : string := "run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b_16b.dat";      --  51200 lines
   CONSTANT c_sinusoid            : string := "data/run_pfb_m_sinusoid_8b_16taps_32points_16b_16b.dat";           --   1600 lines
   CONSTANT c_impulse_chirp       : string := "data/run_pfb_m_impulse_chirp_8b_16taps_32points_16b_16b.dat";      --   6400 lines
   CONSTANT c_noise_1024          : string := "data/run_pfb_m_noise_8b_16taps_1024points_16b_16b.dat";            --  51200 lines
@@ -302,7 +302,7 @@ BEGIN
   
   -- Two real input data A and B
   -- * 1024 point (as in Apertif subband filterbank)
-  u_act_wb4_two_real_a0_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_pre_ab_v2, c_pre_c, c_sinusoid_1024_v2, 51200, c_zero,   51200, c_un, 0, 51200, FALSE);
+  u_act_wb4_two_real_a0_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_coefs_file, c_pre_c, c_sinusoid_1024_v2, 51200, c_zero,   51200, c_un, 0, 51200, FALSE);
 --  u_act_wb4_two_real_ab_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_noise_1024,   51200, c_un, 0, 51200, FALSE);
 --  u_act_wb1_two_real_ab_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_two_real_1024, c_dm_5, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_noise_1024,   51200, c_un, 0, 51200, FALSE);
 --  u_act_wb1_two_real_chirp_1024 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_two_real_1024, c_dm_5, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_zero,         51200, c_un, 0, 51200, FALSE);

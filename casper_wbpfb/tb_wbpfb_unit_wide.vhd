@@ -174,11 +174,8 @@ architecture tb of tb_wbpfb_unit_wide is
   constant c_dut_clk_latency       : natural := c_nof_valid_per_block * c_dut_block_latency * c_rnd_factor;  -- worst case
 
   -- PFIR coefficients file access
-  constant c_coefs_dat_file_prefix    : string  := sel_a_b(c_in_complex, g_coefs_file_prefix_c, g_coefs_file_prefix_ab) &
-                                                                         "_" & integer'image(g_wpfb.nof_taps) & "taps" &
-                                                                         "_" & integer'image(g_wpfb.nof_points) & "points" &
-                                                                         "_" & integer'image(g_wpfb.coef_dat_w) & "b";
-  constant c_coefs_mif_file_prefix    : string  := c_coefs_dat_file_prefix & "_" & integer'image(g_wpfb.wb_factor) & "wb";
+  constant c_coefs_dat_file_prefix    : string  := sel_a_b(c_in_complex, g_coefs_file_prefix_c, g_coefs_file_prefix_ab);
+  constant c_coefs_memory_file_prefix : string  := c_coefs_dat_file_prefix;
   
   -- input/output data width
   constant c_in_dat_w              : natural := g_wpfb.fil_in_dat_w;   
@@ -265,7 +262,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal ref_re_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal ref_im_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
 
-  signal shiftreg               : std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
+  signal shiftreg               : std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (0=>'0', 1=>'0', others=>'1');
 
   -- Input in sclk domain  
   signal in_re_scope            : integer;
@@ -388,11 +385,11 @@ begin
             else
               -- stream 0 and if present the other streams >= 2 carry the same input reference data to verify the filter function
               if c_in_complex then
-                in_re_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC_32(input_data_c_arr((I*g_wpfb.wb_factor+P)*c_nof_complex));
-                in_im_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC_32(input_data_c_arr((I*g_wpfb.wb_factor+P)*c_nof_complex+1));
+                in_re_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC(input_data_c_arr((I*g_wpfb.wb_factor+P)*c_nof_complex),g_wpfb.fil_in_dat_w);
+                in_im_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC(input_data_c_arr((I*g_wpfb.wb_factor+P)*c_nof_complex+1),g_wpfb.fil_in_dat_w);
               else
-                in_re_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC_32(input_data_a_arr(I*g_wpfb.wb_factor+P));
-                in_im_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC_32(input_data_b_arr(I*g_wpfb.wb_factor+P));
+                in_re_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC(input_data_a_arr(I*g_wpfb.wb_factor+P),g_wpfb.fil_in_dat_w);
+                in_im_arr(S*g_wpfb.wb_factor + vP) <= TO_SVEC(input_data_b_arr(I*g_wpfb.wb_factor+P),g_wpfb.fil_in_dat_w);
               end if;
             end if;
           end loop;
@@ -451,7 +448,8 @@ begin
   begin
     for I in 0 to g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 loop
       -- DUT input
-      in_sosi_arr(I)    <= ref_sosi_ctrl;
+      -- in_sosi_arr(I)    <= ref_sosi_ctrl;
+      in_sosi_arr(I).valid <='1';
       in_sosi_arr(I).re <= ref_re_arr(I);
       in_sosi_arr(I).im <= ref_im_arr(I);
     end loop;
@@ -462,7 +460,7 @@ begin
     g_big_endian_wb_in  => c_big_endian_wb_in,
     g_wpfb              => g_wpfb,
     g_use_prefilter     => TRUE,
-    g_coefs_file_prefix => c_coefs_mif_file_prefix
+    g_coefs_file_prefix => c_coefs_memory_file_prefix
   )
   port map (
     rst                 => rst,

@@ -37,7 +37,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="183"/>
+    <Option Name="WTXSimLaunchSim" Val="205"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -276,6 +276,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../common_components/common_paged_reg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_components_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../casper_ram/common_ram_rw_rw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
@@ -318,6 +325,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../common_components/common_switch.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_components_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../casper_multiplexer/common_zip.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplexer_lib"/>
@@ -332,14 +346,70 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../r2sdf_fft/twiddlesPkg.vhd">
+      <File Path="$PPRDIR/../../r2sdf_fft/rTwoSDFPkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../r2sdf_fft/rTwoSDFPkg.vhd">
+      <File Path="$PPRDIR/../../casper_filter/fil_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_filter_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../wbpfb_gnrcs_intrfcs_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wpfb_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_pkg/dp_stream_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_pkg_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_ctrl.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_input.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="dp_components_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_pipeline/dp_pipeline.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_pipeline_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../dp_bsn_restore_global.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wpfb_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../dp_block_gen_valid_arr.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wpfb_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../r2sdf_fft/twiddlesPkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -444,13 +514,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../casper_filter/fil_ppf_ctrl.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_filter_lib"/>
@@ -493,9 +556,9 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/mult/ip_mult_infer.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="Library" Val="ip_xpm_mult_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -514,21 +577,16 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../wbpfb_gnrcs_intrfcs_pkg.vhd">
+      <File Path="$PPRDIR/../wbpfb_unit_dev.vhd">
         <FileInfo>
+          <Attr Name="Library" Val="wpfb_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../wbpfb_unit.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd">
         <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_dp_pkg/dp_stream_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="dp_pkg_lib"/>
+          <Attr Name="Library" Val="casper_fifo_lib"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -544,7 +602,8 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="wbpfb_unit"/>
+        <Option Name="TopModule" Val="wbpfb_unit_dev"/>
+        <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
@@ -627,91 +686,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_phasor_8b_64points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_noise_complex_8b_64points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_sinusoid_8b_128points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_dc_agwn_8b_128points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_impulse_chirp_8b_32points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_sinusoid_chirp_8b_32points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/to_separate.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_impulse_chirp_8b_128points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_noise_8b_128points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_phasor_chirp_8b_32points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_phasor_8b_32points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_complex_m_noise_complex_8b_32points_16b.dat">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/data/run_pfft_m_sinusoid_8b_32points_16b.dat">
+      <File Path="$PPRDIR/../data/run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b_16b.dat">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -758,11 +733,12 @@
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="11">
-    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" IncludeInArchive="true">
+    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019"/>
         <Step Id="synth_design"/>
       </Strategy>
+      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2019"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
