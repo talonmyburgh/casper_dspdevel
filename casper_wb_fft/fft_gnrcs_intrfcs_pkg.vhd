@@ -5,7 +5,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg IS
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT c_fft_in_dat_w       : natural := 8;       -- = 8,  number of input bits
+CONSTANT c_fft_in_dat_w       : natural := 16;       -- = 8,  number of input bits
 CONSTANT c_fft_out_dat_w      : natural := 16;      -- = 13, number of output bits
 CONSTANT c_fft_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
 
