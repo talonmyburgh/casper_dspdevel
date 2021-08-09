@@ -185,25 +185,25 @@ ARCHITECTURE tb OF tb_tb_wbpfb_unit_wide IS
   CONSTANT c_pre_c               : string := "data/run_pfb_complex_m_pfir_coeff_fircls1";
   
   -- Real input
-  CONSTANT c_sinusoid_chirp_1024 : string := "data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b_16b.dat";   -- 204800 lines
-  CONSTANT c_sinusoid_chirp      : string := "data/run_pfb_m_sinusoid_chirp_8b_16taps_32points_16b_16b.dat";     --   6400 lines
-  CONSTANT c_sinusoid_1024       : string := "data/run_pfb_m_sinusoid_8b_16taps_1024points_16b_16b.dat";         --  51200 lines
-  CONSTANT c_sinusoid_1024_v2    : string := "run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b_16b.dat";      --  51200 lines
-  CONSTANT c_sinusoid            : string := "data/run_pfb_m_sinusoid_8b_16taps_32points_16b_16b.dat";           --   1600 lines
-  CONSTANT c_impulse_chirp       : string := "data/run_pfb_m_impulse_chirp_8b_16taps_32points_16b_16b.dat";      --   6400 lines
-  CONSTANT c_noise_1024          : string := "data/run_pfb_m_noise_8b_16taps_1024points_16b_16b.dat";            --  51200 lines
-  CONSTANT c_noise               : string := "data/run_pfb_m_noise_8b_16taps_32points_16b_16b.dat";              --   1600 lines
-  CONSTANT c_dc_agwn             : string := "data/run_pfb_m_dc_agwn_8b_16taps_32points_16b_16b.dat";            --   1600 lines
+  CONSTANT c_sinusoid_chirp_1024 : string := "run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b.dat";   -- 204800 lines
+  CONSTANT c_sinusoid_chirp      : string := "run_pfb_m_sinusoid_chirp_8b_16taps_32points_16b.dat";     --   6400 lines
+  CONSTANT c_sinusoid_1024       : string := "run_pfb_m_sinusoid_8b_16taps_1024points_16b.dat";         --  51200 lines
+  CONSTANT c_sinusoid_1024_v2    : string := "run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b.dat";      --  51200 lines
+  CONSTANT c_sinusoid            : string := "run_pfb_m_sinusoid_8b_16taps_32points_16b.dat";           --   1600 lines
+  CONSTANT c_impulse_chirp       : string := "run_pfb_m_impulse_chirp_8b_16taps_32points_16b.dat";      --   6400 lines
+  CONSTANT c_noise_1024          : string := "run_pfb_m_noise_8b_16taps_1024points_16b.dat";            --  51200 lines
+  CONSTANT c_noise               : string := "run_pfb_m_noise_8b_16taps_32points_16b.dat";              --   1600 lines
+  CONSTANT c_dc_agwn             : string := "run_pfb_m_dc_agwn_8b_16taps_32points_16b.dat";            --   1600 lines
   -- Complex input
-  CONSTANT c_phasor_chirp_1024   : string := "data/run_pfb_complex_m_phasor_chirp_8b_16taps_1024points_16b_16b.dat";   -- 204800 lines
-  CONSTANT c_phasor_chirp_128    : string := "data/run_pfb_complex_m_phasor_chirp_8b_16taps_128points_16b_16b.dat";    --  25600 lines
-  CONSTANT c_phasor_chirp_64     : string := "data/run_pfb_complex_m_phasor_chirp_8b_16taps_64points_16b_16b.dat";     --  12800 lines
-  CONSTANT c_phasor_chirp        : string := "data/run_pfb_complex_m_phasor_chirp_8b_16taps_32points_16b_16b.dat";     --   6400 lines
-  CONSTANT c_phasor              : string := "data/run_pfb_complex_m_phasor_8b_16taps_32points_16b_16b.dat";           --   1600 lines
-  CONSTANT c_noise_complex_1024  : string := "data/run_pfb_complex_m_noise_complex_8b_16taps_1024points_16b_16b.dat";  --  51200 lines
-  CONSTANT c_noise_complex_128   : string := "data/run_pfb_complex_m_noise_complex_8b_16taps_128points_16b_16b.dat";   --   6400 lines
-  CONSTANT c_noise_complex_64    : string := "data/run_pfb_complex_m_noise_complex_8b_16taps_64points_16b_16b.dat";    --   3200 lines
-  CONSTANT c_noise_complex       : string := "data/run_pfb_complex_m_noise_complex_8b_16taps_32points_16b_16b.dat";    --   1600 lines
+  CONSTANT c_phasor_chirp_1024   : string := "run_pfb_complex_m_phasor_chirp_8b_16taps_1024points_16b.dat";   -- 204800 lines
+  CONSTANT c_phasor_chirp_128    : string := "run_pfb_complex_m_phasor_chirp_8b_16taps_128points_16b.dat";    --  25600 lines
+  CONSTANT c_phasor_chirp_64     : string := "run_pfb_complex_m_phasor_chirp_8b_16taps_64points_16b.dat";     --  12800 lines
+  CONSTANT c_phasor_chirp        : string := "run_pfb_complex_m_phasor_chirp_8b_16taps_32points_16b.dat";     --   6400 lines
+  CONSTANT c_phasor              : string := "run_pfb_complex_m_phasor_8b_16taps_32points_16b.dat";           --   1600 lines
+  CONSTANT c_noise_complex_1024  : string := "run_pfb_complex_m_noise_complex_8b_16taps_1024points_16b.dat";  --  51200 lines
+  CONSTANT c_noise_complex_128   : string := "run_pfb_complex_m_noise_complex_8b_16taps_128points_16b.dat";   --   6400 lines
+  CONSTANT c_noise_complex_64    : string := "run_pfb_complex_m_noise_complex_8b_16taps_64points_16b.dat";    --   3200 lines
+  CONSTANT c_noise_complex       : string := "run_pfb_complex_m_noise_complex_8b_16taps_32points_16b.dat";    --   1600 lines
   -- Zero input
   CONSTANT c_zero                : string := "UNUSED";  -- zero's data
   CONSTANT c_un                  : string := "UNUSED";  -- zero's data
@@ -302,9 +302,9 @@ BEGIN
   
   -- Two real input data A and B
   -- * 1024 point (as in Apertif subband filterbank)
-  u_act_wb4_two_real_a0_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_coefs_file, c_pre_c, c_sinusoid_1024_v2, 51200, c_zero,   51200, c_un, 0, 51200, FALSE);
+  -- u_act_wb4_two_real_a0_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_coefs_file, c_pre_c, c_sinusoid_1024_v2, 51200, c_zero,   51200, c_un, 0, 51200, FALSE);
 --  u_act_wb4_two_real_ab_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_two_real_1024, c_dm_1, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_noise_1024,   51200, c_un, 0, 51200, FALSE);
---  u_act_wb1_two_real_ab_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_two_real_1024, c_dm_5, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_noise_1024,   51200, c_un, 0, 51200, FALSE);
+ u_act_wb1_two_real_ab_1024    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_two_real_1024, c_dm_5, c_coefs_file, c_pre_c, c_sinusoid_chirp_1024, 204800, c_noise_1024,   51200, c_un, 0, 51200, FALSE);
 --  u_act_wb1_two_real_chirp_1024 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_two_real_1024, c_dm_5, c_pre_ab, c_pre_c, c_sinusoid_chirp_1024, 204800, c_zero,         51200, c_un, 0, 51200, FALSE);
   
 --  -- * 32 point

@@ -275,7 +275,17 @@ architecture tb of tb_wbpfb_unit_wide is
   signal fil_val_scope          : std_logic:= '0';
   signal exp_fil_re_scope       : integer;
   signal exp_fil_im_scope       : integer;
+
+  -- Filter output
+  signal fil_sosi_arr           : t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_re_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_im_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_re_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
+  signal fil_im_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
+  signal fil_val                : std_logic:= '0';  -- for parallel output
   
+  signal fil_out_cnt            : natural := 0;
+
   -- Observe common sosi fields via sosi_arr(0)
   signal in_sosi_0              : t_fil_sosi_in;
   signal out_sosi_0             : t_fft_sosi_out;
@@ -414,29 +424,29 @@ begin
   
   in_sosi_val.valid <= in_val;
   
---   u_ref_sosi_ctrl : entity dp_components_lib.dp_block_gen
---   generic map (
---     g_use_src_in         => false,                  -- when true use src_in.ready else use snk_in.valid for flow control
---     g_nof_data           => c_nof_valid_per_block,  -- nof data per block
---     g_nof_blk_per_sync   => g_wpfb.nof_blk_per_sync,
---     g_empty              => 0,
---     g_channel            => 0,
---     g_error              => 0,
---     g_bsn                => 12,
---     g_preserve_sync      => false,
---     g_preserve_bsn       => false
---   )
---   port map (
---     rst        => rst,
---     clk        => clk,
---     -- Streaming sink
---     snk_in     => in_sosi_val,
---     -- Streaming source
---     src_in     => c_dp_siso_rdy,
---     src_out    => ref_sosi_ctrl,
---     -- MM control
---     en         => '1'
---   );  
+  u_ref_sosi_ctrl : entity dp_components_lib.dp_block_gen_fil_in
+  generic map (
+    g_use_src_in         => false,                  -- when true use src_in.ready else use snk_in.valid for flow control
+    g_nof_data           => c_nof_valid_per_block,  -- nof data per block
+    g_nof_blk_per_sync   => g_wpfb.nof_blk_per_sync,
+    g_empty              => 0,
+    g_channel            => 0,
+    g_error              => 0,
+    g_bsn                => 12,
+    g_preserve_sync      => false,
+    g_preserve_bsn       => false
+  )
+  port map (
+    rst        => rst,
+    clk        => clk,
+    -- Streaming sink
+    snk_in     => in_sosi_val,
+    -- Streaming source
+    src_in     => c_dp_siso_rdy,
+    src_out    => ref_sosi_ctrl,
+    -- MM control
+    en         => '1'
+  );  
 
   ref_re_arr <= in_re_arr when rising_edge(clk);
   ref_im_arr <= in_im_arr when rising_edge(clk);
@@ -448,14 +458,13 @@ begin
   begin
     for I in 0 to g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 loop
       -- DUT input
-      -- in_sosi_arr(I)    <= ref_sosi_ctrl;
-      in_sosi_arr(I).valid <='1';
+      in_sosi_arr(I)    <= ref_sosi_ctrl;
       in_sosi_arr(I).re <= ref_re_arr(I);
       in_sosi_arr(I).im <= ref_im_arr(I);
     end loop;
   end process;
 
-  u_dut : entity work.wbpfb_unit
+  u_dut : entity work.wbpfb_unit_dev
   generic map (
     g_big_endian_wb_in  => c_big_endian_wb_in,
     g_wpfb              => g_wpfb,
@@ -469,9 +478,19 @@ begin
     shiftreg            => shiftreg,
     in_sosi_arr         => in_sosi_arr,
     ovflw               => ovflw,
+    fil_sosi_arr        => fil_sosi_arr,
     out_sosi_arr        => out_sosi_arr
   );
   
+  p_fil_sosi_arr : process(fil_sosi_arr)
+  begin
+    for I in 0 to g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 loop
+      fil_re_arr(I) <= fil_sosi_arr(I).re;
+      fil_im_arr(I) <= fil_sosi_arr(I).im;
+    end loop;
+  end process;
+  fil_val <= fil_sosi_arr(0).valid;
+
   p_out_sosi_arr : process(out_sosi_arr)
   begin
     for I in 0 to g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 loop
@@ -512,6 +531,11 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
+  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val='1' else fil_out_cnt;
+
+  exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val='1';
+  exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val='1';
+
   out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c='1' else out_cnt;
 
   out_blk_time <= (out_cnt / c_nof_channels) / g_wpfb.nof_points;
@@ -528,7 +552,7 @@ begin
   reg_out_bin_cnt  <= out_bin_cnt  when rising_edge(sclk);
   reg_out_bin      <= out_bin      when rising_edge(sclk);
   reg_out_blk_time <= out_blk_time when rising_edge(sclk);
-  
+
   out_re_a_scope <= out_re_scope when rising_edge(sclk) and out_val_a='1';
   out_im_a_scope <= out_im_scope when rising_edge(sclk) and out_val_a='1';
   out_re_b_scope <= out_re_scope when rising_edge(sclk) and out_val_b='1';
@@ -644,6 +668,9 @@ begin
   rewire_scope_data : for P in 0 to g_wpfb.wb_factor-1 generate
     in_re_data((P+1)*c_in_dat_w-1 downto P*c_in_dat_w) <= in_re_arr(P)(c_in_dat_w-1 downto 0);
     in_im_data((P+1)*c_in_dat_w-1 downto P*c_in_dat_w) <= in_im_arr(P)(c_in_dat_w-1 downto 0);
+      
+    fil_re_data((P+1)*c_fil_dat_w-1 downto P*c_fil_dat_w) <= fil_re_arr(P)(c_fil_dat_w-1 downto 0);
+    fil_im_data((P+1)*c_fil_dat_w-1 downto P*c_fil_dat_w) <= fil_im_arr(P)(c_fil_dat_w-1 downto 0);
      
     out_re_data((P+1)*c_out_dat_w-1 downto P*c_out_dat_w) <= out_re_arr(P)(c_out_dat_w-1 downto 0);
     out_im_data((P+1)*c_out_dat_w-1 downto P*c_out_dat_w) <= out_im_arr(P)(c_out_dat_w-1 downto 0);
@@ -691,6 +718,48 @@ begin
     out_val   => open
   );
   
+  u_fil_re_scope : entity casper_sim_tools_lib.common_wideband_data_scope
+  generic map (
+    g_sim                 => TRUE,
+    g_wideband_factor     => g_wpfb.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
+    g_wideband_big_endian => TRUE,              -- When true in_data[3:0] = sample[t0,t1,t2,t3], else when false : in_data[3:0] = sample[t3,t2,t1,t0]
+    g_dat_w               => c_fil_dat_w        -- Actual width of the data samples
+  )
+  port map (
+    -- Sample clock
+    SCLK      => sclk,  -- sample clk, use only for simulation purposes
+
+    -- Streaming input data
+    in_data   => fil_re_data,
+    in_val    => fil_val,
+
+    -- Scope output samples
+    out_dat   => OPEN,
+    out_int   => fil_re_scope,
+    out_val   => fil_val_scope
+  );
+
+  u_fil_im_scope : entity casper_sim_tools_lib.common_wideband_data_scope
+  generic map (
+    g_sim                 => TRUE,
+    g_wideband_factor     => g_wpfb.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
+    g_wideband_big_endian => TRUE,              -- When true in_data[3:0] = sample[t0,t1,t2,t3], else when false : in_data[3:0] = sample[t3,t2,t1,t0]
+    g_dat_w               => c_fil_dat_w        -- Actual width of the data samples
+  )
+  port map (
+    -- Sample clock
+    SCLK      => sclk,  -- sample clk, use only for simulation purposes
+
+    -- Streaming input data
+    in_data   => fil_im_data,
+    in_val    => fil_val,
+
+    -- Scope output samples
+    out_dat   => OPEN,
+    out_int   => fil_im_scope,
+    out_val   => open
+  );
+
   u_out_re_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
