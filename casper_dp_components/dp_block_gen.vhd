@@ -229,3 +229,171 @@ BEGIN
   END PROCESS;  
  
 END rtl;
+
+LIBRARY IEEE, common_pkg_lib, wpfb_lib, wb_fft_lib;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+USE common_pkg_lib.common_pkg.ALL;
+USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL; 
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL; 
+
+ENTITY dp_block_gen_fil_in IS
+  GENERIC (
+    g_use_src_in         : BOOLEAN := TRUE;  -- when true use src_in.ready else use snk_in.valid for flow control
+    g_nof_data           : POSITIVE := 1;    -- nof data per block
+    g_nof_blk_per_sync   : POSITIVE := 8;
+    g_empty              : NATURAL := 0;
+    g_channel            : NATURAL := 0;
+    g_error              : NATURAL := 0;
+    g_bsn                : NATURAL := 0;
+    g_preserve_sync      : BOOLEAN := FALSE;
+    g_preserve_bsn       : BOOLEAN := FALSE;
+    g_preserve_channel   : BOOLEAN := FALSE
+  );             
+  PORT (         
+    rst        : IN  STD_LOGIC;
+    clk        : IN  STD_LOGIC;
+    -- Streaming sink
+    snk_out    : OUT t_dp_siso;                   -- pass on src_in.xon, pass on or force snk_out.ready dependend on g_use_src_in
+    snk_in     : IN  t_fil_sosi_in := c_fil_sosi_rst_in;
+    -- Streaming source
+    src_in     : IN  t_dp_siso := c_dp_siso_rdy;
+    src_out    : OUT t_fil_sosi_in;
+    -- MM control
+    en         : IN  STD_LOGIC := '1'
+  );
+END dp_block_gen_fil_in;
+
+
+ARCHITECTURE rtl OF dp_block_gen_fil_in IS
+
+  TYPE t_state IS (s_sop, s_data, s_eop);
+
+  TYPE t_reg IS RECORD  -- local registers
+    state     : t_state;
+    data_cnt  : NATURAL RANGE 0 TO g_nof_data;
+    blk_cnt   : NATURAL RANGE 0 TO g_nof_blk_per_sync;
+    bsn       : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);
+    src_out   : t_fil_sosi_in;
+  END RECORD;
+  
+  CONSTANT c_reg_rst  : t_reg := (s_sop, 0, 0, TO_UVEC(g_bsn, c_dp_stream_bsn_w), c_fil_sosi_rst_in);
+
+  SIGNAL ready     : STD_LOGIC;
+    
+  -- Define the local registers in t_reg record
+  SIGNAL r         : t_reg;
+  SIGNAL nxt_r     : t_reg;
+  
+BEGIN
+  
+  snk_out.ready <= src_in.ready WHEN g_use_src_in=TRUE ELSE '1';  -- force snk_out.ready = '1' when src_in.ready is not used
+  snk_out.xon   <= src_in.xon;                                    -- always pass on siso.xon
+  
+  src_out <= r.src_out;
+  
+  p_clk : PROCESS(rst, clk)
+  BEGIN
+    IF rst='1' THEN
+      r <= c_reg_rst;
+    ELSIF rising_edge(clk) THEN
+      r <= nxt_r;
+    END IF;
+  END PROCESS;  
+
+  ready <= src_in.ready WHEN g_use_src_in=TRUE ELSE snk_in.valid;
+  
+  p_state : PROCESS(r, en, ready, snk_in)
+  BEGIN
+    nxt_r <= r;
+    
+    IF g_use_src_in=FALSE THEN
+      -- nxt_r.src_out.data  <= snk_in.data;
+      nxt_r.src_out.re    <= snk_in.re;
+      nxt_r.src_out.im    <= snk_in.im;
+    END IF;
+
+    IF g_preserve_sync = FALSE THEN
+      nxt_r.src_out.sync  <= '0';
+    ELSE
+      nxt_r.src_out.sync  <= snk_in.sync;
+    END IF;
+
+    nxt_r.src_out.valid <= '0';
+    nxt_r.src_out.sop   <= '0';
+    nxt_r.src_out.eop   <= '0';
+    
+    IF g_preserve_bsn=TRUE THEN
+      nxt_r.src_out.bsn <= snk_in.bsn;
+    END IF;
+    
+    IF g_preserve_channel=TRUE THEN
+      nxt_r.src_out.channel <= snk_in.channel;
+    END IF;
+    
+    CASE r.state IS
+      WHEN s_sop =>
+        nxt_r.data_cnt <= 0;            -- for clarity init data count to 0 (because it will become 1 anyway at sop)
+        IF en='0' THEN                  -- if disabled then reset block generator and remain in this state
+          nxt_r.blk_cnt <= 0;
+          nxt_r.bsn     <= TO_UVEC(g_bsn, c_dp_stream_bsn_w);
+        ELSE                            -- enabled block generator
+          IF ready='1' THEN             -- once enabled the complete block will be output dependent on the flow control
+            -- use input sync or create local sync
+            IF g_preserve_sync = FALSE THEN
+              IF r.blk_cnt=0 THEN
+                nxt_r.src_out.sync  <= '1';              -- use local sync for this block, local sync starts at first ready
+              END IF;
+              IF r.blk_cnt>=g_nof_blk_per_sync-1 THEN    -- maintain local sync interval
+                nxt_r.blk_cnt <= 0;
+              ELSE
+                nxt_r.blk_cnt <= r.blk_cnt+1;
+              END IF;
+            END IF;
+            nxt_r.src_out.valid   <= '1';
+            nxt_r.src_out.sop     <= '1';
+            
+            -- use input bsn or create local bsn
+            IF g_preserve_bsn=FALSE THEN
+              nxt_r.bsn             <= INCR_UVEC(r.bsn, 1);  -- increment local bsn for next block
+              nxt_r.src_out.bsn     <= r.bsn;                -- use local bsn for this block
+            END IF;
+            
+            -- use input channel or create fixed local channel
+            IF g_preserve_channel=FALSE THEN
+              nxt_r.src_out.channel <= TO_UVEC(g_channel, c_dp_stream_channel_w);
+            END IF;
+            
+            IF g_nof_data=1 THEN
+              nxt_r.src_out.eop   <= '1';  -- single word block
+              nxt_r.src_out.empty <= TO_UVEC(g_empty, c_dp_stream_empty_w);
+              nxt_r.src_out.err   <= TO_UVEC(g_error, c_dp_stream_error_w);
+            ELSIF g_nof_data=2 THEN
+              nxt_r.data_cnt <= 1;      -- start of two word block
+              nxt_r.state <= s_eop;
+            ELSE
+              nxt_r.data_cnt <= 1;      -- start of multi word block
+              nxt_r.state <= s_data;
+            END IF;
+          END IF;
+        END IF;
+      WHEN s_data =>
+        IF ready='1' THEN
+          nxt_r.data_cnt <= r.data_cnt+1;
+          nxt_r.src_out.valid <= '1';
+          IF r.data_cnt=g_nof_data-2 THEN
+            nxt_r.state <= s_eop;
+          END IF;
+        END IF;
+      WHEN OTHERS =>  -- s_eop
+        IF ready='1' THEN
+          nxt_r.src_out.valid <= '1';
+          nxt_r.src_out.eop   <= '1';
+          nxt_r.src_out.empty <= TO_UVEC(g_empty, c_dp_stream_empty_w);
+          nxt_r.src_out.err   <= TO_UVEC(g_error, c_dp_stream_error_w);
+          nxt_r.state <= s_sop;
+        END IF;
+    END CASE;
+  END PROCESS;  
+ 
+END rtl;

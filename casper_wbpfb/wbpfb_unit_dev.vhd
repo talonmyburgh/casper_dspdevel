@@ -360,16 +360,14 @@ entity wbpfb_unit_dev is
     g_wpfb              : t_wpfb            := c_wpfb;
     g_dont_flip_channels: boolean           := false;   -- True preserves channel interleaving for pipelined FFT
     g_use_prefilter     : boolean           := TRUE;
-    g_stats_ena         : boolean           := TRUE;    -- Enables the statistics unit
-    g_use_bg            : boolean           := FALSE;
     g_coefs_file_prefix : string            := "data/coefs_wide"; -- File prefix for the coefficients files.
     g_fil_ram_primitive : string            := "block";
     g_use_variant       : string  		      := "4DSP";        										--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
     g_use_dsp           : string  		      := "yes";        										--! = "yes" or "no"
     g_ovflw_behav       : string  		      := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
     g_use_round         : string  		      := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-    g_fft_ram_primitive : string  		      := "auto";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-    g_fifo_primitive    : string  		      := "auto"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_fft_ram_primitive : string  		      := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_fifo_primitive    : string  		      := "block"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
    );
   port (
     rst                : in  std_logic := '0';
@@ -424,20 +422,15 @@ architecture str of wbpfb_unit_dev is
   constant c_bg_data_file_index_arr : t_nat_natural_arr := array_init(0, g_wpfb.nof_wb_streams*g_wpfb.wb_factor, 1);
   constant c_bg_data_file_prefix    : string  := "UNUSED";
 
-  signal ram_st_sst_mosi_arr : t_mem_mosi_arr(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal ram_st_sst_miso_arr : t_mem_miso_arr(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others => c_mem_miso_rst);
-
   signal fil_in_arr          : t_fil_slv_arr_in(c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fil_in_val          : std_logic;
-  signal fil_out_arr         : t_fil_slv_arr_out(c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_out_arr         : t_fil_slv_arr_out(c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others => (others => '0'));
   signal fil_out_val         : std_logic;
   
   signal fft_in_re_arr       : t_fft_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fft_in_im_arr       : t_fft_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fft_in_val          : std_logic;
 
-  signal fft_out_re_arr_i    : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_out_im_arr_i    : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fft_out_re_arr      : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fft_out_im_arr      : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal fft_out_re_arr_pipe : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
@@ -473,8 +466,6 @@ begin
     end if;
   end process;
 
-
-  gen_pfb : if g_use_bg = FALSE generate
     ---------------------------------------------------------------
     -- REWIRE THE DATA FOR WIDEBAND POLY PHASE FILTER
     ---------------------------------------------------------------
@@ -593,17 +584,14 @@ begin
           rst       => rst,
           clken     => ce,
           shiftreg  => shiftreg,
-          in_re     => fft_in_re_arr(S)(c_fft.in_dat_w-1 downto 0),
-          in_im     => fft_in_im_arr(S)(c_fft.in_dat_w-1 downto 0),
+          in_re     => fft_in_re_arr(S),
+          in_im     => fft_in_im_arr(S),
           in_val    => fft_in_val,
-          out_re    => fft_out_re_arr_i(S)(c_fft.out_dat_w-1 downto 0),
-          out_im    => fft_out_im_arr_i(S)(c_fft.out_dat_w-1 downto 0),
+          out_re    => fft_out_re_arr(S),
+          out_im    => fft_out_im_arr(S),
           ovflw     => ovflw,
           out_val   => fft_out_val_arr(S)
         );
-        
-        fft_out_re_arr(S) <= fft_out_re_arr_i(S)(c_fft.out_dat_w-1 downto 0);
-        fft_out_im_arr(S) <= fft_out_im_arr_i(S)(c_fft.out_dat_w-1 downto 0);
       end generate;
     end generate;
 
@@ -644,7 +632,6 @@ begin
       -- Control
       enable      => '1'
     );
-  end generate;
 
   -- Connect to the outside world
   out_sosi_arr <= pfb_out_sosi_arr;
