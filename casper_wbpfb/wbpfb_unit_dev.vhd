@@ -356,28 +356,28 @@ use work.wbpfb_gnrcs_intrfcs_pkg.all;
 
 entity wbpfb_unit_dev is
   generic (
-    g_big_endian_wb_in  : boolean           := true;
-    g_wpfb              : t_wpfb            := c_wpfb;
-    g_dont_flip_channels: boolean           := false;   -- True preserves channel interleaving for pipelined FFT
-    g_use_prefilter     : boolean           := TRUE;
-    g_coefs_file_prefix : string            := "data/coefs_wide"; -- File prefix for the coefficients files.
-    g_fil_ram_primitive : string            := "block";
-    g_use_variant       : string  		      := "4DSP";        										--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-    g_use_dsp           : string  		      := "yes";        										--! = "yes" or "no"
-    g_ovflw_behav       : string  		      := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-    g_use_round         : string  		      := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-    g_fft_ram_primitive : string  		      := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-    g_fifo_primitive    : string  		      := "block"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_big_endian_wb_in  : boolean          := true;
+    g_wpfb              : t_wpfb           := c_wpfb;
+    g_dont_flip_channels: boolean          := false;   -- True preserves channel interleaving for pipelined FFT
+    g_use_prefilter     : boolean          := TRUE;
+    g_coefs_file_prefix : string           := c_coefs_file; -- File prefix for the coefficients files.
+    g_fil_ram_primitive : string           := "block";
+    g_use_variant       : string  		    := "4DSP";        										--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+    g_use_dsp           : string  		    := "yes";        										--! = "yes" or "no"
+    g_ovflw_behav       : string  		    := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+    g_use_round         : string  		    := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+    g_fft_ram_primitive : string  		    := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_fifo_primitive    : string  		    := "block"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
    );
   port (
-    rst                : in  std_logic := '0';
-    clk                : in  std_logic := '0';
-    ce                 : in  std_logic := '1';
-    shiftreg           : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register
-    in_sosi_arr        : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others => c_fil_sosi_rst_in);
-    fil_sosi_arr       : out t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-    ovflw              : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);			--! Ovflw register
-    out_sosi_arr       : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) 
+    rst                	: in  std_logic := '0';
+    clk                	: in  std_logic := '0';
+    ce                 	: in  std_logic := '1';
+    shiftreg           	: in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register
+    in_sosi_arr        	: in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others => c_fil_sosi_rst_in);
+    fil_sosi_arr       	: out t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+    ovflw              	: out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);			--! Ovflw register
+    out_sosi_arr       	: out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) 
   );
 end entity wbpfb_unit_dev;
 

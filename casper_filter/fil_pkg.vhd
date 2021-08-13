@@ -11,10 +11,10 @@ CONSTANT c_fil_coef_dat_w   : natural := 16;
 CONSTANT c_coefs_file       : string  := "C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wbpfb/data/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT c_fil_wb_factor    : natural   := 1;
-CONSTANT c_fil_nof_taps     : natural   := 8; 
+CONSTANT c_fil_wb_factor    : natural   := 4;
+CONSTANT c_fil_nof_taps     : natural   := 16; 
 CONSTANT c_fil_nof_chan     : natural   := 0;
-CONSTANT c_fil_nof_bands    : natural   := 64;
+CONSTANT c_fil_nof_bands    : natural   := 1024;
 CONSTANT c_fil_nof_streams  : natural   := 1;
 CONSTANT c_fil_backoff_w    : natural   := 0;
 
