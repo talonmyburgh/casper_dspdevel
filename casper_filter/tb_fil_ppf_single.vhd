@@ -129,7 +129,7 @@
 --   > observe out_dat in analogue format in Wave window
 --   > testbench is selftesting.
 --
-library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib; -- casper_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, technology_lib; -- casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -140,6 +140,7 @@ use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
 -- use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
+use technology_lib.technology_select_pkg.ALL;
 use work.fil_pkg.all;
 
 entity tb_fil_ppf_single is
@@ -173,7 +174,6 @@ entity tb_fil_ppf_single is
       -- end record;
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
     g_enable_in_val_gaps : boolean := FALSE;
-    g_technology         : natural := 0
   );
 end entity tb_fil_ppf_single;
 
@@ -315,9 +315,9 @@ begin
   begin
     for J in 0 to g_fil_ppf.nof_taps-1 loop
       -- Read coeffs per tap from MEMORY file
-      if g_technology = 1 then
+      if c_tech_select_default = c_tech_stratixiv then
         proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(J) & ".mif", memory_coefs_arr);
-      elsif g_technology = 0 then
+      elsif c_tech_select_default = c_tech_xpm then
         proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(J) & ".mem", memory_coefs_arr);
       end if;
       wait for 1 ns;
@@ -376,8 +376,7 @@ begin
     g_fil_ppf           => g_fil_ppf,
     g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
     g_file_index_arr    => c_file_index_arr,
-    g_coefs_file_prefix => c_coefs_file_prefix,
-    g_technology        => g_technology
+    g_coefs_file_prefix => c_coefs_file_prefix
   )
   port map (
     clk         => clk,

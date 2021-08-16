@@ -37,7 +37,6 @@ END tb_tb_fil_ppf_wide;
 ARCHITECTURE tb OF tb_tb_fil_ppf_wide IS
   
   CONSTANT c_prefix           : string  := c_coefs_file;
-  CONSTANT c_technology       : natural := 0;
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
 
@@ -112,7 +111,7 @@ BEGIN
   u1_rnd_4channels   : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_rnd_4channels, c_hanning_1_rnd_4channels, TRUE);
   
   -- verify fil_ppf_wide for wb_factor>1
-  u4_act            :  ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_act, c_hanning_4_act, FALSE, 0);
+  u4_act            :  ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_act, c_hanning_4_act, FALSE);
   u4_act_be_le       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE, FALSE, c_fil_ppf_pipeline, c_fil_ppf_4_act_be_le, c_hanning_4_act_be_le, FALSE);
   u4_act_le_le       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( FALSE,FALSE, c_fil_ppf_pipeline, c_fil_ppf_4_act_le_le, c_hanning_4_act_le_le, FALSE);
   u4_rnd_quant       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_quant, c_hanning_4_rnd_quant, TRUE);
