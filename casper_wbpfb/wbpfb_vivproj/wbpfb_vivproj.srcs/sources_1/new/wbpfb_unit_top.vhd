@@ -17,22 +17,8 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 library ieee, common_pkg_lib,r2sdf_fft_lib,casper_filter_lib,wb_fft_lib,casper_diagnostics_lib,casper_ram_lib,wpfb_lib;
 use IEEE.std_logic_1164.all;
-use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
 use casper_ram_lib.common_ram_pkg.all;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
