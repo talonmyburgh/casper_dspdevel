@@ -43,9 +43,17 @@ function filterbank_top_config(this_block)
   technology = get_param(filterbank_blk_parent,'technology');
   ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
+  technology_int = 0;
+  if strcmp(technology, 'Xilinx')
+    technology_int = 0;
+  end % if technology Xilinx
+  if strcmp(technology, 'UniBoard')
+    technology_int = 1;
+  end % if technology UniBoard
+
   %Generate the top level vhdl file as well as the mem files. Returned is the location of the mem files for adding to the project.
-  top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
-      str2double(fwidth),str2double(technology),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
+  vhdlfile = top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
+      str2double(fwidth),technology_int,str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
   %Input signals
   this_block.addSimulinkInport('rst');
@@ -115,9 +123,10 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_nof_taps','natural',num2str(nof_taps));
   this_block.addGeneric('g_nof_streams','natural',nof_streams);
   this_block.addGeneric('g_backoff_w','natural',backoff_w);
-  this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
+  %get location of generated hdl source files:
+  srcloc = fileparts(vhdlfile);
   
   % Copy across the technology_select_pkg as per mask's vendor_technology
   source_technology_select_pkg = '';

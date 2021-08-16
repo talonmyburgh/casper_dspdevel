@@ -1,8 +1,14 @@
-function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, in_dat_w, out_dat_w, coef_dat_w)
+function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, in_dat_w, out_dat_w, coef_dat_w)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('top_fil_code_gen'));                 %get the filepath of this script (and thereby all scripts needed)
-    filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
-    vhdlfile = filepath+"/"+bdroot+"_fil_top.vhd";                         %filename for vhd file
+    %where the top vhdl file will be generated
+    vhdlfilefolder = [fileparts(which(bdroot)) '/tmp_dspdevel'];
+    if ~exist(vhdlfilefolder, 'dir')
+        mkdir(vhdlfilefolder)
+    end
+    %and what it will be named
+    vhdlfile = [vhdlfilefolder '/' bdroot '_wb_fft_top.vhd'];              %filename for vhd file
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec = ["library IEEE, common_pkg_lib, casper_ram_lib, casper_filter_lib, casper_mm_lib;"
     "use IEEE.std_logic_1164.ALL;"
@@ -71,7 +77,7 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
 
     %Generate coefficients mem file for the filter:
     pyscriptloc = [filepathscript , '/fil_ppf_create.py'];
-    command = sprintf("python %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth)';
+    command = sprintf("python %s -o %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, vhdlfilefolder, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth);
     [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
     
     if(status ~= 0)
@@ -80,7 +86,7 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     
     %Update fil_pkg.vhd:
     coef_filepath_stem = strtrim(cmdout);
-    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem);
+    updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem);
 end
 
 function chararr = mknprts(wb_factor)
@@ -115,9 +121,11 @@ function achararr = mkarch(wb_factor)
     end
 end
 
-function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem)
+function updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem)
     insertloc = 7;
     vhdlgenfileloc = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
+    pkgdest = [vhdlfilefolder '/fil_pkg.vhd'];
+
     lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
     linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
     linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
@@ -130,7 +138,7 @@ function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb
     lines = lines{1};
     fclose(fid);
 
-    fid=fopen(vhdlgenfileloc,'w');
+    fid=fopen(pkgdest,'w');
     for jj = 1:insertloc
         fprintf(fid,'%s\n',lines{jj} );
     end
