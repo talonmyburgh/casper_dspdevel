@@ -22,7 +22,6 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     "g_nof_taps          : natural;          -- number of taps"
     "g_nof_streams       : natural;          -- number of streams"
     "g_backoff_w         : natural;          -- backoff width"
-    "g_technology        : natural;          -- 0 for Xilinx, 1 for Altera"
     "g_ram_primitive     : string);          -- ram primitive function for use"
     "port("
     "clk            : in  std_logic;"
