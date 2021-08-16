@@ -93,7 +93,9 @@ end
 num_stages = stagecalc(nof_points);
 ovflwshiftreg_type = sprintf('UFix_%d_0',num_stages);
 
-%TODO Update the vhdl top file with the required ports per wb_factor:
+%Update the vhdl top file with the required ports per wb_factor:
+vhdlfile = top_wbpfb_code_gen(wb_factor,str2double(nof_wb_streams),str2double(nof_points),nof_taps,win,str2double(fwidth),...
+          xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(c_d_w));
 
 %If extra data signals are specified, we add them below
 if xtra_dat_sigs
@@ -116,7 +118,7 @@ if xtra_dat_sigs
   in_empty_port.useHDLVector(true);
   this_block.addSimulinkInport('in_err');
   in_err_port = this_block.port('in_err');
-  in_err_port.setType(err_data_type);
+  in_err_port.setType(error_data_type);
   in_err_port.useHDLVector(true);
   this_block.addSimulinkInport('in_channel');
   in_channel_port = this_block.port('in_channel');
@@ -297,7 +299,7 @@ end
   this_block.addGeneric('g_dont_flip_channels','boolean',dont_flip_channels);
   this_block.addGeneric('g_use_prefilter','boolean',use_prefilter);
   this_block.addGeneric('g_fil_ram_primitive','string',fil_ram_primitive);
-  this_block.addGeneric('g_use_variant','string',use_variant);
+  this_block.addGeneric('g_use_variant','string',variant);
   this_block.addGeneric('g_use_dsp','string',use_dsp);
   this_block.addGeneric('g_ovflw_behav','string',fft_ovflw_behav);
   this_block.addGeneric('g_use_round','string',fft_use_round);
@@ -315,13 +317,88 @@ end
   %  |    this_block.addFile('a.vhd');
   %  |-------------
 
-  %    this_block.addFile('');
-  %    this_block.addFile('');
-  this_block.addFile('C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wbpfb/wbpfb_vivproj/wbpfb_vivproj.srcs/sources_1/new/wbpfb_unit_top.vhd');
+  %get location of generated hdl source files:
+  srcloc = fileparts(vhdlfile);
 
+  % Copy across the technology_select_pkg as per mask's vendor_technology
+  source_technology_select_pkg = '';
+  if strcmp(technology, 'Xilinx')
+    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperxpm.vhd'];
+  end % if technology Xilinx
+  if strcmp(technology, 'UniBoard')
+    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperunb1.vhd'];
+  end % if technology UniBoard
+  copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
+
+  this_block.addFileToLibrary(vhdlfile, 'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree_a_str.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_cr_cw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_rw_rw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_paged_reg.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_rw_rw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_r_w.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_switch.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
+  this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([srcloc   '/fil_pkg.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_gnrcs_intrfcs_pkg.vhd'],'casper_wbpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'casper_dp_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_ctrl.vhd'],'casper_dp_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_input.vhd'],'casper_dp_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_pipeline/dp_pipeline.vhd'],'casper_pipeline_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_bsn_restore_global.vhd'],'casper_wbpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_block_gen_valid_arr.vhd'],'casper_wbpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBFStage.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWeights.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFStage.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_pipe.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa_wide.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_wide.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_wide.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd'],'ip_xpm_mult_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd'],'ip_xpm_mult_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_mult_infer.vhd'],'ip_xpm_mult_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_unit_dev.vhd'],'casper_wbpfb_lib');
   return;
 end
-
 
 % ------------------------------------------------------------
 
