@@ -118,6 +118,17 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
+  
+  % Copy across the technology_select_pkg as per mask's vendor_technology
+  source_technology_select_pkg = '';
+  if strcmp(technology, 'Xilinx')
+    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperxpm.vhd'];
+  end % if technology Xilinx
+  if strcmp(technology, 'UniBoard')
+    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperunb1.vhd'];
+  end % if technology UniBoard
+  copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
+
   %Add files:
   this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
 
@@ -127,6 +138,7 @@ function filterbank_top_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree_a_str.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([srcloc '/technology_select_pkg.vhd'],'technology_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult.vhd'],'casper_multiplier_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');
@@ -144,10 +156,10 @@ function filterbank_top_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_mult_infer.vhd'],'ip_xpm_mult_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_wide.vhd'],'casper_filter_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_mult_infer.vhd'],'casper_multiplier_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
 return;
 end
 
