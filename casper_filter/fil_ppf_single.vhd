@@ -97,7 +97,7 @@ end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
   
-  constant c_coefs_postfix   : string  := sel_a_b(c_tech_select_default = 0, ".mem", ".mif"); 
+  constant c_coefs_postfix   : string  := sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif"); 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              
