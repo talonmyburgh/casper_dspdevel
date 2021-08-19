@@ -10,7 +10,7 @@ function wbpfb_unit_top_config(this_block)
   %
 
   this_block.setTopLevelLanguage('VHDL');
-  filepath = fileparts(which('wbpfb_unit_config'));
+  filepath = fileparts(which('wbpfb_unit_top_config'));
 
   this_block.setEntityName('wbpfb_unit_top');
 
@@ -26,9 +26,8 @@ function wbpfb_unit_top_config(this_block)
   channel_data_type = sprintf('Fix_%d_0',dp_stream_channel);
   dp_stream_error = 32;
   error_data_type = sprintf('Fix_%d_0',dp_stream_error);
-  
 
-  function boolval =  checkbox2bool(bxval)
+function boolval =  checkbox2bool(bxval)
     if strcmp(bxval, 'on')
      boolval= true;
     elseif strcmp(bxval, 'off')
@@ -36,23 +35,25 @@ function wbpfb_unit_top_config(this_block)
     end 
  end
 
- function strboolval = bool2str(bval)
-     if bval
-         strboolval = 'TRUE';
-     elseif ~bval
-         strboolval = 'FALSE';
-     end
- end
+ function strval = checkbox2str(bxval)
+  if strcmp(bxval,'on')
+    strval = 'TRUE';
+  elseif strcmp(bxval, 'off')
+    strval = 'FALSE'; 
+  end
+end
 
  %Fetch subsystem mask parameters for dynamic ports:
  use_reorder = get_param(wb_pfb_blk_parent,'use_reorder');
  use_fft_shift = get_param(wb_pfb_blk_parent,'use_fft_shift');
  use_separate = get_param(wb_pfb_blk_parent,'use_separate');
- wb_factor = str2double(get_param(wb_pfb_blk_parent,'wb_factor'));
- if wb_factor<1
+ wb_factor =get_param(wb_pfb_blk_parent,'wb_factor');
+ dbl_wb_factor = str2double(wb_factor);
+ if dbl_wb_factor<1
       error("Cannot have wideband factor <1"); 
  end
  nof_points = get_param(wb_pfb_blk_parent,'nof_points');
+ dbl_nof_points = str2double(nof_points);
  fft_i_d_w = get_param(wb_pfb_blk_parent,'fft_in_dat_w');
  fil_i_d_w = get_param(wb_pfb_blk_parent,'fil_in_dat_w');
  in_fil_data_type = sprintf('Fix_%s_0', fil_i_d_w);
@@ -74,28 +75,28 @@ function wbpfb_unit_top_config(this_block)
  fil_ram_primitive = get_param(wb_pfb_blk_parent,'fil_ram_primitive');
  fifo_primitive = get_param(wb_pfb_blk_parent,'fifo_primitive');
  xtra_dat_sigs = checkbox2bool(get_param(wb_pfb_blk_parent,'xtra_dat_sigs'));
- use_reorder = checkbox2bool(use_reorder);
- use_fft_shift = checkbox2bool(use_fft_shift);
- use_separate = checkbox2bool(use_separate);
- fft_guard_en = checkbox2bool(fft_guard_en);
  win = get_param(wb_pfb_blk_parent, 'win');
  fwidth = get_param(wb_pfb_blk_parent, 'fwidth');
- nof_taps = str2double(get_param(wb_pfb_blk_parent,'nof_taps'));
+ nof_taps = get_param(wb_pfb_blk_parent,'nof_taps');
+ dbl_nof_taps = str2double(nof_taps);
+ nof_chan = get_param(wb_pfb_blk_parent,'nof_chan');
  nof_wb_streams = get_param(wb_pfb_blk_parent,'nof_wb_streams');
+ dbl_nof_wb_streams = str2double(nof_wb_streams);
  backoff_w = get_param(wb_pfb_blk_parent,'backoff_w');
  big_endian_wb_in = get_param(wb_pfb_blk_parent,'big_endian_wb_in');
  use_prefilter = get_param(wb_pfb_blk_parent,'use_prefilter');
  dont_flip_channels = get_param(wb_pfb_blk_parent,'dont_flip_channels');
 
-function stages = stagecalc(nof_points)
-  stages = ceil(log2(str2double(nof_points)));
+function stages = stagecalc(dbl_nof_points)
+  stages = ceil(log2(dbl_nof_points));
 end
-num_stages = stagecalc(nof_points);
+num_stages = stagecalc(dbl_nof_points);
 ovflwshiftreg_type = sprintf('UFix_%d_0',num_stages);
 
 %Update the vhdl top file with the required ports per wb_factor:
-vhdlfile = top_wbpfb_code_gen(wb_factor,str2double(nof_wb_streams),str2double(nof_points),nof_taps,win,str2double(fwidth),...
-          xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),str2double(c_d_w));
+vhdlfile = top_wbpfb_code_gen(dbl_wb_factor,dbl_nof_wb_streams,dbl_nof_points,dbl_nof_taps,win,str2double(fwidth)...
+          ,xtra_dat_sigs,str2double(fft_i_d_w),str2double(fft_o_d_w),str2double(fft_s_d_w),str2double(fil_c_d_w)...
+          ,str2double(fil_i_d_w),str2double(fil_o_d_w));
 
 %If extra data signals are specified, we add them below
 if xtra_dat_sigs
@@ -103,80 +104,23 @@ if xtra_dat_sigs
   this_block.addSimulinkInport('in_bsn');
   in_bsn_port = this_block.port('in_bsn');
   in_bsn_port.setType(bsn_data_type);
-  in_bsn_port.useHDLVector(true);
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
   in_sop_port.setType('UFix_1_0');
-  in_sop_port.useHDLVector(false);
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
   in_eop_port.setType('UFix_1_0');
-  in_eop_port.useHDLVector(false);
   this_block.addSimulinkInport('in_empty');
   in_empty_port = this_block.port('in_empty');
   in_empty_port.setType(empty_data_type);
-  in_empty_port.useHDLVector(true);
   this_block.addSimulinkInport('in_err');
   in_err_port = this_block.port('in_err');
   in_err_port.setType(error_data_type);
-  in_err_port.useHDLVector(true);
   this_block.addSimulinkInport('in_channel');
   in_channel_port = this_block.port('in_channel');
   in_channel_port.setType(channel_data_type);
-  in_channel_port.useHDLVector(true);
-
-  %extra signals outport declarations
-  this_block.addSimulinkOutport('out_bsn');
-  out_bsn_port = this_block.port('out_bsn');
-  out_bsn_port.setType(bsn_data_type);
-  out_bsn_port.useHDLVector(true);
-  this_block.addSimulinkOutport('out_sop');
-  out_sop_port = this_block.port('out_sop');
-  out_sop_port.setType('UFix_1_0');
-  out_sop_port.useHDLVector(false);
-  this_block.addSimulinkOutport('out_eop');
-  out_eop_port = this_block.port('out_eop');
-  out_eop_port.setType('UFix_1_0');
-  out_eop_port.useHDLVector(false);
-  this_block.addSimulinkOutport('out_empty');
-  out_empty_port = this_block.port('out_empty');
-  out_empty_port.setType(empty_data_type);
-  out_empty_port.useHDLVector(true);
-  this_block.addSimulinkOutport('out_err');
-  out_err_port = this_block.port('out_err');
-  out_err_port.setType(err_data_type);
-  out_err_port.useHDLVector(true);
-  this_block.addSimulinkOutport('out_channel');
-  out_channel_port = this_block.port('out_channel');
-  out_channel_port.setType(channel_data_type);
-  out_channel_port.useHDLVector(true);
-
-  %extra signals filport declarations
-  this_block.addSimulinkOutport('fil_bsn');
-  fil_bsn_port = this_block.port('fil_bsn');
-  fil_bsn_port.setType(bsn_data_type);
-  fil_bsn_port.useHDLVector(true);
-  this_block.addSimulinkOutport('fil_sop');
-  fil_sop_port = this_block.port('fil_sop');
-  fil_sop_port.setType('UFix_1_0');
-  fil_sop_port.useHDLVector(false);
-  this_block.addSimulinkOutport('fil_eop');
-  fil_eop_port = this_block.port('fil_eop');
-  fil_eop_port.setType('UFix_1_0');
-  fil_eop_port.useHDLVector(false);
-  this_block.addSimulinkOutport('fil_empty');
-  fil_empty_port = this_block.port('fil_empty');
-  fil_empty_port.setType(empty_data_type);
-  fil_empty_port.useHDLVector(true);
-  this_block.addSimulinkOutport('fil_err');
-  fil_err_port = this_block.port('fil_err');
-  fil_err_port.setType(err_data_type);
-  fil_err_port.useHDLVector(true);
-  this_block.addSimulinkOutport('fil_channel');
-  fil_channel_port = this_block.port('fil_channel');
-  fil_channel_port.setType(channel_data_type);
-  fil_channel_port.useHDLVector(true);
 end
+
 
 %If not, we only make use of the data signals below.
 
@@ -198,7 +142,7 @@ in_valid_port = this_block.port('in_valid');
 in_valid_port.setType('UFix_1_0');
 in_valid_port.useHDLVector(false);
 %Generate im, re per wb_factor*nof_wb_streams:
-for i=0:wb_factor*nof_wb_streams-1
+for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
   in_im_port = sprintf('in_im_%d',i);
   this_block.addSimulinkInport(in_im_port);
   in_im = this_block.port(in_im_port);
@@ -212,58 +156,91 @@ for i=0:wb_factor*nof_wb_streams-1
   in_re.useHDLVector(true);
 end
 
-%filport declarations
+if xtra_dat_sigs
+  %extra signals outport declarations
+  this_block.addSimulinkOutport('out_bsn');
+  out_bsn_port = this_block.port('out_bsn');
+  out_bsn_port.setType(bsn_data_type);
+  this_block.addSimulinkOutport('out_sop');
+  out_sop_port = this_block.port('out_sop');
+  out_sop_port.setType('UFix_1_0');
+  this_block.addSimulinkOutport('out_eop');
+  out_eop_port = this_block.port('out_eop');
+  out_eop_port.setType('UFix_1_0');
+  this_block.addSimulinkOutport('out_empty');
+  out_empty_port = this_block.port('out_empty');
+  out_empty_port.setType(empty_data_type);
+  this_block.addSimulinkOutport('out_err');
+  out_err_port = this_block.port('out_err');
+  out_err_port.setType(error_data_type);
+  this_block.addSimulinkOutport('out_channel');
+  out_channel_port = this_block.port('out_channel');
+  out_channel_port.setType(channel_data_type);
+
+  %extra signals filport declarations
+  this_block.addSimulinkOutport('fil_bsn');
+  fil_bsn_port = this_block.port('fil_bsn');
+  fil_bsn_port.setType(bsn_data_type);
+  this_block.addSimulinkOutport('fil_sop');
+  fil_sop_port = this_block.port('fil_sop');
+  fil_sop_port.setType('UFix_1_0');
+  this_block.addSimulinkOutport('fil_eop');
+  fil_eop_port = this_block.port('fil_eop');
+  fil_eop_port.setType('UFix_1_0');
+  this_block.addSimulinkOutport('fil_empty');
+  fil_empty_port = this_block.port('fil_empty');
+  fil_empty_port.setType(empty_data_type);
+  this_block.addSimulinkOutport('fil_err');
+  fil_err_port = this_block.port('fil_err');
+  fil_err_port.setType(error_data_type);
+  this_block.addSimulinkOutport('fil_channel');
+  fil_channel_port = this_block.port('fil_channel');
+  fil_channel_port.setType(channel_data_type);
+end
+
+% filport declarations
 this_block.addSimulinkOutport('fil_sync');
 fil_sync_port = this_block.port('fil_sync');
 fil_sync_port.setType('UFix_1_0');
-fil_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('fil_valid');
 fil_valid_port = this_block.port('fil_valid');
 fil_valid_port.setType('UFix_1_0');
-fil_valid_port.useHDLVector(false);
 
-for i=0:wb_factor*nof_wb_streams-1
+for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
   fil_im_port = sprintf('fil_im_%d',i);
   this_block.addSimulinkOutport(fil_im_port);
   fil_im = this_block.port(fil_im_port);
   fil_im.setType(out_fil_data_type);
-  fil_im.useHDLVector(true);
 
   fil_re_port = sprintf('fil_re_%d',i);
   this_block.addSimulinkOutport(fil_re_port);
   fil_re = this_block.port(fil_re_port);
   fil_re.setType(out_fil_data_type);
-  fil_re.useHDLVector(true);
 end
 
 %outport declarations
 this_block.addSimulinkOutport('out_sync');
 out_sync_port = this_block.port('out_sync');
 out_sync_port.setType('UFix_1_0');
-out_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_valid');
 out_valid_port = this_block.port('out_valid');
 out_valid_port.setType('UFix_1_0');
-out_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('ovflw');
 out_ovflw_port = this_block.port('ovflw');
 out_ovflw_port.setType(ovflwshiftreg_type);
-out_shiftreg_port.useHDLVector(true);
 
-for i=0:wb_factor*nof_wb_streams-1
+
+for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
   out_im_port = sprintf('out_im_%d',i);
   this_block.addSimulinkOutport(out_im_port);
   out_im = this_block.port(out_im_port);
   out_im.setType(out_fft_data_type);
-  out_im.useHDLVector(true);
   
   out_re_port = sprintf('out_re_%d',i);
   this_block.addSimulinkOutport(out_re_port);
   out_re = this_block.port(out_re_port);
   out_re.setType(out_fft_data_type);
-  out_re.useHDLVector(true);
 end
-
 
   % -----------------------------
    if (this_block.inputRatesKnown)
@@ -271,14 +248,12 @@ end
    end  % if(inputRatesKnown)
   % -----------------------------
 
-    uniqueInputRates = unique(this_block.getInputRates);
-
   % (!) Custimize the following generic settings as appropriate. If any settings depend
   %      on input types, make the settings in the "inputTypesKnown" code block.
   %      The addGeneric function takes  3 parameters, generic name, type and constant value.
   %      Supported types are boolean, real, integer and string.
-  this_block.addGeneric('g_big_endian_wb_in','boolean',big_endian_wb_in);
-  this_block.addGeneric('g_wb_factor','natural',num2str(wb_factor));
+  this_block.addGeneric('g_big_endian_wb_in','boolean',checkbox2str(big_endian_wb_in));
+  this_block.addGeneric('g_wb_factor','natural',wb_factor);
   this_block.addGeneric('g_nof_points','natural',nof_points);
   this_block.addGeneric('g_nof_chan','natural',nof_chan);
   this_block.addGeneric('g_nof_wb_streams','natural',nof_wb_streams);
@@ -287,17 +262,17 @@ end
   this_block.addGeneric('g_fil_in_dat_w','natural',fil_i_d_w);
   this_block.addGeneric('g_fil_out_dat_w','natural',fil_o_d_w);
   this_block.addGeneric('g_coef_dat_w','natural',fil_c_d_w);
-  this_block.addGeneric('g_use_reorder','boolean',bool2str(use_reorder));
-  this_block.addGeneric('g_use_fft_shift','boolean',bool2str(use_fft_shift));
-  this_block.addGeneric('g_use_separate','boolean',bool2str(use_separate));
+  this_block.addGeneric('g_use_reorder','boolean',checkbox2str(use_reorder));
+  this_block.addGeneric('g_use_fft_shift','boolean',checkbox2str(use_fft_shift));
+  this_block.addGeneric('g_use_separate','boolean',checkbox2str(use_separate));
   this_block.addGeneric('g_fft_in_dat_w','natural',fft_i_d_w);
   this_block.addGeneric('g_fft_out_dat_w','natural',fft_o_d_w);
   this_block.addGeneric('g_fft_out_gain_w',o_g_w);
   this_block.addGeneric('g_stage_dat_w','natural',fft_s_d_w);
   this_block.addGeneric('g_guard_w','natural',fft_guard_w);
-  this_block.addGeneric('g_guard_enable','boolean',bool2str(fft_guard_en));
-  this_block.addGeneric('g_dont_flip_channels','boolean',dont_flip_channels);
-  this_block.addGeneric('g_use_prefilter','boolean',use_prefilter);
+  this_block.addGeneric('g_guard_enable','boolean',checkbox2str(fft_guard_en));
+  this_block.addGeneric('g_dont_flip_channels','boolean',checkbox2str(dont_flip_channels));
+  this_block.addGeneric('g_use_prefilter','boolean',checkbox2str(use_prefilter));
   this_block.addGeneric('g_fil_ram_primitive','string',fil_ram_primitive);
   this_block.addGeneric('g_use_variant','string',variant);
   this_block.addGeneric('g_use_dsp','string',use_dsp);

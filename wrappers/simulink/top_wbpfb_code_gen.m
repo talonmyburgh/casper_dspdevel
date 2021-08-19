@@ -1,4 +1,6 @@
-function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, nof_taps, win, fwidth, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, coef_dat_w)
+function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, nof_taps, win, fwidth... 
+    ,xtra_dat_sigs, fft_in_dat_w, fft_out_dat_w, fft_stage_dat_w...
+    ,fil_coef_dat_w,fil_in_dat_w, fil_out_dat_w)
     %Locate where this matlab script is
     filepathscript = fileparts(which('top_wbpfb_code_gen'));
     %where the top vhdl file will be generated
@@ -298,7 +300,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
 
     %Generate coefficients mem file for the filter:
     pyscriptloc = [filepathscript , '/fil_ppf_create.py'];
-    command = sprintf("python %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, nof_taps, nof_points, wb_factor, coef_dat_w, vendor, win, fwidth)';
+    command = sprintf("python %s -o %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, vhdlfilefolder, nof_taps, nof_points, wb_factor, fil_coef_dat_w, 0, win, fwidth)';
     [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
     
     if(status ~= 0)
@@ -307,8 +309,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
 
     %update generics package
     coef_filepath_stem = strtrim(cmdout);
-    updatefftpkg(filepathscript,vhdlfilefolder,in_dat_w,out_dat_w,stage_dat_w);
-    updatefilpkg(filepathscript,vhdlfilefolder,in_dat_w,out_dat_w,coef_dat_w,coef_filepath_stem);
+    updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w);
+    updatefilpkg(filepathscript,vhdlfilefolder,fil_in_dat_w,fil_out_dat_w,fil_coef_dat_w,coef_filepath_stem);
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
@@ -342,7 +344,7 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
     end
 end
 
-function achararr = mkarch(wbfctr)
+function achararr = mkarch(wbfctr,nof_wb_streams)
     achararr = strings(6*wbfctr*nof_wb_streams,0);
     imap_re_c = "in_fil_sosi_arr(%c).re <= in_re_%c;";
     imap_im_c = "in_fil_sosi_arr(%c).im <= in_im_%c;";
@@ -402,7 +404,7 @@ end
 function updatefilpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, coef_filepath_stem)
     insertloc = 7;
     pkgsource = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
-    pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
+    pkgdest = [vhdlfilefolder '/fil_pkg.vhd'];
     lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
     linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
     linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
