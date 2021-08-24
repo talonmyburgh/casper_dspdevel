@@ -20,8 +20,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     "use casper_filter_lib.fil_pkg.all;"
     "use wb_fft_lib.all;"
     "use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
-    "use work.wbpfb_gnrcs_intrfcs_pkg.all;"
     "use wpfb_lib.all;"
+    "use wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.all;"
 
     "entity wbpfb_unit_top is"
     "generic ("
@@ -101,8 +101,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     "use casper_filter_lib.fil_pkg.all;"
     "use wb_fft_lib.all;"
     "use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;"
-    "use work.wbpfb_gnrcs_intrfcs_pkg.all;"
     "use wpfb_lib.all;"
+    "use wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.all;"
 
     "entity wbpfb_unit_top is"
     "generic ("
@@ -160,7 +160,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
 
     lnsafterarchopen_w_xtradat = [");"
         "end wbpfb_unit_top;"
-        "architecture Behavioral of wbpfb_unit_top is"
+        "architecture RTL of wbpfb_unit_top is"
         "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                                  "g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
@@ -227,7 +227,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     
     lnsafterarchopen_w_o_xtradat = [");"
     "end wbpfb_unit_top;"
-    "architecture Behavioral of wbpfb_unit_top is"
+    "architecture RTL of wbpfb_unit_top is"
     "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                              "g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
@@ -318,7 +318,7 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
     inimchar  = "in_im_%c             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
     inrechar  = "in_re_%c             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
     filimchar = "fil_im_%c            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
-    filrechar = "fil_re_%c            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
+    filrechar = "fil_re_%c            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
     outrechar = "out_re_%c            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
     outimchar = "out_im_%c            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
 
@@ -374,9 +374,9 @@ function updatefftpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
     pkgsource = [filepathscript '/../../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
-    lineone = sprintf(  "CONSTANT c_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
-    linetwo = sprintf(  "CONSTANT c_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
-    linethree = sprintf("CONSTANT c_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+    lineone = sprintf(  "CONSTANT c_fft_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
+    linetwo = sprintf(  "CONSTANT c_fft_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
+    linethree = sprintf("CONSTANT c_fft_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
 
     fid = fopen(pkgsource,'r');
     if(fid == -1) 
@@ -405,9 +405,9 @@ function updatefilpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_
     insertloc = 7;
     pkgsource = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fil_pkg.vhd'];
-    lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
-    linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
-    linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
+    lineone = sprintf("CONSTANT c_fil_in_dat_w : natural := %d;",in_dat_w);
+    linetwo = sprintf("CONSTANT c_fil_out_dat_w : natural := %d;", out_dat_w);
+    linethree = sprintf("CONSTANT c_fil_coef_dat_w : natural :=%d;",coef_dat_w);
     linefour = sprintf("CONSTANT c_coefs_file : string := ""%s"";", coef_filepath_stem);
     fid = fopen(pkgsource,'r');
     if fid==-1

@@ -102,12 +102,15 @@ vhdlfile = top_wbpfb_code_gen(dbl_wb_factor,dbl_nof_wb_streams,dbl_nof_points,db
 this_block.addSimulinkInport('rst');
 in_rst_port = this_block.port('rst');
 in_rst_port.setType('UFix_1_0');
+in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
 in_sync_port.setType('UFix_1_0');
+in_sync_port.useHDLVector(false);
 this_block.addSimulinkInport('in_valid');
 in_valid_port = this_block.port('in_valid');
 in_valid_port.setType('UFix_1_0');
+in_valid_port.useHDLVector(false);
 this_block.addSimulinkInport('shiftreg');
 in_shiftreg_port = this_block.port('shiftreg');
 in_shiftreg_port.setType(ovflwshiftreg_type);
@@ -122,10 +125,12 @@ if xtra_dat_sigs
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
   in_sop_port.setType('UFix_1_0');
+  in_sop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
   in_eop_port.setType('UFix_1_0');
+  in_eop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_empty');
   in_empty_port = this_block.port('in_empty');
@@ -146,28 +151,30 @@ for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
   this_block.addSimulinkInport(in_im_port);
   in_im = this_block.port(in_im_port);
   in_im.setType(in_fil_data_type);
-  in_im.useHDLVector(true);
   
   in_re_port = sprintf('in_re_%d',i);
   this_block.addSimulinkInport(in_re_port);
   in_re = this_block.port(in_re_port);
   in_re.setType(in_fil_data_type);
-  in_re.useHDLVector(true);
 end
 
 % outport declarations
 this_block.addSimulinkOutport('fil_sync');
 fil_sync_port = this_block.port('fil_sync');
 fil_sync_port.setType('UFix_1_0');
+fil_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_sync');
 out_sync_port = this_block.port('out_sync');
 out_sync_port.setType('UFix_1_0');
+out_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('fil_valid');
 fil_valid_port = this_block.port('fil_valid');
 fil_valid_port.setType('UFix_1_0');
+fil_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_valid');
 out_valid_port = this_block.port('out_valid');
 out_valid_port.setType('UFix_1_0');
+out_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('ovflw');
 out_ovflw_port = this_block.port('ovflw');
 out_ovflw_port.setType(ovflwshiftreg_type);
@@ -183,16 +190,20 @@ if xtra_dat_sigs
   this_block.addSimulinkOutport('fil_sop');
   fil_sop_port = this_block.port('fil_sop');
   fil_sop_port.setType('UFix_1_0');
+  fil_sop_port.useHDLVector(false);
   this_block.addSimulinkOutport('out_sop');
   out_sop_port = this_block.port('out_sop');
   out_sop_port.setType('UFix_1_0');
+  out_sop_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('fil_eop');
   fil_eop_port = this_block.port('fil_eop');
   fil_eop_port.setType('UFix_1_0');
+  fil_eop_port.useHDLVector(false);
   this_block.addSimulinkOutport('out_eop');
   out_eop_port = this_block.port('out_eop');
   out_eop_port.setType('UFix_1_0');
+  out_eop_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('fil_empty');
   fil_empty_port = this_block.port('fil_empty');
@@ -265,7 +276,7 @@ end
   this_block.addGeneric('g_use_separate','boolean',checkbox2str(use_separate));
   this_block.addGeneric('g_fft_in_dat_w','natural',fft_i_d_w);
   this_block.addGeneric('g_fft_out_dat_w','natural',fft_o_d_w);
-  this_block.addGeneric('g_fft_out_gain_w',o_g_w);
+  this_block.addGeneric('g_fft_out_gain_w','natural',o_g_w);
   this_block.addGeneric('g_stage_dat_w','natural',fft_s_d_w);
   this_block.addGeneric('g_guard_w','natural',fft_guard_w);
   this_block.addGeneric('g_guard_enable','boolean',checkbox2str(fft_guard_en));
@@ -336,30 +347,30 @@ end
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_switch.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
-  this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'wb_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([srcloc   '/fil_pkg.vhd'],'casper_filter_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_gnrcs_intrfcs_pkg.vhd'],'casper_wbpfb_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'casper_dp_pkg_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_ctrl.vhd'],'casper_dp_components_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_input.vhd'],'casper_dp_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_gnrcs_intrfcs_pkg.vhd'],'wpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'dp_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_ctrl.vhd'],'dp_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_dp_components/dp_hold_input.vhd'],'dp_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_pipeline/dp_pipeline.vhd'],'casper_pipeline_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_bsn_restore_global.vhd'],'casper_wbpfb_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_block_gen_valid_arr.vhd'],'casper_wbpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_bsn_restore_global.vhd'],'wpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_block_gen_valid_arr.vhd'],'wpfb_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'casper_wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'wb_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBFStage.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWeights.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFStage.vhd'],'r2sdf_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'casper_wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'casper_wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_pipe.vhd'],'casper_wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa_wide.vhd'],'casper_wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_wide.vhd'],'casper_wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_pipe.vhd'],'wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa_wide.vhd'],'wb_fft_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_wide.vhd'],'wb_fft_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
@@ -369,7 +380,7 @@ end
   this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_mult_infer.vhd'],'ip_xpm_mult_lib');
   this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
   this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_unit_dev.vhd'],'casper_wbpfb_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_unit_dev.vhd'],'wpfb_lib');
   return;
 end
 
