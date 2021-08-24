@@ -39,12 +39,12 @@ entity wbpfb_unit_top is
     g_nof_taps          : natural          := 16;      -- = 16, the number of FIR taps per subband
     g_fil_backoff_w     : natural          := 0;       -- = 0, number of bits for input backoff to avoid output overflow
     g_fil_in_dat_w      : natural          := 8;       -- = 8, number of input bits
-    g_fil_out_dat_w     : natural          := 16;      -- = 16, number of output bits
+    g_fil_out_dat_w     : natural          := 14;      -- = 16, number of output bits
     g_coef_dat_w        : natural          := 16;      -- = 16, data width of the FIR coefficients
     g_use_reorder       : boolean          := false;   -- = false for bit-reversed output, true for normal output
     g_use_fft_shift     : boolean          := false;   -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
     g_use_separate      : boolean          := false;   -- = false for complex input, true for two real inputs
-    g_fft_in_dat_w      : natural          := 16;      -- = 16, number of input bits
+    g_fft_in_dat_w      : natural          := 14;      -- = 16, number of input bits
     g_fft_out_dat_w     : natural          := 16;      -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13
     g_fft_out_gain_w    : natural          := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
     g_stage_dat_w       : natural          := 18;      -- = 18, number of bits that are used inter-stage
@@ -100,7 +100,7 @@ entity wbpfb_unit_top is
     in_im_0             : in STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);
     in_re_0             : in STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);
     fil_im_0            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);
-    fil_re_0            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);
+    fil_re_0            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);
     out_re_0            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);
     out_im_0            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0)
     
