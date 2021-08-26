@@ -34,7 +34,7 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     "ce             : in  std_logic           := '1';"
     "rst            : in  std_logic;"
     "in_val         : in  std_logic;"
-    "out_val        : out std_logic;"];
+    "out_val        : out std_logic := '0';"];
 
     portdec = join(mknprts(wb_factor),'\n');
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
