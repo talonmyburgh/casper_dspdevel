@@ -53,7 +53,6 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     "g_fil_ppf           => cc_fil_ppf,"
     "g_fil_ppf_pipeline  => c_fil_ppf_pipeline,"
     "g_coefs_file_prefix => c_coefs_file,"
-    "g_technology        => g_technology,"
     "g_ram_primitive     => g_ram_primitive)"
     "port map("
     "clk => clk,"
