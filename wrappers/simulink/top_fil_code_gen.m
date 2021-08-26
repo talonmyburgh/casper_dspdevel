@@ -7,7 +7,7 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
         mkdir(vhdlfilefolder)
     end
     %and what it will be named
-    vhdlfile = [vhdlfilefolder '/' bdroot '_wb_fft_top.vhd'];              %filename for vhd file
+    vhdlfile = [vhdlfilefolder '/' bdroot '_fil_top.vhd'];              %filename for vhd file
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec = ["library IEEE, common_pkg_lib, casper_ram_lib, casper_filter_lib, casper_mm_lib;"
