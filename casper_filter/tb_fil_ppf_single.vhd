@@ -173,7 +173,7 @@ entity tb_fil_ppf_single is
       --   coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
       -- end record;
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-    g_enable_in_val_gaps : boolean := FALSE;
+    g_enable_in_val_gaps : boolean := FALSE
   );
 end entity tb_fil_ppf_single;
 
