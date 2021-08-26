@@ -139,7 +139,7 @@ function filterbank_top_config(this_block)
   copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
 
   %Add files:
-  this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
+  this_block.addFileToLibrary(vhdlfile,'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
@@ -161,7 +161,7 @@ function filterbank_top_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_pkg.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([srcloc '/fil_pkg.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
