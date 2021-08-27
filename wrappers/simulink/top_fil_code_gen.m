@@ -31,10 +31,10 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     "g_ram_primitive     : string);          -- ram primitive function for use"
     "port("
     "clk            : in  std_logic;"
-    "ce             : in  std_logic           := '1';"
+    "ce             : in  std_logic;"
     "rst            : in  std_logic;"
     "in_val         : in  std_logic;"
-    "out_val        : out std_logic := '0';"];
+    "out_val        : out std_logic := '1';"];
 
     portdec = join(mknprts(wb_factor),'\n');
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,8 +48,8 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     "begin"
     "wide_ppf : entity casper_filter_lib.fil_ppf_wide"
     "generic map("
-    "g_big_endian_wb_in  => false,"
-    "g_big_endian_wb_out => false,"
+    "g_big_endian_wb_in  => g_big_endian_wb_in,"
+    "g_big_endian_wb_out => g_big_endian_wb_out,"
     "g_fil_ppf           => cc_fil_ppf,"
     "g_fil_ppf_pipeline  => c_fil_ppf_pipeline,"
     "g_coefs_file_prefix => c_coefs_file,"
