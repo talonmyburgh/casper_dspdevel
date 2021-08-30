@@ -73,8 +73,6 @@ import sys
 import getopt
 import os
 import numpy as np
-from re import escape
-
 
 def run(argv):
     # Arguments
@@ -306,7 +304,7 @@ def run(argv):
 
     if pfir.ext == 'mem' and pfir.gen_files:
         writemem(pfir, pfir_coefs_flip)
-        return escape(pfir.outfileprefix.replace('\\', '/'))
+        return pfir.outfileprefix.replace('\\', '/')
     elif pfir.ext == 'mem' and not pfir.gen_files:
         coefs = writemem(pfir, pfir_coefs_flip)
         return coefs
