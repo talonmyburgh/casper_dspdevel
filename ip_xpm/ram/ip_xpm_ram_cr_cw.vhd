@@ -78,7 +78,7 @@ begin
 			USE_MEM_INIT            => 1, --DECIMAL
 			WAKEUP_TIME             => "disable_sleep", --String
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
-			WRITE_MODE_B            => "write_first" --String
+			WRITE_MODE_B            => "read_first" --String
 		)
 		port map(
 			dbiterrb       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence
