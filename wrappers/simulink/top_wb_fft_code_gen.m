@@ -282,9 +282,9 @@ function updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage_da
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
     pkgsource = [filepathscript '/../../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
-    lineone = sprintf(  "CONSTANT c_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
-    linetwo = sprintf(  "CONSTANT c_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
-    linethree = sprintf("CONSTANT c_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
+    lineone = sprintf(  "CONSTANT c_fft_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
+    linetwo = sprintf(  "CONSTANT c_fft_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
+    linethree = sprintf("CONSTANT c_fft_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
 
     fid = fopen(pkgsource,'r');
     if(fid == -1) 
