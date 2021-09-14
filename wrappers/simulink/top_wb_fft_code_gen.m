@@ -262,8 +262,8 @@ function achararr = mkarch(wbfctr)
     achararr = strings(4*wbfctr,0);
     imap_re_c = "in_fft_sosi_arr(%c).re <= RESIZE_SVEC(in_re_%c, in_fft_sosi_arr(%c).re'length);";
     imap_im_c = "in_fft_sosi_arr(%c).im <= RESIZE_SVEC(in_im_%c, in_fft_sosi_arr(%c).im'length);";
-    omap_re_c = "out_re_%c <= RESIZE_SVEC(out_bb_sosi_arr(%c).re,out_dat_w);";
-    omap_im_c = "out_im_%c <= RESIZE_SVEC(out_bb_sosi_arr(%c).im,out_dat_w);";
+    omap_re_c = "out_re_%c <= RESIZE_SVEC(out_fft_sosi_arr(%c).re,out_dat_w);";
+    omap_im_c = "out_im_%c <= RESIZE_SVEC(out_fft_sosi_arr(%c).im,out_dat_w);";
     l = 1;
     for m=0:1:wbfctr-1
         mm = int2str(m);
