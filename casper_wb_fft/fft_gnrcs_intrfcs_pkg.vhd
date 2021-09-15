@@ -5,9 +5,9 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg Is
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT c_in_dat_w       : natural := 8;       -- = 8,  number of input bits
-CONSTANT c_out_dat_w      : natural := 16;      -- = 13, number of output bits
-CONSTANT c_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT c_fft_in_dat_w       : natural := 8;       -- = 8,  number of input bits
+CONSTANT c_fft_out_dat_w      : natural := 16;      -- = 13, number of output bits
+CONSTANT c_fft_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_dp_stream_bsn_w      : NATURAL :=  64;  -- 64 is sufficient to count blocks of data for years
@@ -51,21 +51,21 @@ stat_data_w    : positive;      -- = 56
 stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := ( true, false, false, 0, c_wb_factor, 0, c_nof_points, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+constant c_fft : t_fft := ( true, false, false, 0, c_wb_factor, 0, c_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
 
-type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_stage_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_stage_dat_w-1 DOWNTO 0);
+type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_out_dat_w-1 DOWNTO 0);
 
 --t_dp_sosi record
 TYPE t_bb_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                          -- ctrl
-re       : STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);             -- data
-im       : STD_LOGIC_VECTOR(c_in_dat_w-1 DOWNTO 0);             -- data
+re       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
+im       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -80,8 +80,8 @@ CONSTANT c_bb_sosi_rst_in : t_bb_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), 
 TYPE t_bb_sosi_out IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC;   
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);                                        -- ctrl
-re       : STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);            -- data
-im       : STD_LOGIC_VECTOR(c_out_dat_w-1 DOWNTO 0);            -- data
+re       : STD_LOGIC_VECTOR(c_fft_out_dat_w-1 DOWNTO 0);            -- data
+im       : STD_LOGIC_VECTOR(c_fft_out_dat_w-1 DOWNTO 0);            -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -131,12 +131,12 @@ end;
 
 function to_fft_in_svec(n : integer) return std_logic_vector is
 begin
-	return RESIZE_SVEC(TO_SVEC(n, c_in_dat_w), c_in_dat_w);
+	return RESIZE_SVEC(TO_SVEC(n, c_fft_in_dat_w), c_fft_in_dat_w);
 end;
 
 function to_fft_stg_svec(n : integer) return std_logic_vector is
 begin
-	return RESIZE_SVEC(TO_SVEC(n, c_stage_dat_w), c_stage_dat_w);
+	return RESIZE_SVEC(TO_SVEC(n, c_fft_stage_dat_w), c_fft_stage_dat_w);
 end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
