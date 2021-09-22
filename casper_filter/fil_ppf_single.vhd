@@ -77,7 +77,6 @@ entity fil_ppf_single is
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
     g_coefs_file_prefix : string             := c_coefs_file;    -- Relative path to the mem files that contain the initial data for the coefficients memories
-    g_technology        : natural            := 0;
     g_ram_primitive     : string             := "auto" 
   );                                                                    
   port (
