@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_tb_wbpfb_unit_wide_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="common_lfsr_sequences_pkg" />
+            <top_module name="common_pkg" />
+            <top_module name="common_ram_pkg" />
+            <top_module name="dp_stream_pkg" />
+            <top_module name="fft_gnrcs_intrfcs_pkg" />
+            <top_module name="fil_pkg" />
+            <top_module name="glbl" />
+            <top_module name="rtwosdfpkg" />
+            <top_module name="tb_common_mem_pkg" />
+            <top_module name="tb_common_pkg" />
+            <top_module name="tb_fft_pkg" />
+            <top_module name="tb_tb_wbpfb_unit_wide" />
+            <top_module name="tech_memory_component_pkg" />
+            <top_module name="tech_mult_component_pkg" />
+            <top_module name="technology_select_pkg" />
+            <top_module name="twiddlespkg" />
+            <top_module name="vcomponents" />
+            <top_module name="wbpfb_gnrcs_intrfcs_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="999098fs"></ZoomStartTime>
+      <ZoomEndTime time="1000181fs"></ZoomEndTime>
+      <Cursor1Time time="1000000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="234"></NameColumnWidth>
+      <ValueColumnWidth column_width="208"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="12" />
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_re_c_scope" type="other">
+      <obj_property name="ElementShortName">out_re_c_scope</obj_property>
+      <obj_property name="ObjectShortName">out_re_c_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_re_c_scope" type="other">
+      <obj_property name="ElementShortName">exp_re_c_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_re_c_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_im_c_scope" type="other">
+      <obj_property name="ElementShortName">out_im_c_scope</obj_property>
+      <obj_property name="ObjectShortName">out_im_c_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_im_c_scope" type="other">
+      <obj_property name="ElementShortName">exp_im_c_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_im_c_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_re_a_scope" type="other">
+      <obj_property name="ElementShortName">out_re_a_scope</obj_property>
+      <obj_property name="ObjectShortName">out_re_a_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_re_a_scope" type="other">
+      <obj_property name="ElementShortName">exp_re_a_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_re_a_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_im_a_scope" type="other">
+      <obj_property name="ElementShortName">out_im_a_scope</obj_property>
+      <obj_property name="ObjectShortName">out_im_a_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_im_a_scope" type="other">
+      <obj_property name="ElementShortName">exp_im_a_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_im_a_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_re_b_scope" type="other">
+      <obj_property name="ElementShortName">out_re_b_scope</obj_property>
+      <obj_property name="ObjectShortName">out_re_b_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_re_b_scope" type="other">
+      <obj_property name="ElementShortName">exp_re_b_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_re_b_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/out_im_b_scope" type="other">
+      <obj_property name="ElementShortName">out_im_b_scope</obj_property>
+      <obj_property name="ObjectShortName">out_im_b_scope</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/exp_im_b_scope" type="other">
+      <obj_property name="ElementShortName">exp_im_b_scope</obj_property>
+      <obj_property name="ObjectShortName">exp_im_b_scope</obj_property>
+   </wvobject>
+</wave_config>
