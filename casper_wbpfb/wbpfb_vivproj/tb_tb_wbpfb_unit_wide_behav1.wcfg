@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_tb_wbpfb_unit_wide_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="common_lfsr_sequences_pkg" />
+            <top_module name="common_pkg" />
+            <top_module name="common_ram_pkg" />
+            <top_module name="dp_stream_pkg" />
+            <top_module name="fft_gnrcs_intrfcs_pkg" />
+            <top_module name="fil_pkg" />
+            <top_module name="glbl" />
+            <top_module name="rtwosdfpkg" />
+            <top_module name="tb_common_mem_pkg" />
+            <top_module name="tb_common_pkg" />
+            <top_module name="tb_fft_pkg" />
+            <top_module name="tb_tb_wbpfb_unit_wide" />
+            <top_module name="tech_memory_component_pkg" />
+            <top_module name="tech_mult_component_pkg" />
+            <top_module name="technology_select_pkg" />
+            <top_module name="twiddlespkg" />
+            <top_module name="vcomponents" />
+            <top_module name="wbpfb_gnrcs_intrfcs_pkg" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="14476941fs"></ZoomStartTime>
+      <ZoomEndTime time="14584242fs"></ZoomEndTime>
+      <Cursor1Time time="14655000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="234"></NameColumnWidth>
+      <ValueColumnWidth column_width="188"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="2" />
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr" type="array">
+      <obj_property name="ElementShortName">nxt_src_out_arr[0:0]</obj_property>
+      <obj_property name="ObjectShortName">nxt_src_out_arr[0:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0]" type="array">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].sync" type="logic">
+            <obj_property name="ElementShortName">.sync</obj_property>
+            <obj_property name="ObjectShortName">.sync</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].bsn" type="array">
+            <obj_property name="ElementShortName">.bsn[63:0]</obj_property>
+            <obj_property name="ObjectShortName">.bsn[63:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].re" type="array">
+            <obj_property name="ElementShortName">.re[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.re[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].im" type="array">
+            <obj_property name="ElementShortName">.im[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.im[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].valid" type="logic">
+            <obj_property name="ElementShortName">.valid</obj_property>
+            <obj_property name="ObjectShortName">.valid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].sop" type="logic">
+            <obj_property name="ElementShortName">.sop</obj_property>
+            <obj_property name="ObjectShortName">.sop</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].eop" type="logic">
+            <obj_property name="ElementShortName">.eop</obj_property>
+            <obj_property name="ObjectShortName">.eop</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].empty" type="array">
+            <obj_property name="ElementShortName">.empty[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.empty[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].channel" type="array">
+            <obj_property name="ElementShortName">.channel[31:0]</obj_property>
+            <obj_property name="ObjectShortName">.channel[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/nxt_src_out_arr[0].err" type="array">
+            <obj_property name="ElementShortName">.err[31:0]</obj_property>
+            <obj_property name="ObjectShortName">.err[31:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr" type="array">
+      <obj_property name="ElementShortName">snk_in_arr[0:0]</obj_property>
+      <obj_property name="ObjectShortName">snk_in_arr[0:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0]" type="array">
+         <obj_property name="ElementShortName">[0]</obj_property>
+         <obj_property name="ObjectShortName">[0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].sync" type="logic">
+            <obj_property name="ElementShortName">.sync</obj_property>
+            <obj_property name="ObjectShortName">.sync</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].bsn" type="array">
+            <obj_property name="ElementShortName">.bsn[63:0]</obj_property>
+            <obj_property name="ObjectShortName">.bsn[63:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].re" type="array">
+            <obj_property name="ElementShortName">.re[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.re[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].im" type="array">
+            <obj_property name="ElementShortName">.im[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.im[15:0]</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].valid" type="logic">
+            <obj_property name="ElementShortName">.valid</obj_property>
+            <obj_property name="ObjectShortName">.valid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].sop" type="logic">
+            <obj_property name="ElementShortName">.sop</obj_property>
+            <obj_property name="ObjectShortName">.sop</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].eop" type="logic">
+            <obj_property name="ElementShortName">.eop</obj_property>
+            <obj_property name="ObjectShortName">.eop</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].empty" type="array">
+            <obj_property name="ElementShortName">.empty[15:0]</obj_property>
+            <obj_property name="ObjectShortName">.empty[15:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].channel" type="array">
+            <obj_property name="ElementShortName">.channel[31:0]</obj_property>
+            <obj_property name="ObjectShortName">.channel[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_tb_wbpfb_unit_wide/u_act_wb1_two_real_chirp/u_dut/u_dp_block_gen_valid_arr/snk_in_arr[0].err" type="array">
+            <obj_property name="ElementShortName">.err[31:0]</obj_property>
+            <obj_property name="ObjectShortName">.err[31:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>
