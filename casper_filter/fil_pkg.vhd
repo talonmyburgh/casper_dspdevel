@@ -8,10 +8,10 @@ package fil_pkg is
 CONSTANT c_fil_in_dat_w     : natural := 8;
 CONSTANT c_fil_out_dat_w    : natural := 16;
 CONSTANT c_fil_coef_dat_w   : natural := 16;
-CONSTANT c_coefs_file       : string  :=  "mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_1024points_16b";
+CONSTANT c_coefs_file       : string  :=  "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT c_fil_wb_factor    : natural   := 4;
+CONSTANT c_fil_wb_factor    : natural   := 1;
 CONSTANT c_fil_nof_taps     : natural   := 16; 
 CONSTANT c_fil_nof_chan     : natural   := 0;
 CONSTANT c_fil_nof_bands    : natural   := 1024;
