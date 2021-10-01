@@ -317,4 +317,4 @@ def run(argv):
         None
 
 if __name__ == "__main__":
-    print(run(sys.argv[1:]))
+    run(sys.argv[1:])
