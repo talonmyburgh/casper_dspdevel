@@ -98,6 +98,23 @@ ENTITY dp_pipeline_fft_out IS
   );
 END dp_pipeline_fft_out;
 
+LIBRARY IEEE, common_pkg_lib, wb_fft_lib, wpfb_lib;
+USE IEEE.std_logic_1164.all;
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
+USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL;
+
+ENTITY dp_pipeline_one_fft_out IS
+  PORT (
+    rst          : IN  STD_LOGIC;
+    clk          : IN  STD_LOGIC;
+    -- ST sink
+    snk_out      : OUT t_dp_siso;
+    snk_in       : IN  t_fft_sosi_out;
+    -- ST source
+    src_in       : IN  t_dp_siso := c_dp_siso_rdy;
+    src_out      : OUT t_fft_sosi_out
+  );
+END dp_pipeline_one_fft_out;
 
 LIBRARY IEEE, common_pkg_lib, dp_pkg_lib;
 USE IEEE.std_logic_1164.all;
@@ -175,11 +192,12 @@ BEGIN
     
 END str;
 
-LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, dp_components_lib;
+LIBRARY IEEE, common_pkg_lib, dp_components_lib, wb_fft_lib, wpfb_lib;
 USE IEEE.std_logic_1164.all;
-USE dp_pkg_lib.dp_stream_pkg.ALL;
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
+USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL;
 
-ARCHITECTURE str OF dp_pipeline_fft_out IS
+ARCHITECTURE str OF dp_pipeline_one_fft_out IS
 
   SIGNAL nxt_src_out      : t_fft_sosi_out;
   SIGNAL i_src_out        : t_fft_sosi_out;
@@ -213,4 +231,40 @@ BEGIN
     src_out_reg      => i_src_out
   );  
     
+END str;
+
+LIBRARY IEEE, common_pkg_lib, wb_fft_lib, wpfb_lib;
+USE IEEE.std_logic_1164.all;
+USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
+USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL;
+
+ARCHITECTURE str OF dp_pipeline_fft_out IS
+
+SIGNAL snk_out_arr      : t_dp_siso_arr(0 TO g_pipeline);
+SIGNAL snk_in_arr       : t_fft_sosi_arr_out(0 TO g_pipeline);
+
+BEGIN
+
+-- Input at index 0
+snk_out       <= snk_out_arr(0);
+snk_in_arr(0) <= snk_in;
+
+-- Output at index g_pipeline
+snk_out_arr(g_pipeline) <= src_in;
+src_out                 <= snk_in_arr(g_pipeline);
+
+gen_p : FOR I IN 1 TO g_pipeline GENERATE
+  u_p : ENTITY work.dp_pipeline_one_fft_out
+  PORT MAP (
+    rst          => rst,
+    clk          => clk,
+    -- ST sink
+    snk_out      => snk_out_arr(I-1),
+    snk_in       => snk_in_arr(I-1),
+    -- ST source
+    src_in       => snk_out_arr(I),
+    src_out      => snk_in_arr(I)
+  );
+END GENERATE;
+
 END str;
