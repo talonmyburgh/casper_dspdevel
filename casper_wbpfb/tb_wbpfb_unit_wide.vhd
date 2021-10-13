@@ -584,31 +584,31 @@ begin
       if not c_in_complex then
         if reg_out_channel=1 then
           --if reg_out_val_a='1' then
-            assert out_re_a_scope = 0 report "Output data A real error in channel" severity error;
-            assert out_im_a_scope = 0 report "Output data A imag error in channel" severity error;
+            assert out_re_a_scope = 0 report "Output data A real error in channel" severity failure;
+            assert out_im_a_scope = 0 report "Output data A imag error in channel" severity failure;
           --end if;
           if reg_out_val_b='1' then
-            assert out_re_b_scope = 0 report "Output data B real error in channel" severity error;
-            assert out_im_b_scope = 0 report "Output data B imag error in channel" severity error;
+            assert out_re_b_scope = 0 report "Output data B real error in channel" severity failure;
+            assert out_im_b_scope = 0 report "Output data B imag error in channel" severity failure;
           end if;
         else
           --if reg_out_val_a='1' then
-            assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity error;
-            assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity error;
+            assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
+            assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
           --end if;
           if reg_out_val_b='1' then
-            assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity error;
-            assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity error;
+            assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
+            assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
           end if;
         end if;
       else
         if reg_out_val_c='1' then
           if reg_out_channel=1 then
-            assert out_re_c_scope = 0 report "Output data C real error in channel" severity error;
-            assert out_im_c_scope = 0 report "Output data C imag error in channel" severity error;
+            assert out_re_c_scope = 0 report "Output data C real error in channel" severity failure;
+            assert out_im_c_scope = 0 report "Output data C imag error in channel" severity failure;
           else
-            assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity error;
-            assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity error;
+            assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
+            assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
           end if;
         end if;
       end if;

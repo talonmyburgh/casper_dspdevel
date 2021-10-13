@@ -180,9 +180,12 @@ ARCHITECTURE tb OF tb_tb_wbpfb_unit_wide IS
   CONSTANT c_dm_3                : natural := 3;  -- diff margin (for 32 point dm=2 appears sufficient, for 1024 point dm=3 is sufficient)
   CONSTANT c_dm_5                : natural := 5;  -- diff margin (for 32 point dm=2 appears sufficient, for 1024 point dm=3 is sufficient)
   
-  CONSTANT c_pre_ab              : string := "../../../../../data/run_pfb_m_pfir_coeff_fircls1";                 -- original version
-  CONSTANT c_pre_ab_v2           : string := "../../../../../data/run_pfb_m_v2_pfir_coeff_fircls1";              -- next version
-  CONSTANT c_pre_c               : string := "../../../../../data/run_pfb_complex_m_pfir_coeff_fircls1";
+  CONSTANT c_pre_ab              : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_32points_16b";                 -- original version
+  CONSTANT c_pre_ab_1024         : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b";                 -- original version
+  CONSTANT c_pre_ab_v2           : string := "../../../../../data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b";              -- next version
+  CONSTANT c_pre_c               : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_32points_16b";
+  CONSTANT c_pre_c_64            : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_64points_16b";
+  CONSTANT c_pre_c_1024          : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_1024points_16b";
   
   -- Real input
   CONSTANT c_sinusoid_chirp_1024 : string := "../../../../../data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b.dat";   -- 204800 lines

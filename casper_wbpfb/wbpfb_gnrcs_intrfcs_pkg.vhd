@@ -65,6 +65,8 @@ xon      : STD_LOGIC;   -- coarse typically block based flow control using xon/x
 END RECORD;
 CONSTANT c_dp_siso_rdy   : t_dp_siso := ('1', '1');
 
+TYPE t_dp_siso_arr IS ARRAY (INTEGER RANGE <>) OF t_dp_siso;
+
 --t_dp_sosi record in. Since this always goes into the filterbank first, its bitwidth is the fil_in_dat_w
 TYPE t_fil_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
