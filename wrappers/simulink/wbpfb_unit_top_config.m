@@ -91,7 +91,7 @@ function stages = stagecalc(dbl_nof_points)
   stages = ceil(log2(dbl_nof_points));
 end
 num_stages = stagecalc(dbl_nof_points);
-ovflwshiftreg_type = sprintf('UFix_%d_0',num_stages);
+ovflwshiftreg_type = sprintf('Ufix_%d_0',num_stages);
 
 %Update the vhdl top file with the required ports per wb_factor:
 vhdlfile = top_wbpfb_code_gen(dbl_wb_factor,dbl_nof_wb_streams,dbl_nof_points,dbl_nof_taps,win,str2double(fwidth)...
@@ -101,15 +101,15 @@ vhdlfile = top_wbpfb_code_gen(dbl_wb_factor,dbl_nof_wb_streams,dbl_nof_points,db
 %inport declarations
 this_block.addSimulinkInport('rst');
 in_rst_port = this_block.port('rst');
-in_rst_port.setType('UFix_1_0');
+in_rst_port.setType('Ufix_1_0');
 in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
-in_sync_port.setType('UFix_1_0');
+in_sync_port.setType('Ufix_1_0');
 in_sync_port.useHDLVector(false);
 this_block.addSimulinkInport('in_valid');
 in_valid_port = this_block.port('in_valid');
-in_valid_port.setType('UFix_1_0');
+in_valid_port.setType('Ufix_1_0');
 in_valid_port.useHDLVector(false);
 this_block.addSimulinkInport('shiftreg');
 in_shiftreg_port = this_block.port('shiftreg');
@@ -124,12 +124,12 @@ if xtra_dat_sigs
 
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
-  in_sop_port.setType('UFix_1_0');
+  in_sop_port.setType('Ufix_1_0');
   in_sop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
-  in_eop_port.setType('UFix_1_0');
+  in_eop_port.setType('Ufix_1_0');
   in_eop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_empty');
@@ -161,19 +161,19 @@ end
 % outport declarations
 this_block.addSimulinkOutport('fil_sync');
 fil_sync_port = this_block.port('fil_sync');
-fil_sync_port.setType('UFix_1_0');
+fil_sync_port.setType('Ufix_1_0');
 fil_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_sync');
 out_sync_port = this_block.port('out_sync');
-out_sync_port.setType('UFix_1_0');
+out_sync_port.setType('Ufix_1_0');
 out_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('fil_valid');
 fil_valid_port = this_block.port('fil_valid');
-fil_valid_port.setType('UFix_1_0');
+fil_valid_port.setType('Ufix_1_0');
 fil_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_valid');
 out_valid_port = this_block.port('out_valid');
-out_valid_port.setType('UFix_1_0');
+out_valid_port.setType('Ufix_1_0');
 out_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('ovflw');
 out_ovflw_port = this_block.port('ovflw');
@@ -189,20 +189,20 @@ if xtra_dat_sigs
   
   this_block.addSimulinkOutport('fil_sop');
   fil_sop_port = this_block.port('fil_sop');
-  fil_sop_port.setType('UFix_1_0');
+  fil_sop_port.setType('Ufix_1_0');
   fil_sop_port.useHDLVector(false);
   this_block.addSimulinkOutport('out_sop');
   out_sop_port = this_block.port('out_sop');
-  out_sop_port.setType('UFix_1_0');
+  out_sop_port.setType('Ufix_1_0');
   out_sop_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('fil_eop');
   fil_eop_port = this_block.port('fil_eop');
-  fil_eop_port.setType('UFix_1_0');
+  fil_eop_port.setType('Ufix_1_0');
   fil_eop_port.useHDLVector(false);
   this_block.addSimulinkOutport('out_eop');
   out_eop_port = this_block.port('out_eop');
-  out_eop_port.setType('UFix_1_0');
+  out_eop_port.setType('Ufix_1_0');
   out_eop_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('fil_empty');
