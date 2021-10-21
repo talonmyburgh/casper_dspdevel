@@ -341,19 +341,19 @@ begin
   begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity error;
+    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity failure;
     if g_fft.wb_factor=g_fft.nof_points then
       -- Parallel FFT 
-      assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity error;
+      assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity failure;
     else
       -- Wideband FFT 
       -- The PFFT has a memory of 1 block, independent of use_reorder and use_separate, but without the
       -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
       -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
       if g_fft.use_reorder=true then
-        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity failure;
       else
-        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
+        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
       end if;
     end if;
     wait;

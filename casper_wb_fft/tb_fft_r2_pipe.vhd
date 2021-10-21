@@ -377,9 +377,9 @@ begin
     -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
     -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
     if g_fft.use_reorder=true then
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity failure;
     else
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
+      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
     end if;
     wait;
   end process;
