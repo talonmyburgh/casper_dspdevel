@@ -9,8 +9,9 @@ IP Cores:
 .. toctree::
    :maxdepth: 5
 
-   wideband_fft
    r2sdf_fft
+   wideband_fft
+   wideband_pfb
    
 
 Indices and tables

@@ -132,9 +132,9 @@ entity fil_ppf_wide is
     -- mm_rst         : in  std_logic;
     -- ram_coefs_mosi : in  t_mem_mosi;               
     -- ram_coefs_miso : out t_mem_miso := c_mem_miso_rst;
-    in_dat_arr     : in  t_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
+    in_dat_arr     : in  t_fil_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
     in_val         : in  std_logic;  
-    out_dat_arr    : out t_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
+    out_dat_arr    : out t_fil_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  
     out_val        : out std_logic
   ); 
 end fil_ppf_wide;
@@ -237,7 +237,7 @@ begin
       g_fil_ppf           => c_fil_ppf_arr(P),
       g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
       g_file_index_arr    => c_file_index_arr2(P),  -- use (g_fil_ppf.wb_factor-1 - P) to try impact of reversed WB FIR coefficients
-      g_coefs_file_prefix => g_coefs_file_prefix,
+      g_coefs_file_prefix => g_coefs_file_prefix, 
       g_ram_primitive     => g_ram_primitive        
     )
     port map (
