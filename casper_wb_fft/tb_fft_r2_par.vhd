@@ -420,8 +420,8 @@ begin
   begin
     -- Wait until tb_end_dut
     proc_common_wait_until_high(tb_clk, tb_end_dut);
-    assert in_val_cnt > 0           report "Test did not run, no valid input data"  severity error;
-    assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity error;
+    assert in_val_cnt > 0           report "Test did not run, no valid input data"  severity failure;
+    assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity failure;
     wait;
   end process;
 
