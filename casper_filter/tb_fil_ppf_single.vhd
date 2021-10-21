@@ -356,7 +356,7 @@ begin
   begin
     -- Wait until the coeff dat file and coeff MIF files have been read
     proc_common_wait_until_low(clk, rst);
-    assert file_dat_arr = ref_dat_arr   report "Coefs file does not match coefs memory files"   severity error;
+    assert file_dat_arr = ref_dat_arr   report "Coefs file does not match coefs memory files"   severity failure;
     wait;
   end process;
 
@@ -364,7 +364,7 @@ begin
   -- begin
   --   -- Wait until the coeff dat file has been read and the coeff have been read via MM
   --   proc_common_wait_until_high(clk, tb_end_almost);
-  --   assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity error;
+  --   assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity failure;
   --   wait;
   -- end process;
 
@@ -399,7 +399,7 @@ begin
   begin
     -- Wait until tb_end_almost to avoid that the Error message gets lost in earlier messages
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity error;
+    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity failure;
     wait;
   end process;
   
@@ -408,8 +408,8 @@ begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
     -- The filter has a latency of 1 tap, so there remains in_dat for tap in the filter
-    assert in_val_cnt > 0                              report "Test did not run, no valid input data" severity error;
-    assert out_val_cnt = in_val_cnt-c_nof_data_per_tap report "Unexpected number of valid output data coefficients" severity error;
+    assert in_val_cnt > 0                              report "Test did not run, no valid input data" severity failure;
+    assert out_val_cnt = in_val_cnt-c_nof_data_per_tap report "Unexpected number of valid output data coefficients" severity failure;
     wait;
   end process;
   
@@ -431,7 +431,7 @@ begin
           end if;
           for S in 0 to g_fil_ppf.nof_streams-1 loop
             -- all streams carry the same data
-            assert TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w)) = v_coeff report "Output data error" severity error;
+            assert TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w)) = v_coeff report "Output data error" severity failure;
           end loop;
         end if;
       end if;

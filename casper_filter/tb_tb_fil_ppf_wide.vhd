@@ -42,32 +42,32 @@ ARCHITECTURE tb OF tb_tb_fil_ppf_wide IS
 
   CONSTANT c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
 
-  CONSTANT c_fil_ppf_1_act            : t_fil_ppf := (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_1_rnd_quant      : t_fil_ppf := (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_1_rnd_9taps      : t_fil_ppf := (1, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_1_rnd_3streams   : t_fil_ppf := (1, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_1_rnd_4channels  : t_fil_ppf := (1, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_act            : t_fil_ppf := (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_act_be_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_act_le_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_rnd_quant      : t_fil_ppf := (4, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_rnd_9taps      : t_fil_ppf := (4, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_rnd_3streams   : t_fil_ppf := (4, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w);
-  CONSTANT c_fil_ppf_4_rnd_4channels  : t_fil_ppf := (4, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w);
+  CONSTANT c_fil_ppf_1_act            : t_fil_ppf := (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_1_rnd_quant      : t_fil_ppf := (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_1_rnd_9taps      : t_fil_ppf := (1, 0, 64, 9, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_1_rnd_3streams   : t_fil_ppf := (1, 0, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_1_rnd_4channels  : t_fil_ppf := (1, 2, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_act            : t_fil_ppf := (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_act_be_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_act_le_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_rnd_quant      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_rnd_9taps      : t_fil_ppf := (4, 0, 64, 9, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_rnd_3streams   : t_fil_ppf := (4, 0, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_rnd_4channels  : t_fil_ppf := (4, 2, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
 
   -- Inputs
-  CONSTANT c_hanning_1_act            : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_quant      : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_9taps      : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_3streams   : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_4channels  : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
-  CONSTANT c_hanning_4_act            : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_act_be_le      : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_act_le_le      : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_rnd_quant      : string := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_rnd_9taps      : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
-  CONSTANT c_hanning_4_rnd_3streams   : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
-  CONSTANT c_hanning_4_rnd_4channels  : string := "run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_9taps      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_4_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_rnd_9taps      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_4_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
+  CONSTANT c_hanning_4_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b";
   
 BEGIN
 

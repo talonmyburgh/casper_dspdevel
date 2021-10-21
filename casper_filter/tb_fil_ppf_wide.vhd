@@ -125,12 +125,12 @@ architecture tb of tb_fil_ppf_wide is
 --  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
 --  signal ram_coefs_miso : t_mem_miso;
 
-  signal in_dat_arr      : t_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
+  signal in_dat_arr      : t_fil_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
   signal in_val          : std_logic; 
   signal in_val_cnt      : natural := 0;
   signal in_gap          : std_logic := '0'; 
                          
-  signal out_dat_arr     : t_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
+  signal out_dat_arr     : t_fil_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
   signal out_val         : std_logic; 
   signal out_val_cnt     : natural := 0;
                          
@@ -305,7 +305,7 @@ begin
   begin
     -- Wait until tb_end_almost to avoid that the Error message gets lost in earlier messages
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity error;
+    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity failure;
     wait;
   end process;
   
@@ -314,8 +314,8 @@ begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
     -- The filter has a latency of 1 tap, so there remains in_dat for tap in the filter
-    assert in_val_cnt > 0                               report "Test did not run, no valid input data" severity error;
-    assert out_val_cnt = in_val_cnt-c_nof_valid_per_tap report "Unexpected number of valid output data coefficients" severity error;
+    assert in_val_cnt > 0                               report "Test did not run, no valid input data" severity failure;
+    assert out_val_cnt = in_val_cnt-c_nof_valid_per_tap report "Unexpected number of valid output data coefficients" severity failure;
     wait;
   end process;
   
@@ -351,7 +351,7 @@ begin
           end if;
           for S in 0 to g_fil_ppf.nof_streams-1 loop
             -- all streams carry the same data
-            assert TO_SINT(out_dat_arr(P*g_fil_ppf.nof_streams + S)) = v_coeff report "Output data error" severity error;
+            assert TO_SINT(out_dat_arr(P*g_fil_ppf.nof_streams + S)) = v_coeff report "Output data error" severity failure;
           end loop;
         end loop;
       end if;
