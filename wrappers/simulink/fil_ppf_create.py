@@ -161,8 +161,8 @@ def run(argv):
         else:
             if pfir.verbose:
                 print("No input filename specified - will create one from the provided paramenters.")
-            pfir.outfileprefix = os.path.join(pathforstore, "pfir_coeffs_%s_%dt_%dp_%db_%dwb" % (
-                pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
+            pfir.outfileprefix = os.path.join(pathforstore, "pfir_coeffs_%s_%dt_%dp_%db" % (
+                pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w)
             )
 
     def fetchdatcoeffs(pfir):

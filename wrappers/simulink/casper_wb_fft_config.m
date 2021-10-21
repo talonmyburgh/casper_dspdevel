@@ -17,10 +17,14 @@ function casper_wb_fft_config(this_block)
   
   %constant widths for 
   dp_stream_bsn = 64;
+  bsn_data_type = sprintf('Fix_%d_0',dp_stream_bsn);
   dp_stream_empty = 16;
+  empty_data_type = sprintf('Fix_%d_0',dp_stream_empty);
   dp_stream_channel = 32;
+  channel_data_type = sprintf('Fix_%d_0',dp_stream_channel);
   dp_stream_error = 32;
-  
+  error_data_type = sprintf('Fix_%d_0',dp_stream_error);
+
     function boolval =  checkbox2bool(bxval)
        if strcmp(bxval, 'on')
         boolval= true;
@@ -41,14 +45,18 @@ function casper_wb_fft_config(this_block)
   use_reorder = get_param(wb_fft_blk_parent,'use_reorder');
   use_fft_shift = get_param(wb_fft_blk_parent,'use_fft_shift');
   use_separate = get_param(wb_fft_blk_parent,'use_separate');
-  wb_factor = str2double(get_param(wb_fft_blk_parent,'wb_factor'));
-  if wb_factor<1
+  wb_factor = get_param(wb_fft_blk_parent,'wb_factor');
+  dbl_wb_factor = str2double(wb_factor);
+  if dbl_wb_factor<1
        error("Cannot have wideband factor <1"); 
-  end
+  end 
   twiddle_offset = get_param(wb_fft_blk_parent,'twiddle_offset');
   nof_points = get_param(wb_fft_blk_parent,'nof_points');
+  dbl_nof_points = str2double(nof_points);
   i_d_w = get_param(wb_fft_blk_parent,'in_dat_w');
+  in_data_type = sprintf('Fix_%s_0', i_d_w);
   o_d_w = get_param(wb_fft_blk_parent,'out_dat_w');
+  out_data_type = sprintf('Fix_%s_0', o_d_w);
   o_g_w = get_param(wb_fft_blk_parent,'out_gain_w');
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
@@ -67,192 +75,134 @@ function casper_wb_fft_config(this_block)
   guard_en = checkbox2bool(guard_en);
   
   function stages = stagecalc(nof_points)
-    stages = ceil(log2(str2double(nof_points)));
+    stages = ceil(log2(nof_points));
   end
-  num_stages = stagecalc(nof_points);
+  num_stages = stagecalc(dbl_nof_points);
+  ovflwshiftreg_type = sprintf('Ufix_%d_0',num_stages);
+
   %Update the vhdl top file with the required ports per wb_factor:
-  vhdlfile = top_wb_fft_code_gen(wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
+  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
 
-  % System Generator has to assume that your entity has a combinational feed through; 
-  %   if it  doesn't, then comment out the following line:
-  this_block.tagAsCombinational;
-
-  this_block.addSimulinkInport('rst');
-  this_block.addSimulinkInport('in_sync');
-  this_block.addSimulinkInport('in_valid');
-  this_block.addSimulinkInport('in_shiftreg');
-  in_shiftreg_port = this_block.port('in_shiftreg');
+%inport declarations
+this_block.addSimulinkInport('rst');
+in_rst_port = this_block.port('rst');
+in_rst_port.setType('Ufix_1_0');
+in_rst_port.useHDLVector(false);
+this_block.addSimulinkInport('in_sync');
+in_sync_port = this_block.port('in_sync');
+in_sync_port.setType('Ufix_1_0');
+in_sync_port.useHDLVector(false);
+this_block.addSimulinkInport('in_valid');
+in_valid_port = this_block.port('in_valid');
+in_valid_port.setType('Ufix_1_0');
+in_valid_port.useHDLVector(false);
+this_block.addSimulinkInport('in_shiftreg');
+in_shiftreg_port = this_block.port('in_shiftreg');
+in_shiftreg_port.setType(ovflwshiftreg_type);
 
   %If a simple interface is required by the user, hide these other signals
   if xtra_dat_sigs
-        this_block.addSimulinkInport('in_bsn');
-        this_block.addSimulinkInport('in_sop');
-        this_block.addSimulinkInport('in_eop');
-        this_block.addSimulinkInport('in_empty');
-        this_block.addSimulinkInport('in_err');
-        this_block.addSimulinkInport('in_channel');
-        in_sop_port = this_block.port('in_sop');
-        in_sop_port.setType('UFix_1_0');
-        in_sop_port.useHDLVector(false);
-        in_eop_port = this_block.port('in_eop');
-        in_eop_port.setType('UFix_1_0');
-        in_eop_port.useHDLVector(false);
-        in_bsn_port = this_block.port('in_bsn');
-        in_empty_port = this_block.port('in_empty');
-        in_err_port = this_block.port('in_err');
-        in_channel_port = this_block.port('in_channel');
+  %extra signals inport declarations 
+  this_block.addSimulinkInport('in_bsn');
+  in_bsn_port = this_block.port('in_bsn');
+  in_bsn_port.setType(bsn_data_type);
+
+  this_block.addSimulinkInport('in_sop');
+  in_sop_port = this_block.port('in_sop');
+  in_sop_port.setType('Ufix_1_0');
+  in_sop_port.useHDLVector(false);
+  
+  this_block.addSimulinkInport('in_eop');
+  in_eop_port = this_block.port('in_eop');
+  in_eop_port.setType('Ufix_1_0');
+  in_eop_port.useHDLVector(false);
+  
+  this_block.addSimulinkInport('in_empty');
+  in_empty_port = this_block.port('in_empty');
+  in_empty_port.setType(empty_data_type);
+  
+  this_block.addSimulinkInport('in_err');
+  in_err_port = this_block.port('in_err');
+  in_err_port.setType(error_data_type);
+  
+  this_block.addSimulinkInport('in_channel');
+  in_channel_port = this_block.port('in_channel');
+  in_channel_port.setType(channel_data_type);
   end
   
   %Dynamically add in im, re per wb_factor:
-  for i=0:wb_factor-1
-      this_block.addSimulinkInport(sprintf('in_im_%d',i));
-      this_block.addSimulinkInport(sprintf('in_re_%d',i));
+  for i=0:dbl_wb_factor-1
+      in_im_port = sprintf('in_im_%d',i);
+      this_block.addSimulinkInport(in_im_port);
+      in_im = this_block.port(in_im_port);
+      in_im.setType(in_data_type);
+  
+      in_re_port = sprintf('in_re_%d',i);
+      this_block.addSimulinkInport(in_re_port);
+      in_re = this_block.port(in_re_port);
+      in_re.setType(in_data_type);
   end
   
   this_block.addSimulinkOutport('out_sync');
+  out_sync_port = this_block.port('out_sync');
+  out_sync_port.setType('Ufix_1_0');
+  out_sync_port.useHDLVector(false);
+  
   this_block.addSimulinkOutport('out_valid');
+  out_valid_port = this_block.port('out_valid');
+  out_valid_port.setType('Ufix_1_0');
+  out_valid_port.useHDLVector(false);
+  
   this_block.addSimulinkOutport('out_ovflw');
   out_ovflw_port = this_block.port('out_ovflw');
+  out_ovflw_port.setType(ovflwshiftreg_type);
 
   if xtra_dat_sigs
-      this_block.addSimulinkOutport('out_bsn');
-      this_block.addSimulinkOutport('out_sop');
-      this_block.addSimulinkOutport('out_eop');
-      this_block.addSimulinkOutport('out_empty');
-      this_block.addSimulinkOutport('out_err');
-      this_block.addSimulinkOutport('out_channel');
-      out_sop_port = this_block.port('out_sop');
-      out_sop_port.setType('UFix_1_0');
-      out_sop_port.useHDLVector(false);
-      out_eop_port = this_block.port('out_eop');
-      out_eop_port.setType('UFix_1_0');
-      out_eop_port.useHDLVector(false);
-      out_bsn_port = this_block.port('out_bsn');
-      out_empty_port = this_block.port('out_empty');
-      out_err_port = this_block.port('out_err');
-      out_channel_port = this_block.port('out_channel');
+    this_block.addSimulinkOutport('out_bsn');
+    out_bsn_port = this_block.port('out_bsn');
+    out_bsn_port.setType(bsn_data_type);
+    
+    this_block.addSimulinkOutport('out_sop');
+    out_sop_port = this_block.port('out_sop');
+    out_sop_port.setType('Ufix_1_0');
+    out_sop_port.useHDLVector(false);
+    
+    this_block.addSimulinkOutport('out_eop');
+    out_eop_port = this_block.port('out_eop');
+    out_eop_port.setType('Ufix_1_0');
+    out_eop_port.useHDLVector(false);
+    
+    this_block.addSimulinkOutport('out_empty');
+    out_empty_port = this_block.port('out_empty');
+    out_empty_port.setType(empty_data_type);
+    
+    this_block.addSimulinkOutport('out_err');
+    out_err_port = this_block.port('out_err');
+    out_err_port.setType(error_data_type);
+    
+    this_block.addSimulinkOutport('out_channel');
+    out_channel_port = this_block.port('out_channel');
+    out_channel_port.setType(channel_data_type);
   end
 
   %Dynamically add out im, re per wb_factor:
-  for i=0:wb_factor-1
-    this_block.addSimulinkOutport(sprintf('out_im_%d',i));
-    this_block.addSimulinkOutport(sprintf('out_re_%d',i));
-  end
-  
-  %std_logic signals:
-  in_sync_port = this_block.port('in_sync');
-  in_sync_port.setType('UFix_1_0');
-  in_sync_port.useHDLVector(false);
-  in_valid_port = this_block.port('in_valid');
-  in_valid_port.setType('UFix_1_0');
-  in_valid_port.useHDLVector(false);
-  
-  out_sync_port = this_block.port('out_sync');
-  out_sync_port.setType('UFix_1_0');
-  out_sync_port.useHDLVector(false);
-  out_valid_port = this_block.port('out_valid');
-  out_valid_port.setType('UFix_1_0');
-  out_valid_port.useHDLVector(false);
-  
-  in_rst_port = this_block.port('rst');
-
-  % -----------------------------
-  if (this_block.inputTypesKnown)
-    % do input type checking, dynamic output type and generic setup in this code block.
-
-    %rst port
-    if (in_rst_port.width ~= 1)
-      this_block.setError('Input data type for port "rst" must have width=1.');
-    end
-    in_rst_port.useHDLVector(false);
-
-    %input sync
-    if (in_sync_port.width ~= 1)
-      this_block.setError('Input data type for port "in_sync" must have width=1.');
-    end
-    in_sync_port.useHDLVector(false);
-
-    %input valid
-    if (in_valid_port.width ~= 1)
-      this_block.setError('Input data type for port "in_valid" must have width=1.');
-    end
-    in_valid_port.useHDLVector(false);
+  for i=0:dbl_wb_factor-1
+    out_im_port = sprintf('out_im_%d',i);
+    this_block.addSimulinkOutport(out_im_port);
+    out_im = this_block.port(out_im_port);
+    out_im.setType(out_data_type);
     
-    %input shiftreg
-    in_shiftreg_port.useHDLVector(true);
-    in_shiftreg_port.setWidth(num_stages);
-    
-    %output ovflw
-    out_ovflw_port.useHDLVector(true);
-    out_ovflw_port.setWidth(num_stages);
-
-   if xtra_dat_sigs
-    %input bsn
-      in_bsn_port.useHDLVector(true);
-      in_bsn_port.setWidth(dp_stream_bsn);
-
-    %input sop
-      if (in_sop_port.width ~= 1)
-        this_block.setError('Input data type for port "in_sop" must have width=1.');
-      end
-      in_sop_port.useHDLVector(false);
-
-      %input eop
-      if (in_eop_port.width ~= 1)
-        this_block.setError('Input data type for port "in_eop" must have width=1.');
-      end
-      in_eop_port.useHDLVector(false);
-
-      %input empty
-      in_empty_port.useHDLVector(true);
-      in_empty_port.setWidth(dp_stream_empty);
-      
-      %input error
-      in_err_port.useHDLVector(true);
-      in_err_port.setWidth(dp_stream_error);
-
-      %input channel
-      in_channel_port.useHDLVector(true);
-      in_channel_port.setWidth(dp_stream_channel);
-
-      %output bsn
-      out_bsn_port.useHDLVector(true);
-      out_bsn_port.setWidth(dp_stream_bsn);
-
-      %output empty
-      out_empty_port.useHDLVector(true);
-      out_empty_port.setWidth(dp_stream_empty);
-      
-      %output error
-      out_err_port.useHDLVector(true);
-      out_err_port.setWidth(dp_stream_error);
-      
-      %output channel
-      out_channel_port.useHDLVector(true);
-      out_channel_port.setWidth(dp_stream_channel);
+    out_re_port = sprintf('out_re_%d',i);
+    this_block.addSimulinkOutport(out_re_port);
+    out_re = this_block.port(out_re_port);
+    out_re.setType(out_data_type);
   end
-
-    %input/output im, re
-    for j=0:wb_factor-1
-      this_block.port(sprintf('in_im_%d',j)).useHDLVector(true);
-      this_block.port(sprintf('in_im_%d',j)).setWidth(str2double(i_d_w));
-      this_block.port(sprintf('in_re_%d',j)).useHDLVector(true);
-      this_block.port(sprintf('in_re_%d',j)).setWidth(str2double(i_d_w));
-      this_block.port(sprintf('out_im_%d',j)).useHDLVector(true);
-      this_block.port(sprintf('out_im_%d',j)).setWidth(str2double(o_d_w));
-      this_block.port(sprintf('out_re_%d',j)).useHDLVector(true);
-      this_block.port(sprintf('out_re_%d',j)).setWidth(str2double(o_d_w));
-    end
-  end  % if(inputTypesKnown)
-  % -----------------------------
 
   % -----------------------------
    if (this_block.inputRatesKnown)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-
-   uniqueInputRates = unique(this_block.getInputRates);
     
   %      Add generics to blackbox (this_block)
   %      The addGeneric function takes  3 parameters, generic name, type and constant value.
@@ -260,7 +210,7 @@ function casper_wb_fft_config(this_block)
   this_block.addGeneric('use_reorder','boolean',bool2str(use_reorder));
   this_block.addGeneric('use_fft_shift','boolean',bool2str(use_fft_shift));
   this_block.addGeneric('use_separate','boolean',bool2str(use_separate));
-  this_block.addGeneric('wb_factor','natural',num2str(wb_factor));
+  this_block.addGeneric('wb_factor','natural',wb_factor);
   this_block.addGeneric('twiddle_offset','natural',twiddle_offset);
   this_block.addGeneric('nof_points','natural',nof_points);
   this_block.addGeneric('in_dat_w','natural',i_d_w);

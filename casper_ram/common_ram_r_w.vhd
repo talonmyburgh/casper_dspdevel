@@ -18,10 +18,10 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE;
+LIBRARY IEEE, technology_lib;
 USE IEEE.std_logic_1164.ALL;
 USE work.common_ram_pkg.ALL;
---USE technology_lib.technology_select_pkg.ALL;
+USE technology_lib.technology_select_pkg.ALL;
 
 ENTITY common_ram_r_w IS
 	GENERIC(
