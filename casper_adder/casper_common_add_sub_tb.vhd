@@ -91,7 +91,11 @@ ARCHITECTURE tb OF common_add_sub_tb IS
 	SIGNAL out_result      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- combinatorial result
 	SIGNAL result_expected : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- pipelined results
 	SIGNAL result_rtl      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
-
+	
+	CONSTANT c_posmax							: integer := 2**(g_in_dat_w - 1) - 1;
+	CONSTANT c_posmax_half 				: integer := (c_posmax + 1) / 2;
+	CONSTANT c_posmax_half_less_2 : integer := (c_posmax_half) - 2;
+	CONSTANT c_posmax_half_add_1 	: integer := (c_posmax_half) + 1;
 BEGIN
 	g_sel_add <= str_to_std(s_sel_add);
 	clk       <= NOT clk OR tb_end AFTER clk_period / 2;
@@ -114,28 +118,28 @@ BEGIN
 
 		-- Some special combinations
 		in_a <= TO_SVEC(2, g_in_dat_w);
-		in_b <= TO_SVEC(5, g_in_dat_w);
+		in_b <= TO_SVEC(c_posmax_half_less_2, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
 		in_a <= TO_SVEC(2, g_in_dat_w);
-		in_b <= TO_SVEC(-5, g_in_dat_w);
+		in_b <= TO_SVEC(-c_posmax_half_less_2, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
 		in_a <= TO_SVEC(-3, g_in_dat_w);
-		in_b <= TO_SVEC(-9, g_in_dat_w);
+		in_b <= TO_SVEC(-c_posmax_half_add_1, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
 		in_a <= TO_SVEC(-3, g_in_dat_w);
-		in_b <= TO_SVEC(9, g_in_dat_w);
+		in_b <= TO_SVEC(c_posmax_half_add_1, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
-		in_a <= TO_SVEC(11, g_in_dat_w);
-		in_b <= TO_SVEC(15, g_in_dat_w);
+		in_a <= TO_SVEC(c_posmax-4, g_in_dat_w);
+		in_b <= TO_SVEC(c_posmax, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
-		in_a <= TO_SVEC(11, g_in_dat_w);
-		in_b <= TO_SVEC(-15, g_in_dat_w);
+		in_a <= TO_SVEC(c_posmax-4, g_in_dat_w);
+		in_b <= TO_SVEC(-c_posmax, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
-		in_a <= TO_SVEC(-11, g_in_dat_w);
-		in_b <= TO_SVEC(15, g_in_dat_w);
+		in_a <= TO_SVEC(-(c_posmax-4), g_in_dat_w);
+		in_b <= TO_SVEC(c_posmax, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
-		in_a <= TO_SVEC(-11, g_in_dat_w);
-		in_b <= TO_SVEC(-15, g_in_dat_w);
+		in_a <= TO_SVEC(-(c_posmax-4), g_in_dat_w);
+		in_b <= TO_SVEC(-c_posmax, g_in_dat_w);
 		WAIT UNTIL rising_edge(clk);
 
 		FOR I IN 0 TO 49 LOOP
@@ -143,8 +147,8 @@ BEGIN
 		END LOOP;
 
 		-- All combinations
-		FOR I IN -2**(g_in_dat_w - 1) TO 2**(g_in_dat_w - 1) - 1 LOOP
-			FOR J IN -2**(g_in_dat_w - 1) TO 2**(g_in_dat_w - 1) - 1 LOOP
+		FOR I IN -(c_posmax+1) TO c_posmax LOOP
+			FOR J IN -(c_posmax+1) TO c_posmax LOOP
 				in_a <= TO_SVEC(I, g_in_dat_w);
 				in_b <= TO_SVEC(J, g_in_dat_w);
 				WAIT UNTIL rising_edge(clk);
