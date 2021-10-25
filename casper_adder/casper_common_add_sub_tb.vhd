@@ -32,6 +32,10 @@ ENTITY common_add_sub_tb IS
 		g_pipeline_out : NATURAL := 2;  -- output pipelining >= 0
 		g_in_dat_w     : NATURAL := 5;
 		g_out_dat_w    : NATURAL := 5;  -- g_in_dat_w or g_in_dat_w+1;
+		g_a_val_min    : INTEGER := 0;  -- -(2**(g_in_dat_w - 1)) if left as zero
+		g_a_val_max    : INTEGER := 0;  -- 2**(g_in_dat_w - 1) - 1 if left as zero
+		g_b_val_min    : INTEGER := 0;  -- -(2**(g_in_dat_w - 1)) if left as zero
+		g_b_val_max    : INTEGER := 0;  -- 2**(g_in_dat_w - 1) - 1 if left as zero
 		runner_cfg     : string
 	);
 END common_add_sub_tb;
@@ -92,10 +96,17 @@ ARCHITECTURE tb OF common_add_sub_tb IS
 	SIGNAL result_expected : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- pipelined results
 	SIGNAL result_rtl      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
 	
-	CONSTANT c_posmax							: integer := 2**(g_in_dat_w - 1) - 1;
-	CONSTANT c_posmax_half 				: integer := (c_posmax + 1) / 2;
-	CONSTANT c_posmax_half_less_2 : integer := (c_posmax_half) - 2;
-	CONSTANT c_posmax_half_add_1 	: integer := (c_posmax_half) + 1;
+	CONSTANT c_posmax							: INTEGER := 2**(g_in_dat_w - 1) - 1;
+	CONSTANT c_posmax_half 				: INTEGER := (c_posmax + 1) / 2;
+	CONSTANT c_posmax_half_less_2 : INTEGER := (c_posmax_half) - 2;
+	CONSTANT c_posmax_half_add_1 	: INTEGER := (c_posmax_half) + 1;
+	
+	CONSTANT c_a_val_min    : INTEGER := sel_a_b(g_a_val_min = 0, -(c_posmax+1), g_a_val_min);
+	CONSTANT c_a_val_max    : INTEGER := sel_a_b(g_a_val_max = 0,   c_posmax, 	 g_a_val_max);
+	CONSTANT c_b_val_min    : INTEGER := sel_a_b(g_b_val_min = 0, -(c_posmax+1), g_b_val_min);
+	CONSTANT c_b_val_max    : INTEGER := sel_a_b(g_b_val_max = 0,   c_posmax,  	 g_b_val_max);
+
+	SIGNAL s_test_count 	: INTEGER := 0;
 BEGIN
 	g_sel_add <= str_to_std(s_sel_add);
 	clk       <= NOT clk OR tb_end AFTER clk_period / 2;
@@ -103,6 +114,10 @@ BEGIN
 	-- run 1 us or -all
 	p_in_stimuli : PROCESS
 	BEGIN
+		report "c_a_val_min: " & integer'image(c_a_val_min);
+		report "c_a_val_max: " & integer'image(c_a_val_max);
+		report "c_b_val_min: " & integer'image(c_b_val_min);
+		report "c_b_val_max: " & integer'image(c_b_val_max);
 		test_runner_setup(runner, runner_cfg);
 		rst  <= '1';
 		in_a <= TO_SVEC(0, g_in_dat_w);
@@ -140,6 +155,7 @@ BEGIN
 		WAIT UNTIL rising_edge(clk);
 		in_a <= TO_SVEC(-(c_posmax-4), g_in_dat_w);
 		in_b <= TO_SVEC(-c_posmax, g_in_dat_w);
+		s_test_count <= 8;
 		WAIT UNTIL rising_edge(clk);
 
 		FOR I IN 0 TO 49 LOOP
@@ -147,14 +163,16 @@ BEGIN
 		END LOOP;
 
 		-- All combinations
-		FOR I IN -(c_posmax+1) TO c_posmax LOOP
-			FOR J IN -(c_posmax+1) TO c_posmax LOOP
+		FOR I IN c_a_val_min TO c_a_val_max LOOP
+			FOR J IN c_b_val_min TO c_b_val_max LOOP
 				in_a <= TO_SVEC(I, g_in_dat_w);
 				in_b <= TO_SVEC(J, g_in_dat_w);
+				s_test_count <= s_test_count + 1;
 				WAIT UNTIL rising_edge(clk);
 			END LOOP;
 		END LOOP;
 		WAIT UNTIL rising_edge(clk);
+		report "Tests completed: " & integer'image(s_test_count);
 		tb_end <= '1';
 		test_runner_cleanup(runner);
 
@@ -200,7 +218,7 @@ BEGIN
 	BEGIN
 		IF rst = '0' THEN
 			IF rising_edge(clk) THEN
-				check(result_rtl = result_expected, "Error: wrong RTL result, expected: " & to_hstring(result_expected) & " but got: " & to_hstring(result_rtl));
+				check(result_rtl = result_expected, "Error: wrong RTL result#" & integer'image(s_test_count) &", expected: " & to_hstring(result_expected) & " but got: " & to_hstring(result_rtl));
 			END IF;
 		END IF;
 
