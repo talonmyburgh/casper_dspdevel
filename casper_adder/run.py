@@ -1,3 +1,4 @@
+import os
 from itertools import product
 from vunit import VUnit
 
@@ -26,8 +27,10 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
 
 vu = VUnit.from_argv()
 
+script_dir, _ = os.path.split(os.path.realpath(__file__))
+
 lib1 = vu.add_library("casper_adder_lib",allow_duplicate=True)
-lib1.add_source_files("*.vhd")
+lib1.add_source_files(os.path.join(script_dir, "*.vhd"))
 TB_GENERATED = lib1.test_bench("common_add_sub_tb")
 generate_tests(TB_GENERATED,
     ['BOTH'],
@@ -38,9 +41,9 @@ generate_tests(TB_GENERATED,
 )
 
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)
-lib2.add_source_files("../common_components/*.vhd")
+lib2.add_source_files(os.path.join(script_dir, "../common_components/*.vhd"))
 
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
-lib3.add_source_files("../common_pkg/*.vhd")
+lib3.add_source_files(os.path.join(script_dir, "../common_pkg/*.vhd"))
 
 vu.main()
