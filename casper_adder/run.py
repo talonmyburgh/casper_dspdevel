@@ -42,7 +42,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
                 config_name1 += value_range_string
             obj.add_config(
                 name = config_name1,
-                generics=dict(g_direction=d,s_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w,
+                generics=dict(g_direction=d,g_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w,
                                 g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
             config_name2 = "direc = %s, add_sub = %s, i_pipe = %i, o_pipe = %i, in_dat_w = %i, out_dat_w = %i" % (d, a_s, i_pipe, o_pipe, i_d_w, i_d_w+1)
@@ -50,7 +50,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
                 config_name2 += value_range_string
             obj.add_config(
                 name = config_name2,
-                generics=dict(g_direction=d,s_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w+1,
+                generics=dict(g_direction=d,g_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w+1,
                                 g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
 
@@ -60,7 +60,7 @@ script_dir, _ = os.path.split(os.path.realpath(__file__))
 
 lib1 = vu.add_library("casper_adder_lib",allow_duplicate=True)
 lib1.add_source_files(os.path.join(script_dir, "*.vhd"))
-TB_GENERATED = lib1.test_bench("common_add_sub_tb")
+TB_GENERATED = lib1.test_bench("tb_tb_vu_common_add_sub")
 
 direc_values = ['BOTH']
 add_sub_values = [0,1]
