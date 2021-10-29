@@ -5,7 +5,7 @@ from vunit import VUnit
 
 def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
     """
-    Generate test by varying the generics of common_counter:
+    Generate test by varying the generics of casper_adder:
         direc : string {SUB,ADD,BOTH}
         add_sub : int {0,1}
         pipeline_in : int {0,1}
@@ -30,7 +30,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
 
         for a_v_min, a_v_max, b_v_min, b_v_max in ab_value_ranges:
             non_exhaustive_value_range = any([lim != 0 for lim in [a_v_min, a_v_max, b_v_min, b_v_max]])
-            value_range_string = ", a_val = [%i, %i] , b_val = [%i, %i]" % (
+            value_range_string = ", a_val = [%d, %d] , b_val = [%d, %d]" % (
                 a_v_min if a_v_min != 0 else -(2**(i_d_w-1)),
                 a_v_max if a_v_max != 0 else (2**(i_d_w-1))-1,
                 b_v_min if b_v_min != 0 else -(2**(i_d_w-1)),
