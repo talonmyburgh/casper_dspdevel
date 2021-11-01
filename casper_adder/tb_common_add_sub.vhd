@@ -37,11 +37,11 @@ ENTITY tb_common_add_sub IS
 		g_b_val_max    : INTEGER := 0   -- 2**(g_in_dat_w - 1) - 1 if left as zero
 	);
 	PORT(
-		o_rst				: OUT STD_LOGIC;
-		o_clk				: OUT STD_LOGIC;
-		o_tb_end		: OUT STD_LOGIC;
-		o_test_msg	: OUT STRING(1 to 80);
-		o_test_pass	: OUT BOOLEAN
+		o_rst		   : OUT STD_LOGIC;
+		o_clk		   : OUT STD_LOGIC;
+		o_tb_end	   : OUT STD_LOGIC;
+		o_test_msg	   : OUT STRING(1 to 80);
+		o_test_pass	   : OUT BOOLEAN
 	);
 END tb_common_add_sub;
 
@@ -88,10 +88,10 @@ ARCHITECTURE tb OF tb_common_add_sub IS
 	SIGNAL result_expected : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- pipelined results
 	SIGNAL result_rtl      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
 	
-	CONSTANT c_posmax							: INTEGER := 2**(g_in_dat_w - 1) - 1;
+	CONSTANT c_posmax					: INTEGER := 2**(g_in_dat_w - 1) - 1;
 	CONSTANT c_posmax_half 				: INTEGER := (c_posmax + 1) / 2;
-	CONSTANT c_posmax_half_less_2 : INTEGER := (c_posmax_half) - 2;
-	CONSTANT c_posmax_half_add_1 	: INTEGER := (c_posmax_half) + 1;
+	CONSTANT c_posmax_half_less_2 		: INTEGER := (c_posmax_half) - 2;
+	CONSTANT c_posmax_half_add_1 		: INTEGER := (c_posmax_half) + 1;
 	
 	CONSTANT c_a_val_min    : INTEGER := sel_a_b(g_a_val_min = 0, -(c_posmax+1), g_a_val_min);
 	CONSTANT c_a_val_max    : INTEGER := sel_a_b(g_a_val_max = 0,   c_posmax, 	 g_a_val_max);

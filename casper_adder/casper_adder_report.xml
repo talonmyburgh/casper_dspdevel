@@ -1,433 +1,705 @@
-<testsuite name="testsuite" errors="0" failures="0" skipped="0" tests="48" hostname="fv-az91-955"><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+<testsuite name="testsuite" errors="0" failures="0" skipped="0" tests="64" hostname="fv-az91-42"><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 4, out_dat_w = 4" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 4, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 9, out_dat_w = 9" time="5.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 9, out_dat_w = 10" time="5.9"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
-simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 6" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
-simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 4, out_dat_w = 4" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 5" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 4, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 9, out_dat_w = 9" time="6.2"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 9, out_dat_w = 10" time="6.2"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 5, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
 simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 2, in_dat_w = 5, out_dat_w = 6" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 6" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
 simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 14, out_dat_w = 14, a_val = [-8192, 8191] , b_val = [-16, 15]" time="14.1"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 0, in_dat_w = 14, out_dat_w = 15, a_val = [-8192, 8191] , b_val = [-16, 15]" time="14.2"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 4, out_dat_w = 4" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 4, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 9, out_dat_w = 9" time="5.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 9, out_dat_w = 10" time="5.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
-simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 6" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
-simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -131072
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: -130944
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@42075ns:(report note): Tests completed: 4136
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
 simulation stopped @42075ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 128
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@83035ns:(report note): Tests completed: 8232
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
 simulation stopped @83035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: 131071
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 130943
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@795ns:(report note): Tests completed: 8
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
 simulation stopped @795ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 4, out_dat_w = 4" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 5, out_dat_w = 5" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 4, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 7
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -8
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 7
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@3355ns:(report note): Tests completed: 264
-simulation stopped @3355ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 9, out_dat_w = 9" time="6.1"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 9, out_dat_w = 10" time="6.1"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 255
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -256
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 255
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@2622235ns:(report note): Tests completed: 262152
-simulation stopped @2622235ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 5, out_dat_w = 5" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
 simulation stopped @11035ns with status 0
-</system-out></testcase><testcase classname="casper_adder_lib.common_add_sub_tb" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 2, in_dat_w = 5, out_dat_w = 6" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:117:16:@0ms:(report note): c_a_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:118:16:@0ms:(report note): c_a_val_max: 15
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:119:16:@0ms:(report note): c_b_val_min: -16
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:120:16:@0ms:(report note): c_b_val_max: 15
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 5, out_dat_w = 6" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
 ../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/casper_common_add_sub_tb.vhd:175:16:@11035ns:(report note): Tests completed: 1032
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
 simulation stopped @11035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 14, out_dat_w = 14, a_val = [-8192, 8191] , b_val = [-16, 15]" time="15.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 0, i_pipe = 1, o_pipe = 4, in_dat_w = 14, out_dat_w = 15, a_val = [-8192, 8191] , b_val = [-16, 15]" time="15.9"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 15, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 15, out_dat_w = 16, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 5" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
+simulation stopped @11035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 5, out_dat_w = 6" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
+simulation stopped @11035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 14, out_dat_w = 14, a_val = [-8192, 8191] , b_val = [-16, 15]" time="13.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 0, in_dat_w = 14, out_dat_w = 15, a_val = [-8192, 8191] , b_val = [-16, 15]" time="13.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [-131072, -130944] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -131072
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -130944
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 18, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 18, out_dat_w = 19, a_val = [131071, 130943] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 131071
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 130943
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [-16384, -16256] , b_val = [-16, 15]" time="0.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@42075ns:(report note): c_a_val_min: -16384
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@42075ns:(report note): c_a_val_max: -16256
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@42075ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@42075ns:(report note): c_b_val_max: 15
+simulation stopped @42075ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [-128, 128] , b_val = [-16, 15]" time="0.8"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@83035ns:(report note): c_a_val_min: -128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@83035ns:(report note): c_a_val_max: 128
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@83035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@83035ns:(report note): c_b_val_max: 15
+simulation stopped @83035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 15, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 15, out_dat_w = 16, a_val = [16383, 16255] , b_val = [-16, 15]" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@795ns:(report note): c_a_val_min: 16383
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@795ns:(report note): c_a_val_max: 16255
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@795ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@795ns:(report note): c_b_val_max: 15
+simulation stopped @795ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 5, out_dat_w = 5" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
+simulation stopped @11035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 5, out_dat_w = 6" time="0.6"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@11035ns:(report note): c_a_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@11035ns:(report note): c_a_val_max: 15
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@11035ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@11035ns:(report note): c_b_val_max: 15
+simulation stopped @11035ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 14, out_dat_w = 14, a_val = [-8192, 8191] , b_val = [-16, 15]" time="15.9"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
+</system-out></testcase><testcase classname="casper_adder_lib.tb_tb_vu_common_add_sub" name="direc = BOTH, add_sub = 1, i_pipe = 1, o_pipe = 4, in_dat_w = 14, out_dat_w = 15, a_val = [-8192, 8191] , b_val = [-16, 15]" time="15.3"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@0ms:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@0ms:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@0ms:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@0ms:(report note): c_b_val_max: 15
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+../../src/ieee2008/numeric_std-body.vhdl:3062:7:@0ms:(assertion warning): NUMERIC_STD.TO_INTEGER: metavalue detected, returning 0
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:112:16:@5243675ns:(report note): c_a_val_min: -8192
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:113:16:@5243675ns:(report note): c_a_val_max: 8191
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:114:16:@5243675ns:(report note): c_b_val_min: -16
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_adder/tb_common_add_sub.vhd:115:16:@5243675ns:(report note): c_b_val_max: 15
+simulation stopped @5243675ns with status 0
 </system-out></testcase></testsuite>
