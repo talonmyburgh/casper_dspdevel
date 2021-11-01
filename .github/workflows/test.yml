@@ -48,9 +48,15 @@ jobs:
           cd casper_adder/
           python run.py --xunit-xml casper_adder_report.xml
       
+      - name: Casper_multiplier Run.py
+        run: |
+          cd casper_multiplier/
+          python run.py --xunit-xml casper_multiplier_report.xml
+      
       - name: Commit report
         run: |
           git add -f ./casper_adder/casper_adder_report.xml
+          git add -f ./casper_multiplier/casper_multiplier_report.xml
           git config --global user.name 'TalonMyburgh Action'
           git config --global user.email 'talonmyburgh@users.noreply.github.com'
           git commit -am "VUnit Test Reports"
