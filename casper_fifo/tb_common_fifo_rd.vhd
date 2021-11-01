@@ -29,6 +29,13 @@ ENTITY tb_common_fifo_rd IS
 	GENERIC(
 		g_random_control : BOOLEAN := TRUE -- use TRUE for random rd_req control
 	);
+	PORT(
+		o_rst    		: out STD_LOGIC;
+		o_clk    		: out STD_LOGIC;
+		o_tb_end 		: out STD_LOGIC;
+		o_test_msg	: OUT STRING(1 to 64);
+		o_test_pass	: OUT BOOLEAN
+	);
 END tb_common_fifo_rd;
 
 -- Run -all, observe rd_dat in wave window
@@ -57,8 +64,18 @@ ARCHITECTURE tb OF tb_common_fifo_rd IS
 	SIGNAL verify_en   : STD_LOGIC                     := '1';
 	SIGNAL prev_rd_req : STD_LOGIC;
 	SIGNAL prev_rd_dat : STD_LOGIC_VECTOR(c_dat_w - 1 DOWNTO 0);
-
+	
+	SIGNAL data_test_pass : BOOLEAN;
+	SIGNAL valid_test_pass : BOOLEAN;
+	SIGNAL data_test_msg : STRING(o_test_msg'range);
+	SIGNAL valid_test_msg : STRING(o_test_msg'range);
 BEGIN
+	o_rst <= rst;
+	o_clk <= clk;
+	o_tb_end <= tb_end;
+	o_test_pass <= data_test_pass and valid_test_pass;
+	o_test_msg <= sel_a_b(not valid_test_pass, valid_test_msg, data_test_msg);
+
 
 	rst    <= '1', '0' AFTER clk_period * 7;
 	clk    <= NOT clk OR tb_end AFTER clk_period / 2;
@@ -74,10 +91,10 @@ BEGIN
 	rd_req <= random(random'HIGH) WHEN g_random_control = TRUE ELSE '1';
 
 	-- Verify dut output incrementing data
-	proc_common_verify_data(c_read_rl, clk, verify_en, rd_req, rd_val, rd_dat, prev_rd_dat);
+	proc_common_verify_data(c_read_rl, clk, verify_en, rd_req, rd_val, rd_dat, prev_rd_dat, data_test_msg, data_test_pass);
 
 	-- Verify dut output stream ready - valid relation, prev_rd_req is an auxiliary signal needed by the proc
-	proc_common_verify_valid(c_read_rl, clk, verify_en, rd_req, prev_rd_req, rd_val);
+	proc_common_verify_valid(c_read_rl, clk, verify_en, rd_req, prev_rd_req, rd_val, valid_test_msg, valid_test_pass);
 
 	u_dut : ENTITY work.common_fifo_rd
 		GENERIC MAP(

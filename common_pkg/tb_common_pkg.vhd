@@ -217,7 +217,9 @@ PACKAGE tb_common_pkg IS
 	                                  SIGNAL ready         : IN STD_LOGIC;
 	                                  SIGNAL out_valid     : IN STD_LOGIC;
 	                                  SIGNAL out_data      : IN STD_LOGIC_VECTOR;
-	                                  SIGNAL prev_out_data : INOUT STD_LOGIC_VECTOR);
+	                                  SIGNAL prev_out_data : INOUT STD_LOGIC_VECTOR;
+																		SIGNAL test_msg			 : OUT STRING;
+																		SIGNAL test_pass		 : OUT BOOLEAN);
 
 	-- Verify the DUT output valid for ready latency, only support ready latency c_rl = 0 or 1.
 	PROCEDURE proc_common_verify_valid(CONSTANT c_rl     : IN NATURAL;
@@ -225,7 +227,9 @@ PACKAGE tb_common_pkg IS
 	                                   SIGNAL verify_en  : IN STD_LOGIC;
 	                                   SIGNAL ready      : IN STD_LOGIC;
 	                                   SIGNAL prev_ready : INOUT STD_LOGIC;
-	                                   SIGNAL out_valid  : IN STD_LOGIC);
+	                                   SIGNAL out_valid  : IN STD_LOGIC;
+																		 SIGNAL test_msg	 : OUT STRING;
+																		 SIGNAL test_pass	 : OUT BOOLEAN);
 
 	-- Verify the DUT input to output latency for SL ctrl signals
 	PROCEDURE proc_common_verify_latency(CONSTANT c_str       : IN STRING; -- e.g. "valid", "sop", "eop"
@@ -817,9 +821,12 @@ PACKAGE BODY tb_common_pkg IS
 	                                  SIGNAL ready         : IN STD_LOGIC;
 	                                  SIGNAL out_valid     : IN STD_LOGIC;
 	                                  SIGNAL out_data      : IN STD_LOGIC_VECTOR;
-	                                  SIGNAL prev_out_data : INOUT STD_LOGIC_VECTOR) IS
+	                                  SIGNAL prev_out_data : INOUT STD_LOGIC_VECTOR;
+																		SIGNAL test_msg			 : OUT STRING;
+																		SIGNAL test_pass		 : OUT BOOLEAN) IS
 		VARIABLE v_exp_data : STD_LOGIC_VECTOR(out_data'RANGE);
 	BEGIN
+		test_pass <= TRUE;
 		IF rising_edge(clk) THEN
 			-- out_valid must be active, because only the out_data will it differ from the previous out_data
 			IF out_valid = '1' THEN
@@ -829,6 +836,8 @@ PACKAGE BODY tb_common_pkg IS
 					prev_out_data <= out_data;
 					v_exp_data    := INCR_UVEC(prev_out_data, 1); -- increment first then compare to also support increment wrap around
 					IF verify_en = '1' AND UNSIGNED(out_data) /= UNSIGNED(v_exp_data) THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong out_data count", test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong out_data count" SEVERITY ERROR;
 					END IF;
 				END IF;
@@ -845,8 +854,11 @@ PACKAGE BODY tb_common_pkg IS
 	                                   SIGNAL verify_en  : IN STD_LOGIC;
 	                                   SIGNAL ready      : IN STD_LOGIC;
 	                                   SIGNAL prev_ready : INOUT STD_LOGIC;
-	                                   SIGNAL out_valid  : IN STD_LOGIC) IS
+	                                   SIGNAL out_valid  : IN STD_LOGIC;
+																		 SIGNAL test_msg	 : OUT STRING;
+																		 SIGNAL test_pass	 : OUT BOOLEAN) IS
 	BEGIN
+		test_pass <= TRUE;
 		IF rising_edge(clk) THEN
 			-- for ready latency c_rl = 1 out_valid may only be asserted after ready
 			-- for ready latency c_rl = 0 out_valid may always be asserted
@@ -855,6 +867,8 @@ PACKAGE BODY tb_common_pkg IS
 				prev_ready <= ready;
 				IF verify_en = '1' AND out_valid = '1' THEN
 					IF prev_ready /= '1' THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong ready latency between ready and out_valid", test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong ready latency between ready and out_valid" SEVERITY ERROR;
 					END IF;
 				END IF;

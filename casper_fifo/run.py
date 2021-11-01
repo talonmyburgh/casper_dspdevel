@@ -1,0 +1,37 @@
+import os
+import random
+from itertools import product
+from vunit import VUnit            
+
+vu = VUnit.from_argv()
+
+script_dir, _ = os.path.split(os.path.realpath(__file__))
+
+lib1 = vu.add_library("tb_lib",allow_duplicate=True)
+lib1.add_source_files(os.path.join(script_dir, "common_fifo_rd.vhd"))
+lib1.add_source_files(os.path.join(script_dir, "tb_common_fifo_rd.vhd"))
+lib1.add_source_files(os.path.join(script_dir, "tb_tb_vu_common_fifo_rd.vhd"))
+lib1.add_source_files(os.path.join(script_dir, "../casper_fifo/common_rl_decrease.vhd"))
+TB_GENERATED = lib1.test_bench("tb_tb_vu_common_fifo_rd")
+
+TB_GENERATED.add_config(
+				name = "random",
+				generics=dict(g_random_control=True)
+		)
+
+
+lib2 = vu.add_library("common_components_lib",allow_duplicate = True)
+lib2.add_source_files(os.path.join(script_dir, "../common_components/common_areset.vhd"))
+lib2.add_source_files(os.path.join(script_dir, "../common_components/common_async.vhd"))
+
+lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
+lib3.add_source_files(os.path.join(script_dir, "../common_pkg/*.vhd"))
+
+lib5 = vu.add_library("dp_pkg_lib",allow_duplicate = True)
+lib5.add_source_files(os.path.join(script_dir, "../casper_dp_pkg/*.vhd"))
+
+lib6 = vu.add_library("dp_components_lib",allow_duplicate = True)
+lib6.add_source_files(os.path.join(script_dir, "../casper_dp_components/dp_latency_adapter.vhd"))
+lib6.add_source_files(os.path.join(script_dir, "../casper_dp_components/dp_latency_increase.vhd"))
+
+vu.main()
