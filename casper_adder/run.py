@@ -66,7 +66,7 @@ direc_values = ['BOTH']
 add_sub_values = [0,1]
 inp_pipeline_values = random.sample([0,1], 1)
 out_pipeline_values = [0] + random.sample(range(1,5), 1)
-in_dat_w_values = [18] + random.sample(range(4, 17), 3) 
+in_dat_w_values = [18] + random.sample(range(4, 8), 1) + random.sample(range(9, 17), 1) 
 
 generate_tests(TB_GENERATED,
     direc_values,
