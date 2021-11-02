@@ -37,18 +37,15 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Casper_adder Run.py
         run: |
-          cd casper_adder/
-          python run.py --xunit-xml casper_adder_report.xml
+          python casper_adder/run.py --xunit-xml casper_adder_report.xml
       
       - name: Casper_multiplier Run.py
         run: |
-          cd casper_multiplier/
-          python run.py --xunit-xml casper_multiplier_report.xml
+          python casper_multiplier/run.py --xunit-xml casper_multiplier_report.xml
       
       - name: Casper_fifo Run.py
         run: |
-          cd casper_fifo/
-          python run.py --xunit-xml casper_fifo_report.xml
+          python casper_fifo/run.py --xunit-xml casper_fifo_report.xml
       
       - name: Commit report
         run: |
