@@ -68,7 +68,7 @@ inp_pipeline_values = 1 #+ random.sample([0,1], 1)
 product_pipeline_values = 0 #+random.sample([0,1], 1)
 adder_pipeline_values = 1 #+random.sample([0,1], 1)
 out_pipeline_values = 1 #+ random.sample([0,1], 1)
-in_dat_w_values = [4, 8, 18]# + random.sample(list(range(5, 8)) + list(range(9, 17)), 1) 
+in_dat_w_values = [18] + random.sample(range(4, 8), 1) 
 conj_values = [True,False]
 out_dat_w_values = [2 * f for f in in_dat_w_values]# + [2 * f + 1 for f in in_dat_w_values]
 
