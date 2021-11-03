@@ -1,8 +1,6 @@
 from vunit import VUnit
 from itertools import product
-from random import choice
-from random import choices
-from random import sample
+from random import sample, choice
 import glob
 import os
 # Create VUnit instance by parsing command line arguments
@@ -11,14 +9,14 @@ vu = VUnit.from_argv()
 def get_ranges(dat_w,margin):
     min_val = -(2**(dat_w-1))
     max_val = (-min_val)-1
-    ab_value_ranges = [
-        (min_val,min_val+margin,-margin,margin-1),
-        (max_val,max_val-margin,-margin,margin-1)
-        ]
-    if dat_w > 6: # this otherwise is a repeated ab_value_range
-        ab_value_ranges.append(
-            (-margin,+margin,-margin,margin-1)
-        )
+    if 2*margin < max_val:
+        ab_value_ranges = [
+            (min_val,min_val+margin,-margin,margin-1),
+            (-margin,+margin,-margin,margin-1),
+            (max_val,max_val-margin,-margin,margin-1)
+            ]
+    else:
+        ab_value_ranges = [(min_val, max_val, min_val, max_val)]
     return ab_value_ranges
 
 def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, conjugate_b=None, adder_pipeline=None):
@@ -36,7 +34,7 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
         for i_d_w in in_dat_w:
             margin = 16
             ab_value_ranges = get_ranges(i_d_w,margin)
-            ab_value_ranges = choices(ab_value_ranges, k=2)
+            ab_value_ranges = sample(ab_value_ranges, min(2, len(ab_value_ranges)))
             for a_v_min, a_v_max, b_v_min, b_v_max in ab_value_ranges:
                 value_range_string = ", a_val = [%d, %d] , b_val = [%d, %d]" % (a_v_min, a_v_max,b_v_min,b_v_max)
                 config_name = "i_d_w=%i, o_d_w=%i, inp_pipeline=%i, out_pipeline=%i, prod_pipe=%i" % (i_d_w, 2 * i_d_w + 1, inp_pipeline, out_pipeline, product_pipeline) +\
