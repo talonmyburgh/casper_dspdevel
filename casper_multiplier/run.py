@@ -16,7 +16,7 @@ def get_ranges(dat_w,margin):
         (max_val,max_val-margin,-margin,margin-1)
         ]
     if dat_w > 6: # this otherwise is a repeated ab_value_range
-        ab_value_range.append(
+        ab_value_ranges.append(
             (-margin,+margin,-margin,margin-1)
         )
     return ab_value_ranges
