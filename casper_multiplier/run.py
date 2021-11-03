@@ -13,9 +13,12 @@ def get_ranges(dat_w,margin):
     max_val = (-min_val)-1
     ab_value_ranges = [
         (min_val,min_val+margin,-margin,margin-1),
-        (-margin,+margin,-margin,margin-1),
         (max_val,max_val-margin,-margin,margin-1)
         ]
+    if dat_w > 6: # this otherwise is a repeated ab_value_range
+        ab_value_range.append(
+            (-margin,+margin,-margin,margin-1)
+        )
     return ab_value_ranges
 
 def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, conjugate_b=None, adder_pipeline=None):
