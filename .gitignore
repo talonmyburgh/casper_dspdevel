@@ -6,6 +6,7 @@
 casper_ram/altera_*.vhd
 casper_ram/BRAM_*Macro.vhd
 */vunit_out
+vunit_out
 */*.xml
 .vscode
 build/*
