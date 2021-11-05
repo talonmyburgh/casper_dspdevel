@@ -15,7 +15,7 @@ architecture tb of tb_tb_vu_common_paged_ram_crw_crw is
     SIGNAL rst      	: STD_LOGIC;
 	SIGNAL clk      	: STD_LOGIC;
 	SIGNAL tb_end   	: STD_LOGIC;
-	SIGNAL test_msg   : STRING(1 to 50);
+	SIGNAL test_msg   : STRING(1 to 80);
 	SIGNAL test_pass	: BOOLEAN;
 
 BEGIN
