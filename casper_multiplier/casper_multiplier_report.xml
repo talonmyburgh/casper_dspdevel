@@ -1,24 +1,25 @@
-<testsuite name="testsuite" errors="0" failures="0" skipped="0" tests="7" hostname="fv-az137-711"><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=18, o_d_w=37, conj_b=1, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="92.2"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
+<testsuite name="testsuite" errors="0" failures="0" skipped="0" tests="8" hostname="fv-az137-711"><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=18, o_d_w=37, conj_b=1, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
+    u0 : ip_stratixiv_complex_mult
+    ^
+/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
+simulation stopped @1265ns with status 0
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=18, o_d_w=37, conj_b=0, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="79.3"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
     u0 : ip_stratixiv_complex_mult
     ^
 /home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
 simulation stopped @2960625ns with status 0
-</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=18, o_d_w=37, conj_b=0, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="87.2"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=7, o_d_w=15, conj_b=1, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="0.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
     u0 : ip_stratixiv_complex_mult
     ^
 /home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
-simulation stopped @2960625ns with status 0
-</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=4, o_d_w=9, conj_b=1, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="6.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
+simulation stopped @1265ns with status 0
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=7, o_d_w=15, conj_b=0, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="132.7"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
     u0 : ip_stratixiv_complex_mult
     ^
 /home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
-simulation stopped @656625ns with status 0
-</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_complex_mult" name="i_d_w=4, o_d_w=9, conj_b=0, inp_pipeline=1, out_pipeline=1, add_pipe=1, prod_pipe=0" time="6.5"><system-out>/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:137:5:warning: instance "u0" of component "ip_stratixiv_complex_mult" is not bound [-Wbinding]
-    u0 : ip_stratixiv_complex_mult
-    ^
-/home/runner/work/casper_dspdevel/casper_dspdevel/casper_multiplier/tech_complex_mult.vhd:58:14:warning: (in default configuration of tech_complex_mult(str))
-simulation stopped @656625ns with status 0
-</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=18, o_d_w=37, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [-131072, -131056] , b_val = [-16, 15]" time="0.5"><system-out>simulation stopped @6695ns with status 0
+simulation stopped @11152625ns with status 0
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=18, o_d_w=37, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [-16, 16] , b_val = [-16, 15]" time="0.5"><system-out>simulation stopped @11815ns with status 0
 </system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=18, o_d_w=37, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [131071, 131055] , b_val = [-16, 15]" time="0.5"><system-out>simulation stopped @1255ns with status 0
-</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=4, o_d_w=9, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [-8, 7] , b_val = [-8, 7]" time="0.5"><system-out>simulation stopped @3815ns with status 0
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=7, o_d_w=15, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [-64, -48] , b_val = [-16, 15]" time="0.5"><system-out>simulation stopped @6695ns with status 0
+</system-out></testcase><testcase classname="casper_multiplier_lib.tb_tb_vu_common_mult" name="i_d_w=7, o_d_w=15, inp_pipeline=1, out_pipeline=1, prod_pipe=0, a_val = [63, 47] , b_val = [-16, 15]" time="0.5"><system-out>simulation stopped @1255ns with status 0
 </system-out></testcase></testsuite>
