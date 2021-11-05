@@ -41,7 +41,7 @@ PORT(
   o_rst		   : OUT STD_LOGIC;
   o_clk		   : OUT STD_LOGIC;
   o_tb_end	   : OUT STD_LOGIC;
-  o_test_msg	   : OUT STRING(1 to 50);
+  o_test_msg	   : OUT STRING(1 to 80);
   o_test_pass	   : OUT BOOLEAN
 );
 END tb_common_paged_ram_crw_crw;
