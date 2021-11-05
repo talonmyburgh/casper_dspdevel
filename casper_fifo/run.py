@@ -1,11 +1,9 @@
 import os
-import random
-from itertools import product
 from vunit import VUnit            
 
 vu = VUnit.from_argv()
 
-script_dir, _ = os.path.split(os.path.realpath(__file__))
+script_dir = os.path.dirname(__file__)
 
 lib1 = vu.add_library("tb_lib",allow_duplicate=True)
 lib1.add_source_files(os.path.join(script_dir, "common_fifo_rd.vhd"))
