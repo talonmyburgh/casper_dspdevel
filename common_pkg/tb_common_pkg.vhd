@@ -213,6 +213,7 @@ PACKAGE tb_common_pkg IS
 	-- Verify the DUT output incrementing data, only support ready latency c_rl = 0 or 1.
 	PROCEDURE proc_common_verify_data(CONSTANT c_rl        : IN NATURAL;
 	                                  SIGNAL clk           : IN STD_LOGIC;
+									  SIGNAL rst		   : IN STD_LOGIC;
 	                                  SIGNAL verify_en     : IN STD_LOGIC;
 	                                  SIGNAL ready         : IN STD_LOGIC;
 	                                  SIGNAL out_valid     : IN STD_LOGIC;
@@ -817,6 +818,7 @@ PACKAGE BODY tb_common_pkg IS
 	------------------------------------------------------------------------------
 	PROCEDURE proc_common_verify_data(CONSTANT c_rl        : IN NATURAL;
 	                                  SIGNAL clk           : IN STD_LOGIC;
+									  SIGNAL rst		   : IN STD_LOGIC;
 	                                  SIGNAL verify_en     : IN STD_LOGIC;
 	                                  SIGNAL ready         : IN STD_LOGIC;
 	                                  SIGNAL out_valid     : IN STD_LOGIC;
@@ -827,21 +829,23 @@ PACKAGE BODY tb_common_pkg IS
 		VARIABLE v_exp_data : STD_LOGIC_VECTOR(out_data'RANGE);
 	BEGIN
 		test_pass <= TRUE;
-		IF rising_edge(clk) THEN
-			-- out_valid must be active, because only the out_data will it differ from the previous out_data
-			IF out_valid = '1' THEN
-				-- for ready_latency = 1 out_valid indicates new data
-				-- for ready_latency = 0 out_valid only indicates new data when it is confirmed by ready
-				IF c_rl = 1 OR (c_rl = 0 AND ready = '1') THEN
-					prev_out_data <= out_data;
-					v_exp_data    := INCR_UVEC(prev_out_data, 1); -- increment first then compare to also support increment wrap around
-					IF verify_en = '1' AND UNSIGNED(out_data) /= UNSIGNED(v_exp_data) THEN
-						test_pass <= FALSE;
-						test_msg <= pad("COMMON : Wrong out_data count", test_msg'length, '.')(test_msg'range);
-						REPORT "COMMON : Wrong out_data count" SEVERITY ERROR;
+		IF rst = '0' then
+			IF rising_edge(clk) THEN
+				-- out_valid must be active, because only the out_data will it differ from the previous out_data
+				IF out_valid = '1' THEN
+					-- for ready_latency = 1 out_valid indicates new data
+					-- for ready_latency = 0 out_valid only indicates new data when it is confirmed by ready
+					IF c_rl = 1 OR (c_rl = 0 AND ready = '1') THEN
+						prev_out_data <= out_data;
+						v_exp_data    := INCR_UVEC(prev_out_data, 1); -- increment first then compare to also support increment wrap around
+						IF verify_en = '1' AND UNSIGNED(out_data) /= UNSIGNED(v_exp_data) THEN
+							test_pass <= FALSE;
+							test_msg <= pad("COMMON : Wrong out_data count", test_msg'length, '.')(test_msg'range);
+							REPORT "COMMON : Wrong out_data count" SEVERITY ERROR;
+						END IF;
 					END IF;
 				END IF;
-			END IF;
+			end if;
 		END IF;
 	END proc_common_verify_data;
 

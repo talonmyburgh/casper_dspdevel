@@ -242,21 +242,22 @@ BEGIN
   );
 
   -- Verify that the read data is incrementing data
-  proc_common_verify_data(c_rl, clk, verify_en, ready, mux_rd_val_b, mux_rd_dat_b, prev_mux_rd_dat_b,mux_test_msg,mux_test_pass);
-  proc_common_verify_data(c_rl, clk, verify_en, ready, adr_rd_val_b, adr_rd_dat_b, prev_adr_rd_dat_b,adr_test_msg,adr_test_pass);
-  proc_common_verify_data(c_rl, clk, verify_en, ready, ofs_rd_val_b, ofs_rd_dat_b, prev_ofs_rd_dat_b,ofs_test_msg,ofs_test_pass);
+  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, mux_rd_val_b, mux_rd_dat_b, prev_mux_rd_dat_b,mux_test_msg,mux_test_pass);
+  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, adr_rd_val_b, adr_rd_dat_b, prev_adr_rd_dat_b,adr_test_msg,adr_test_pass);
+  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, ofs_rd_val_b, ofs_rd_dat_b, prev_ofs_rd_dat_b,ofs_test_msg,ofs_test_pass);
      
   -- Verify that the read data is the same for all three DUT variants
   p_verify_equal : PROCESS(clk)  
   BEGIN
-    IF rising_edge(clk) THEN
-      IF UNSIGNED(mux_rd_dat_b) /= UNSIGNED(adr_rd_dat_b) OR UNSIGNED(mux_rd_dat_b) /= UNSIGNED(ofs_rd_dat_b) THEN
-        REPORT "DUT : read data differs between two implementations" SEVERITY FAILURE;
+    If rst = '0' then
+      IF rising_edge(clk) THEN
+        IF UNSIGNED(mux_rd_dat_b) /= UNSIGNED(adr_rd_dat_b) OR UNSIGNED(mux_rd_dat_b) /= UNSIGNED(ofs_rd_dat_b) THEN
+          REPORT "DUT : read data differs between two implementations" SEVERITY FAILURE;
+        END IF;
+        IF mux_rd_val_b /= adr_rd_val_b OR mux_rd_val_b /= ofs_rd_val_b THEN
+          REPORT "DUT : read valid differs between two implementations" SEVERITY FAILURE;
+        END IF;
       END IF;
-      IF mux_rd_val_b /= adr_rd_val_b OR mux_rd_val_b /= ofs_rd_val_b THEN
-        REPORT "DUT : read valid differs between two implementations" SEVERITY FAILURE;
-      END IF;
-    END IF;
+    end if;
   END PROCESS;
-  
 END tb;
