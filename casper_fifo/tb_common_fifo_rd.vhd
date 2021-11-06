@@ -91,7 +91,7 @@ BEGIN
 	rd_req <= random(random'HIGH) WHEN g_random_control = TRUE ELSE '1';
 
 	-- Verify dut output incrementing data
-	proc_common_verify_data(c_read_rl, clk, verify_en, rd_req, rd_val, rd_dat, prev_rd_dat, data_test_msg, data_test_pass);
+	proc_common_verify_data(c_read_rl, clk, rst, verify_en, rd_req, rd_val, rd_dat, prev_rd_dat, data_test_msg, data_test_pass);
 
 	-- Verify dut output stream ready - valid relation, prev_rd_req is an auxiliary signal needed by the proc
 	proc_common_verify_valid(c_read_rl, clk, verify_en, rd_req, prev_rd_req, rd_val, valid_test_msg, valid_test_pass);
