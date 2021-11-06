@@ -33,26 +33,53 @@ jobs:
         run: |
           pip install -U pip --progress-bar off
           pip install vunit_hdl --progress-bar off
-
-      # Runs a set of commands using the runners shell
+      
+      # Adder
+      - name: Assess adder files changes
+        id: changed-files-adder
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_adder/*.vhd$
+      
       - name: Casper_adder Run.py
+        if: steps.changed-files-adder.outputs.any_changed == 'true'
         run: |
           python casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+          git add -f ./casper_adder/casper_adder_report.xml
+            
+      # Multiplier
+      - name: Assess multiplier files changes
+        id: changed-files-multiplier
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_multiplier/*.vhd$
       
       - name: Casper_multiplier Run.py
+        if: steps.changed-files-multiplier.outputs.any_changed == 'true'
         run: |
           python casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
-      
+          git add -f ./casper_multiplier/casper_multiplier_report.xml
+            
+      # FIFO
+      - name: Assess FIFO files changes
+        id: changed-files-fifo
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_fifo/*.vhd$
+        
       - name: Casper_fifo Run.py
+        if: steps.changed-files-fifo.outputs.any_changed == 'true'
         run: |
           python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+          git add -f ./casper_fifo/casper_fifo_report.xml
       
       - name: Commit report
         run: |
-          git add -f ./casper_adder/casper_adder_report.xml
-          git add -f ./casper_multiplier/casper_multiplier_report.xml
-          git add -f ./casper_fifo/casper_fifo_report.xml
           git config --global user.name 'TalonMyburgh Action'
           git config --global user.email 'talonmyburgh@users.noreply.github.com'
-          git commit -am "VUnit Test Reports"
+          timestamp=$(date -u)
+          git commit -am "VUnit Test Reports $(timestamp)" || exit 0
           git push
