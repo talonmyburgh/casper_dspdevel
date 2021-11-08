@@ -77,7 +77,22 @@ jobs:
         run: |
           python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
           git add -f ./casper_fifo/casper_fifo_report.xml
+            
+      # RAM
+      - name: Assess RAM files changes
+        id: changed-files-ram
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_ram/*.vhd$
+        
+      - name: Casper_ram Run.py
+        if: steps.changed-files-ram.outputs.any_changed == 'true'
+        run: |
+          python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+          git add -f ./casper_ram/casper_ram_report.xml
       
+      # Report back
       - name: Commit report
         run: |
           git config --global user.name 'TalonMyburgh Action'
