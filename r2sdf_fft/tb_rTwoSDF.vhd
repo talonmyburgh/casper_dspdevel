@@ -101,14 +101,14 @@ architecture tb of tb_rTwoSDF is
   constant c_repeat     : natural := 2;  -- >= 2 to have sufficent frames for c_outputFile evaluation by testFFT_output.m
 
   -- input from uniform noise file created automatically by MATLAB testFFT_input.m
-  constant c_noiseInputFile    : string := "data/test/in/uniNoise_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w) &"_in.txt";
-  constant c_noiseGoldenFile   : string := "data/test/out/uniNoise_p" & natural'image(g_nof_points)& "_in"& natural'image(g_in_dat_w) &"_out"&natural'image(g_out_dat_w) &"_out.txt";
-  constant c_noiseOutputFile   : string := "data/test/out/uniNoise_out.txt";
+  constant c_noiseInputFile    : string := "../../../../../data/test/in/uniNoise_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w) &"_in.txt";
+  constant c_noiseGoldenFile   : string := "../../../../../data/test/out/uniNoise_p" & natural'image(g_nof_points)& "_in"& natural'image(g_in_dat_w) &"_out"&natural'image(g_out_dat_w) &"_out.txt";
+  constant c_noiseOutputFile   : string := "../../../../../data/test/out/uniNoise_out.txt";
 
   -- input from manually created file
-  constant c_impulseInputFile  : string := "data/test/in/impulse_p"   & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_in.txt";
-  constant c_impulseGoldenFile : string := "data/test/out/impulse_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_out.txt";
-  constant c_impulseOutputFile : string := "data/test/out/impulse_out.txt";
+  constant c_impulseInputFile  : string := "../../../../../data/test/in/impulse_p"   & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_in.txt";
+  constant c_impulseGoldenFile : string := "../../../../../data/test/out/impulse_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_out.txt";
+  constant c_impulseOutputFile : string := "../../../../../data/test/out/impulse_out.txt";
 
   -- determine active stimuli and result files
   constant c_inputFile  : string := sel_a_b(g_use_uniNoise_file, c_noiseInputFile,  c_impulseInputFile);
@@ -262,9 +262,11 @@ begin
     in_re     => in_re,
     in_im     => in_im,
     in_val    => in_val,
+    shiftreg  => (0=>'0', 1=>'0', others=>'1'),
     out_re    => out_re,
     out_im    => out_im,
-    out_val   => out_val
+    out_val   => out_val,
+    ovflw     => open
   );   
 
   -- Read golden file with the expected DUT output

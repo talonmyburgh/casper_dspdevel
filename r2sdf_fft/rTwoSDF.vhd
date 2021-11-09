@@ -90,10 +90,10 @@ entity rTwoSDF is
 		in_re   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Real input (data width = g_in_dat_w)
 		in_im   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Imag input (data width = g_in_dat_w)
 		in_val  	: in  std_logic := '1'; 							--! Input select for delay component (i.e. accept input to delay)
-		shiftreg	: in  std_logic_vector(c_nof_stages - 1 downto 0); 	--! Shift register for specifying scaling at each of the r2SDFStages.
+		shiftreg	: in  std_logic_vector(ceil_log2(g_nof_points) - 1 downto 0); 	--! Shift register for specifying scaling at each of the r2SDFStages.
 		out_re  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output real value (data width = g_out_dat_w)
 		out_im  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output imag value (data width = g_out_dat_w)
-		ovflw		: out std_logic_vector(c_nof_stages - 1 downto 0);  --! Overflow register for specifying at which stage overflow may have occured.
+		ovflw		: out std_logic_vector(ceil_log2(g_nof_points) - 1 downto 0);  --! Overflow register for specifying at which stage overflow may have occured.
 		out_val 	: out std_logic         							--!Output valid signal (valid when high)
 	);
 end entity rTwoSDF;
@@ -102,6 +102,7 @@ architecture str of rTwoSDF is
 
 	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
+	constant c_nof_stages   : natural := ceil_log2(g_nof_points);
 
 	
 	constant c_pipeline_remove_lsb : natural := 0;
