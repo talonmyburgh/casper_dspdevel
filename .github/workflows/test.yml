@@ -91,6 +91,20 @@ jobs:
         run: |
           python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
           git add -f ./casper_ram/casper_ram_report.xml
+
+      # RTWOSDF FFT
+      - name: Assess r2SDF_FFT files changes
+        id: changed-files-r2sdf_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            r2sdf_fft/*.vhd$
+        
+      - name: rTwoSDF_FFt Run.py
+        if: steps.changed-files-ram.outputs.any_changed == 'true'
+        run: |
+          python r2sdf_fft/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+          git add -f ./r2sdf_fft/r2sdf_fft_report.xml
       
       # Report back
       - name: Commit report
