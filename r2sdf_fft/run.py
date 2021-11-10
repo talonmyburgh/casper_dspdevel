@@ -7,7 +7,7 @@ script_dir = dirname(__file__)
 # Create library 'lib' 
 file_loc_prefix = "./"
 
-#XPM Library compile
+# XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
 xpm_source_file_base = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd"))
@@ -16,57 +16,57 @@ xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm
 xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
 xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
 
-#Altera_mf library
+# Altera_mf library
 lib_altera_mf = vu.add_library("altera_mf")
 lib_altera_mf.add_source_file(join(script_dir, "../intel/altera_mf/altera_mf_components.vhd"))
 altera_mf_source_file = lib_altera_mf.add_source_file(join(script_dir, "../intel/altera_mf/altera_mf.vhd"))
 
-#XPM Multiplier library
+# XPM Multiplier library
 ip_xpm_mult_lib = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
 ip_cmult_3dsp = ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd")
 ip_cmult_4dsp = ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd")
 
-#STRATIXIV Multiplier library
+# STRATIXIV Multiplier library
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
 ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
 
-#XPM RAM library
+# XPM RAM library
 ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
 ip_xpm_file_cr_cw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd"))
 ip_xpm_file_cr_cw.add_dependency_on(xpm_source_file_sdpram)
 ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd"))
 ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 
-#STRATIXIV RAM Library
+# STRATIXIV RAM Library
 ip_stratixiv_ram_lib = vu.add_library("ip_stratixiv_ram_lib")
 ip_stratix_file_cr_cw = ip_stratixiv_ram_lib.add_source_file(join(script_dir, "../ip_stratixiv/ram/ip_stratixiv_ram_cr_cw.vhd"))
 ip_stratix_file_crw_crw = ip_stratixiv_ram_lib.add_source_file(join(script_dir, "../ip_stratixiv/ram/ip_stratixiv_ram_crw_crw.vhd"))
 ip_stratix_file_cr_cw.add_dependency_on(altera_mf_source_file)
 ip_stratix_file_crw_crw.add_dependency_on(altera_mf_source_file)
 
-#COMMON COMPONENTS Library 
+# COMMON COMPONENTS Library 
 common_components_lib = vu.add_library("common_components_lib")
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_bit_delay.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_delay.vhd"))
 
-#COMMON PACKAGE Library
+# COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_lfsr_sequences_pkg.vhd"))
 
-#TECHNOLOGY Library
+# TECHNOLOGY Library
 technology_lib = vu.add_library("technology_lib")
 technology_lib.add_source_files(script_dir + "/../technology/technology_select_pkg.vhd")
 
-#COMMON COUNTER Library
+# COMMON COUNTER Library
 casper_counter_lib = vu.add_library("casper_counter_lib")
 casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_counter.vhd"))
 
-#CASPER MUlTIPLIER Library
+# CASPER MUlTIPLIER Library
 casper_multiplier_lib = vu.add_library("casper_multiplier_lib")
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_mult_component.vhd"))
 tech_complex_mult = casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_complex_mult.vhd"))
@@ -74,14 +74,14 @@ casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/com
 tech_complex_mult.add_dependency_on(ip_cmult_3dsp)
 tech_complex_mult.add_dependency_on(ip_cmult_4dsp)
 
-#CASPER REQUANTIZE Library
+# CASPER REQUANTIZE Library
 casper_requantize_lib = vu.add_library("casper_requantize_lib")
 casper_requantize_lib.add_source_file(join(script_dir, "../casper_requantize/common_round.vhd"))
 casper_requantize_lib.add_source_file(join(script_dir, "../casper_requantize/common_resize.vhd"))
 casper_requantize_lib.add_source_file(join(script_dir, "../casper_requantize/common_requantize.vhd"))
 casper_requantize_lib.add_source_file(join(script_dir, "../casper_requantize/r_shift_requantize.vhd"))
 
-#CASPER RAM Library
+# CASPER RAM Library
 casper_ram_lib = vu.add_library("casper_ram_lib")
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_pkg.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_component_pkg.vhd"))
@@ -94,7 +94,7 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_rw_rw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_crw_crw.vhd"))
 
-#rTwoSDF Library
+# RTWOSDF Library
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBFStage.vhd"))
