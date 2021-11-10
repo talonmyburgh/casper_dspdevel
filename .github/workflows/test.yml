@@ -42,7 +42,8 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_adder/*.vhd$
+            casper_adder/.*\.vhd$
+            casper_adder/run.py
       
       - name: Casper_adder Run.py
         if: steps.changed-files-adder.outputs.any_changed == 'true'
@@ -56,7 +57,8 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_multiplier/*.vhd$
+            casper_multiplier/.*\.vhd$
+            casper_multiplier/run.py
       
       - name: Casper_multiplier Run.py
         if: steps.changed-files-multiplier.outputs.any_changed == 'true'
@@ -70,7 +72,8 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_fifo/*.vhd$
+            casper_fifo/.*\.vhd$
+            casper_fifo/run.py
         
       - name: Casper_fifo Run.py
         if: steps.changed-files-fifo.outputs.any_changed == 'true'
@@ -84,7 +87,8 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_ram/*.vhd$
+            casper_ram/.*\.vhd$
+            casper_ram/run.py
         
       - name: Casper_ram Run.py
         if: steps.changed-files-ram.outputs.any_changed == 'true'
@@ -98,12 +102,13 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            r2sdf_fft/*.vhd$
+            r2sdf_fft/.*\.vhd$
+            r2sdf_fft/run.py
         
       - name: rTwoSDF_FFt Run.py
-        if: steps.changed-files-ram.outputs.any_changed == 'true'
+        if: steps.changed-files-r2sdf_fft.outputs.any_changed == 'true'
         run: |
-          python r2sdf_fft/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+          python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
       
       # Report back
