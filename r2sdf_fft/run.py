@@ -23,12 +23,12 @@ altera_mf_source_file = lib_altera_mf.add_source_file(join(script_dir, "../intel
 
 # XPM Multiplier library
 ip_xpm_mult_lib = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
-ip_cmult_3dsp = ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd")
-ip_cmult_4dsp = ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd")
+ip_cmult_3dsp = ip_xpm_mult_lib.add_source_files(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd"))
+ip_cmult_4dsp = ip_xpm_mult_lib.add_source_files(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd"))
 
 # STRATIXIV Multiplier library
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
-ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
+ip_stratixiv_mult_lib.add_source_files(join(script_dir, "../ip_stratixiv/mult/*rtl.vhd"))
 
 # XPM RAM library
 ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
@@ -60,7 +60,7 @@ common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_lfsr_sequ
 
 # TECHNOLOGY Library
 technology_lib = vu.add_library("technology_lib")
-technology_lib.add_source_files(script_dir + "/../technology/technology_select_pkg.vhd")
+technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg.vhd"))
 
 # COMMON COUNTER Library
 casper_counter_lib = vu.add_library("casper_counter_lib")
@@ -96,18 +96,18 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 
 # RTWOSDF Library
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBFStage.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoOrder.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/twiddlesPkg.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDFPkg.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoWeights.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoWMul.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDFStage.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDF.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/tb_rTwoSDF.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/tb_rTwoOrder.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/tb_tb_vu_rTwoSDF.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBF.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBFStage.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoOrder.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"twiddlesPkg.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDFPkg.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoWeights.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoWMul.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDFStage.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDF.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoSDF.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoOrder.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
