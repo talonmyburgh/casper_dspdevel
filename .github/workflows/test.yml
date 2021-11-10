@@ -16,14 +16,12 @@ jobs:
   # This workflow contains a single job called "testbenches"
   testbenches:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latestb
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -39,6 +37,9 @@ jobs:
       # Adder
       - name: Assess adder files changes
         id: changed-files-adder
+        uses: actions/checkout@v2  
+        with:
+          fetch-depth: 0
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
@@ -54,6 +55,9 @@ jobs:
       # Multiplier
       - name: Assess multiplier files changes
         id: changed-files-multiplier
+        uses: actions/checkout@v2  
+        with:
+          fetch-depth: 0
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
@@ -69,6 +73,9 @@ jobs:
       # FIFO
       - name: Assess FIFO files changes
         id: changed-files-fifo
+        uses: actions/checkout@v2  
+        with:
+          fetch-depth: 0
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
@@ -84,6 +91,9 @@ jobs:
       # RAM
       - name: Assess RAM files changes
         id: changed-files-ram
+        uses: actions/checkout@v2  
+        with:
+          fetch-depth: 0
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
@@ -99,6 +109,9 @@ jobs:
       # RTWOSDF FFT
       - name: Assess r2SDF_FFT files changes
         id: changed-files-r2sdf_fft
+        uses: actions/checkout@v2  
+        with:
+          fetch-depth: 0
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
