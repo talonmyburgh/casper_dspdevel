@@ -46,6 +46,13 @@ ENTITY tb_common_multiplexer IS
     g_random_in_val      : BOOLEAN := FALSE;
     g_test_nof_cycles    : NATURAL := 500
   );
+	PORT(
+		o_rst		   : OUT STD_LOGIC;
+		o_clk		   : OUT STD_LOGIC;
+		o_tb_end	 : OUT STD_LOGIC;
+		o_test_msg : OUT STRING(1 to 120);
+		o_test_pass: OUT BOOLEAN
+	);
 END tb_common_multiplexer;
 
 ARCHITECTURE tb OF tb_common_multiplexer IS
@@ -77,20 +84,28 @@ ARCHITECTURE tb OF tb_common_multiplexer IS
   SIGNAL in_sel             : STD_LOGIC_VECTOR(c_sel_w-1 DOWNTO 0) := (OTHERS => '0');
   
   -- Demux-Mux interface
-  SIGNAL demux_dat_vec      : STD_LOGIC_VECTOR(g_nof_streams*g_dat_w-1 DOWNTO 0);
-  SIGNAL demux_val_vec      : STD_LOGIC_VECTOR(g_nof_streams        -1 DOWNTO 0);
+  SIGNAL demux_dat_vec      : STD_LOGIC_VECTOR(g_nof_streams*g_dat_w-1 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL demux_val_vec      : STD_LOGIC_VECTOR(g_nof_streams        -1 DOWNTO 0) := (OTHERS => '0');
   SIGNAL demux_val          : STD_LOGIC;
-  SIGNAL demux_sel          : STD_LOGIC_VECTOR(c_sel_w-1 DOWNTO 0);
+  SIGNAL demux_sel          : STD_LOGIC_VECTOR(c_sel_w-1 DOWNTO 0) := (OTHERS => '0');
   
   -- DUT output
-  SIGNAL out_dat            : STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
+  SIGNAL out_dat            : STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0) := (OTHERS => '0');
   SIGNAL out_val            : STD_LOGIC;
   
   -- Verify
-  SIGNAL prev_out_dat       : STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
-  SIGNAL pipe_dat_vec       : STD_LOGIC_VECTOR(0 TO (c_pipeline_total+1)*g_dat_w-1);
-  SIGNAL pipe_val_vec       : STD_LOGIC_VECTOR(0 TO (c_pipeline_total+1)*1      -1);
+  SIGNAL prev_out_dat       : STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0) := (OTHERS => '0');
+  SIGNAL pipe_dat_vec       : STD_LOGIC_VECTOR(0 TO (c_pipeline_total+1)*g_dat_w-1) := (OTHERS => '0');
+  SIGNAL pipe_val_vec       : STD_LOGIC_VECTOR(0 TO (c_pipeline_total+1)*1      -1) := (OTHERS => '0');
   
+  -- Test out signals
+  SIGNAL dat_test_pass : BOOLEAN := TRUE;
+  SIGNAL dat_latency_test_pass : BOOLEAN := TRUE;
+  SIGNAL val_latency_test_pass : BOOLEAN := TRUE;
+
+  SIGNAL dat_test_msg : STRING(o_test_msg'range) := (OTHERS => '.');
+  SIGNAL dat_latency_test_msg : STRING(o_test_msg'range) := (OTHERS => '.');
+  SIGNAL val_latency_test_msg : STRING(o_test_msg'range) := (OTHERS => '.');
 BEGIN
 
   ------------------------------------------------------------------------------
@@ -101,6 +116,12 @@ BEGIN
   clk <= NOT clk OR tb_end AFTER clk_period/2;
   rst <= '1', '0' AFTER 3*clk_period;
   tb_end <= '0', '1' AFTER g_test_nof_cycles*clk_period;
+
+  o_clk <= clk;
+  o_rst <= rst;
+  o_tb_end <= tb_end;
+  o_test_pass <= dat_test_pass and dat_latency_test_pass and val_latency_test_pass;
+  o_test_msg <= sel_a_b(not dat_test_pass, dat_test_msg, sel_a_b(not dat_latency_test_pass, dat_latency_test_msg, val_latency_test_msg));
   
   -- . data
   random_0 <= func_common_random(random_0) WHEN rising_edge(clk);
@@ -188,8 +209,8 @@ BEGIN
   -- Verification
   ------------------------------------------------------------------------------
   
-  proc_common_verify_data(c_rl, clk, verify_en, ready, out_val, out_dat, prev_out_dat);                   -- verify out_dat assuming incrementing data
-  proc_common_verify_latency("data",  c_pipeline_total, clk, verify_en, in_dat, pipe_dat_vec, out_dat);   -- verify out_dat using delayed input
-  proc_common_verify_latency("valid", c_pipeline_total, clk, verify_en, in_val, pipe_val_vec, out_val);   -- verify out_val using delayed input
+  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, out_val, out_dat, prev_out_dat, dat_test_msg, dat_test_pass);              -- verify out_dat assuming incrementing data
+  proc_common_verify_latency("data",  c_pipeline_total, clk, verify_en, in_dat, pipe_dat_vec, out_dat, dat_latency_test_msg, dat_latency_test_pass);   -- verify out_dat using delayed input
+  proc_common_verify_latency("valid", c_pipeline_total, clk, verify_en, in_val, pipe_val_vec, out_val, val_latency_test_msg, val_latency_test_pass);   -- verify out_val using delayed input
   
 END tb;

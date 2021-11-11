@@ -239,7 +239,9 @@ PACKAGE tb_common_pkg IS
 	                                     SIGNAL verify_en     : IN STD_LOGIC;
 	                                     SIGNAL in_ctrl       : IN STD_LOGIC;
 	                                     SIGNAL pipe_ctrl_vec : INOUT STD_LOGIC_VECTOR; -- range [0:c_latency]
-	                                     SIGNAL out_ctrl      : IN STD_LOGIC);
+	                                     SIGNAL out_ctrl      : IN STD_LOGIC;
+																			 SIGNAL test_msg	 : OUT STRING;
+																			 SIGNAL test_pass	 : OUT BOOLEAN);
 
 	-- Verify the DUT input to output latency for SLV data signals
 	PROCEDURE proc_common_verify_latency(CONSTANT c_str       : IN STRING; -- e.g. "data"
@@ -248,7 +250,9 @@ PACKAGE tb_common_pkg IS
 	                                     SIGNAL verify_en     : IN STD_LOGIC;
 	                                     SIGNAL in_data       : IN STD_LOGIC_VECTOR;
 	                                     SIGNAL pipe_data_vec : INOUT STD_LOGIC_VECTOR; -- range [0:(1 + c_latency)*c_data_w-1]
-	                                     SIGNAL out_data      : IN STD_LOGIC_VECTOR);
+	                                     SIGNAL out_data      : IN STD_LOGIC_VECTOR;
+																			 SIGNAL test_msg	 : OUT STRING;
+																			 SIGNAL test_pass	 : OUT BOOLEAN);
 
 	-- Verify the expected value, e.g. to check that a test has ran at all
 	PROCEDURE proc_common_verify_value(CONSTANT mode : IN NATURAL;
@@ -890,17 +894,24 @@ PACKAGE BODY tb_common_pkg IS
 	                                     SIGNAL verify_en     : IN STD_LOGIC;
 	                                     SIGNAL in_ctrl       : IN STD_LOGIC;
 	                                     SIGNAL pipe_ctrl_vec : INOUT STD_LOGIC_VECTOR; -- range [0:c_latency]
-	                                     SIGNAL out_ctrl      : IN STD_LOGIC) IS
+	                                     SIGNAL out_ctrl      : IN STD_LOGIC;
+																			 SIGNAL test_msg	 : OUT STRING;
+																			 SIGNAL test_pass	 : OUT BOOLEAN) IS
 	BEGIN
+		test_pass <= TRUE;
 		IF rising_edge(clk) THEN
 			pipe_ctrl_vec <= in_ctrl & pipe_ctrl_vec(0 TO c_latency - 1); -- note: pipe_ctrl_vec(c_latency) is a dummy place holder to avoid [0:-1] range
 			IF verify_en = '1' THEN
 				IF c_latency = 0 THEN
 					IF in_ctrl /= out_ctrl THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong zero latency between input " & c_str & " and output " & c_str, test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong zero latency between input " & c_str & " and output " & c_str SEVERITY ERROR;
 					END IF;
 				ELSE
 					IF pipe_ctrl_vec(c_latency - 1) /= out_ctrl THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong latency between input " & c_str & " and output " & c_str, test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong latency between input " & c_str & " and output " & c_str SEVERITY ERROR;
 					END IF;
 				END IF;
@@ -915,19 +926,26 @@ PACKAGE BODY tb_common_pkg IS
 	                                     SIGNAL verify_en     : IN STD_LOGIC;
 	                                     SIGNAL in_data       : IN STD_LOGIC_VECTOR;
 	                                     SIGNAL pipe_data_vec : INOUT STD_LOGIC_VECTOR; -- range [0:(1 + c_latency)*c_data_w-1]
-	                                     SIGNAL out_data      : IN STD_LOGIC_VECTOR) IS
+	                                     SIGNAL out_data      : IN STD_LOGIC_VECTOR;
+																			 SIGNAL test_msg	 : OUT STRING;
+																			 SIGNAL test_pass	 : OUT BOOLEAN) IS
 		CONSTANT c_data_w     : NATURAL := in_data'LENGTH;
 		CONSTANT c_data_vec_w : NATURAL := pipe_data_vec'LENGTH; -- = (1 + c_latency) * c_data_w
 	BEGIN
+		test_pass <= TRUE;
 		IF rising_edge(clk) THEN
 			pipe_data_vec <= in_data & pipe_data_vec(0 TO c_data_vec_w - c_data_w - 1); -- note: pipe_data_vec(c_latency) is a dummy place holder to avoid [0:-1] range
 			IF verify_en = '1' THEN
 				IF c_latency = 0 THEN
 					IF UNSIGNED(in_data) /= UNSIGNED(out_data) THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong zero latency between input " & c_str & " and output " & c_str, test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong zero latency between input " & c_str & " and output " & c_str SEVERITY ERROR;
 					END IF;
 				ELSE
 					IF UNSIGNED(pipe_data_vec(c_data_vec_w - c_data_w - c_data_w TO c_data_vec_w - c_data_w - 1)) /= UNSIGNED(out_data) THEN
+						test_pass <= FALSE;
+						test_msg <= pad("COMMON : Wrong latency between input " & c_str & " and output " & c_str, test_msg'length, '.')(test_msg'range);
 						REPORT "COMMON : Wrong latency between input " & c_str & " and output " & c_str SEVERITY ERROR;
 					END IF;
 				END IF;
