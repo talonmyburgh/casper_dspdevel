@@ -83,21 +83,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: mcode
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:mcode
+          cmd: casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+      - name: Stage Casper Adder Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      # Adder
-      - name: Casper_adder Run.py
-        run: |
-          python casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
           git add -f ./casper_adder/casper_adder_report.xml
 
   multiplexer:
@@ -110,20 +101,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: mcode
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:mcode
+          cmd: casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+      - name: Stage Casper Multiplexer Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      - name: Casper_multiplexer Run.py
-        run: |
-          python casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
           git add -f ./casper_multiplexer/casper_multiplexer_report.xml
 
   multiplier:
@@ -136,20 +119,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: llvm # seems like mcode just hangs on tb_common_complex_mult in CI
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:llvm
+          cmd: casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+      - name: Stage Casper Multiplier Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      - name: Casper_multiplier Run.py
-        run: |
-          python casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
           git add -f ./casper_multiplier/casper_multiplier_report.xml
 
   fifo:
@@ -162,21 +137,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: mcode
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:mcode
+          cmd: casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+      - name: Stage Casper Fifo Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      # FIFO  
-      - name: Casper_fifo Run.py
-        run: |
-          python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
           git add -f ./casper_fifo/casper_fifo_report.xml
 
   ram:
@@ -192,21 +158,12 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: mcode
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:mcode
+          cmd: casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+      - name: Stage Casper Ram Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      # RAM  
-      - name: Casper_ram Run.py
-        run: |
-          python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
           git add -f ./casper_ram/casper_ram_report.xml
 
   rtwosdf_fft:
@@ -222,21 +179,12 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - uses: ghdl/setup-ghdl-ci@nightly
+      - uses: VUnit/vunit_action@master
         with:
-          backend: mcode
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install VUnit
+          image: ghdl/vunit:mcode
+          cmd: r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
+      - name: Stage rTwoSDF Report
         run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-      
-      # RTWOSDF FFT  
-      - name: rTwoSDF_FFT Run.py
-        run: |
-          python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
       
   report:
