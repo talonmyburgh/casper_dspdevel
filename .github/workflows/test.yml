@@ -79,23 +79,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - uses: ghdl/setup-ghdl-ci@nightly
-        with:
-          backend: mcode
 
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
           pip install vunit_hdl --progress-bar off
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
   
   adder:
     # The type of runner that the job will run on
@@ -106,9 +102,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
         with:
-          python-version: 3.8
+          backend: mcode
+      
       # Adder
       - name: Casper_adder Run.py
         if: needs.files_changed.outputs.adder == 'true'
@@ -125,6 +122,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
+        with:
+          backend: mcode
+      
       - name: Casper_multiplexer Run.py
         if: needs.files_changed.outputs.multiplexer == 'true'
         run: |
@@ -140,6 +141,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
+        with:
+          backend: mcode
+      
       - name: Casper_multiplier Run.py
         if: needs.files_changed.outputs.multiplier == 'true'
         run: |
@@ -155,6 +160,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
+        with:
+          backend: mcode
+      
       # FIFO  
       - name: Casper_fifo Run.py
         if: needs.files_changed.outputs.fifo == 'true'
@@ -171,6 +180,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
+        with:
+          backend: mcode
+      
       # RAM  
       - name: Casper_ram Run.py
         if: needs.files_changed.outputs.ram == 'true'
@@ -187,6 +200,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: ghdl/setup-ghdl-ci@nightly
+        with:
+          backend: mcode
+      
       # RTWOSDF FFT  
       - name: rTwoSDF_FFt Run.py
         if: needs.files_changed.outputs.r2sdf_fft == 'true'
