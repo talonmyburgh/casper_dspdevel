@@ -32,4 +32,5 @@ lib6 = vu.add_library("dp_components_lib",allow_duplicate = True)
 lib6.add_source_files(os.path.join(script_dir, "../casper_dp_components/dp_latency_adapter.vhd"))
 lib6.add_source_files(os.path.join(script_dir, "../casper_dp_components/dp_latency_increase.vhd"))
 
+vu.set_compile_option("ghdl.a_flags", ["-Wno-hide"])
 vu.main()
