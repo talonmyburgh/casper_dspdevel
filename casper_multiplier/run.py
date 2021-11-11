@@ -118,6 +118,6 @@ generate_tests(
 )
 
 # RUN
-vu.set_compile_option("ghdl.a_flags", ["-Wno-hide", "-frelaxed"])
+vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","--syn-binding"])
 vu.main()

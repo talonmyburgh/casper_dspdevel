@@ -1,5 +1,5 @@
 from vunit import VUnit
-from os.path import join, abspath, dirname,split
+from os.path import join, abspath, split
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
