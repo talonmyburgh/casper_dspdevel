@@ -129,6 +129,6 @@ TB_GENERATED.add_config(
     generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
 
 # Run vunit function
-vu.set_compile_option("ghdl.a_flags", ["-Wno-hide", "-frelaxed","-fsynopsys","-fexplicit"])
+vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
 vu.main()
