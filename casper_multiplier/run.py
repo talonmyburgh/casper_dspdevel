@@ -6,6 +6,7 @@ from os.path import dirname
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 
+# Function for mult range calculations
 def get_ranges(dat_w,margin):
     min_val = -(2**(dat_w-1))
     max_val = (-min_val)-1
@@ -19,6 +20,7 @@ def get_ranges(dat_w,margin):
         ab_value_ranges = [(min_val, max_val, min_val, max_val)]
     return ab_value_ranges
 
+# Function to vary tb configurations
 def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, conjugate_b=None, adder_pipeline=None):
     """
     Generate test by varying the generics of common_counter:
