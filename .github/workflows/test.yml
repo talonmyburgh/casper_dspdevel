@@ -88,7 +88,7 @@ jobs:
           backend: mcode
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
@@ -115,7 +115,7 @@ jobs:
           backend: llvm # seems like mcode just hangs on tb_common_complex_mult in CI
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
@@ -141,7 +141,7 @@ jobs:
           backend: mcode
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
@@ -167,7 +167,7 @@ jobs:
           backend: mcode
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
@@ -197,7 +197,7 @@ jobs:
           backend: mcode
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
@@ -227,7 +227,7 @@ jobs:
           backend: mcode
       - uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install VUnit
         run: |
           pip install -U pip --progress-bar off
