@@ -69,6 +69,7 @@ jobs:
   testbenches:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    needs: files_changed
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -88,35 +89,35 @@ jobs:
       
       # Adder
       - name: Casper_adder Run.py
-        if: jobs.files_changed.adder == 'true'
+        if: needs.files_changed.outputs.adder == 'true'
         run: |
           python casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
           git add -f ./casper_adder/casper_adder_report.xml
             
       # Multiplier
       - name: Casper_multiplier Run.py
-        if: jobs.files_changed.multiplier == 'true'
+        if: needs.files_changed.outputs.multiplier == 'true'
         run: |
           python casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
           git add -f ./casper_multiplier/casper_multiplier_report.xml
             
       # FIFO  
       - name: Casper_fifo Run.py
-        if: jobs.files_changed.fifo == 'true'
+        if: needs.files_changed.outputs.fifo == 'true'
         run: |
           python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
           git add -f ./casper_fifo/casper_fifo_report.xml
             
       # RAM  
       - name: Casper_ram Run.py
-        if: jobs.files_changed.ram == 'true'
+        if: needs.files_changed.outputs.ram == 'true'
         run: |
           python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
           git add -f ./casper_ram/casper_ram_report.xml
 
       # RTWOSDF FFT  
       - name: rTwoSDF_FFt Run.py
-        if: jobs.files_changed.r2sdf_fft == 'true'
+        if: needs.files_changed.outputs.r2sdf_fft == 'true'
         run: |
           python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
