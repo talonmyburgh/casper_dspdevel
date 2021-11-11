@@ -1,4 +1,4 @@
-library ieee, common_pkg_lib;
+library ieee, common_pkg_lib, vunit_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
@@ -6,6 +6,7 @@ use IEEE.std_logic_textio.all;
 use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
 use work.rTwoSDFPkg.all;
+context vunit_lib.vunit_context;
 
 entity tb_tb_vu_rTwoSDF is
     GENERIC(
@@ -36,14 +37,14 @@ BEGIN
         GENERIC MAP(
             g_use_uniNoise_file => g_use_uniNoise_file,        
             g_in_en => g_in_en,
-            g_use_reorder = g_use_reorder,
-            g_nof_points = g_nof_points,
-            g_in_dat_w = g_in_dat_w,
-            g_out_dat_w = g_out_dat_w,
-            g_guard_w = g_guard_w,
-            g_diff_margin = g_diff_margin,
-            g_file_loc_prefix = g_file_loc_prefix
-        );
+            g_use_reorder => g_use_reorder,
+            g_nof_points => g_nof_points,
+            g_in_dat_w => g_in_dat_w,
+            g_out_dat_w => g_out_dat_w,
+            g_guard_w => g_guard_w,
+            g_diff_margin => g_diff_margin,
+            g_file_loc_prefix => g_file_loc_prefix
+        )
 		PORT MAP(
 			o_rst => rst,
 			o_clk => clk,

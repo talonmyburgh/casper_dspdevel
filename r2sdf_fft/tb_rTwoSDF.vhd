@@ -87,11 +87,11 @@ entity tb_rTwoSDF is
     g_file_loc_prefix   : string   := "../../../../../"
   );
   port(
-    o_rst       : std_logic;
-    o_clk       : std_logic;
-    o_tb_end    : std_logic;
-    o_test_msg  : string(1 to 80);
-    o_test_pass : boolean
+    o_rst       : out std_logic;
+    o_clk       : out std_logic;
+    o_tb_end    : out std_logic;
+    o_test_msg  : out string(1 to 80);
+    o_test_pass : out boolean
   );
 end entity tb_rTwoSDF;
 
@@ -350,20 +350,20 @@ begin
     if rising_edge(clk) then
       if out_val='1' and gold_index <= gold_index_max then
         -- only write when out_val='1', because then the file is independent of cycles with invalid out_dat
-        v_test_pass := out_sync /= gold_sync;
-        if v_test_pass_sync then
+        v_test_pass_sync := out_sync = gold_sync;
+        if not v_test_pass_sync then
           o_test_msg <= pad("Output sync error",o_test_msg'length,'.');
           report "Output sync error"      severity failure;
         end if;
         v_test_pass_re := diff_re >= -g_diff_margin and diff_re <= g_diff_margin;
-        if v_test_pass_re then
-          o_test_msg <= pad("Output real data error, expected: " & integer'image(gold_re) & "but got: " & integer'image(sint_re),o_test_msg'length,'.');
-          report "Output real data error, expected: " & integer'image(gold_re) & "but got: " & integer'image(sint_re) severity failure;
+        if not v_test_pass_re then
+          o_test_msg <= pad("Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re),o_test_msg'length,'.');
+          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity failure;
         end if;
         v_test_pass_im := diff_im >= -g_diff_margin and diff_im <= g_diff_margin;
-        if v_test_pass_im then
-          o_test_msg <= pad("Output imag data error, expected: " & integer'image(gold_im) & "but got: " & integer'image(sint_im),o_test_msg'length,'.');
-          report "Output imag data error, expected: " & integer'image(gold_im) & "but got: " & integer'image(sint_im) severity failure;
+        if not v_test_pass_im then
+          o_test_msg <= pad("Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im),o_test_msg'length,'.');
+          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity failure;
         end if;
       end if;
     end if;
