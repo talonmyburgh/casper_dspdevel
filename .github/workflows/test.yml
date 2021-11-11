@@ -234,7 +234,7 @@ jobs:
           pip install vunit_hdl --progress-bar off
       
       # RTWOSDF FFT  
-      - name: rTwoSDF_FFt Run.py
+      - name: rTwoSDF_FFT Run.py
         run: |
           python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
