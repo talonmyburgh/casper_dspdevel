@@ -56,12 +56,12 @@ lib1.add_source_files(os.path.join(script_dir, "tb_tb_vu_common_multiplexer.vhd"
 TB_GENERATED = lib1.test_bench("tb_tb_vu_common_multiplexer")
 
 generate_tests(TB_GENERATED,
-pipeline_demux_in = [0,1],
-pipeline_demux_out = [0,2],
-nof_streams = [1,5],
-pipeline_mux_in = [0,3],
-pipeline_mux_out = [0,4],
-dat_w = [8],
+pipeline_demux_in = random.sample([0,1], 1),
+pipeline_demux_out = random.sample([0,1,2], 1),
+nof_streams = random.sample([1,4,5], 1),
+pipeline_mux_in = random.sample([0,1,3], 1),
+pipeline_mux_out = random.sample([0,1,4], 1),
+dat_w = [8] + random.sample(range(9, 19), 1),
 random_in_val = [True],
 test_nof_cycles = 500)
 
