@@ -46,6 +46,6 @@ ip_stratix_file_crw_crw.add_dependency_on(altera_mf_source_file)
 lib6 = vu.add_library("technology_lib",allow_duplicate = True)
 lib6.add_source_files(os.path.join(script_dir, "../technology/technology_select_pkg.vhd"))
 
-vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit"])
+vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit", "-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
 vu.main()

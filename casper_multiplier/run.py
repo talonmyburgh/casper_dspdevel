@@ -112,6 +112,6 @@ lib6 = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
 lib6.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
        
 # Run vunit function
-vu.set_compile_option("ghdl.a_flags", ["-frelaxed"])
+vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","--syn-binding"])
 vu.main()
