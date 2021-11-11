@@ -73,32 +73,6 @@ jobs:
             r2sdf_fft/.*\.vhd$
             r2sdf_fft/run.py
 
-  python_install:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install VUnit
-        run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
   adder:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -112,6 +86,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       # Adder
       - name: Casper_adder Run.py
@@ -132,6 +113,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       - name: Casper_multiplexer Run.py
         run: |
@@ -151,6 +139,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       - name: Casper_multiplier Run.py
         run: |
@@ -170,6 +165,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       # FIFO  
       - name: Casper_fifo Run.py
@@ -190,6 +192,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       # RAM  
       - name: Casper_ram Run.py
@@ -210,6 +219,13 @@ jobs:
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install VUnit
+        run: |
+          pip install -U pip --progress-bar off
+          pip install vunit_hdl --progress-bar off
       
       # RTWOSDF FFT  
       - name: rTwoSDF_FFt Run.py
