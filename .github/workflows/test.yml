@@ -12,11 +12,63 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  
+  files_changed:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      adder: ${{ steps.adder.outputs.any_changed }}
+      multiplier: ${{ steps.multiplier.outputs.any_changed }}
+      fifo: ${{ steps.fifo.outputs.any_changed }}
+      ram: ${{ steps.ram.outputs.any_changed }}
+      r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out only the latest commit to assess which files changed
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Assess adder files changes
+        id: adder
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_adder/.*\.vhd$
+            casper_adder/run.py
+      - name: Assess multiplier files changes
+        id: multiplier
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_multiplier/.*\.vhd$
+            casper_multiplier/run.py
+      - name: Assess FIFO files changes
+        id: fifo
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_fifo/.*\.vhd$
+            casper_fifo/run.py
+      - name: Assess RAM files changes
+        id: ram
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_ram/.*\.vhd$
+            casper_ram/run.py
+      - name: Assess r2SDF_FFT files changes
+        id: r2sdf_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            r2sdf_fft/.*\.vhd$
+            r2sdf_fft/run.py
 
   # This workflow contains a single job called "testbenches"
   testbenches:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latestb
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -35,91 +87,36 @@ jobs:
           pip install vunit_hdl --progress-bar off
       
       # Adder
-      - name: Assess adder files changes
-        id: changed-files-adder
-        uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
-            casper_adder/.*\.vhd$
-            casper_adder/run.py
-      
       - name: Casper_adder Run.py
-        if: steps.changed-files-adder.outputs.any_changed == 'true'
+        if: jobs.files_changed.adder == 'true'
         run: |
           python casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
           git add -f ./casper_adder/casper_adder_report.xml
             
       # Multiplier
-      - name: Assess multiplier files changes
-        id: changed-files-multiplier
-        uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
-            casper_multiplier/.*\.vhd$
-            casper_multiplier/run.py
-      
       - name: Casper_multiplier Run.py
-        if: steps.changed-files-multiplier.outputs.any_changed == 'true'
+        if: jobs.files_changed.multiplier == 'true'
         run: |
           python casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
           git add -f ./casper_multiplier/casper_multiplier_report.xml
             
-      # FIFO
-      - name: Assess FIFO files changes
-        id: changed-files-fifo
-        uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
-            casper_fifo/.*\.vhd$
-            casper_fifo/run.py
-        
+      # FIFO  
       - name: Casper_fifo Run.py
-        if: steps.changed-files-fifo.outputs.any_changed == 'true'
+        if: jobs.files_changed.fifo == 'true'
         run: |
           python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
           git add -f ./casper_fifo/casper_fifo_report.xml
             
-      # RAM
-      - name: Assess RAM files changes
-        id: changed-files-ram
-        uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
-            casper_ram/.*\.vhd$
-            casper_ram/run.py
-        
+      # RAM  
       - name: Casper_ram Run.py
-        if: steps.changed-files-ram.outputs.any_changed == 'true'
+        if: jobs.files_changed.ram == 'true'
         run: |
           python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
           git add -f ./casper_ram/casper_ram_report.xml
 
-      # RTWOSDF FFT
-      - name: Assess r2SDF_FFT files changes
-        id: changed-files-r2sdf_fft
-        uses: actions/checkout@v2  
-        with:
-          fetch-depth: 0
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
-            r2sdf_fft/.*\.vhd$
-            r2sdf_fft/run.py
-        
+      # RTWOSDF FFT  
       - name: rTwoSDF_FFt Run.py
-        if: steps.changed-files-r2sdf_fft.outputs.any_changed == 'true'
+        if: jobs.files_changed.r2sdf_fft == 'true'
         run: |
           python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
