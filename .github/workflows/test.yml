@@ -86,7 +86,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:mcode
-          cmd: casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+          cmd: casper_adder/run.py
       - name: Stage Casper Adder Report
         run: |
           git add -f ./casper_adder/casper_adder_report.xml
@@ -104,7 +104,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:mcode
-          cmd: casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+          cmd: casper_multiplexer/run.py
       - name: Stage Casper Multiplexer Report
         run: |
           git add -f ./casper_multiplexer/casper_multiplexer_report.xml
@@ -122,7 +122,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+          cmd: casper_multiplier/run.py
       - name: Stage Casper Multiplier Report
         run: |
           git add -f ./casper_multiplier/casper_multiplier_report.xml
@@ -140,7 +140,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:mcode
-          cmd: casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+          cmd: casper_fifo/run.py
       - name: Stage Casper Fifo Report
         run: |
           git add -f ./casper_fifo/casper_fifo_report.xml
@@ -161,7 +161,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:mcode
-          cmd: casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+          cmd: casper_ram/run.py
       - name: Stage Casper Ram Report
         run: |
           git add -f ./casper_ram/casper_ram_report.xml
@@ -182,7 +182,7 @@ jobs:
       - uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:mcode
-          cmd: r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
+          cmd: r2sdf_fft/run.py
       - name: Stage rTwoSDF Report
         run: |
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
