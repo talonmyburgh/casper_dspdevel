@@ -112,7 +112,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
-          backend: llvm # seems like mcode just hangs on tb_common_complex_mult in CI
+          backend: mcode
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -138,7 +138,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
-          backend: mcode
+          backend: llvm # seems like mcode just hangs on tb_common_complex_mult in CI
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
