@@ -187,8 +187,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.PAT_TOKEN }}
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
@@ -214,8 +217,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.PAT_TOKEN }}
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
           backend: mcode
