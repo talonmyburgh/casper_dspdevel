@@ -82,7 +82,7 @@ jobs:
           python-version: 3.8
       - uses: ghdl/setup-ghdl-ci@nightly
         with:
-          backend: llvm
+          backend: mcode
 
       - name: Install VUnit
         run: |
