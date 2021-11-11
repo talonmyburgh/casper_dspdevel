@@ -56,7 +56,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
 
 vu = VUnit.from_argv()
 
-script_dir, _ = os.path.split(os.path.realpath(__file__))
+script_dir = os.path.dirname(__file__)
 
 lib1 = vu.add_library("casper_adder_lib",allow_duplicate=True)
 lib1.add_source_files(os.path.join(script_dir, "*.vhd"))
