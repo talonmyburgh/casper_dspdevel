@@ -1,11 +1,12 @@
 from vunit import VUnit
-from os.path import dirname, join
+from os.path import join, abspath, dirname,split
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
-script_dir = dirname(__file__)
-# Create library 'lib' 
-file_loc_prefix = "./"
+# script_dir = dirname(__file__)
+script_dir,_ = split(abspath(__file__))
+print(script_dir)
+
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -23,12 +24,14 @@ altera_mf_source_file = lib_altera_mf.add_source_file(join(script_dir, "../intel
 
 # XPM Multiplier library
 ip_xpm_mult_lib = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
-ip_cmult_3dsp = ip_xpm_mult_lib.add_source_files(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd"))
-ip_cmult_4dsp = ip_xpm_mult_lib.add_source_files(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd"))
+ip_cmult_3dsp = ip_xpm_mult_lib.add_source_file(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd"))
+ip_cmult_4dsp = ip_xpm_mult_lib.add_source_file(join(script_dir, "../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd"))
 
 # STRATIXIV Multiplier library
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
-ip_stratixiv_mult_lib.add_source_files(join(script_dir, "../ip_stratixiv/mult/*rtl.vhd"))
+ip_stratixiv_complex_mult_rtl = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult_rtl.vhd"))
+ip_stratixiv_complex_mult = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult.vhd"))
+ip_stratixiv_complex_mult.add_dependency_on(altera_mf_source_file)
 
 # XPM RAM library
 ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
@@ -73,6 +76,8 @@ tech_complex_mult = casper_multiplier_lib.add_source_file(join(script_dir, "../c
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/common_complex_mult.vhd"))
 tech_complex_mult.add_dependency_on(ip_cmult_3dsp)
 tech_complex_mult.add_dependency_on(ip_cmult_4dsp)
+tech_complex_mult.add_dependency_on(ip_stratixiv_complex_mult)
+tech_complex_mult.add_dependency_on(ip_stratixiv_complex_mult_rtl)
 
 # CASPER REQUANTIZE Library
 casper_requantize_lib = vu.add_library("casper_requantize_lib")
@@ -112,16 +117,16 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
     name = "u_act_impulse_16p_16i_16o",
-    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = file_loc_prefix))
+    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_act_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = file_loc_prefix))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = file_loc_prefix))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o_flipped",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = file_loc_prefix))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit"])
