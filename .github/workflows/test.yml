@@ -92,11 +92,18 @@ jobs:
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
-  
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
   adder:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.adder == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -108,7 +115,6 @@ jobs:
       
       # Adder
       - name: Casper_adder Run.py
-        if: needs.files_changed.outputs.adder == 'true'
         run: |
           python casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
           git add -f ./casper_adder/casper_adder_report.xml
@@ -117,6 +123,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.multiplexer == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -127,7 +134,6 @@ jobs:
           backend: mcode
       
       - name: Casper_multiplexer Run.py
-        if: needs.files_changed.outputs.multiplexer == 'true'
         run: |
           python casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
           git add -f ./casper_multiplexer/casper_multiplexer_report.xml
@@ -136,6 +142,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.multiplier == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -146,7 +153,6 @@ jobs:
           backend: mcode
       
       - name: Casper_multiplier Run.py
-        if: needs.files_changed.outputs.multiplier == 'true'
         run: |
           python casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
           git add -f ./casper_multiplier/casper_multiplier_report.xml
@@ -155,6 +161,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.fifo == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -166,7 +173,6 @@ jobs:
       
       # FIFO  
       - name: Casper_fifo Run.py
-        if: needs.files_changed.outputs.fifo == 'true'
         run: |
           python casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
           git add -f ./casper_fifo/casper_fifo_report.xml
@@ -175,6 +181,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.ram == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -186,7 +193,6 @@ jobs:
       
       # RAM  
       - name: Casper_ram Run.py
-        if: needs.files_changed.outputs.ram == 'true'
         run: |
           python casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
           git add -f ./casper_ram/casper_ram_report.xml
@@ -195,6 +201,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed, python_install]
+    if: needs.files_changed.outputs.r2sdf_fft == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -206,7 +213,6 @@ jobs:
       
       # RTWOSDF FFT  
       - name: rTwoSDF_FFt Run.py
-        if: needs.files_changed.outputs.r2sdf_fft == 'true'
         run: |
           python r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
           git add -f ./r2sdf_fft/r2sdf_fft_report.xml
