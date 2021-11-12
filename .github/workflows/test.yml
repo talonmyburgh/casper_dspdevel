@@ -19,6 +19,7 @@ jobs:
     # Map a step output to a job output
     outputs:
       adder: ${{ steps.adder.outputs.any_changed }}
+      counter: ${{ steps.counter.outputs.any_changed }}
       multiplexer: ${{ steps.multiplexer.outputs.any_changed }}
       multiplier: ${{ steps.multiplier.outputs.any_changed }}
       fifo: ${{ steps.fifo.outputs.any_changed }}
@@ -37,6 +38,13 @@ jobs:
           files: |
             casper_adder/.*\.vhd$
             casper_adder/run.py
+      - name: Assess counter files changes
+        id: counter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_counter/.*\.vhd$
+            casper_counter/run.py
       - name: Assess multiplexer files changes
         id: multiplexer
         uses: tj-actions/changed-files@v1.2.0
@@ -91,6 +99,26 @@ jobs:
         with:
           name: casper_adder_report
           path: ./casper_adder/casper_adder_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  counter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.counter == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:mcode
+          cmd: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_counter_report
+          path: ./casper_counter/casper_counter_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
   multiplexer:
