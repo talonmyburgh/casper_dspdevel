@@ -109,7 +109,7 @@ jobs:
           cmd: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
       - uses: actions/upload-artifact@v2
         with:
-          name: casper_multiplexerfact
+          name: casper_multiplexer_report
           path: ./casper_multiplexer/casper_multiplexer_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
@@ -125,7 +125,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
+          image: ghdl/vunit:mcode
           cmd: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
       - uses: actions/upload-artifact@v2
         with:
