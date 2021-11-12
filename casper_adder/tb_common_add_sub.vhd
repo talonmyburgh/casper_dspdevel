@@ -18,10 +18,11 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib;
+LIBRARY IEEE, std, common_pkg_lib, common_components_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
+USE STD.TEXTIO.ALL;
 
 ENTITY tb_common_add_sub IS
 	GENERIC(
@@ -208,17 +209,18 @@ BEGIN
 
 		p_verify : PROCESS(rst, clk)
 			VARIABLE v_test_msg : STRING(1 to o_test_msg'length) := (OTHERS => '.');
+			VARIABLE v_test_pass : BOOLEAN := True;
 		BEGIN
 			IF rst = '0' THEN
 				IF rising_edge(clk) THEN
-					o_test_pass <= result_rtl = result_expected;
-					IF result_rtl /= result_expected THEN
+					v_test_pass := result_rtl = result_expected;
+					IF not v_test_pass THEN
 						v_test_msg := pad("wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_expected) & " but got: " & to_hstring(result_rtl), o_test_msg'length, '.');
 						o_test_msg <= v_test_msg;
 						report "Error: " & v_test_msg severity failure;
 					END IF;
 				END IF;
 			END IF;
-	
+			o_test_pass <= v_test_pass;
 		END PROCESS;
 END tb;
