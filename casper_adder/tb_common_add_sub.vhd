@@ -213,7 +213,7 @@ BEGIN
 		BEGIN
 			IF rst = '0' THEN
 				IF rising_edge(clk) THEN
-					v_test_pass := result_rtl = std_logic_vector(signed(result_expected) + 1);
+					v_test_pass := result_rtl = result_expected;
 					IF not v_test_pass THEN
 						v_test_msg := pad("wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_expected) & " but got: " & to_hstring(result_rtl), o_test_msg'length, '.');
 						o_test_msg <= v_test_msg;
