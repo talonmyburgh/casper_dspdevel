@@ -25,6 +25,7 @@ jobs:
       fifo: ${{ steps.fifo.outputs.any_changed }}
       ram: ${{ steps.ram.outputs.any_changed }}
       r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
+      wb_fft: ${{ steps.wb_fft.outputs.any_changed }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
@@ -80,6 +81,13 @@ jobs:
           files: |
             r2sdf_fft/.*\.vhd$
             r2sdf_fft/run.py
+      - name: Assess WB_FFT files changes
+        id: wb_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wb_fft/.*\.vhd$
+            casper_wb_fft/run.py
 
   adder:
     # The type of runner that the job will run on
@@ -225,4 +233,27 @@ jobs:
         with:
           name: r2sdf_fft_report
           path: ./r2sdf_fft/r2sdf_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+  
+  wb_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.wb_fft == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:mcode
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wb_fft_report
+          path: ./casper_wb_fft/wb_fft_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']

@@ -18,7 +18,7 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, dp_pkg_lib, casper_mm_lib, casper_ram_lib;
+LIBRARY IEEE, common_pkg_lib, casper_mm_lib, casper_ram_lib;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL; 
 use IEEE.std_logic_textio.all;
@@ -27,8 +27,6 @@ USE common_pkg_lib.common_pkg.ALL;
 USE casper_ram_lib.common_ram_pkg.ALL;
 USE common_pkg_lib.tb_common_pkg.ALL;     
 USE casper_mm_lib.tb_common_mem_pkg.ALL;
-USE dp_pkg_lib.dp_stream_pkg.ALL; 
---USE work.fft_pkg.ALL;
 USE work.fft_gnrcs_intrfcs_pkg.ALL;
 
 PACKAGE tb_fft_pkg IS   
