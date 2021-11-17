@@ -210,7 +210,7 @@ jobs:
         with:
           label: casper_multiplexer
           message: passed
-          message-color: "c04044c
+          message-color: "c04044c"
           file-name: casper_multiplexer_test.svg
           badge-branch: badges
           style: flat
@@ -254,7 +254,7 @@ jobs:
         with:
           label: casper_multiplier
           message: passed
-          message-color: "c04044c
+          message-color: "c04044c"
           file-name: casper_multiplier_test.svg
           badge-branch: badges
           style: flat
@@ -298,7 +298,7 @@ jobs:
         with:
           label: casper_fifo
           message: passed
-          message-color: 4cc4044"
+          message-color: "4cc4044"
           file-name: casper_fifo_test.svg
           badge-branch: badges
           style: flat
@@ -345,7 +345,7 @@ jobs:
         with:
           label: casper_ram
           message: passed
-          message-color:4"c04044"
+          message-color: "c04044"
           file-name: casper_ram_test.svg
           badge-branch: badges
           style: flat
@@ -392,7 +392,7 @@ jobs:
         with:
           label: r2sdf_fft
           message: passed
-          message-color4 cc04044"
+          message-color: "cc04044"
           file-name: r2sdf_fft_test.svg
           badge-branch: badges
           style: flat
