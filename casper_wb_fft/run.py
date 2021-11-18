@@ -1,11 +1,21 @@
 from vunit import VUnit
 from os.path import join, abspath, split
+import sys
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 # script_dir = dirname(__file__)
 script_dir,_ = split(abspath(__file__))
-print(script_dir)
+
+#gather arguments specifying which tests to run:
+# test_to_run = sys.argv[1]
+test_to_run = 'par'
+arg_options = ['pipe','par','all','wb','none']
+if test_to_run in arg_options:
+    pass
+else:
+    print("Invalid argument, running no tests.")
+    quit
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -120,244 +130,260 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDF.vhd"))
 
 # WIDEBAND FFT Library
 wb_fft_lib = vu.add_library("wb_fft_lib")
-wb_fft_lib.add_source_file(join(script_dir,"fft_reorder_sepa_pipe.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_sepa.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_gnrcs_intrfcs_pkg.vhd"))
-wb_fft_lib.add_source_file(join(script_dir,"fft_r2_pipe.vhd"))
-wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_pipe.vhd"))
-wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_pipe.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"tb_fft_pkg.vhd"))
+wb_fft_lib.add_source_file(join(script_dir,"fft_reorder_sepa_pipe.vhd"))
+wb_fft_lib.add_source_file(join(script_dir,"fft_r2_pipe.vhd"))
+wb_fft_lib.add_source_file(join(script_dir,"fft_r2_bf_par.vhd"))
+wb_fft_lib.add_source_file(join(script_dir,"fft_r2_par.vhd"))
 
-#CONSTANTS
-c_fft_two_real = dict(
-    g_use_reorder = True,
-    g_use_fft_shift = False,
-    g_use_separate = True,
-    g_nof_chan = 0,
-    g_wb_factor = 1,
-    g_twiddle_offset = 0, 
-    g_nof_points = 128,
-    g_in_dat_w = 8,
-    g_out_dat_w = 16,
-    g_out_gain_w = 0,
-    g_stage_dat_w = 18,
-    g_guard_w = 2,
-    g_guard_enable = True
-)
-c_fft_two_real_more_channels = c_fft_two_real.copy()
-c_fft_two_real_more_channels.update({'g_nof_chan':1})
-c_fft_complex = c_fft_two_real.copy()
-c_fft_complex.update({'g_nof_points':64})
-c_fft_complex.update({'g_use_separate':False})
-c_fft_complex_more_channels = c_fft_complex.copy()
-c_fft_complex_more_channels.update({'g_nof_chan':1})
-c_fft_complex_fft_shift = c_fft_complex.copy()
-c_fft_complex_fft_shift.update({'g_use_fft_shift':True})
-c_fft_complex_fft_shift_more_channels = c_fft_complex_fft_shift.copy()
-c_fft_complex_fft_shift_more_channels.update({'g_nof_chan':1})
-c_fft_complex_flipped = c_fft_complex.copy()
-c_fft_complex_flipped.update({'g_use_reorder':False})
-c_fft_complex_flipped_more_channels = c_fft_complex_flipped.copy()
-c_fft_complex_flipped_more_channels.update({'g_nof_chan':1})
+# CONSTANTS COMMON TO PIPELINE AND PARALLEL TESTS
+if test_to_run in arg_options[0:3]:
+    c_fft_two_real = dict(
+        g_use_reorder = True,
+        g_use_fft_shift = False,
+        g_use_separate = True,
+        g_nof_chan = 0,
+        g_wb_factor = 1,
+        g_twiddle_offset = 0, 
+        g_nof_points = 128,
+        g_in_dat_w = 8,
+        g_out_dat_w = 16,
+        g_out_gain_w = 0,
+        g_stage_dat_w = 18,
+        g_guard_w = 2,
+        g_guard_enable = True
+    )
+    c_fft_complex = c_fft_two_real.copy()
+    c_fft_complex.update({'g_nof_points':64})
+    c_fft_complex.update({'g_use_separate':False})
+    c_fft_complex_fft_shift = c_fft_complex.copy()
+    c_fft_complex_fft_shift.update({'g_use_fft_shift':True})
+    c_fft_complex_flipped = c_fft_complex.copy()
+    c_fft_complex_flipped.update({'g_use_reorder':False})
 
-c_impulse_chirp = script_dir+"/data/run_pfft_m_impulse_chirp_8b_128points_16b.dat"
-c_sinusoid_chirp = script_dir+"/data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat"
-c_noise = script_dir+"/data/run_pfft_m_noise_8b_128points_16b.dat"
-c_dc_agwn = script_dir+"/data/run_pfft_m_dc_agwn_8b_128points_16b.dat"
-c_phasor_chirp = script_dir+"/data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat"
-c_phasor = script_dir+"/data/run_pfft_complex_m_phasor_8b_64points_16b.dat"
-c_noise_complex = script_dir+"/data/run_pfft_complex_m_noise_complex_8b_64points_16b.dat"
-c_zero = "UNUSED"
-c_unused = "UNUSED"
+    c_impulse_chirp = script_dir+"/data/run_pfft_m_impulse_chirp_8b_128points_16b.dat"
+    c_sinusoid_chirp = script_dir+"/data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat"
+    c_noise = script_dir+"/data/run_pfft_m_noise_8b_128points_16b.dat"
+    c_dc_agwn = script_dir+"/data/run_pfft_m_dc_agwn_8b_128points_16b.dat"
+    c_phasor_chirp = script_dir+"/data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat"
+    c_phasor = script_dir+"/data/run_pfft_complex_m_phasor_8b_64points_16b.dat"
+    c_noise_complex = script_dir+"/data/run_pfft_complex_m_noise_complex_8b_64points_16b.dat"
+    c_zero = "UNUSED"
+    c_unused = "UNUSED"
 
-diff_margin = 2
+    diff_margin = 2
 
-c_act_two_real_chirp = c_fft_two_real.copy()
-c_act_two_real_chirp.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_sinusoid_chirp,
-'g_data_file_a_nof_lines':25600,
-'g_data_file_b':c_impulse_chirp,
-'g_data_file_b_nof_lines':25600,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':25600,
-'g_enable_in_val_gaps':False})
+    # REAL TESTS
+    c_act_two_real_chirp = c_fft_two_real.copy()
+    c_act_two_real_chirp.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_sinusoid_chirp,
+    'g_data_file_a_nof_lines':25600,
+    'g_data_file_b':c_impulse_chirp,
+    'g_data_file_b_nof_lines':25600,
+    'g_data_file_c':c_unused,
+    'g_data_file_c_nof_lines':0,
+    'g_data_file_nof_lines':25600,
+    'g_enable_in_val_gaps':False})
 
-c_act_two_real_a0 = c_fft_two_real.copy()
-c_act_two_real_a0.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_zero,
-'g_data_file_a_nof_lines':25600,
-'g_data_file_b':c_impulse_chirp,
-'g_data_file_b_nof_lines':25600,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':5120,
-'g_enable_in_val_gaps':False})
+    c_act_two_real_a0 = c_act_two_real_chirp.copy()
+    c_act_two_real_a0.update({'g_data_file_a':c_zero,
+    'g_data_file_nof_lines':5120})
 
-c_act_two_real_b0 = c_fft_two_real.copy()
-c_act_two_real_b0.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_sinusoid_chirp,
-'g_data_file_a_nof_lines':25600,
-'g_data_file_b':c_zero,
-'g_data_file_b_nof_lines':25600,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':5120,
-'g_enable_in_val_gaps':False})
+    c_act_two_real_b0 = c_act_two_real_chirp.copy()
+    c_act_two_real_b0.update({'g_data_file_b':c_zero,
+    'g_data_file_nof_lines':5120})
 
-c_rnd_two_real_noise = c_fft_two_real.copy()
-c_rnd_two_real_noise.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_noise,
-'g_data_file_a_nof_lines':1280,
-'g_data_file_b':c_dc_agwn,
-'g_data_file_b_nof_lines':1280,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':True})
+    c_rnd_two_real_noise = c_act_two_real_chirp.copy()
+    c_rnd_two_real_noise.update({'g_data_file_a':c_noise,
+    'g_data_file_a_nof_lines':1280,
+    'g_data_file_b':c_dc_agwn,
+    'g_data_file_b_nof_lines':1280,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':True})
 
-c_rnd_two_real_noise = c_fft_two_real.copy()
-c_rnd_two_real_noise.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_noise,
-'g_data_file_a_nof_lines':1280,
-'g_data_file_b':c_dc_agwn,
-'g_data_file_b_nof_lines':1280,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':True})
+    # COMPLEX TESTS
+    c_act_complex_chirp = c_fft_complex.copy()
+    c_act_complex_chirp.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':12800,
+    'g_enable_in_val_gaps':False})
 
-c_rnd_two_real_channels = c_fft_two_real_more_channels.copy()
-c_rnd_two_real_channels.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_noise,
-'g_data_file_a_nof_lines':1280,
-'g_data_file_b':c_dc_agwn,
-'g_data_file_b_nof_lines':1280,
-'g_data_file_c':c_unused,
-'g_data_file_c_nof_lines':0,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':True})
+    c_act_complex_fft_shift = c_fft_complex_fft_shift.copy()
+    c_act_complex_fft_shift.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':False})
 
-c_act_complex_chirp = c_fft_complex.copy()
-c_act_complex_chirp.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':12800,
-'g_enable_in_val_gaps':False})
+    c_act_complex_flipped = c_fft_complex_flipped.copy()
+    c_act_complex_flipped.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':False})
 
-c_act_complex_channels = c_fft_complex_more_channels.copy()
-c_act_complex_channels.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':False})
+    c_rnd_complex_noise = c_fft_complex.copy()
+    c_rnd_complex_noise.update({
+    'g_data_file_c':c_noise_complex,
+    'g_data_file_c_nof_lines':640,
+    'g_data_file_nof_lines':640,
+    'g_enable_in_val_gaps':True})
+##########################################################################################
 
-c_act_complex_fft_shift_chirp = c_fft_complex_fft_shift.copy()
-c_act_complex_fft_shift_chirp.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':12800,
-'g_enable_in_val_gaps':False})
+# PIPELINE TEST CONSTANTS AND CONFIGURATIONS
+if test_to_run =='pipe' or test_to_run == 'all':
+    wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_pipe.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_pipe.vhd"))
 
-c_act_complex_fft_shift_channels = c_fft_complex_fft_shift_more_channels.copy()
-c_act_complex_fft_shift_channels.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':False})
+    #EXTRA PIPELINE CONSTANTS
+    c_fft_two_real_more_channels = c_fft_two_real.copy()
+    c_fft_two_real_more_channels.update({'g_nof_chan':1})
+    c_fft_complex_more_channels = c_fft_complex.copy()
+    c_fft_complex_more_channels.update({'g_nof_chan':1})
+    c_fft_complex_fft_shift_more_channels = c_fft_complex_fft_shift.copy()
+    c_fft_complex_fft_shift_more_channels.update({'g_nof_chan':1})
+    c_fft_complex_flipped_more_channels = c_fft_complex_flipped.copy()
+    c_fft_complex_flipped_more_channels.update({'g_nof_chan':1})
 
-c_act_complex_flipped = c_fft_complex_flipped.copy()
-c_act_complex_flipped.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':False})
+    c_rnd_two_real_channels = c_fft_two_real_more_channels.copy()
+    c_rnd_two_real_channels.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_noise,
+    'g_data_file_a_nof_lines':1280,
+    'g_data_file_b':c_dc_agwn,
+    'g_data_file_b_nof_lines':1280,
+    'g_data_file_c':c_unused,
+    'g_data_file_c_nof_lines':0,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':True})
 
-c_act_complex_flipped_channels = c_fft_complex_flipped_more_channels.copy()
-c_act_complex_flipped_channels.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_phasor_chirp,
-'g_data_file_c_nof_lines':12800,
-'g_data_file_nof_lines':1280,
-'g_enable_in_val_gaps':False})
+    c_act_complex_channels = c_fft_complex_more_channels.copy()
+    c_act_complex_channels.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':False})
 
-c_rnd_complex_noise = c_fft_complex.copy()
-c_rnd_complex_noise.update({'g_diff_margin': diff_margin,
-'g_data_file_a':c_unused,
-'g_data_file_a_nof_lines':0,
-'g_data_file_b':c_unused,
-'g_data_file_b_nof_lines':0,
-'g_data_file_c':c_noise_complex,
-'g_data_file_c_nof_lines':640,
-'g_data_file_nof_lines':640,
-'g_enable_in_val_gaps':True})
+    c_act_complex_fft_shift_chirp = c_act_complex_fft_shift.copy()
+    c_act_complex_fft_shift_chirp.update({'g_data_file_nof_lines':12800})
 
-#TB CONFIGURATIONS
-TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_pipe")
-TB_GENERATED.add_config(
-    name = "u_act_two_real_chirp",
-    generics=c_act_two_real_chirp)
-TB_GENERATED.add_config(
-    name = "u_act_two_real_a0",
-    generics=c_act_two_real_a0)
-TB_GENERATED.add_config(
-    name = "c_act_two_real_b0",
-    generics=c_act_two_real_b0)
-TB_GENERATED.add_config(
-    name = "u_rnd_two_real_noise",
-    generics=c_rnd_two_real_noise)
-TB_GENERATED.add_config(
-    name = "u_rnd_two_real_channels",
-    generics=c_rnd_two_real_channels)
-TB_GENERATED.add_config(
-    name = "u_act_complex_chirp",
-    generics=c_act_complex_chirp)
-TB_GENERATED.add_config(
-    name = "u_act_complex_channels",
-    generics=c_act_complex_channels)
-TB_GENERATED.add_config(
-    name = "u_act_complex_fft_shift_chirp",
-    generics=c_act_complex_fft_shift_chirp)
-TB_GENERATED.add_config(
-    name = "u_act_complex_fft_shift_channels",
-    generics=c_act_complex_fft_shift_channels)
-TB_GENERATED.add_config(
-    name = "u_act_complex_flipped",
-    generics=c_act_complex_flipped)
-TB_GENERATED.add_config(
-    name = "u_act_complex_flipped_channels",
-    generics=c_act_complex_flipped_channels)
-TB_GENERATED.add_config(
-    name = "u_rnd_complex_noise",
-    generics=c_rnd_complex_noise)
+    c_act_complex_fft_shift_channels = c_fft_complex_fft_shift_more_channels.copy()
+    c_act_complex_fft_shift_channels.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':False})
 
-# print(c_act_complex_fft_shift_chirp)
-# print(c_act_complex_fft_shift_channels)
-# print(c_act_complex_flipped)
-# print(c_act_complex_flipped_channels)
+    c_act_complex_flipped_channels = c_fft_complex_flipped_more_channels.copy()
+    c_act_complex_flipped_channels.update({'g_diff_margin': diff_margin,
+    'g_data_file_a':c_unused,
+    'g_data_file_a_nof_lines':0,
+    'g_data_file_b':c_unused,
+    'g_data_file_b_nof_lines':0,
+    'g_data_file_c':c_phasor_chirp,
+    'g_data_file_c_nof_lines':12800,
+    'g_data_file_nof_lines':1280,
+    'g_enable_in_val_gaps':False})
+
+    # PIPELINE TB CONFIGURATIONS
+    PIPE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_pipe")
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_two_real_chirp",
+        generics=c_act_two_real_chirp)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_two_real_a0",
+        generics=c_act_two_real_a0)
+    PIPE_TB_GENERATED.add_config(
+        name = "c_act_two_real_b0",
+        generics=c_act_two_real_b0)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_rnd_two_real_noise",
+        generics=c_rnd_two_real_noise)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_rnd_two_real_channels",
+        generics=c_rnd_two_real_channels)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_chirp",
+        generics=c_act_complex_chirp)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_channels",
+        generics=c_act_complex_channels)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_fft_shift_chirp",
+        generics=c_act_complex_fft_shift_chirp)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_fft_shift_channels",
+        generics=c_act_complex_fft_shift_channels)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_flipped",
+        generics=c_act_complex_flipped)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_flipped_channels",
+        generics=c_act_complex_flipped_channels)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_rnd_complex_noise",
+        generics=c_rnd_complex_noise)
+##########################################################################################
+
+# PARALLEL TEST CONFIGURATIONS
+if test_to_run =='par' or test_to_run == 'all':
+    wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_par.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_par.vhd"))
+
+    PAR_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_par")
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_two_real_chirp",
+        generics= c_act_complex_chirp)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_two_real_a0",
+        generics= c_act_two_real_a0)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_two_real_b0",
+        generics= c_act_two_real_b0)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_rnd_two_real_noise",
+        generics= c_rnd_two_real_noise)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_complex_chirp",
+        generics= c_act_complex_chirp)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_complex_fft_shift",
+        generics= c_act_complex_fft_shift)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_act_complex_flipped",
+        generics= c_act_complex_flipped)    
+    PAR_TB_GENERATED.add_config(
+        name = "u_par_rnd_complex_noise",
+        generics= c_rnd_complex_noise)    
+##########################################################################################
+
+if test_to_run =='wb' or test_to_run == 'all':
+    wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_wide.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_wide.vhd"))
+##########################################################################################
+
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
