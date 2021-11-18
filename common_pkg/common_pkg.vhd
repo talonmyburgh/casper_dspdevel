@@ -243,6 +243,8 @@ PACKAGE common_pkg IS
 	FUNCTION is_true(a : INTEGER) RETURN BOOLEAN; -- also covers NATURAL because it is a subtype of INTEGER
 	FUNCTION is_true(a : INTEGER) RETURN STD_LOGIC; -- also covers NATURAL because it is a subtype of INTEGER
 
+	FUNCTION is_all(vec : STD_LOGIC_VECTOR; val : STD_LOGIC) return BOOLEAN;
+
 	FUNCTION sel_a_b(sel, a, b : BOOLEAN) RETURN BOOLEAN;
 	FUNCTION sel_a_b(sel, a, b : INTEGER) RETURN INTEGER;
 	FUNCTION sel_a_b(sel : BOOLEAN; a, b : INTEGER) RETURN INTEGER;
