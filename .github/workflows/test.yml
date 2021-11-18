@@ -438,7 +438,7 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_pipe_fft/run.py --xunit-xml ./casper_pipe_fft/pipe_fft_report.xml --pipe
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
 
       - name: Note casper_pipe_fft_test Failure
         if: ${{ steps.casper_pipe_fft_test.outcome == 'failure' }}
@@ -465,7 +465,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: pipe_fft_report
-          path: ./casper_pipe_fft/pipe_fft_report.xml
+          path: ./casper_wb_fft/pipe_fft_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
   par_fft:
@@ -485,7 +485,7 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_par_fft/run.py --xunit-xml ./casper_par_fft/par_fft_report.xml --par
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
 
       - name: Note casper_par_fft_test Failure
         if: ${{ steps.casper_par_fft_test.outcome == 'failure' }}
@@ -512,7 +512,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: par_fft_report
-          path: ./casper_par_fft/par_fft_report.xml
+          path: ./casper_wb_fft/par_fft_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
   # wb_fft:
