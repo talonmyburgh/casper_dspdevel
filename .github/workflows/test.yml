@@ -86,19 +86,19 @@ jobs:
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_wb_fft/.*\pipe.vhd$
-            casper_wb_fft/run.py$
-            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd$
-            casper_wb_fft/tb_fft_funtions.vhd
+            casper_wb_fft/.*pipe\.vhd$
+            casper_wb_fft/run.py
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
       - name: Assess PARALLEL_FFT files changes
         id: par_fft
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
-            casper_wb_fft/.*\par.vhd$
-            casper_wb_fft/run.py$
-            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd$
-            casper_wb_fft/tb_fft_funtions.vhd
+            casper_wb_fft/.*par\.vhd$
+            casper_wb_fft/run.py
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
       # - name: Assess WB_FFT files changes
       #   id: wb_fft
       #   uses: tj-actions/changed-files@v1.2.0
