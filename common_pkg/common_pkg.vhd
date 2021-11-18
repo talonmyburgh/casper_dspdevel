@@ -1061,6 +1061,12 @@ PACKAGE BODY common_pkg IS
 		END IF;
 	END;
 
+	FUNCTION is_all(vec : STD_LOGIC_VECTOR; val : STD_LOGIC) RETURN BOOLEAN IS
+		CONSTANT all_bits : STD_LOGIC_VECTOR(vec'RANGE) := (OTHERS => val);
+	BEGIN
+		RETURN vec = all_bits;
+	END FUNCTION;
+
 	FUNCTION sel_a_b(sel, a, b : INTEGER) RETURN INTEGER IS
 	BEGIN
 		IF sel /= 0 THEN
