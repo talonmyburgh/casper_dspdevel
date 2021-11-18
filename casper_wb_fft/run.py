@@ -1,21 +1,22 @@
-from vunit import VUnit
+from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
-import sys
 
-# Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
+cli = VUnitCLI()
 # script_dir = dirname(__file__)
 script_dir,_ = split(abspath(__file__))
 
 #gather arguments specifying which tests to run:
 # test_to_run = sys.argv[1]
-test_to_run = 'par'
-arg_options = ['pipe','par','all','wb','none']
-if test_to_run in arg_options:
-    pass
-else:
-    print("Invalid argument, running no tests.")
-    quit
+cli.parser.add_argument('--par',action = 'store_true',help = 'Run the parallel fft tests')
+cli.parser.add_argument('--pipe',action = 'store_true', help = 'run the pipeline fft tests')
+cli.parser.add_argument('--wb',action = 'store_true', help = 'run the wb fft tests')
+args = cli.parse_args()
+
+# Create VUnit instance by parsing command line arguments
+vu = VUnit.from_args(args = args)
+
+# If none of the flags are specified, run all tests.
+run_all = not(args.par or args.pipe or args.wb)
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -139,7 +140,7 @@ wb_fft_lib.add_source_file(join(script_dir,"fft_r2_bf_par.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_r2_par.vhd"))
 
 # CONSTANTS COMMON TO PIPELINE AND PARALLEL TESTS
-if test_to_run in arg_options[0:3]:
+if args.par or args.pipe or run_all:
     c_fft_two_real = dict(
         g_use_reorder = True,
         g_use_fft_shift = False,
@@ -246,7 +247,7 @@ if test_to_run in arg_options[0:3]:
 ##########################################################################################
 
 # PIPELINE TEST CONSTANTS AND CONFIGURATIONS
-if test_to_run =='pipe' or test_to_run == 'all':
+if args.pipe or run_all:
     wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_pipe.vhd"))
     wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_pipe.vhd"))
 
@@ -348,7 +349,7 @@ if test_to_run =='pipe' or test_to_run == 'all':
 ##########################################################################################
 
 # PARALLEL TEST CONFIGURATIONS
-if test_to_run =='par' or test_to_run == 'all':
+if args.par or run_all:
     wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_par.vhd"))
     wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_par.vhd"))
 
@@ -379,7 +380,7 @@ if test_to_run =='par' or test_to_run == 'all':
         generics= c_rnd_complex_noise)    
 ##########################################################################################
 
-if test_to_run =='wb' or test_to_run == 'all':
+if args.wb or run_all:
     wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_wide.vhd"))
     wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_wide.vhd"))
 ##########################################################################################
