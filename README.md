@@ -12,6 +12,8 @@ VHDL development of the CASPER FFT for use in the CASPER toolflow.
 ### Memory
 ![casper_ram](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_ram_test.svg)
 ### DSP
+![casper_par_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_par_fft_test.svg)
+![casper_pipe_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_pipe_fft_test.svg)
 ![r2sdf_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/r2sdf_fft_test.svg)
 ![casper_wb_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_wb_fft_test.svg)
 
