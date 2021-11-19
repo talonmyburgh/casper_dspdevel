@@ -461,16 +461,6 @@ begin
     o_test_pass <= v_test_pass;
     o_test_msg <= v_test_msg;
   end process;
-  -- gen_verify_two_real : if not c_in_complex generate
-  --   assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
-  --   assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
-  --   assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
-  --   assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
-  -- end generate;
-  -- gen_verify_complex : if c_in_complex generate
-  --   assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
-  --   assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
-  -- end generate;
 
   ---------------------------------------------------------------
   -- DATA SCOPES
