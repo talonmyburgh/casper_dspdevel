@@ -551,8 +551,8 @@ jobs:
   #       with:
   #         image: ghdl/vunit:llvm
   #         cmd: |
-    ghdl --version
-    python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
+  #           ghdl --version
+  #           python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
 
   #     - name: Note casper_wb_fft_test Failure
   #       ${{ failure() }}
