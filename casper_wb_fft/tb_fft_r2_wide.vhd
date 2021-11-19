@@ -52,7 +52,6 @@ use common_pkg_lib.tb_common_pkg.all;
 use casper_mm_lib.tb_common_mem_pkg.ALL;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
 use work.fft_gnrcs_intrfcs_pkg.all;
--- use work.fft_pkg.all;
 use work.tb_fft_pkg.all;
 
 entity tb_fft_r2_wide is
@@ -119,7 +118,18 @@ entity tb_fft_r2_wide is
     --g_data_file_c_nof_lines : natural := 320;
     
     g_data_file_nof_lines   : natural := 6400;    -- actual number of lines with input data to simulate from the data files, must be <= g_data_file_*_nof_lines
-    g_enable_in_val_gaps    : boolean := TRUE   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_enable_in_val_gaps    : boolean := TRUE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_use_variant : STRING := "4DSP";
+    g_ovflw_behav : STRING := "WRAP";
+    g_use_round   : STRING := "TRUNCATE"
+  );
+  PORT
+  (
+    o_rst       : out std_logic;
+    o_clk       : out std_logic;
+    o_tb_end    : out std_logic;
+    o_test_msg  : out string(1 to 80);
+    o_test_pass : out boolean
   );
 end entity tb_fft_r2_wide;
 
@@ -261,6 +271,10 @@ begin
   random <= func_common_random(random) WHEN rising_edge(clk);
   in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps=TRUE ELSE '0';
 
+  o_clk <= clk;
+  o_rst <= rst;
+  o_tb_end <= tb_end;
+
   ---------------------------------------------------------------
   -- DATA INPUT
   ---------------------------------------------------------------
@@ -313,11 +327,14 @@ begin
   ---------------------------------------------------------------
   u_dut : entity work.fft_r2_wide
   generic map(
-    g_fft          => g_fft
+    g_fft          => g_fft,
+    g_use_variant  => g_use_variant,
+    g_ovflw_behav  => g_ovflw_behav,
+    g_use_round    => g_use_round
   )
   port map(
     clk        => clk,
-    clken        => '1',
+    clken      => '1',
     rst        => rst,
     shiftreg   => (0=>'0', 1=>'0', others=>'1'),
     in_re_arr  => in_re_arr,
@@ -325,7 +342,7 @@ begin
     in_val     => in_val,
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,
-    ovflw => open,
+    ovflw      => open,
     out_val    => out_val
   );
   
@@ -400,17 +417,66 @@ begin
   ---------------------------------------------------------------
   -- VERIFY OUTPUT DATA
   ---------------------------------------------------------------
-  -- p_verify_output
-  gen_verify_two_real : if not c_in_complex generate
-    assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
-    assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
-    assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
-    assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
-  end generate;
-  gen_verify_complex : if c_in_complex generate
-    assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
-    assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
-  end generate;
+  verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
+    VARIABLE v_test_pass : BOOLEAN := TRUE;
+    VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
+  begin
+   if rising_edge(clk) then
+    if rst = '0' then
+      if not c_in_complex then
+        if (out_val_a ='1') and (out_val_b = '1') then
+          v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+        end if;
+      else
+        if out_val_c = '1' then
+          v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+        end if;
+      end if;
+     end if;
+    end if;
+    o_test_pass <= v_test_pass;
+    o_test_msg <= v_test_msg;
+  end process;
+
+  -- -- p_verify_output
+  -- gen_verify_two_real : if not c_in_complex generate
+  --   assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
+  --   assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
+  --   assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
+  --   assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
+  -- end generate;
+  -- gen_verify_complex : if c_in_complex generate
+  --   assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
+  --   assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
+  -- end generate;
 
   ---------------------------------------------------------------
   -- READ EXPECTED OUTPUT DATA FROM FILE

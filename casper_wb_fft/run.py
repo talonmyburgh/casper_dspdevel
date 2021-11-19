@@ -9,14 +9,14 @@ script_dir,_ = split(abspath(__file__))
 # test_to_run = sys.argv[1]
 cli.parser.add_argument('--par',action = 'store_true',help = 'Run the parallel FFT tests')
 cli.parser.add_argument('--pipe',action = 'store_true', help = 'Run the pipeline FFT tests')
-cli.parser.add_argument('--wb',action = 'store_true', help = 'Run the WB FFT tests')
+cli.parser.add_argument('--wide',action = 'store_true', help = 'Run the wide FFT tests')
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_args(args = args)
 
 # If none of the flags are specified, run all tests.
-run_all = not(args.par or args.pipe or args.wb)
+run_all = not(args.par or args.pipe or args.wide)
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -63,6 +63,8 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_bit_delay.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_delay.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_select_symbol.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_components_pkg.vhd"))
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
@@ -93,6 +95,12 @@ tech_complex_mult.add_dependency_on(ip_cmult_4dsp)
 tech_complex_mult.add_dependency_on(ip_stratixiv_complex_mult)
 tech_complex_mult.add_dependency_on(ip_stratixiv_complex_mult_rtl)
 
+# CASPER MULTIPLEXER Library
+casper_multiplexer_lib = vu.add_library("casper_multiplexer_lib")
+casper_multiplexer_lib.add_source_files(join(script_dir, "../casper_multiplexer/common_multiplexer.vhd"))
+casper_multiplexer_lib.add_source_files(join(script_dir, "../casper_multiplexer/common_zip.vhd"))
+casper_multiplexer_lib.add_source_files(join(script_dir, "../casper_multiplexer/common_demultiplexer.vhd"))
+
 # CASPER REQUANTIZE Library
 casper_requantize_lib = vu.add_library("casper_requantize_lib")
 casper_requantize_lib.add_source_file(join(script_dir, "../casper_requantize/common_round.vhd"))
@@ -117,6 +125,10 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 casper_mm_lib = vu.add_library("casper_mm_lib")
 casper_mm_lib.add_source_file(join(script_dir,"../casper_mm/tb_common_mem_pkg.vhd"))
 
+# CASPER SIM TOOLS Library
+casper_sim_tools_lib =vu.add_library("casper_sim_tools_lib")
+casper_sim_tools_lib.add_source_file(join(script_dir,"../casper_sim_tools/common_wideband_data_scope.vhd"))
+
 # RTWOSDF Library
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
@@ -139,8 +151,8 @@ wb_fft_lib.add_source_file(join(script_dir,"fft_r2_pipe.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_r2_bf_par.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_r2_par.vhd"))
 
-# CONSTANTS COMMON TO PIPELINE AND PARALLEL TESTS
-if args.par or args.pipe or run_all:
+# CONSTANTS COMMON TO ALL TESTS
+if args.par or args.pipe or run_all or args.wide:
     c_fft_two_real = dict(
         g_use_reorder = True,
         g_use_fft_shift = False,
@@ -380,9 +392,89 @@ if args.par or run_all:
         generics= c_rnd_complex_noise)    
 ##########################################################################################
 
-if args.wb or run_all:
+if args.wide or run_all:
+    wb_fft_lib.add_source_file(join(script_dir,"fft_sepa_wide.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_par.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"fft_r2_wide.vhd"))
     wb_fft_lib.add_source_file(join(script_dir,"tb_fft_r2_wide.vhd"))
     wb_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_fft_r2_wide.vhd"))
+
+    #EXTRA WIDE CONSTANTS
+    c_act_wb4_two_real_chirp = c_act_two_real_chirp.copy()
+    c_act_wb4_two_real_chirp.update({'g_wb_factor':4})
+    c_act_wb4_two_real_a0 = c_act_two_real_a0.copy()
+    c_act_wb4_two_real_a0.update({'g_wb_factor':4})
+    c_act_wb4_two_real_b0 = c_act_two_real_b0.copy()
+    c_act_wb4_two_real_b0.update({'g_wb_factor':4})
+    c_act_wb4_two_real_b0 = c_act_two_real_b0.copy()
+    c_act_wb4_two_real_b0.update({'g_wb_factor':4})
+    c_rnd_wb4_two_real_noise = c_rnd_two_real_noise.copy()
+    c_rnd_wb4_two_real_noise.update({'g_wb_factor':4})
+
+    c_act_wb4_complex_fft_shift = c_act_complex_fft_shift.copy()
+    c_act_wb4_complex_fft_shift.update({'g_wb_factor':4})
+    c_act_wb4_complex_flipped = c_act_complex_flipped.copy()
+    c_act_wb4_complex_flipped.update({'g_wb_factor':4})
+    c_act_wb4_complex_chirp = c_act_complex_chirp.copy()
+    c_act_wb4_complex_chirp.update({'g_wb_factor':4})
+    c_rnd_wb4_complex_noise = c_rnd_complex_noise.copy()
+    c_rnd_wb4_complex_noise.update({'g_wb_factor':4})
+    c_act_wb64_complex_noise = c_rnd_complex_noise.copy()
+    c_act_wb64_complex_noise.update({'g_wb_factor':64})
+    c_act_wb1_complex_noise = c_rnd_complex_noise.copy()
+    c_act_wb1_complex_noise.update({'g_wb_factor':1})
+
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_two_real_chirp",
+        generics=c_act_wb4_two_real_chirp
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_two_real_a0",
+        generics=c_act_wb4_two_real_a0
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_two_real_b0",
+        generics=c_act_wb4_two_real_b0
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_rnd_two_real_noise",
+        generics=c_rnd_wb4_two_real_noise
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_complex_chirp",
+        generics=c_act_wb4_complex_chirp
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_complex_fft_shift",
+        generics=c_act_wb4_complex_fft_shift
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_complex_flipped",
+        generics=c_act_wb4_complex_flipped
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_rnd_complex_noise",
+        generics=c_rnd_wb4_complex_noise
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_wb1_complex_noise",
+        generics=c_act_wb1_complex_noise
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_wb64_complex_noise",
+        generics=c_act_wb64_complex_noise
+    )
+
 ##########################################################################################
 
 # Run vunit function
