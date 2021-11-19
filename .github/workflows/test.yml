@@ -27,6 +27,8 @@ jobs:
       r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
       pipe_fft: ${{ steps.pipe_fft.outputs.any_changed }}
       par_fft: ${{ steps.par_fft.outputs.any_changed }}
+      wide_fft: ${{ steps.wide_fft.outputs.any_changed }}
+      all_fft: ${{ steps.all_fft.outputs.any_changed }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
@@ -88,26 +90,29 @@ jobs:
         with:
           files: |
             casper_wb_fft/.*pipe\.vhd$
-            casper_wb_fft/run.py
-            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
-            casper_wb_fft/tb_fft_functions.vhd
       - name: Assess PARALLEL_FFT files changes
         id: par_fft
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
             casper_wb_fft/.*par\.vhd$
-            casper_wb_fft/run.py
+      - name: Assess WIDE_FFT files changes
+        id: wide_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wb_fft/.*wide\.vhd$
+      - name: Assess ALL_FFT files changes
+        id: all_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
             casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
             casper_wb_fft/tb_fft_functions.vhd
-      # - name: Assess WB_FFT files changes
-      #   id: wb_fft
-      #   uses: tj-actions/changed-files@v1.2.0
-      #   with:
-      #     files: |
-      #       casper_wb_fft/.*\.vhd$
-      #       casper_wb_fft/run.py$
-
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
+            
   adder:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -516,49 +521,96 @@ jobs:
           path: ./casper_wb_fft/par_fft_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
-  # wb_fft:
-  #   # The type of runner that the job will run on
-  #   runs-on: ubuntu-latest
-  #   needs: [files_changed]
-  #   if: needs.files_changed.outputs.wb_fft == 'true'
+  wide_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.wide_fft == 'true'
 
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         submodules: 'true'
-  #         token: ${{ secrets.TOKEN }}
-  #     - id: casper_wb_fft_test
-  #       uses: VUnit/vunit_action@master
-  #       with:
-  #         image: ghdl/vunit:llvm
-  #         cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_wide_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
 
-  #     - name: Note casper_wb_fft_test Failure
-  #       ${{ failure() }}
-  #       uses: action-badges/core@0.2.2
-  #       with:
-  #         label: casper_wb_fft
-  #         message: failing
-  #         message-color: "C74D1F"
-  #         file-name: casper_wb_fft_test.svg
-  #         badge-branch: badges
-  #         style: flat
-  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
-  #     - name: Note casper_wb_fft_test Success
-  #       if: ${{ steps.casper_wb_fft_test.outcome == 'success' }}
-  #       uses: action-badges/core@0.2.2
-  #       with:
-  #         label: casper_wb_fft
-  #         message: passing
-  #         message-color: "4DC71F"
-  #         file-name: casper_wb_fft_test.svg
-  #         badge-branch: badges
-  #         style: flat
-  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: wb_fft_report
-  #         path: ./casper_wb_fft/wb_fft_report.xml
-  #         if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+      - name: Note casper_wide_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_wb_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_wide_fft_test Success
+        if: ${{ steps.casper_wide_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_wide_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wide_fft_report
+          path: ./casper_wb_fft/wide_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  all_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.all_fft == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_all_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml
+
+      - name: Note casper_all_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_all_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_all_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_all_fft_test Success
+        if: ${{ steps.casper_wide_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_all_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_all_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wide_fft_report
+          path: ./casper_wb_fft/wide_all_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
