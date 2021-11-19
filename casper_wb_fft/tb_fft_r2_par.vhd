@@ -123,7 +123,7 @@ entity tb_fft_r2_par is
     o_rst       : out std_logic;
     o_clk       : out std_logic;
     o_tb_end    : out std_logic;
-    o_test_msg  : out string(1 to 100);
+    o_test_msg  : out string(1 to 80);
     o_test_pass : out boolean
   );
 end entity tb_fft_r2_par;
@@ -469,7 +469,7 @@ begin
   
   verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
     VARIABLE v_test_pass : BOOLEAN := TRUE;
-    VARIABLE v_test_msg : STRING( 1 to 100 ) := (others => '.');  
+    VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
    if rising_edge(clk) then
     if rst = '0' then
