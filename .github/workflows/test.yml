@@ -124,12 +124,12 @@ jobs:
           cmd: python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
 
       - name: Note casper_adder_test Failure
-        if: ${{ steps.casper_adder_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_adder
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_adder_test.svg
           badge-branch: badges
           style: flat
@@ -139,8 +139,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_adder
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_adder_test.svg
           badge-branch: badges
           style: flat
@@ -168,12 +168,12 @@ jobs:
           cmd: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
       - name: Note casper_counter_test Failure
-        if: ${{ steps.casper_counter_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_counter
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_counter_test.svg
           badge-branch: badges
           style: flat
@@ -183,8 +183,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_counter
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_counter_test.svg
           badge-branch: badges
           style: flat
@@ -212,12 +212,12 @@ jobs:
           cmd: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
 
       - name: Note casper_multiplexer_test Failure
-        if: ${{ steps.casper_multiplexer_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_multiplexer
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_multiplexer_test.svg
           badge-branch: badges
           style: flat
@@ -227,8 +227,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_multiplexer
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_multiplexer_test.svg
           badge-branch: badges
           style: flat
@@ -256,12 +256,12 @@ jobs:
           cmd: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
 
       - name: Note casper_multiplier_test Failure
-        if: ${{ steps.casper_multiplier_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_multiplier
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_multiplier_test.svg
           badge-branch: badges
           style: flat
@@ -271,8 +271,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_multiplier
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_multiplier_test.svg
           badge-branch: badges
           style: flat
@@ -300,12 +300,12 @@ jobs:
           cmd: python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
 
       - name: Note casper_fifo_test Failure
-        if: ${{ steps.casper_fifo_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_fifo
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_fifo_test.svg
           badge-branch: badges
           style: flat
@@ -315,8 +315,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_fifo
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_fifo_test.svg
           badge-branch: badges
           style: flat
@@ -347,12 +347,12 @@ jobs:
           cmd: python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
 
       - name: Note casper_ram_test Failure
-        if: ${{ steps.casper_ram_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_ram
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_ram_test.svg
           badge-branch: badges
           style: flat
@@ -362,8 +362,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_ram
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_ram_test.svg
           badge-branch: badges
           style: flat
@@ -394,12 +394,12 @@ jobs:
           cmd: python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
 
       - name: Note r2sdf_fft_test Failure
-        if: ${{ steps.r2sdf_fft_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: r2sdf_fft
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: r2sdf_fft_test.svg
           badge-branch: badges
           style: flat
@@ -409,8 +409,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: r2sdf_fft
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: r2sdf_fft_test.svg
           badge-branch: badges
           style: flat
@@ -441,12 +441,12 @@ jobs:
           cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
 
       - name: Note casper_pipe_fft_test Failure
-        if: ${{ steps.casper_pipe_fft_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_pipe_fft
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_pipe_fft_test.svg
           badge-branch: badges
           style: flat
@@ -456,8 +456,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_pipe_fft
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_pipe_fft_test.svg
           badge-branch: badges
           style: flat
@@ -488,12 +488,12 @@ jobs:
           cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
 
       - name: Note casper_par_fft_test Failure
-        if: ${{ steps.casper_par_fft_test.outcome == 'failure' }}
+        if: ${{ failure() }}
         uses: action-badges/core@0.2.2
         with:
           label: casper_par_fft
-          message: failed
-          message-color: "c04044"
+          message: failing
+          message-color: "C74D1F"
           file-name: casper_par_fft_test.svg
           badge-branch: badges
           style: flat
@@ -503,8 +503,8 @@ jobs:
         uses: action-badges/core@0.2.2
         with:
           label: casper_par_fft
-          message: passed
-          message-color: "c04044c"
+          message: passing
+          message-color: "4DC71F"
           file-name: casper_par_fft_test.svg
           badge-branch: badges
           style: flat
@@ -535,12 +535,12 @@ jobs:
   #         cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
 
   #     - name: Note casper_wb_fft_test Failure
-  #       if: ${{ steps.casper_wb_fft_test.outcome == 'failure' }}
+  #       ${{ failure() }}
   #       uses: action-badges/core@0.2.2
   #       with:
   #         label: casper_wb_fft
-  #         message: failed
-  #         message-color: "c04044"
+  #         message: failing
+  #         message-color: "C74D1F"
   #         file-name: casper_wb_fft_test.svg
   #         badge-branch: badges
   #         style: flat
@@ -550,8 +550,8 @@ jobs:
   #       uses: action-badges/core@0.2.2
   #       with:
   #         label: casper_wb_fft
-  #         message: passed
-  #         message-color: "c04044c"
+  #         message: passing
+  #         message-color: "4DC71F"
   #         file-name: casper_wb_fft_test.svg
   #         badge-branch: badges
   #         style: flat
