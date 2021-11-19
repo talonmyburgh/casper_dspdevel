@@ -388,4 +388,5 @@ if args.wb or run_all:
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
+vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable-at-0"])
 vu.main()
