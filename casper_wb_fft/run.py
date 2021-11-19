@@ -7,9 +7,9 @@ script_dir,_ = split(abspath(__file__))
 
 #gather arguments specifying which tests to run:
 # test_to_run = sys.argv[1]
-cli.parser.add_argument('--par',action = 'store_true',help = 'Run the parallel fft tests')
-cli.parser.add_argument('--pipe',action = 'store_true', help = 'run the pipeline fft tests')
-cli.parser.add_argument('--wb',action = 'store_true', help = 'run the wb fft tests')
+cli.parser.add_argument('--par',action = 'store_true',help = 'Run the parallel FFT tests')
+cli.parser.add_argument('--pipe',action = 'store_true', help = 'Run the pipeline FFT tests')
+cli.parser.add_argument('--wb',action = 'store_true', help = 'Run the WB FFT tests')
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
@@ -388,5 +388,5 @@ if args.wb or run_all:
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
-vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable-at-0"])
+vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable"])
 vu.main()

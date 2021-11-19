@@ -121,7 +121,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
 
       - name: Note casper_adder_test Failure
         if: ${{ failure() }}
@@ -165,7 +167,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
       - name: Note casper_counter_test Failure
         if: ${{ failure() }}
@@ -209,7 +213,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
 
       - name: Note casper_multiplexer_test Failure
         if: ${{ failure() }}
@@ -253,7 +259,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
 
       - name: Note casper_multiplier_test Failure
         if: ${{ failure() }}
@@ -297,7 +305,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
 
       - name: Note casper_fifo_test Failure
         if: ${{ failure() }}
@@ -344,7 +354,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+          cmd: |
+            ghdl --version
+            python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
 
       - name: Note casper_ram_test Failure
         if: ${{ failure() }}
@@ -391,7 +403,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
+          cmd: |
+            ghdl --version
+            python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
 
       - name: Note r2sdf_fft_test Failure
         if: ${{ failure() }}
@@ -425,7 +439,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed]
-    # if: needs.files_changed.outputs.pipe_fft == 'true'
+    if: needs.files_changed.outputs.pipe_fft == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -438,7 +452,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
+          cmd: |
+            ghdl --version
+            python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
 
       - name: Note casper_pipe_fft_test Failure
         if: ${{ failure() }}
@@ -485,7 +501,9 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
+          cmd: |
+            ghdl --version
+            python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
 
       - name: Note casper_par_fft_test Failure
         if: ${{ failure() }}
@@ -532,7 +550,9 @@ jobs:
   #       uses: VUnit/vunit_action@master
   #       with:
   #         image: ghdl/vunit:llvm
-  #         cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
+  #         cmd: |
+    ghdl --version
+    python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wb_fft_report.xml --wb
 
   #     - name: Note casper_wb_fft_test Failure
   #       ${{ failure() }}
