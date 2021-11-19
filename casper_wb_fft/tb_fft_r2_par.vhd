@@ -467,54 +467,54 @@ begin
     wait;
   end process;
   
-  -- verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
-  --   VARIABLE v_test_pass : BOOLEAN := TRUE;
-  --   VARIABLE v_test_msg : STRING( 1 to 100 ) := (others => '.');  
-  -- begin
-  --  if rising_edge(clk) then
-  --   if rst = '0' then
-  --     if not c_in_complex then
-  --       if (out_val_a ='1') and (out_val_b = '1') then
-  --         v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --         v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --         v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --         v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --       end if;
-  --     else
-  --       if out_val_c = '1' then
-  --         v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --         v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
-  --         if not v_test_pass then
-  --           v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-  --           report v_test_msg severity failure;
-  --         end if;
-  --       end if;
-  --     end if;
-  --    end if;
-  --   end if;
-  --   o_test_pass <= v_test_pass;
-  --   o_test_msg <= v_test_msg;
-  -- end process;
+  verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
+    VARIABLE v_test_pass : BOOLEAN := TRUE;
+    VARIABLE v_test_msg : STRING( 1 to 100 ) := (others => '.');  
+  begin
+   if rising_edge(clk) then
+    if rst = '0' then
+      if not c_in_complex then
+        if (out_val_a ='1') and (out_val_b = '1') then
+          v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+        end if;
+      else
+        if out_val_c = '1' then
+          v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+          v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
+          if not v_test_pass then
+            v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
+            report v_test_msg severity failure;
+          end if;
+        end if;
+      end if;
+     end if;
+    end if;
+    o_test_pass <= v_test_pass;
+    o_test_msg <= v_test_msg;
+  end process;
 
   ---------------------------------------------------------------
   -- DATA SCOPES
