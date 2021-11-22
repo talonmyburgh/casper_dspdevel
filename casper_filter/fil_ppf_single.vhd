@@ -63,7 +63,7 @@
 -- Remarks:
 -- .  See also description tb_fil_ppf_single.vhd for more info.
 --
-library IEEE, common_pkg_lib, casper_ram_lib, casper_mm_lib, technology_lib;
+library IEEE, common_pkg_lib, casper_ram_lib, technology_lib; --casper_mm_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL; 

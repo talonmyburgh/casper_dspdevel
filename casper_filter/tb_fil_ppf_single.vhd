@@ -129,7 +129,7 @@
 --   > observe out_dat in analogue format in Wave window
 --   > testbench is selftesting.
 --
-library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, technology_lib; -- casper_mm_lib;
+library ieee, std, common_pkg_lib, casper_ram_lib, technology_lib; -- casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -139,7 +139,6 @@ use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
 -- use casper_mm_lib.tb_common_mem_pkg.ALL;
-use dp_pkg_lib.dp_stream_pkg.ALL;
 use technology_lib.technology_select_pkg.ALL;
 use work.fil_pkg.all;
 
@@ -174,6 +173,14 @@ entity tb_fil_ppf_single is
       -- end record;
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
     g_enable_in_val_gaps : boolean := FALSE
+  );
+  PORT
+  (
+    o_rst       : out std_logic;
+    o_clk       : out std_logic;
+    o_tb_end    : out std_logic;
+    o_test_msg  : out string(1 to 80);
+    o_test_pass : out boolean
   );
 end entity tb_fil_ppf_single;
 
@@ -239,6 +246,10 @@ begin
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
   in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps=TRUE ELSE '0';
+
+  o_clk <= clk;
+  o_rst <= rst;
+  o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
   -- SEND PULSE TO THE DATA INPUT
@@ -420,6 +431,9 @@ begin
 
   p_verify_out_dat : process(clk)
     variable v_coeff : integer;
+    variable v_test_pass : BOOLEAN := TRUE;
+    variable v_test_msg : STRING(1 to 80);
+    variable v_tmp_val : integer;
   begin
     if rising_edge(clk) then
       if out_val='1' then
@@ -431,11 +445,18 @@ begin
           end if;
           for S in 0 to g_fil_ppf.nof_streams-1 loop
             -- all streams carry the same data
-            assert TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w)) = v_coeff report "Output data error" severity failure;
+            v_tmp_val := TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w));
+            v_test_pass := v_tmp_val = v_coeff;
+            if not v_test_pass then
+              v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & "but got: " & integer'image(v_coeff),o_test_msg'length,'.');
+            end if;
+              -- assert v_test_pass report v_test_msg severity failure;
           end loop;
         end if;
       end if;
     end if;
+    o_test_msg <= v_test_msg;
+    o_test_pass <= v_test_pass;
   end process;
 
 end tb;
