@@ -32,7 +32,7 @@
 --   > run -all
 --   > testbench is selftesting. 
 --
-library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, technology_lib;-- astron_mm_lib;
+library ieee, common_pkg_lib, casper_ram_lib, technology_lib;-- astron_mm_lib;
 use IEEE.std_logic_1164.all;                                            
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -42,7 +42,6 @@ use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
 --use casper_mm_lib.tb_common_mem_pkg.ALL;
-use dp_pkg_lib.dp_stream_pkg.ALL;
 use technology_lib.technology_select_pkg.ALL;
 use work.fil_pkg.all;
 
