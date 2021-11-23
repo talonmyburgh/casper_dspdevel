@@ -219,8 +219,8 @@ architecture tb of tb_fil_ppf_single is
   signal rst            : std_logic := '0';
   signal random         : std_logic_vector(15 DOWNTO 0) := (OTHERS=>'0');  -- use different lengths to have different random sequences
 
-  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
-  signal ram_coefs_miso : t_mem_miso;
+  -- signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
+  -- signal ram_coefs_miso : t_mem_miso;
 
   signal in_dat         : std_logic_vector(g_fil_ppf.nof_streams*c_in_dat_w-1 downto 0);
   signal in_val         : std_logic;
@@ -435,8 +435,8 @@ begin
     variable v_test_msg : STRING(1 to 80);
     variable v_tmp_val : integer;
   begin
-    if rising_edge(clk) then
-      if out_val='1' then
+    if out_val='1' then
+      if rising_edge(clk) then
         if g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w then
           if g_fil_ppf.out_dat_w > g_fil_ppf.coef_dat_w then
             v_coeff := ref_dat;  -- positive input pulse
@@ -448,7 +448,7 @@ begin
             v_tmp_val := TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w));
             v_test_pass := v_tmp_val = v_coeff;
             if not v_test_pass then
-              v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & "but got: " & integer'image(v_coeff),o_test_msg'length,'.');
+              v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & " but got: " & integer'image(v_coeff),o_test_msg'length,'.');
             end if;
               -- assert v_test_pass report v_test_msg severity failure;
           end loop;
