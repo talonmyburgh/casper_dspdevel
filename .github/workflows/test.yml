@@ -657,7 +657,7 @@ jobs:
           label: casper_single_filter
           message: failing
           message-color: "C74D1F"
-          file-name: casper_single_filter_test.svg
+          file-name: casper_filter_test.svg
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
@@ -675,5 +675,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: single_filter_report
-          path: ./casper_wb_fft/single_filter_report.xml
+          path: ./casper_filter/single_filter_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
