@@ -254,7 +254,7 @@ copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
 this_block.addFileToLibrary(vhdlfile,'xil_defaultlib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
-this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
+this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_async.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
