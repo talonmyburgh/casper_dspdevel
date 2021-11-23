@@ -29,6 +29,8 @@ jobs:
       par_fft: ${{ steps.par_fft.outputs.any_changed }}
       wide_fft: ${{ steps.wide_fft.outputs.any_changed }}
       all_fft: ${{ steps.all_fft.outputs.any_changed }}
+      single_filter: ${{ steps.single_filter.outputs.any_changed }}
+      all_filter: ${{ steps.all_filter.outputs.any_changed }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
@@ -112,6 +114,20 @@ jobs:
             casper_wb_fft/run.py
             casper_wb_fft/tb_fft_pkg.vhd
             casper_wb_fft/fft_sepa.vhd
+      - name: Assess single_filter files changes
+        id: single_filter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_filter/.*single\.vhd$
+      - name: Assess all_filter files changes
+        id: all_filter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_filter/fil_pkg.vhd
+            casper_filter/fil_ppf_ctrl.vhd
+            casper_filter/fil_ppf_filter.vhd
             
   adder:
     # The type of runner that the job will run on
@@ -614,3 +630,50 @@ jobs:
   #         name: wide_fft_report
   #         path: ./casper_wb_fft/wide_all_report.xml
   #         if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  single_filter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.single_filter == 'true' || needs.files_changed.outputs.all_filter == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_single_filter_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml
+
+      - name: Note casper_single_filter_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_single_filter
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_single_filter_test Success
+        if: ${{ steps.casper_single_filter_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_single_filter
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_single_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: single_filter_report
+          path: ./casper_wb_fft/single_filter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
