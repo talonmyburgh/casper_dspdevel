@@ -17,6 +17,7 @@ VHDL development of the CASPER FFT for use in the CASPER toolflow.
 ![r2sdf_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/r2sdf_fft_test.svg)
 ![casper_wb_fft](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_wide_fft_test.svg)
 ![casper_single_filter](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_single_filter_test.svg)
+![casper_wide_filter](https://raw.githubusercontent.com/talonmyburgh/casper_dspdevel/badges/.badges/master/casper_wide_filter_test.svg)
 
 
 ### Documentation
