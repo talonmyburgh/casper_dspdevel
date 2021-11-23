@@ -99,8 +99,8 @@ casper_filter_lib.add_source_file(join(script_dir,"./tb_tb_vu_fil_ppf_single.vhd
 
 #CONSTANTS FOR SINGLE FILTER
 
-c_file_prefix_8 = script_dir+"/data/run_pfir_coeff_m_incrementing_8taps_64points_16b"
-c_file_prefix_9 = script_dir+"/data/run_pfir_coeff_m_incrementing_9taps_64points_16b"
+c_file_prefix_8 = join(script_dir, "./data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b")
+c_file_prefix_9 = join(script_dir, "./data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b")
 
 c_act = dict(
     g_wb_factor = 1,
@@ -122,7 +122,7 @@ c_rnd_9taps.update({'g_nof_taps':9,'g_coefs_file_prefix':c_file_prefix_9})
 c_rnd_3streams =  c_rnd_9taps.copy()
 c_rnd_3streams.update({'g_nof_streams':3})
 c_rnd_4channels = c_rnd_3streams.copy()
-c_rnd_4channels.update({'g_nof_channels':2})
+c_rnd_4channels.update({'g_nof_chan':2})
 
 TB_SINGLE_FILTER = casper_filter_lib.test_bench("tb_tb_vu_fil_ppf_single")
 TB_SINGLE_FILTER.add_config(

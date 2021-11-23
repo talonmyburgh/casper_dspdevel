@@ -213,7 +213,6 @@ architecture tb of tb_fil_ppf_single is
 
   -- signal definitions
   signal tb_end         : std_logic := '0';
-  signal tb_end_mm      : std_logic := '0';
   signal tb_end_almost  : std_logic := '0';
   signal clk            : std_logic := '0';
   signal rst            : std_logic := '0';
@@ -291,7 +290,6 @@ begin
 
     -- Wait until done
     proc_common_wait_some_cycles(clk, c_gap_factor*c_nof_data_per_tap);  -- PPF latency of 1 tap
-    proc_common_wait_until_high(clk, tb_end_mm);                         -- MM read done
     tb_end_almost <= '1';
     proc_common_wait_some_cycles(clk, 10);
     tb_end <= '1';
@@ -450,7 +448,7 @@ begin
             if not v_test_pass then
               v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & " but got: " & integer'image(v_coeff),o_test_msg'length,'.');
             end if;
-              -- assert v_test_pass report v_test_msg severity failure;
+            assert v_test_pass report v_test_msg severity error;
           end loop;
         end if;
       end if;
