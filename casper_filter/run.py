@@ -1,9 +1,15 @@
-from vunit import VUnit
+from vunit import VUnit, VUnitCLI
 from os.path import join, dirname
 
+cli = VUnitCLI()
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
 script_dir = dirname(__file__)
+cli.parser.add_argument('--single',action = 'store_true',help = 'Run the single Filter tests')
+cli.parser.add_argument('--wide',action = 'store_true', help = 'Run the wide Filter tests')
+args = cli.parse_args()
+
+# Create VUnit instance by parsing command line arguments
+vu = VUnit.from_args(args = args)
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -91,18 +97,20 @@ casper_filter_lib.add_source_file(join(script_dir,"./fil_pkg.vhd"))
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_ctrl.vhd"))
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_filter.vhd"))
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_single.vhd"))
-casper_filter_lib.add_source_file(join(script_dir,"./tb_fil_ppf_single.vhd"))
-casper_filter_lib.add_source_file(join(script_dir,"./tb_tb_vu_fil_ppf_single.vhd"))
-# casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_wide.vhd"))
-# casper_filter_lib.add_source_file(join(script_dir,"./tb_fil_ppf_wide.vhd"))
-# casper_filter_lib.add_source_file(join(script_dir,"./tb_tb_vu_fil_ppf_wide.vhd"))
+if args.single:
+    casper_filter_lib.add_source_file(join(script_dir,"./tb_fil_ppf_single.vhd"))
+    casper_filter_lib.add_source_file(join(script_dir,"./tb_tb_vu_fil_ppf_single.vhd"))
+if args.wide:
+    casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_wide.vhd"))
+    casper_filter_lib.add_source_file(join(script_dir,"./tb_fil_ppf_wide.vhd"))
+    casper_filter_lib.add_source_file(join(script_dir,"./tb_tb_vu_fil_ppf_wide.vhd"))
 
 #CONSTANTS FOR SINGLE FILTER
 
 c_file_prefix_8 = join(script_dir, "./data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b")
 c_file_prefix_9 = join(script_dir, "./data/hex/run_pfir_coeff_m_incrementing_9taps_64points_16b")
 
-c_act = dict(
+c_act_single = dict(
     g_wb_factor = 1,
     g_nof_chan = 0,
     g_nof_bands = 64,
@@ -115,36 +123,109 @@ c_act = dict(
     g_coefs_file_prefix = c_file_prefix_8,
     g_enable_in_val_gaps = False
 )
-c_rnd_quant = c_act.copy()
-c_rnd_quant.update({'g_enable_in_val_gaps':True})
-c_rnd_9taps = c_rnd_quant.copy()
-c_rnd_9taps.update({'g_nof_taps':9,'g_coefs_file_prefix':c_file_prefix_9})
-c_rnd_3streams =  c_rnd_9taps.copy()
-c_rnd_3streams.update({'g_nof_streams':3})
-c_rnd_4channels = c_rnd_3streams.copy()
-c_rnd_4channels.update({'g_nof_chan':2})
+c_rnd_quant_single = c_act_single.copy()
+c_rnd_quant_single.update({'g_enable_in_val_gaps':True})
+c_rnd_9taps_single = c_rnd_quant_single.copy()
+c_rnd_9taps_single.update({'g_nof_taps':9,'g_coefs_file_prefix':c_file_prefix_9})
+c_rnd_3streams_single =  c_rnd_9taps_single.copy()
+c_rnd_3streams_single.update({'g_nof_streams':3})
+c_rnd_4channels_single = c_rnd_3streams_single.copy()
+c_rnd_4channels_single.update({'g_nof_chan':2})
 
-TB_SINGLE_FILTER = casper_filter_lib.test_bench("tb_tb_vu_fil_ppf_single")
-TB_SINGLE_FILTER.add_config(
-    name = 'u_act',
-    generics=c_act
-)
-TB_SINGLE_FILTER.add_config(
-    name = 'u_rnd_quant',
-    generics=c_rnd_quant
-)
-TB_SINGLE_FILTER.add_config(
-    name = 'u_rnd_9taps',
-    generics=c_rnd_9taps
-)
-TB_SINGLE_FILTER.add_config(
-    name = 'u_rnd_3streams',
-    generics=c_rnd_3streams
-)
-TB_SINGLE_FILTER.add_config(
-    name = 'u_rnd_4channels',
-    generics=c_rnd_4channels
-)
+# WIDE FILTER TESTS wb_factor > 1
+if args.wide:
+    c_act4_wide = c_act_single.copy()
+    c_act4_wide.update({'g_big_endian_wb_in':True,'g_big_endian_wb_out':True,'g_wb_factor':4})
+    c_act4_be_le_wide = c_act4_wide.copy()
+    c_act4_be_le_wide.update({'g_big_endian_wb_out':False})
+    c_act4_le_le_wide = c_act4_be_le_wide.copy()
+    c_act4_le_le_wide.update({'g_big_endian_wb_in':False})
+    c_rnd4_quant_wide = c_act4_wide.copy()
+    c_rnd4_quant_wide.update({'g_enable_in_val_gaps':True})
+    c_rnd4_9taps_wide = c_rnd4_quant_wide.copy()
+    c_rnd4_9taps_wide.update({'g_coefs_file_prefix':c_file_prefix_9,'g_nof_taps':9})
+    c_rnd4_3streams_wide = c_rnd4_9taps_wide.copy()
+    c_rnd4_3streams_wide.update({'g_nof_streams':3})
+    c_rnd4_4channels_wide = c_rnd4_3streams_wide.copy()
+    c_rnd4_4channels_wide.update({'g_nof_chan':4})
+
+# SINGLE FILTER TESTS
+if args.single:
+    TB_SINGLE_FILTER = casper_filter_lib.test_bench("tb_tb_vu_fil_ppf_single")
+    TB_SINGLE_FILTER.add_config(
+        name = 'u_act_single',
+        generics=c_act_single
+    )
+    TB_SINGLE_FILTER.add_config(
+        name = 'u_rnd_quant_single',
+        generics=c_rnd_quant_single
+    )
+    TB_SINGLE_FILTER.add_config(
+        name = 'u_rnd_9taps_single',
+        generics=c_rnd_9taps_single
+    )
+    TB_SINGLE_FILTER.add_config(
+        name = 'u_rnd_3streams_single',
+        generics=c_rnd_3streams_single
+    )
+    TB_SINGLE_FILTER.add_config(
+        name = 'u_rnd_4channels_single',
+        generics=c_rnd_4channels_single
+    )
+
+if args.wide:
+    # WIDE FILTER TESTS wb_factor = 1
+    TB_WIDE_FILTER = casper_filter_lib.test_bench("tb_tb_vu_fil_ppf_wide")
+    TB_WIDE_FILTER.add_config(
+        name = "u1_act_wide",
+        generics=c_act_single
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u1_rnd_quant_wide",
+        generics=c_rnd_quant_single
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u1_rnd_9taps_wide",
+        generics=c_rnd_9taps_single
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u1_rnd_3streams_wide",
+        generics=c_rnd_3streams_single
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u1_rnd_4channels_wide",
+        generics=c_rnd_4channels_single
+    )
+
+    # WIDE FILTER TESTS wb_factor > 1
+    TB_WIDE_FILTER.add_config(
+        name = "u4_act_wide",
+        generics=c_act4_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_act_be_le_wide",
+        generics=c_act4_be_le_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_act_le_le_wide",
+        generics=c_act4_le_le_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_rnd_quant_wide",
+        generics=c_rnd4_quant_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_rnd_9taps_wide",
+        generics=c_rnd4_9taps_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_rnd_3streams_wide",
+        generics=c_rnd4_3streams_wide
+    )
+    TB_WIDE_FILTER.add_config(
+        name = "u4_rnd_4channels_wide",
+        generics=c_rnd4_4channels_wide
+    )
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])

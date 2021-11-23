@@ -47,7 +47,7 @@ ARCHITECTURE tb OF tb_tb_fil_ppf_wide IS
   CONSTANT c_fil_ppf_1_rnd_9taps      : t_fil_ppf := (1, 0, 64, 9, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
   CONSTANT c_fil_ppf_1_rnd_3streams   : t_fil_ppf := (1, 0, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
   CONSTANT c_fil_ppf_1_rnd_4channels  : t_fil_ppf := (1, 2, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
-  CONSTANT c_fil_ppf_4_act            : t_fil_ppf := (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+  CONSTANT c_fil_ppf_4_act            : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
   CONSTANT c_fil_ppf_4_act_be_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
   CONSTANT c_fil_ppf_4_act_le_le      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
   CONSTANT c_fil_ppf_4_rnd_quant      : t_fil_ppf := (4, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);

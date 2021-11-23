@@ -80,6 +80,13 @@ entity tb_fil_ppf_wide is
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
     g_enable_in_val_gaps : boolean := FALSE
   );
+  PORT   (
+    o_rst       : out std_logic;
+    o_clk       : out std_logic;
+    o_tb_end    : out std_logic;
+    o_test_msg  : out string(1 to 80);
+    o_test_pass : out boolean
+  );
 end entity tb_fil_ppf_wide;
 
 architecture tb of tb_fil_ppf_wide is
@@ -115,7 +122,7 @@ architecture tb of tb_fil_ppf_wide is
   
   -- signal definitions
   signal tb_end         : std_logic := '0';
-  signal tb_end_mm      : std_logic := '0';
+  -- signal tb_end_mm      : std_logic := '0';
   signal tb_end_almost  : std_logic := '0';
   signal clk            : std_logic := '0';
   signal rst            : std_logic := '0';
@@ -148,6 +155,10 @@ begin
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
   in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps=TRUE ELSE '0';
+
+  o_clk <= clk;
+  o_rst <= rst;
+  o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
   -- SEND IMPULSE TO THE DATA INPUT
@@ -194,7 +205,7 @@ begin
 
     -- Wait until done
     proc_common_wait_some_cycles(clk, c_gap_factor*c_nof_valid_per_tap);  -- PPF latency of 1 tap
-    proc_common_wait_until_high(clk, tb_end_mm);                          -- MM read done
+    -- proc_common_wait_until_high(clk, tb_end_mm);                          -- MM read done
     tb_end_almost <= '1';
     proc_common_wait_some_cycles(clk, 10);
     tb_end <= '1';
@@ -328,6 +339,9 @@ begin
   p_verify_out_dat : process(clk)
     variable v_coeff : integer;
     variable vP      : natural;
+    variable v_test_pass : BOOLEAN := TRUE;
+    variable v_test_msg : STRING(1 to 80);
+    variable v_tmp_val : integer;
   begin
     if rising_edge(clk) then
       if out_val='1' then
@@ -349,12 +363,19 @@ begin
             v_coeff := -ref_dat_arr(vP);  -- compensate for full scale negative input pulse
           end if;
           for S in 0 to g_fil_ppf.nof_streams-1 loop
+            v_tmp_val := TO_SINT(out_dat_arr(P*g_fil_ppf.nof_streams + S));
+            v_test_pass := v_tmp_val = v_coeff;
             -- all streams carry the same data
-            assert TO_SINT(out_dat_arr(P*g_fil_ppf.nof_streams + S)) = v_coeff report "Output data error" severity failure;
+            if not v_test_pass then
+              v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & " but got: " & integer'image(v_coeff),o_test_msg'length,'.');
+            end if;
+            assert v_test_pass report v_test_msg;
           end loop;
         end loop;
       end if;
     end if;
+    o_test_msg <= v_test_msg;
+    o_test_pass <= v_test_pass;
   end process;
 
 end tb;
