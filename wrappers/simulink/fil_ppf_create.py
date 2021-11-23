@@ -217,7 +217,7 @@ def run(argv):
                         '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
                     with open(t_outfilename, 'w+') as fp:
                         for i in range(pfir.file_nof_points):
-                            s = '%x\n' % (
+                            s = ('%%0%dx\n' % np.ceil(pfir.coef_w/4)) % (
                                 pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
                             fp.write(s)
                 else:
