@@ -46,7 +46,8 @@ entity fft_reorder_sepa_pipe is
 		g_dont_flip_channels : boolean := false; -- set true to preserve the channel interleaving when g_bit_flip is true, otherwise the channels get separated in time when g_bit_flip is true
 		g_separate           : boolean := true; -- apply separation bins for two real inputs
 		g_nof_chan           : natural := 0; -- Exponent of nr of subbands (0 means 1 subband, 1 => 2 sb, 2 => 4 sb, etc )
-		g_ram_primitive      : string  := "auto"
+		g_ram_primitive      : string  := "auto";
+		g_in_place_reorder   : boolean := false -- use single page buffer for reorder (out_val will not be a contiguous pulse though so NOT guaranteed backwards compatible)
 	);
 	port(
 		clken   : in  std_logic := '1';
@@ -72,6 +73,29 @@ architecture rtl of fft_reorder_sepa_pipe is
 	signal adr_chan_cnt   : std_logic_vector(c_adr_chan_w - 1 downto 0);
 	signal adr_tot_cnt    : std_logic_vector(c_adr_tot_w - 1 downto 0);
 
+    -- In-place reorder addressing (read and write addresses are the same)
+    signal base_counter                 : std_logic_vector(c_adr_points_w downto 0);      -- counter which serves as a base
+    signal other_counter                : std_logic;
+    signal adr_up, adr_up_rev           : std_logic_vector(c_adr_points_w - 1 downto 0);  -- we move between adr_up and adr_down when separating
+    signal adr_down, adr_down_rev       : std_logic_vector(c_adr_points_w - 1 downto 0);
+    signal up                           : std_logic; 
+    signal down_d1, down_d2, down       : std_logic;  
+    signal adr                          : std_logic_vector(c_adr_points_w - 1 downto 0);  -- final address
+    
+    signal buf_wr_dat                   : std_logic_vector(c_dat_w - 1 downto 0); -- buffer input
+    signal buf_wr_en                    : std_logic;
+       
+    signal buf_rd_dat, buf_rd_dat_d1, buf_rd_dat_d2     : std_logic_vector(c_dat_w - 1 downto 0); -- buffer output
+    signal buf_rd_val, buf_rd_val_d1                    : std_logic; 
+    signal first_down, first_down_d1, first_down_d2     : std_logic;
+
+    signal sep_in_dat, sep_out_dat      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_in_val, sep_out_val      : std_logic;
+
+    signal sep_out_dat_i      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_out_val_i      : std_logic;
+    --    
+        
 	signal adr_fft_flip  : std_logic_vector(c_adr_points_w - 1 downto 0);
 	signal adr_fft_shift : std_logic_vector(c_adr_points_w - 1 downto 0);
 
@@ -108,238 +132,392 @@ architecture rtl of fft_reorder_sepa_pipe is
 
 begin
 
-	out_dat_i <= rd_dat;
-	out_val_i <= rd_val;
+    -- in-place reorder
+    --gen_in_place_reorder : if g_in_place_reorder = true generate
+       
+        base_cnt : entity casper_counter_lib.common_counter
+            generic map(
+                g_latency => 1,
+                g_init    => 0,
+                g_width   => c_adr_points_w + 1
+            )
+            PORT MAP(
+                rst    => rst,
+                clk    => clk,
+                cnt_en => cnt_ena,
+                count  => base_counter 
+            );
+            
+        -- if separating and/or reordering address is either straight counter
+        -- or manipulated counter    
+        other_counter <= base_counter(c_adr_points_w);
+    
+        adr_up <= '0' & base_counter(c_adr_points_w - 1 downto 1); 
+        adr_up_rev <= flip(adr_up); --bit reverse if we're reordering
+    
+        adr_down_rev <= flip(adr_down); -- bit reversed for if we're reordering
+    
+        down <= base_counter(0); -- are we using the down counter or up when separating
+        up <= not(down);
+        
+        --the first down value is special so we check for it.
+        --first_down <= '1' when adr = TO_UVEC((2**c_adr_points_w)-1, c_adr_points_w) else '0';
+    
+        proc_buffer_inputs:process(clk)
+        begin
+            if rising_edge(clk) then
+                -- we delay up counter by one clock cycle for down counter 
+                -- counting down is the inversion of counting up
+                adr_down <= not(adr_up);
+        
+                -- choose between various counters for address                    
+                -- if we are choosing straight then simple base counter
+                if other_counter = '0' then
+                    adr <= base_counter(c_adr_points_w - 1 downto 0);
+                else    
+                    if down = '1' then
+                        adr <= adr_down_rev;
+                        --adr <= adr_down;
+                    else 
+                        adr <= adr_up_rev;
+                        --adr <= adr_up;
+                    end if;
+                end if; 
+                
+                down_d1 <= down;    -- aligned with inputs to buffer 
+                down_d2 <= down_d1; -- aligned with output of buffer 
+                
+                -- register other inputs to align with address
+                buf_wr_dat <= in_dat; 
+                buf_wr_en <= in_val;
+                
+                -- aligned with inputs to buffer
+                if base_counter(c_adr_points_w - 1 downto 0) = TO_UVEC(1, c_adr_points_w) then
+                    first_down <= '1';
+                else
+                    first_down <= '0';
+                end if;
+                
+                first_down_d1 <= first_down;     -- aligned with output of buffer
+                
+            end if;
+        end process;
+    
+        u_buff_inplace : entity casper_ram_lib.common_paged_ram_r_w
+            generic map(
+                g_str           => "use_adr",
+                g_data_w        => c_dat_w,
+                g_nof_pages     => 1,
+                g_page_sz       => c_page_size,
+                g_wr_start_page => 0,
+                g_rd_start_page => 0,
+                g_rd_latency    => 1,
+                g_ram_primitive => g_ram_primitive
+            )
+            port map(
+                rst          => rst,
+                clk          => clk,
+                wr_next_page => '0',
+                wr_adr       => adr,
+                wr_en        => buf_wr_en,
+                wr_dat       => buf_wr_dat,
+                rd_next_page => '0',
+                rd_adr       => adr,
+                rd_en        => buf_wr_en,
+                rd_dat       => buf_rd_dat,
+                rd_val       => buf_rd_val
+            );
+        
+        -- When separating two real streams we need to combine the output data
+        -- from the address counter going up, with the data from the down address counter
+        -- offset by 1 (except for the first down counter value) 
+        proc_buffer_outputs : process(clk)
+        begin
+            if rising_edge(clk) then
+                if (down_d2 = '1') then
+                    if (first_down_d1 = '1') then
+                        sep_in_dat <= buf_rd_dat_d1;
+                    else
+                        sep_in_dat <= buf_rd_dat_d2;
+                    end if;
+                    sep_in_val <= buf_rd_val_d1;
+                else 
+                    sep_in_dat <= buf_rd_dat;
+                    sep_in_val <= buf_rd_val;
+                end if;
+                
+                -- delay buffer output
+                if (buf_rd_val = '1') then
+                    buf_rd_dat_d1 <= buf_rd_dat;
+                end if;    
+                if (buf_rd_val_d1 = '1') then
+                    buf_rd_dat_d2 <= buf_rd_dat_d1;
+                end if;
+                
+                buf_rd_val_d1 <= buf_rd_val;
+                
+            end if;
+        end process;
+        
+        u_separate_inplace : entity work.fft_sepa
+            port map(
+                clken   => clken,
+                clk     => clk,
+                rst     => rst,
+                in_dat  => sep_in_dat,
+                in_val  => sep_in_val,
+                out_dat => sep_out_dat,
+                out_val => sep_out_val
+            );
+            
+    --end generate; -- in_place_reorder
+    
+-- inplace reorder
+    --gen_not_in_place_reorder: if g_in_place_reorder = false generate
 
-	wr_dat <= in_dat;
-	wr_en  <= in_val;
-
-	next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and wr_en = '1' else '0';
-
-	adr_tot_cnt <= adr_chan_cnt & adr_points_cnt;
-
-	adr_fft_flip  <= flip(adr_points_cnt); -- flip the addresses to perform the bit-reversed reorder
-	adr_fft_shift <= fft_shift(adr_fft_flip); -- invert MSbit for fft_shift
-
-	gen_complex : if g_separate = false generate
-		no_bit_flip : if g_bit_flip = false generate
-			wr_adr <= adr_tot_cnt;
-		end generate;
-		gen_bit_flip_spectrum_and_channels : if g_bit_flip = true and g_dont_flip_channels = false generate -- the channels get separated in time
-			gen_no_fft_shift_sac : if g_fft_shift = false generate
-				wr_adr <= adr_chan_cnt & adr_fft_flip;
-			end generate;
-			gen_fft_shift_sac : if g_fft_shift = true generate
-				wr_adr <= adr_chan_cnt & adr_fft_shift;
-			end generate;
-		end generate;
-		gen_bit_flip_spectrum_only : if g_bit_flip = true and g_dont_flip_channels = true generate -- the channel interleaving in time is preserved
-			gen_no_fft_shift_so : if g_fft_shift = false generate
-				wr_adr <= adr_fft_flip & adr_chan_cnt;
-			end generate;
-			gen_fft_shift_so : if g_fft_shift = true generate
-				wr_adr <= adr_fft_shift & adr_chan_cnt;
-			end generate;
-		end generate;
-	end generate;
-	gen_two_real : if g_separate = true generate
-		gen_bit_flip_spectrum_and_channels : if g_dont_flip_channels = false generate -- the channels get separated in time
-			wr_adr <= adr_chan_cnt & adr_fft_flip;
-		end generate;
-		gen_bit_flip_spectrum_only : if g_dont_flip_channels = true generate -- the channel interleaving in time is preserved
-			wr_adr <= adr_fft_flip & adr_chan_cnt;
-		end generate;
-	end generate;
-
-	u_adr_point_cnt : entity casper_counter_lib.common_counter
-		generic map(
-			g_latency => 1,
-			g_init    => 0,
-			g_width   => ceil_log2(g_nof_points)
-		)
-		PORT MAP(
-			rst    => rst,
-			clk    => clk,
-			cnt_en => cnt_ena,
-			count  => adr_points_cnt
-		);
-
-	-- Generate on c_nof_channels to avoid simulation warnings on TO_UINT(adr_chan_cnt) when adr_chan_cnt is a NULL array
-	one_chan : if c_nof_channels = 1 generate
-		cnt_ena <= '1' when in_val = '1' else '0';
-	end generate;
-	more_chan : if c_nof_channels > 1 generate
-		cnt_ena <= '1' when in_val = '1' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
-	end generate;
-
-	u_adr_chan_cnt : entity casper_counter_lib.common_counter
-		generic map(
-			g_latency => 1,
-			g_init    => 0,
-			g_width   => g_nof_chan
-		)
-		PORT MAP(
-			rst    => rst,
-			clk    => clk,
-			cnt_en => in_val,
-			count  => adr_chan_cnt
-		);
-
-	u_buff : entity casper_ram_lib.common_paged_ram_r_w
-		generic map(
-			g_str           => "use_adr",
-			g_data_w        => c_dat_w,
-			g_nof_pages     => 2,
-			g_page_sz       => c_page_size,
-			g_wr_start_page => 0,
-			g_rd_start_page => 1,
-			g_rd_latency    => 1,
-			g_ram_primitive => g_ram_primitive
-		)
-		port map(
-			rst          => rst,
-			clk          => clk,
-			wr_next_page => next_page,
-			wr_adr       => wr_adr,
-			wr_en        => wr_en,
-			wr_dat       => wr_dat,
-			rd_next_page => next_page,
-			rd_adr       => rd_adr,
-			rd_en        => rd_en,
-			rd_dat       => rd_dat,
-			rd_val       => rd_val
-		);
-
-	-- If the separate functionality is enabled the read address will 
-	-- be composed of an up and down counter that are interleaved. This is
-	-- reflected in the s_run_separate state. 
-	-- The process facilitates the first stage of the separate function
-	-- It generates the read address in order to 
-	-- create the data stream that is required for the separate
-	-- block. The order for a 1024 ponit FFT is:
-	-- X(0), X(1024), X(1), X(1023), X(2), X(1022), etc...              
-	--          |
-	--          |
-	--       This value is X(0), because modulo N addressing is used. 
-	--
-	-- If separate functionality is disbaled a "normal" coun ter is used 
-	-- to read out the dual page memory. State: s_run_normal
-
-	comb : process(r, rst, next_page)
-		variable v : reg_type;
-	begin
-		v       := r;
-		v.rd_en := '0';
-
-		case r.state is
-			when s_idle =>
-				if (next_page = '1') then -- Both counters are reset on page turn. 
-					v.rd_en    := '1';
-					v.switch   := '0';
-					v.count_up := 0;
-					if (g_separate = true) then -- Choose the appropriate run state 
-						v.count_chan := 0;
-						v.count_down := g_nof_points;
-						v.state      := s_run_separate;
-					else
-						v.state := s_run_normal;
-					end if;
-				end if;
-
-			when s_run_separate =>
-				v.rd_en := '1';
-				if (r.switch = '0') then
-					v.switch   := '1';
-					v.count_up := r.count_up + 1;
-				end if;
-
-				if (r.switch = '1') then
-					v.switch     := '0';
-					v.count_down := r.count_down - 1;
-				end if;
-
-				if (next_page = '1') then -- Both counters are reset on page turn. 
-					v.count_up   := 0;
-					v.count_down := g_nof_points;
-					v.count_chan := 0;
-				elsif (r.count_up = g_nof_points / 2 and r.count_chan < c_nof_channels - 1) then -- 
-					v.count_up   := 0;
-					v.count_down := g_nof_points;
-					v.count_chan := r.count_chan + 1;
-				elsif (r.count_up = g_nof_points / 2) then -- Pagereading is done, but there is not yet new data available
-					v.rd_en := '0';
-					v.state := s_idle;
-				end if;
-
-			when s_run_normal =>
-				v.rd_en := '1';
-				if (next_page = '1') then -- Counters is reset on page turn.         
-					v.count_up := 0;
-				elsif (r.count_up = c_page_size - 1) then -- Pagereading is done, but there is not yet new data available 
-					v.rd_en := '0';
-					v.state := s_idle;
-				else
-					v.count_up := r.count_up + 1;
-				end if;
-
-			when others =>
-				v.state := s_idle;
-
-		end case;
-
-		if (rst = '1') then
-			v.switch     := '0';
-			v.rd_en      := '0';
-			v.count_up   := 0;
-			v.count_down := 0;
-			v.count_chan := 0;
-			v.state      := s_idle;
-		end if;
-
-		rin <= v;
-
-	end process comb;
-
-	regs : process(clk)
-	begin
-		if rising_edge(clk) then
-			r <= rin;
-		end if;
-	end process;
-
-	rd_en <= r.rd_en;
-
-	gen_separate : if g_separate = true generate
-		-- The read address toggles between the upcounter and the downcounter.
-		-- Modulo N addressing is done with the TO_UVEC function.
-		rd_adr_up   <= TO_UVEC(r.count_up, c_adr_points_w + 1); -- eg.    0 .. 512
-		rd_adr_down <= TO_UVEC(r.count_down, c_adr_points_w + 1); -- eg. 1024 .. 513, use 1 bit more to avoid truncation warning on 1024 ^= 0
-		rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else 
-					TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
-		-- The data that is read from the memory is fed to the separate block
-		-- that performs the 2nd stage of separation. The output of the 
-		-- separate unit is connected to the output of rtwo_order_separate unit. 
-		-- The 2nd stage of the separate funtion is performed:
-		u_separate : entity work.fft_sepa
-			port map(
-				clken   => clken,
-				clk     => clk,
-				rst     => rst,
-				in_dat  => out_dat_i,
-				in_val  => out_val_i,
-				out_dat => out_dat,
-				out_val => out_val
-			);
-	end generate;
-
-	-- If the separate functionality is disabled the 
-	-- read address is received from the address counter and
-	-- the output signals are directly driven. 
-	gen_no_separate : if g_separate = false generate
-		rd_adr  <= TO_UVEC(r.count_up, c_adr_tot_w);
-		out_dat <= out_dat_i;
-		out_val <= out_val_i;
-	end generate;
-
+        out_dat_i <= rd_dat;
+        out_val_i <= rd_val;
+    
+        wr_dat <= in_dat;
+        wr_en  <= in_val;
+    
+        next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and wr_en = '1' else '0';
+    
+        adr_tot_cnt <= adr_chan_cnt & adr_points_cnt;
+    
+        adr_fft_flip  <= flip(adr_points_cnt); -- flip the addresses to perform the bit-reversed reorder
+        adr_fft_shift <= fft_shift(adr_fft_flip); -- invert MSbit for fft_shift
+    
+        gen_complex : if g_separate = false generate
+            no_bit_flip : if g_bit_flip = false generate
+                wr_adr <= adr_tot_cnt;
+            end generate;
+            gen_bit_flip_spectrum_and_channels : if g_bit_flip = true and g_dont_flip_channels = false generate -- the channels get separated in time
+                gen_no_fft_shift_sac : if g_fft_shift = false generate
+                    wr_adr <= adr_chan_cnt & adr_fft_flip;
+                end generate;
+                gen_fft_shift_sac : if g_fft_shift = true generate
+                    wr_adr <= adr_chan_cnt & adr_fft_shift;
+                end generate;
+            end generate;
+            gen_bit_flip_spectrum_only : if g_bit_flip = true and g_dont_flip_channels = true generate -- the channel interleaving in time is preserved
+                gen_no_fft_shift_so : if g_fft_shift = false generate
+                    wr_adr <= adr_fft_flip & adr_chan_cnt;
+                end generate;
+                gen_fft_shift_so : if g_fft_shift = true generate
+                    wr_adr <= adr_fft_shift & adr_chan_cnt;
+                end generate;
+            end generate;
+        end generate;
+        gen_two_real : if g_separate = true generate
+            gen_bit_flip_spectrum_and_channels : if g_dont_flip_channels = false generate -- the channels get separated in time
+                wr_adr <= adr_chan_cnt & adr_fft_flip;
+            end generate;
+            gen_bit_flip_spectrum_only : if g_dont_flip_channels = true generate -- the channel interleaving in time is preserved
+                wr_adr <= adr_fft_flip & adr_chan_cnt;
+            end generate;
+        end generate;
+    
+        u_adr_point_cnt : entity casper_counter_lib.common_counter
+            generic map(
+                g_latency => 1,
+                g_init    => 0,
+                g_width   => ceil_log2(g_nof_points)
+            )
+            PORT MAP(
+                rst    => rst,
+                clk    => clk,
+                cnt_en => cnt_ena,
+                count  => adr_points_cnt
+            );
+    
+        -- Generate on c_nof_channels to avoid simulation warnings on TO_UINT(adr_chan_cnt) when adr_chan_cnt is a NULL array
+        one_chan : if c_nof_channels = 1 generate
+            cnt_ena <= '1' when in_val = '1' else '0';
+        end generate;
+        more_chan : if c_nof_channels > 1 generate
+            cnt_ena <= '1' when in_val = '1' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
+        end generate;
+    
+        u_adr_chan_cnt : entity casper_counter_lib.common_counter
+            generic map(
+                g_latency => 1,
+                g_init    => 0,
+                g_width   => g_nof_chan
+            )
+            PORT MAP(
+                rst    => rst,
+                clk    => clk,
+                cnt_en => in_val,
+                count  => adr_chan_cnt
+            );
+    
+        u_buff : entity casper_ram_lib.common_paged_ram_r_w
+            generic map(
+                g_str           => "use_adr",
+                g_data_w        => c_dat_w,
+                g_nof_pages     => 2,
+                g_page_sz       => c_page_size,
+                g_wr_start_page => 0,
+                g_rd_start_page => 1,
+                g_rd_latency    => 1,
+                g_ram_primitive => g_ram_primitive
+            )
+            port map(
+                rst          => rst,
+                clk          => clk,
+                wr_next_page => next_page,
+                wr_adr       => wr_adr,
+                wr_en        => wr_en,
+                wr_dat       => wr_dat,
+                rd_next_page => next_page,
+                rd_adr       => rd_adr,
+                rd_en        => rd_en,
+                rd_dat       => rd_dat,
+                rd_val       => rd_val
+            );
+    
+        -- If the separate functionality is enabled the read address will 
+        -- be composed of an up and down counter that are interleaved. This is
+        -- reflected in the s_run_separate state. 
+        -- The process facilitates the first stage of the separate function
+        -- It generates the read address in order to 
+        -- create the data stream that is required for the separate
+        -- block. The order for a 1024 ponit FFT is:
+        -- X(0), X(1024), X(1), X(1023), X(2), X(1022), etc...              
+        --          |
+        --          |
+        --       This value is X(0), because modulo N addressing is used. 
+        --
+        -- If separate functionality is disbaled a "normal" coun ter is used 
+        -- to read out the dual page memory. State: s_run_normal
+    
+        comb : process(r, rst, next_page)
+            variable v : reg_type;
+        begin
+            v       := r;
+            v.rd_en := '0';
+    
+            case r.state is
+                when s_idle =>
+                    if (next_page = '1') then -- Both counters are reset on page turn. 
+                        v.rd_en    := '1';
+                        v.switch   := '0';
+                        v.count_up := 0;
+                        if (g_separate = true) then -- Choose the appropriate run state 
+                            v.count_chan := 0;
+                            v.count_down := g_nof_points;
+                            v.state      := s_run_separate;
+                        else
+                            v.state := s_run_normal;
+                        end if;
+                    end if;
+    
+                when s_run_separate =>
+                    v.rd_en := '1';
+                    if (r.switch = '0') then
+                        v.switch   := '1';
+                        v.count_up := r.count_up + 1;
+                    end if;
+    
+                    if (r.switch = '1') then
+                        v.switch     := '0';
+                        v.count_down := r.count_down - 1;
+                    end if;
+    
+                    if (next_page = '1') then -- Both counters are reset on page turn. 
+                        v.count_up   := 0;
+                        v.count_down := g_nof_points;
+                        v.count_chan := 0;
+                    elsif (r.count_up = g_nof_points / 2 and r.count_chan < c_nof_channels - 1) then -- 
+                        v.count_up   := 0;
+                        v.count_down := g_nof_points;
+                        v.count_chan := r.count_chan + 1;
+                    elsif (r.count_up = g_nof_points / 2) then -- Pagereading is done, but there is not yet new data available
+                        v.rd_en := '0';
+                        v.state := s_idle;
+                    end if;
+    
+                when s_run_normal =>
+                    v.rd_en := '1';
+                    if (next_page = '1') then -- Counters is reset on page turn.         
+                        v.count_up := 0;
+                    elsif (r.count_up = c_page_size - 1) then -- Pagereading is done, but there is not yet new data available 
+                        v.rd_en := '0';
+                        v.state := s_idle;
+                    else
+                        v.count_up := r.count_up + 1;
+                    end if;
+    
+                when others =>
+                    v.state := s_idle;
+    
+            end case;
+    
+            if (rst = '1') then
+                v.switch     := '0';
+                v.rd_en      := '0';
+                v.count_up   := 0;
+                v.count_down := 0;
+                v.count_chan := 0;
+                v.state      := s_idle;
+            end if;
+    
+            rin <= v;
+    
+        end process comb;
+    
+        regs : process(clk)
+        begin
+            if rising_edge(clk) then
+                r <= rin;
+            end if;
+        end process;
+    
+        rd_en <= r.rd_en;
+    
+        gen_separate : if g_separate = true generate
+            -- The read address toggles between the upcounter and the downcounter.
+            -- Modulo N addressing is done with the TO_UVEC function.
+            rd_adr_up   <= TO_UVEC(r.count_up, c_adr_points_w + 1); -- eg.    0 .. 512
+            rd_adr_down <= TO_UVEC(r.count_down, c_adr_points_w + 1); -- eg. 1024 .. 513, use 1 bit more to avoid truncation warning on 1024 ^= 0
+            rd_adr      <= TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_up(c_adr_points_w - 1 DOWNTO 0) when r.switch = '0' else 
+                        TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
+            -- The data that is read from the memory is fed to the separate block
+            -- that performs the 2nd stage of separation. The output of the 
+            -- separate unit is connected to the output of rtwo_order_separate unit. 
+            -- The 2nd stage of the separate funtion is performed:
+            u_separate : entity work.fft_sepa
+                port map(
+                    clken   => clken,
+                    clk     => clk,
+                    rst     => rst,
+                    in_dat  => out_dat_i,
+                    in_val  => out_val_i,
+                    out_dat => sep_out_dat_i,
+                    out_val => sep_out_val_i
+                );
+        end generate;
+    
+        -- If the separate functionality is disabled the 
+        -- read address is received from the address counter and
+        -- the output signals are directly driven. 
+        gen_no_separate : if g_separate = false generate
+            rd_adr  <= TO_UVEC(r.count_up, c_adr_tot_w);
+            sep_out_dat_i <= out_dat_i;
+            sep_out_val_i <= out_val_i;
+        end generate;
+        
+    --end generate; --not_in_place_reorder
+    
+    gen_in_place_reorder : if g_in_place_reorder = true generate
+        out_dat <= sep_out_dat;
+        out_val <= sep_out_val;        
+    end generate;
+    
+    gen_not_in_place_reorder : if g_in_place_reorder = false generate
+        out_dat <= sep_out_dat_i;
+        out_val <= sep_out_val_i;        
+    end generate;
 end rtl;
 
