@@ -591,6 +591,7 @@ begin
   ---------------------------------------------------------------
   p_verify_output : process(sclk)
   VARIABLE v_test_pass : BOOLEAN := TRUE;
+  VARIABLE v_all_tests_pass : BOOLEAN := TRUE;
   VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
     -- verify at sclk rising edge to avoid void differences due to delta-cycle differences that can occur between combinatorial signals
@@ -599,44 +600,51 @@ begin
         if reg_out_channel=1 then
           --if reg_out_val_a='1' then
             v_test_pass := out_re_a_scope = 0;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A real error in channel",o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              report v_test_msg severity error;
             end if;
             v_test_pass := out_im_a_scope = 0;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A imag error in channel",o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              report v_test_msg severity error;
             end if;
           --end if;
           v_test_pass := reg_out_val_b = '1';
+          v_all_tests_pass := v_all_tests_pass and v_test_pass;
           if not v_test_pass then
             v_test_msg := pad("Output data B real/imag error in channel",o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
         else
           --if reg_out_val_a='1' then
             v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data A real error, expected: "& integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data A real error, expected: "& integer'image(exp_re_a_scope) & " but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
             v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data A imag error, expected: "& integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data A imag error, expected: "& integer'image(exp_im_a_scope) & " but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
           --end if;
           if reg_out_val_b='1' then
             v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data B real error, expected: "& integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data B real error, expected: "& integer'image(exp_re_b_scope) & " but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
             v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data B imag error, expected: "& integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data B imag error, expected: "& integer'image(exp_im_b_scope) & " but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
           end if;
         end if;
@@ -644,26 +652,29 @@ begin
         if reg_out_val_c='1' then
           if reg_out_channel=1 then
             v_test_pass := out_re_a_scope = 0 and out_im_c_scope = 0;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data C real/imag error in channel",o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              report v_test_msg severity error;
             end if;
           else
             v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data C real error, expected: "& integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data C real error, expected: "& integer'image(exp_re_c_scope) & " but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
             v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
-              v_test_msg := pad("Output data C imag error, expected: "& integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-              report v_test_msg severity failure;
+              v_test_msg := pad("Output data C imag error, expected: "& integer'image(exp_im_c_scope) & " but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
+              report v_test_msg severity error;
             end if;
           end if;
         end if;
       end if;
     end if;
-    o_test_pass <= v_test_pass;
+    o_test_pass <= v_all_tests_pass;
     o_test_msg <= v_test_msg;
   end process;
 

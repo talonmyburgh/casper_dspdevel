@@ -1,6 +1,5 @@
 from vunit import VUnit
-from os.path import join, dirname
-
+from os.path import join, dirname, abspath
 # script_dir = dirname(__file__)
 script_dir = dirname(__file__)
 
@@ -193,32 +192,32 @@ wpfb_lib.add_source_file(join(script_dir, "tb_tb_vu_wbpfb_unit_wide.vhd"))
 
 # CONSTANTS FOR TESTS
 c_stage_dat_extra_w = 28
-c_pre_ab              = "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_32points_16b"
-c_pre_ab_1024         = "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b"
-c_pre_ab_v2           = "../../../../../data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b"
-c_pre_c               = "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_32points_16b"
-c_pre_c_64            = "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_64points_16b"
-c_pre_c_1024          = "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_1024points_16b"
+c_pre_ab              = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_32points_16b"))
+c_pre_ab_1024         = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b"))
+c_pre_ab_v2           = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b"))
+c_pre_c               = abspath(join(script_dir, "./data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_32points_16b"))
+c_pre_c_64            = abspath(join(script_dir, "./data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_64points_16b"))
+c_pre_c_1024          = abspath(join(script_dir, "./data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_1024points_16b"))
 
-c_sinusoid_chirp_1024 = "../../../../../data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b.dat"
-c_sinusoid_chirp      = "../../../../../data/run_pfb_m_sinusoid_chirp_8b_16taps_32points_16b.dat"
-c_sinusoid_1024       = "../../../../../data/run_pfb_m_sinusoid_8b_16taps_1024points_16b.dat"
-c_sinusoid_1024_v2    = "../../../../../data/run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b.dat"
-c_sinusoid            = "../../../../../data/run_pfb_m_sinusoid_8b_16taps_32points_16b.dat"
-c_impulse_chirp       = "../../../../../data/run_pfb_m_impulse_chirp_8b_16taps_32points_16b.dat"
-c_noise_1024          = "../../../../../data/run_pfb_m_noise_8b_16taps_1024points_16b.dat"
-c_noise               = "../../../../../data/run_pfb_m_noise_8b_16taps_32points_16b.dat"
-c_dc_agwn             = "../../../../../data/run_pfb_m_dc_agwn_8b_16taps_32points_16b.dat"
+c_sinusoid_chirp_1024 = abspath(join(script_dir, "./data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b.dat"))
+c_sinusoid_chirp      = abspath(join(script_dir, "./data/run_pfb_m_sinusoid_chirp_8b_16taps_32points_16b.dat"))
+c_sinusoid_1024       = abspath(join(script_dir, "./data/run_pfb_m_sinusoid_8b_16taps_1024points_16b.dat"))
+c_sinusoid_1024_v2    = abspath(join(script_dir, "./data/run_pfb_m_v2_sinusoid_8b_16taps_1024points_16b.dat"))
+c_sinusoid            = abspath(join(script_dir, "./data/run_pfb_m_sinusoid_8b_16taps_32points_16b.dat"))
+c_impulse_chirp       = abspath(join(script_dir, "./data/run_pfb_m_impulse_chirp_8b_16taps_32points_16b.dat"))
+c_noise_1024          = abspath(join(script_dir, "./data/run_pfb_m_noise_8b_16taps_1024points_16b.dat"))
+c_noise               = abspath(join(script_dir, "./data/run_pfb_m_noise_8b_16taps_32points_16b.dat"))
+c_dc_agwn             = abspath(join(script_dir, "./data/run_pfb_m_dc_agwn_8b_16taps_32points_16b.dat"))
 
-c_phasor_chirp_1024   = "../../../../../data/run_pfb_complex_m_phasor_chirp_8b_16taps_1024points_16b.dat"
-c_phasor_chirp_128    = "../../../../../data/run_pfb_complex_m_phasor_chirp_8b_16taps_128points_16b.dat"
-c_phasor_chirp_64     = "../../../../../data/run_pfb_complex_m_phasor_chirp_8b_16taps_64points_16b.dat"
-c_phasor_chirp        = "../../../../../data/run_pfb_complex_m_phasor_chirp_8b_16taps_32points_16b.dat"
-c_phasor              = "../../../../../data/run_pfb_complex_m_phasor_8b_16taps_32points_16b.dat"
-c_noise_complex_1024  = "../../../../../data/run_pfb_complex_m_noise_complex_8b_16taps_1024points_16b.dat"
-c_noise_complex_128   = "../../../../../data/run_pfb_complex_m_noise_complex_8b_16taps_128points_16b.dat"
-c_noise_complex_64    = "../../../../../data/run_pfb_complex_m_noise_complex_8b_16taps_64points_16b.dat"
-c_noise_complex       = "../../../../../data/run_pfb_complex_m_noise_complex_8b_16taps_32points_16b.dat"
+c_phasor_chirp_1024   = abspath(join(script_dir, "./data/run_pfb_complex_m_phasor_chirp_8b_16taps_1024points_16b.dat"))
+c_phasor_chirp_128    = abspath(join(script_dir, "./data/run_pfb_complex_m_phasor_chirp_8b_16taps_128points_16b.dat"))
+c_phasor_chirp_64     = abspath(join(script_dir, "./data/run_pfb_complex_m_phasor_chirp_8b_16taps_64points_16b.dat"))
+c_phasor_chirp        = abspath(join(script_dir, "./data/run_pfb_complex_m_phasor_chirp_8b_16taps_32points_16b.dat"))
+c_phasor              = abspath(join(script_dir, "./data/run_pfb_complex_m_phasor_8b_16taps_32points_16b.dat"))
+c_noise_complex_1024  = abspath(join(script_dir, "./data/run_pfb_complex_m_noise_complex_8b_16taps_1024points_16b.dat"))
+c_noise_complex_128   = abspath(join(script_dir, "./data/run_pfb_complex_m_noise_complex_8b_16taps_128points_16b.dat"))
+c_noise_complex_64    = abspath(join(script_dir, "./data/run_pfb_complex_m_noise_complex_8b_16taps_64points_16b.dat"))
+c_noise_complex       = abspath(join(script_dir, "./data/run_pfb_complex_m_noise_complex_8b_16taps_32points_16b.dat"))
 
 c_zero                = "UNUSED"
 c_un                  = "UNUSED"
@@ -233,16 +232,16 @@ c_wb1_two_real_1024 = dict(
     g_nof_wb_streams = 1,
     g_nof_taps = 16,
     g_fil_backoff_w = 1,
-    g_fil_in_dat_w = 8,
-    g_fil_out_dat_w = 16,
-    g_coef_dat_w = 16,
+        g_fil_in_dat_w = 8,
+        g_fil_out_dat_w = 16,
+        g_coef_dat_w = 16,
     g_use_reorder = True,
     g_use_fft_shift = False,
     g_use_separate = True,
-    g_fft_in_dat_w = 16,
-    g_fft_out_dat_w = 16,
+        g_fft_in_dat_w = 16,
+        g_fft_out_dat_w = 16,
     g_fft_out_gain_w = 1,
-    g_stage_dat_w = 18,
+        g_stage_dat_w = 18,
     g_guard_w = 2,
     g_guard_enable = True,
 )
