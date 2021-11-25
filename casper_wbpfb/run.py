@@ -3,6 +3,14 @@ from os.path import join, dirname
 script_dir = dirname(__file__)
 import generic_dicts
 
+# Function for package mangling.
+def manglePkg(file_name, line_number, new_line):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+    lines[line_number] = new_line
+    with open(file_name, 'w') as file:
+        lines = file.writelines(lines)
+
 #gather arguments specifying which tests to run:
 # test_to_run = sys.argv[1]
 
@@ -34,9 +42,7 @@ ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=
 ip_stratixiv_complex_mult_rtl = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult_rtl.vhd"))
 ip_stratixiv_complex_mult = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult.vhd"))
 ip_stratixiv_mult_rtl = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_mult_rtl.vhd"))
-# ip_stratixiv_mult = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_mult.vhd"))
 ip_stratixiv_complex_mult.add_dependency_on(altera_mf_source_file)
-# ip_stratixiv_mult.add_dependency_on(altera_mf_source_file)
 
 # XPM RAM library
 ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
@@ -134,8 +140,14 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_crw_crw.vhd"))
 
 # CASPER FILTER Library
+#Ensure bitwidths in fil_pkg are correct:
+fil_pkg = join(script_dir, "../casper_filter/fil_pkg.vhd")
+#Required line entries.
+fil_line_entries = ['CONSTANT c_fil_in_dat_w       : natural := 8;\n','CONSTANT c_fil_out_dat_w      : natural := 16;\n','CONSTANT c_fil_coef_dat_w    : natural := 16;\n']
+manglePkg(fil_pkg, slice(7,10), fil_line_entries)
+
 casper_filter_lib = vu.add_library("casper_filter_lib")
-casper_filter_lib.add_source_file(join(script_dir, "../casper_filter/fil_pkg.vhd"))
+casper_filter_lib.add_source_file(fil_pkg)
 casper_filter_lib.add_source_file(join(script_dir, "../casper_filter/fil_ppf_ctrl.vhd"))
 casper_filter_lib.add_source_file(join(script_dir, "../casper_filter/fil_ppf_filter.vhd"))
 casper_filter_lib.add_source_file(join(script_dir, "../casper_filter/fil_ppf_single.vhd"))
@@ -170,9 +182,15 @@ r2sdf_fft_lib.add_source_file(join(script_dir, "../r2sdf_fft/rTwoSDFStage.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir, "../r2sdf_fft/rTwoSDF.vhd"))
 
 # WIDEBAND FFT Library
+#Ensure bitwidths in fft_gnrcs_intrfcs_pkg are correct:
+fft_pkg = join(script_dir, "../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd")
+#Required line entries.
+fft_line_entries = ['CONSTANT c_fft_in_dat_w       : natural := 16;\n','CONSTANT c_fft_out_dat_w      : natural := 16;\n','CONSTANT c_fft_stage_dat_w    : natural := 18;\n']
+manglePkg(fft_pkg, slice(7,10), fft_line_entries)
+
 wb_fft_lib = vu.add_library("wb_fft_lib")
 wb_fft_lib.add_source_file(join(script_dir, "../casper_wb_fft/fft_sepa.vhd"))
-wb_fft_lib.add_source_file(join(script_dir, "../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd"))
+wb_fft_lib.add_source_file(fft_pkg)
 wb_fft_lib.add_source_file(join(script_dir, "../casper_wb_fft/tb_fft_pkg.vhd"))
 wb_fft_lib.add_source_file(join(script_dir, "../casper_wb_fft/fft_reorder_sepa_pipe.vhd"))
 wb_fft_lib.add_source_file(join(script_dir, "../casper_wb_fft/fft_r2_pipe.vhd"))

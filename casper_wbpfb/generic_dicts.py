@@ -768,7 +768,7 @@ u_act_wb4_two_real_ab_1024 = {
 u_act_wb4_two_real_ab_1024.update(c_wb4_two_real_1024)
 
 u_act_wb1_two_real_ab_1024 = {
-  "g_diff_margin": 5,
+  "g_diff_margin": 6,
   "g_coefs_file_prefix_ab": c_pre_ab_1024,
   "g_coefs_file_prefix_c": c_pre_c_1024,
   "g_data_file_a": c_sinusoid_chirp_1024,

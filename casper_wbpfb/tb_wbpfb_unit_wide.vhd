@@ -543,7 +543,7 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
-  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val='1' else fil_out_cnt;
+  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val='1' and fil_out_cnt < g_data_file_nof_lines - 1 else fil_out_cnt;
 
   exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val='1';
   exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val='1';
@@ -612,11 +612,19 @@ begin
               report v_test_msg severity error;
             end if;
           --end if;
-          v_test_pass := reg_out_val_b = '1';
-          v_all_tests_pass := v_all_tests_pass and v_test_pass;
-          if not v_test_pass then
-            v_test_msg := pad("Output data B real/imag error in channel",o_test_msg'length,'.');
-            report v_test_msg severity error;
+          if reg_out_val_b = '1' then
+            v_test_pass := out_re_b_scope = 0;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
+            if not v_test_pass then
+              v_test_msg := pad("Output data B real error in channel",o_test_msg'length,'.');
+              report v_test_msg severity error;
+            end if;
+            v_test_pass := out_im_b_scope = 0;
+            v_all_tests_pass := v_all_tests_pass and v_test_pass;
+            if not v_test_pass then
+              v_test_msg := pad("Output data B imag error in channel",o_test_msg'length,'.');
+              report v_test_msg severity error;
+            end if;
           end if;
         else
           --if reg_out_val_a='1' then
