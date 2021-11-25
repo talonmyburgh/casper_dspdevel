@@ -43,8 +43,8 @@ function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth
     "end top_fil;"
     "architecture rtl of top_fil is"
     "constant cc_fil_ppf : t_fil_ppf := (g_wb_factor, g_nof_chan, g_nof_bands, g_nof_taps, g_nof_streams, g_backoff_w, g_in_dat_w, g_out_dat_w, g_coef_dat_w);"
-    "signal in_dat_arr : t_slv_arr_in(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
-    "signal out_dat_arr : t_slv_arr_out(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
+    "signal in_dat_arr : t_fil_slv_arr_in(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
+    "signal out_dat_arr : t_fil_slv_arr_out(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
     "begin"
     "wide_ppf : entity casper_filter_lib.fil_ppf_wide"
     "generic map("
@@ -90,8 +90,8 @@ end
 
 function chararr = mknprts(wb_factor)
     chararr = strings(2*wb_factor,0);
-    indatchar = "in_dat_%c    : in std_logic_vector(in_dat_w-1 DOWNTO 0);";
-    outdatchar = "out_dat_%c   : out std_logic_vector(out_dat_w -1 DOWNTO 0);";
+    indatchar = "in_dat_%c    : in std_logic_vector(c_fil_in_dat_w-1 DOWNTO 0);";
+    outdatchar = "out_dat_%c   : out std_logic_vector(c_fil_out_dat_w -1 DOWNTO 0);";
     i=1;
     for j=0:1:wb_factor-1
         jj = int2str(j);
@@ -125,9 +125,9 @@ function updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat
     vhdlgenfileloc = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fil_pkg.vhd'];
 
-    lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
-    linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
-    linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
+    lineone = sprintf("CONSTANT c_fil_in_dat_w : natural := %d;",in_dat_w);
+    linetwo = sprintf("CONSTANT c_fil_out_dat_w : natural := %d;", out_dat_w);
+    linethree = sprintf("CONSTANT c_fil_coef_dat_w : natural :=%d;",coef_dat_w);
     linefour = sprintf("CONSTANT c_coefs_file : string := ""%s"";", coef_filepath_stem);
     fid = fopen(vhdlgenfileloc,'r');
     if fid==-1
