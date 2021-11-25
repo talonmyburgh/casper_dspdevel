@@ -46,7 +46,7 @@
 --   > observe the *_scope signals as radix decimal, format analogue format
 --     signals in the Wave window
 --
-library ieee, common_pkg_lib, dp_pkg_lib, casper_filter_lib, r2sdf_fft_lib, wb_fft_lib, casper_ram_lib, dp_components_lib, casper_sim_tools_lib;
+library ieee, common_pkg_lib, casper_filter_lib, r2sdf_fft_lib, wb_fft_lib, casper_ram_lib, dp_components_lib, casper_sim_tools_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -151,6 +151,14 @@ entity tb_wbpfb_unit_wide is
     
     g_data_file_nof_lines   : natural := 1600;   -- actual number of lines with input data to simulate from the data files, must be <= g_data_file_*_nof_lines
     g_enable_in_val_gaps    : boolean := FALSE   -- when false then in_val flow control active continuously, else with random inactive gaps
+  );
+  PORT
+  (
+    o_rst       : out std_logic;
+    o_clk       : out std_logic;
+    o_tb_end    : out std_logic;
+    o_test_msg  : out string(1 to 80);
+    o_test_pass : out boolean
   );
 end entity tb_wbpfb_unit_wide;
 
@@ -353,6 +361,10 @@ begin
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
   in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps=TRUE ELSE '0';
+
+  o_clk <= clk;
+  o_rst <= rst;
+  o_tb_end <= tb_end;
 
   in_sosi_0  <= in_sosi_arr(0);
   out_sosi_0 <= out_sosi_arr(0);
@@ -578,41 +590,81 @@ begin
   -- VERIFY OUTPUT DATA
   ---------------------------------------------------------------
   p_verify_output : process(sclk)
+  VARIABLE v_test_pass : BOOLEAN := TRUE;
+  VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
     -- verify at sclk rising edge to avoid void differences due to delta-cycle differences that can occur between combinatorial signals
     if rising_edge(sclk) then
       if not c_in_complex then
         if reg_out_channel=1 then
           --if reg_out_val_a='1' then
-            assert out_re_a_scope = 0 report "Output data A real error in channel" severity failure;
-            assert out_im_a_scope = 0 report "Output data A imag error in channel" severity failure;
+            v_test_pass := out_re_a_scope = 0;
+            if not v_test_pass then
+              v_test_msg := pad("Output data A real error in channel",o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
+            v_test_pass := out_im_a_scope = 0;
+            if not v_test_pass then
+              v_test_msg := pad("Output data A imag error in channel",o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
           --end if;
-          if reg_out_val_b='1' then
-            assert out_re_b_scope = 0 report "Output data B real error in channel" severity failure;
-            assert out_im_b_scope = 0 report "Output data B imag error in channel" severity failure;
+          v_test_pass := reg_out_val_b = '1';
+          if not v_test_pass then
+            v_test_msg := pad("Output data B real/imag error in channel",o_test_msg'length,'.');
+            report v_test_msg severity failure;
           end if;
         else
           --if reg_out_val_a='1' then
-            assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
-            assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
+            v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data A real error, expected: "& integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
+            v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data A imag error, expected: "& integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
           --end if;
           if reg_out_val_b='1' then
-            assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
-            assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
+            v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data B real error, expected: "& integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
+            v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data B imag error, expected: "& integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
           end if;
         end if;
       else
         if reg_out_val_c='1' then
           if reg_out_channel=1 then
-            assert out_re_c_scope = 0 report "Output data C real error in channel" severity failure;
-            assert out_im_c_scope = 0 report "Output data C imag error in channel" severity failure;
+            v_test_pass := out_re_a_scope = 0 and out_im_c_scope = 0;
+            if not v_test_pass then
+              v_test_msg := pad("Output data C real/imag error in channel",o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
           else
-            assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
-            assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
+            v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data C real error, expected: "& integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
+            v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
+            if not v_test_pass then
+              v_test_msg := pad("Output data C imag error, expected: "& integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
+              report v_test_msg severity failure;
+            end if;
           end if;
         end if;
       end if;
     end if;
+    o_test_pass <= v_test_pass;
+    o_test_msg <= v_test_msg;
   end process;
 
   ---------------------------------------------------------------
