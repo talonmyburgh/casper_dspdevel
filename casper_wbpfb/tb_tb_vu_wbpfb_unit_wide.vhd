@@ -13,39 +13,39 @@ context vunit_lib.vunit_context;
 
 entity tb_tb_vu_wbpfb_unit_wide is
     GENERIC(
-        g_wb_factor             : natural;  -- = default 1, wideband factor
-        g_nof_points            : natural;  -- = 1024, N point FFT
-        g_nof_chan              : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
-        g_nof_wb_streams        : natural;
-        g_nof_taps              : natural;
-        g_fil_backoff_w         : natural;
-        g_fil_in_dat_w          : natural;
-        g_fil_out_dat_w         : natural;
-        g_coef_dat_w            : natural;
-        g_use_reorder           : boolean;  -- = false for bit-reversed output, true for normal output
-        g_use_fft_shift         : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-        g_use_separate          : boolean;  -- = false for complex input, true for two real inputs
-        g_fft_in_dat_w          : natural;  -- = 8, number of input bits
-        g_fft_out_dat_w         : natural;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
-        g_fft_out_gain_w        : natural;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-        g_stage_dat_w           : natural;  -- = 18, data width used between the stages(= DSP multiplier-width)
-        g_guard_w               : natural;  -- = 2,  Guard used to avoid overflow in FFT stage. 
-        g_guard_enable          : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
-        g_diff_margin           : integer    := 2;  -- maximum difference between HDL output and expected output (> 0 to allow minor rounding differences)
-        g_coefs_file_prefix_ab  : string     := "data/run_pfb_m_pfir_coeff_fircls1";
-        g_coefs_file_prefix_c   : string     := "data/run_pfb_complex_m_pfir_coeff_fircls1";
-        g_data_file_a           : string     := "data/run_pfft_m_sinusoid_chirp_8b_32points_16b.dat";
-        g_data_file_a_nof_lines : natural    := 6400;
-        g_data_file_b           : string     := "UNUSED";
-        g_data_file_b_nof_lines : natural    := 0;
-        g_data_file_c           : string     := "data/run_pfft_complex_m_phasor_8b_64points_16b.dat";
-        g_data_file_c_nof_lines : natural    := 320;
-        g_data_file_nof_lines   : natural    := 6400;
-        g_enable_in_val_gaps    : boolean    := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
-        g_use_variant           : STRING     := "4DSP";
-        g_ovflw_behav           : STRING     := "WRAP";
-        g_use_round             : STRING     := "TRUNCATE";
-        runner_cfg              : string
+        g_wb_factor             : natural   := c_fft_wb_factor;  -- = default 1, wideband factor
+        g_nof_points            : natural   := c_fft_nof_points;  -- = 1024, N point FFT
+        g_nof_chan              : natural   := c_fft_nof_chan;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
+        g_nof_wb_streams        : natural   := c_wbpfb_nof_wb_streams;
+        g_nof_taps              : natural   := c_fil_nof_taps;
+        g_fil_backoff_w         : natural   := c_fil_backoff_w;
+        g_fil_in_dat_w          : natural   := c_fil_in_dat_w;
+        g_fil_out_dat_w         : natural   := c_fil_out_dat_w;
+        g_coef_dat_w            : natural   := c_fil_coef_dat_w;
+        g_use_reorder           : boolean   := c_fft_use_reorder;  -- = false for bit-reversed output, true for normal output
+        g_use_fft_shift         : boolean   := c_fft_use_fft_shift;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+        g_use_separate          : boolean   := c_fft_use_separate;  -- = false for complex input, true for two real inputs
+        g_fft_in_dat_w          : natural   := c_fft_in_dat_w;  -- = 8, number of input bits
+        g_fft_out_dat_w         : natural   := c_fft_out_dat_w;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
+        g_fft_out_gain_w        : natural   := c_fft_out_gain_w;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+        g_stage_dat_w           : natural   := c_fft_stage_dat_w;  -- = 18, data width used between the stages(= DSP multiplier-width)
+        g_guard_w               : natural   := c_fft_guard_w;  -- = 2,  Guard used to avoid overflow in FFT stage. 
+        g_guard_enable          : boolean   := c_fft_guard_enable;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
+        g_diff_margin           : integer   := 2;  -- maximum difference between HDL output and expected output (> 0 to allow minor rounding differences)
+        g_coefs_file_prefix_ab  : string    := "data/run_pfb_m_pfir_coeff_fircls1";
+        g_coefs_file_prefix_c   : string    := "data/run_pfb_complex_m_pfir_coeff_fircls1";
+        g_data_file_a           : string    := "data/run_pfft_m_sinusoid_chirp_8b_32points_16b.dat";
+        g_data_file_a_nof_lines : natural   := 6400;
+        g_data_file_b           : string    := "UNUSED";
+        g_data_file_b_nof_lines : natural   := 0;
+        g_data_file_c           : string    := "data/run_pfft_complex_m_phasor_8b_64points_16b.dat";
+        g_data_file_c_nof_lines : natural   := 320;
+        g_data_file_nof_lines   : natural   := 6400;
+        g_enable_in_val_gaps    : boolean   := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+        g_use_variant           : STRING    := "4DSP";
+        g_ovflw_behav           : STRING    := "WRAP";
+        g_use_round             : STRING    := "TRUNCATE";
+        runner_cfg              : string    := runner_cfg_default 
     );
 end tb_tb_vu_wbpfb_unit_wide;
 
@@ -121,6 +121,7 @@ BEGIN
 		IF rst = '0' THEN
 			IF rising_edge(clk) THEN
 				check(test_pass, "Test Failed: " & test_msg);
+                assert test_pass report test_msg severity failure;
 			END IF;
 		END IF;
 
