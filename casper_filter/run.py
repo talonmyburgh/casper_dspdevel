@@ -1,6 +1,14 @@
 from vunit import VUnit, VUnitCLI
 from os.path import join, dirname
 
+# Function for package mangling.
+def manglePkg(file_name, line_number, new_line):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+    lines[line_number] = new_line
+    with open(file_name, 'w') as file:
+        lines = file.writelines(lines)
+
 cli = VUnitCLI()
 # Create VUnit instance by parsing command line arguments
 script_dir = dirname(__file__)
@@ -92,8 +100,14 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_rw_rw.
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_r_w.vhd"))
 
 # CASPER FILTER Library
+#Ensure bitwidths in fil_pkg are correct:
+fil_pkg = join(script_dir,"./fil_pkg.vhd")
+#Required line entries.
+fil_line_entries = ['CONSTANT c_fil_in_dat_w       : natural := 8;\n','CONSTANT c_fil_out_dat_w      : natural := 16;\n','CONSTANT c_fil_coef_dat_w    : natural := 16;\n']
+manglePkg(fil_pkg, slice(7,10), fil_line_entries)
+
 casper_filter_lib = vu.add_library("casper_filter_lib")
-casper_filter_lib.add_source_file(join(script_dir,"./fil_pkg.vhd"))
+casper_filter_lib.add_source_file(fil_pkg)
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_ctrl.vhd"))
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_filter.vhd"))
 casper_filter_lib.add_source_file(join(script_dir,"./fil_ppf_single.vhd"))
