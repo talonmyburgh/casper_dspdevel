@@ -1,6 +1,15 @@
 from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
 
+# Function for package mangling.
+def manglePkg(file_name, line_number, new_line):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+    lines[line_number] = new_line
+    with open(file_name, 'w') as file:
+        lines = file.writelines(lines)
+
+
 cli = VUnitCLI()
 # script_dir = dirname(__file__)
 script_dir,_ = split(abspath(__file__))
@@ -142,9 +151,16 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDFStage.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoSDF.vhd"))
 
 # WIDEBAND FFT Library
+# WIDEBAND FFT Library
+#Ensure bitwidths in fft_gnrcs_intrfcs_pkg are correct:
+fft_pkg = join(script_dir,"fft_gnrcs_intrfcs_pkg.vhd")
+#Required line entries.
+fft_line_entries = ['CONSTANT c_fft_in_dat_w       : natural := 8;\n','CONSTANT c_fft_out_dat_w      : natural := 16;\n','CONSTANT c_fft_stage_dat_w    : natural := 18;\n']
+manglePkg(fft_pkg, slice(7,10), fft_line_entries)
+
 wb_fft_lib = vu.add_library("wb_fft_lib")
 wb_fft_lib.add_source_file(join(script_dir,"fft_sepa.vhd"))
-wb_fft_lib.add_source_file(join(script_dir,"fft_gnrcs_intrfcs_pkg.vhd"))
+wb_fft_lib.add_source_file(fft_pkg)
 wb_fft_lib.add_source_file(join(script_dir,"tb_fft_pkg.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_reorder_sepa_pipe.vhd"))
 wb_fft_lib.add_source_file(join(script_dir,"fft_r2_pipe.vhd"))

@@ -28,9 +28,10 @@ jobs:
       pipe_fft: ${{ steps.pipe_fft.outputs.any_changed }}
       par_fft: ${{ steps.par_fft.outputs.any_changed }}
       wide_fft: ${{ steps.wide_fft.outputs.any_changed }}
-      all_fft: ${{ steps.all_fft.outputs.any_changed }}
+      # all_fft: ${{ steps.all_fft.outputs.any_changed }}
       single_filter: ${{ steps.single_filter.outputs.any_changed }}
       wide_filter: ${{ steps.wide_filter.outputs.any_changed }}
+      wbpfb: ${{ steps.wbpfb.outputs.any_changed }}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
@@ -92,28 +93,43 @@ jobs:
         with:
           files: |
             casper_wb_fft/.*pipe\.vhd$
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
       - name: Assess PARALLEL_FFT files changes
         id: par_fft
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
             casper_wb_fft/.*par\.vhd$
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
       - name: Assess WIDE_FFT files changes
         id: wide_fft
         uses: tj-actions/changed-files@v1.2.0
         with:
           files: |
             casper_wb_fft/.*wide\.vhd$
-      - name: Assess ALL_FFT files changes
-        id: all_fft
-        uses: tj-actions/changed-files@v1.2.0
-        with:
-          files: |
             casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
             casper_wb_fft/tb_fft_functions.vhd
             casper_wb_fft/run.py
             casper_wb_fft/tb_fft_pkg.vhd
             casper_wb_fft/fft_sepa.vhd
+      # - name: Assess ALL_FFT files changes
+      #   id: all_fft
+      #   uses: tj-actions/changed-files@v1.2.0
+      #   with:
+      #     files: |
+      #       casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+      #       casper_wb_fft/tb_fft_functions.vhd
+      #       casper_wb_fft/run.py
+      #       casper_wb_fft/tb_fft_pkg.vhd
+      #       casper_wb_fft/fft_sepa.vhd
       - name: Assess single_filter files changes
         id: single_filter
         uses: tj-actions/changed-files@v1.2.0
@@ -132,6 +148,14 @@ jobs:
             casper_filter/fil_pkg.vhd
             casper_filter/fil_ppf_ctrl.vhd
             casper_filter/fil_ppf_filter.vhd
+      - name: Assess wbpfb files changes
+        id: wbpfb
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wbpfb/.*\.vhd$
+            casper_wbpfb/run.py
+
   adder:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -684,7 +708,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: [files_changed]
-    # if: needs.files_changed.outputs.wide_filter == 'true'
+    if: needs.files_changed.outputs.wide_filter == 'true'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
@@ -724,4 +748,50 @@ jobs:
         with:
           name: wide_filter_report
           path: ./casper_filter/wide_filter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  wbpfb:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    if: needs.files_changed.outputs.wbpfb == 'true'
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_wbpfb_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
+
+      - name: Note casper_wbpfb_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wbpfb
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_wbpfb_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_wbpfb_test Success
+        if: ${{ steps.casper_wbpfb_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wbpfb
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_wbpfb_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wbpfb_report
+          path: ./casper_wbpfb/wbpfb_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']

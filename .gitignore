@@ -8,3 +8,4 @@ vunit_out
 */*.xml
 .vscode
 build/*
+__pycache__

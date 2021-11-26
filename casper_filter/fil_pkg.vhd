@@ -5,9 +5,9 @@ use common_pkg_lib.common_pkg.all;
 package fil_pkg is
 
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT c_fil_in_dat_w     : natural := 8;
-CONSTANT c_fil_out_dat_w    : natural := 16;
-CONSTANT c_fil_coef_dat_w   : natural := 16;
+CONSTANT c_fil_in_dat_w       : natural := 8;
+CONSTANT c_fil_out_dat_w      : natural := 16;
+CONSTANT c_fil_coef_dat_w    : natural := 16;
 CONSTANT c_coefs_file       : string  := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
