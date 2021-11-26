@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wbpfb/wbpfb_vivproj/wbpfb_vivproj.xpr">
+<Project Version="7" Minor="49" Path="D:/CASPERWORK/Development/casper_dspdevel/casper_wbpfb/wbpfb_vivproj/wbpfb_vivproj.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="5815c11848de4e8fb9af4eff96f040e3"/>
@@ -36,8 +36,9 @@
     <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
+    <Option Name="UseIPStaticLibs" Val="0"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="442"/>
+    <Option Name="WTXSimLaunchSim" Val="452"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -80,7 +81,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_adder/casper_common_add_sub.vhd">
+      <File Path="$PPRDIR/../../casper_adder/common_add_sub.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_adder_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
