@@ -43,13 +43,13 @@ end
   % -----------------------------
   if (this_block.inputTypesKnown)
     %Logic to act as the reinterpret block:
-    % im_in_port.makeUnsigned();
+    % im_in_port.makeUnsigned;
     % re_in_port.setBinPt(0);
-    % re_in_port.makeUnsigned();
+    % re_in_port.makeUnsigned;
     % re_in_port.setBinPt(0);
 
-    re_in_width = re_in_port.width();
-    im_in_width = im_in_port.width();
+    re_in_width = re_in_port.width;
+    im_in_width = im_in_port.width;
     c_out_port = this_block.port('c_out');
     c_out_port.setType(sprintf('Ufix_%d_0',(re_in_width + im_in_width)));
   end  % if(inputTypesKnown)
