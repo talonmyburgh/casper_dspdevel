@@ -1,4 +1,3 @@
-
 function ri_to_c_config(this_block)
 
   this_block.setTopLevelLanguage('VHDL');
@@ -43,11 +42,6 @@ end
   % -----------------------------
   if (this_block.inputTypesKnown)
     %Logic to act as the reinterpret block:
-    % im_in_port.makeUnsigned;
-    % re_in_port.setBinPt(0);
-    % re_in_port.makeUnsigned;
-    % re_in_port.setBinPt(0);
-
     re_in_width = re_in_port.width;
     im_in_width = im_in_port.width;
     c_out_port = this_block.port('c_out');
