@@ -31,7 +31,7 @@ USE work.tech_memory_component_pkg.ALL;
 --LIBRARY ip_arria10_e3sge3_ram_lib;
 --LIBRARY ip_arria10_e1sg_ram_lib;
 
-ENTITY tech_memory_rom_cr_cr IS
+ENTITY tech_memory_rom_r_r IS
 	GENERIC(
 		g_technology    : NATURAL := 0; --c_tech_select_default;
 		g_adr_a_w       : NATURAL := 10;
@@ -50,14 +50,14 @@ ENTITY tech_memory_rom_cr_cr IS
 		q_a         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 		q_B         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
-END tech_memory_rom_cr_cr;
+END tech_memory_rom_r_r;
 
-ARCHITECTURE str OF tech_memory_rom_cr_cr IS
+ARCHITECTURE str OF tech_memory_rom_r_r IS
 
 BEGIN
 
-	gen_ip_xilinx : IF g_technology = 0 GENERATE
-		u1 : ip_xpm_rom_cr_cr
+	gen_ip_xilinx : IF c_tech_select_default = c_tech_xpm GENERATE
+		u1 : ip_xpm_rom_r_r
 		GENERIC MAP (
 			g_adr_a_w         => g_adr_a_w,
 			g_adr_b_w         => g_adr_b_w,
