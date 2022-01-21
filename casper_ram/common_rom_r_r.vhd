@@ -23,11 +23,11 @@ USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE work.common_ram_pkg.ALL;
 
-ENTITY common_rom_cr_cr IS
+ENTITY common_rom_r_r IS
 	GENERIC(
-		g_technology     : NATURAL := 0; --0 for Xilinx, 1 for Alterra
 		g_ram            : t_c_mem := c_mem_ram;
 		g_init_file      : STRING  := "UNUSED";
+		g_true_dual_port : BOOLEAN := TRUE;
 		g_ram_primitive  : STRING  := "auto"
 	);
 	PORT(
@@ -35,21 +35,23 @@ ENTITY common_rom_cr_cr IS
 		clken    : IN  STD_LOGIC                                  := '1';
 		adr_a    : IN  STD_LOGIC_VECTOR(g_ram.adr_w - 1 DOWNTO 0) := (OTHERS => '0');
 		adr_b    : IN  STD_LOGIC_VECTOR(g_ram.adr_w - 1 DOWNTO 0) := (OTHERS => '0');
-		rd_en    : IN  STD_LOGIC                                  := '1';
+		rd_en_a  : IN  STD_LOGIC                                  := '1';
+		rd_en_b  : IN  STD_LOGIC                                  := '1';
 		rd_dat_a : OUT STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0);
 		rd_dat_b : OUT STD_LOGIC_VECTOR(g_ram.dat_w - 1 DOWNTO 0);
-		rd_val   : OUT STD_LOGIC
+		rd_val_a : OUT STD_LOGIC;
+		rd_val_b : OUT STD_LOGIC
 	);
-END common_rom_cr_cr;
+END common_rom_r_r;
 
-ARCHITECTURE str OF common_rom_cr_cr IS
+ARCHITECTURE str OF common_rom_r_r IS
 
 	CONSTANT c_rd_latency : NATURAL := sel_a_b(g_ram.latency < 2, g_ram.latency, 2); -- handle read latency 1 or 2 in RAM
 	CONSTANT c_pipeline   : NATURAL := sel_a_b(g_ram.latency > c_rd_latency, g_ram.latency - c_rd_latency, 0); -- handle rest of read latency > 2 in pipeline
 
 	-- Intermediate signal for extra pipelining
-	SIGNAL ram_rd_dat_a : STD_LOGIC_VECTOR(rd_dat'RANGE);
-	SIGNAL ram_rd_dat_b : STD_LOGIC_VECTOR(rd_dat'RANGE);
+	SIGNAL ram_rd_dat_a : STD_LOGIC_VECTOR(rd_dat_a'RANGE);
+	SIGNAL ram_rd_dat_b : STD_LOGIC_VECTOR(rd_dat_b'RANGE);
 
 	-- Map sl to single bit slv for rd_val pipelining
 	SIGNAL ram_rd_en_a  : STD_LOGIC_VECTOR(0 DOWNTO 0);
@@ -60,13 +62,13 @@ ARCHITECTURE str OF common_rom_cr_cr IS
 BEGIN
 
 	ASSERT g_ram.latency >= 1
-	REPORT "common_rom_cr_cr : only support read latency >= 1"
+	REPORT "common_rom_r_r : only support read latency >= 1"
 	SEVERITY FAILURE;
 
 	-- memory access
-	u_ram : ENTITY work.tech_memory_rom_cr_cr
+	gen_true_dual_port : IF g_true_dual_port = TRUE GENERATE
+	u_ram : ENTITY work.tech_memory_rom_r_r
 		GENERIC MAP(
-			g_technology    => g_technology,
 			g_adr_a_w       => g_ram.adr_w,
 			g_adr_b_w       => g_ram.adr_w,
 			g_dat_w         => g_ram.dat_w,
@@ -83,6 +85,25 @@ BEGIN
 			q_a         => ram_rd_dat_a,
 			q_b         => ram_rd_dat_b
 		);
+	END GENERATE;	
+
+	gen_simple_dual_port : IF g_true_dual_port = FALSE GENERATE
+		u_ram : ENTITY work.tech_memory_rom_r
+		GENERIC MAP(
+			g_adr_w         => g_ram.adr_w,
+			g_dat_w         => g_ram.dat_w,
+			g_nof_words     => g_ram.nof_dat,
+			g_rd_latency    => c_rd_latency,
+			g_init_file     => g_init_file,
+			g_ram_primitive => g_ram_primitive
+		)
+		PORT MAP(
+			rdaddress => adr_a,
+			rdclock   => clk,
+			rdclocken => clken,
+			q      	  => ram_rd_dat_a
+		);
+	END GENERATE;
 
     -- rd_val control
 	ram_rd_en_a(0) <= rd_en_a;
@@ -112,8 +133,8 @@ BEGIN
 			g_out_dat_w => 1
 		)
 		PORT MAP(
-			clk     => clk_a,
-			clken   => clken_a,
+			clk     => clk,
+			clken   => clken,
 			in_dat  => ram_rd_en_a,
 			out_dat => ram_rd_val_a
 		);
@@ -128,8 +149,8 @@ BEGIN
 		PORT MAP(
 			clk     => clk,
 			clken   => clken,
-			in_dat  => ram_rd_dat,
-			out_dat => rd_dat
+			in_dat  => ram_rd_dat_b,
+			out_dat => rd_dat_b
 		);
 
 	u_rd_val_b : ENTITY common_components_lib.common_pipeline
@@ -139,8 +160,8 @@ BEGIN
 			g_out_dat_w => 1
 		)
 		PORT MAP(
-			clk     => clk_b,
-			clken   => clken_b,
+			clk     => clk,
+			clken   => clken,
 			in_dat  => ram_rd_en_b,
 			out_dat => ram_rd_val_b
 		);

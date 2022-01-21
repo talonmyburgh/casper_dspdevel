@@ -21,7 +21,7 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ip_xpm_rom_cr_cr is
+entity ip_xpm_rom_r_r is
 	GENERIC(
 		g_adr_a_w       : NATURAL := 10;
 		g_adr_b_w       : NATURAL := 10;
@@ -39,9 +39,9 @@ entity ip_xpm_rom_cr_cr is
 		q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 		q_b       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
-end ip_xpm_rom_cr_cr;
+end ip_xpm_rom_r_r;
 
-architecture Behavioral of ip_xpm_rom_cr_cr is
+architecture Behavioral of ip_xpm_rom_r_r is
 
 	SIGNAL sub_wire0    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);

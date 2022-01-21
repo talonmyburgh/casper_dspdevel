@@ -3,7 +3,7 @@
 -- 
 -- Create Date: 09.08.2020 14:26:58
 -- Design Name: 
--- Module Name: ip_xpm_rom_cr - Behavioral
+-- Module Name: ip_xpm_rom_r - Behavioral
 ----------------------------------------------------------------------------------
 
 library IEEE, xpm, common_pkg_lib;
@@ -21,7 +21,7 @@ use ieee.numeric_std.all;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ip_xpm_rom_cr is
+entity ip_xpm_rom_r is
 	GENERIC(
 		g_adr_w         : NATURAL := 10;
 		g_dat_w         : NATURAL := 22;
@@ -36,9 +36,9 @@ entity ip_xpm_rom_cr is
 		rdclocken : IN  STD_LOGIC := '1';
 		q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
-end ip_xpm_rom_cr;
+end ip_xpm_rom_r;
 
-architecture Behavioral of ip_xpm_rom_cr is
+architecture Behavioral of ip_xpm_rom_r is
 
 	SIGNAL sub_wire0    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
