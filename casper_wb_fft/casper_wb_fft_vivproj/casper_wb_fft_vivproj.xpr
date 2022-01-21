@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Product Version: Vivado v2020.1 (64-bit)              -->
+<!-- Product Version: Vivado v2020.1.1 (64-bit)              -->
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="C:/Users/mybur/Work/dspdevel_designs/casper_dspdevel/casper_wb_fft/casper_wb_fft_vivproj/casper_wb_fft_vivproj.xpr">
+<Project Version="7" Minor="49" Path="D:/CASPERWORK/Development/casper_dspdevel/casper_wb_fft/casper_wb_fft_vivproj/casper_wb_fft_vivproj.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="42eed8497aac428d8794a44a4e77c874"/>
@@ -80,7 +80,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_adder/casper_common_add_sub.vhd">
+      <File Path="$PPRDIR/../../casper_adder/common_add_sub.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_adder_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -269,6 +269,27 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_rom_r_r.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_rom_r.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/common_rom_r_r.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../common_pkg/common_str_pkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="common_pkg_lib"/>
@@ -343,7 +364,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../r2sdf_fft/rTwoWeights.vhd">
+      <File Path="$PPRDIR/../../r2sdf_fft/new_rTwoWeights.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -430,6 +451,20 @@
       <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_rom_r.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="ip_xpm_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_rom_r_r.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="ip_xpm_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
