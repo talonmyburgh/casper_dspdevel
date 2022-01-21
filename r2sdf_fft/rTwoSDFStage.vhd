@@ -28,8 +28,10 @@ entity rTwoSDFStage is
 	generic(
 		g_nof_chan       : natural        := 0; 				--! Exponent of nr of subbands (0 means 1 subband)
 		g_stage          : natural        := 8; 				--! Stage number
+		g_wb_inst		 : natural 		  := 1; 				--! WB instance index. Altered for WB_FACTOR > 1
 		g_stage_offset   : natural        := 0; 				--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; 				--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_coef_dat_w     : natural		  := 18;				--! The coefficient data width
 		g_use_variant    : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
 		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
@@ -134,6 +136,7 @@ begin
 	u_weights : entity work.rTwoWeights
 		generic map(
 			g_stage          => g_stage,
+			g_wb_inst		 => g_wb_inst,
 			g_twiddle_offset => g_twiddle_offset,
 			g_stage_offset   => g_stage_offset,
 			g_lat            => g_pipeline.weight_lat
