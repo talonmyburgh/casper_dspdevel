@@ -32,8 +32,8 @@ entity ip_xpm_rom_r_r is
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
-		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
-		address_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
+		address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
 		clock     : IN  STD_LOGIC;
 		clocken   : IN  STD_LOGIC := '1';
 		q_a       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
@@ -46,7 +46,7 @@ architecture Behavioral of ip_xpm_rom_r_r is
 	SIGNAL sub_wire0    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
 	-- CONSTANT c_memsize  : NATURAL := g_nof_words * g_dat_w;
-	CONSTANT c_memsize  : NATURAL := (2**g_adr_w -1) * g_dat_w;
+	CONSTANT c_memsize  : NATURAL := (2**sel_a_b( g_adr_a_w >= g_adr_b_w, g_adr_a_w, g_adr_b_w)-1) * g_dat_w ;
 
 begin
 	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);
@@ -99,11 +99,11 @@ begin
 		injectsbiterra => '0', -- 1-bit input: Do not change from the provided value.
 		injectsbiterrb => '0', -- 1-bit input: Do not change from the provided value.
 		regcea => '1', -- 1-bit input: Do not change from the provided value.
-		regceb => '1'', -- 1-bit input: Do not change from the provided value.
-		rsta => '0'', -- 1-bit input: Reset signal for the final port A output register
+		regceb => '1', -- 1-bit input: Do not change from the provided value.
+		rsta => '0', -- 1-bit input: Reset signal for the final port A output register
 		-- stage. Synchronously resets output port douta to the value specified
 		-- by parameter READ_RESET_VALUE_A.
-		rstb => '0'', -- 1-bit input: Reset signal for the final port B output register
+		rstb => '0', -- 1-bit input: Reset signal for the final port B output register
 		-- stage. Synchronously resets output port doutb to the value specified
 		-- by parameter READ_RESET_VALUE_B.
 		sleep => '0' -- 1-bit input: sleep signal to enable the dynamic power saving feature.
