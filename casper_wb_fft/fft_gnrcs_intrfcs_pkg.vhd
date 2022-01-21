@@ -8,6 +8,7 @@ PACKAGE fft_gnrcs_intrfcs_pkg IS
 CONSTANT c_fft_in_dat_w       : natural := 8;       -- = 8,  number of input bits
 CONSTANT c_fft_out_dat_w      : natural := 16;      -- = 13, number of output bits
 CONSTANT c_fft_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT c_fft_twiddle_dat_w  : natural := 18;	    -- = 18, coefficient data width
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_fft_use_reorder          : boolean := false;     -- = false for bit-reversed output, true for normal output
@@ -42,6 +43,7 @@ in_dat_w       : natural;       -- = 8,  number of input bits
 out_dat_w      : natural;       -- = 13, number of output bits
 out_gain_w     : natural;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
 stage_dat_w    : natural;       -- = 18, data width used between the stages(= DSP multiplier-width)
+twiddle_dat_w  : natural;		-- = 18, data width of the twiddle coefficients in the FFT
 guard_w        : natural;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
 --   12.3.2], therefore use input guard_w = 2.
@@ -52,7 +54,7 @@ stat_data_w    : positive;      -- = 56
 stat_data_sz   : positive;      -- = 2
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, c_fft_wb_factor, 0, c_fft_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+constant c_fft : t_fft := (true, false, false, 0, c_fft_wb_factor, 0, c_fft_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, c_fft_twiddle_dat_w, 2, true, 56, 2);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
