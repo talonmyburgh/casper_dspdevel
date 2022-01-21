@@ -31,9 +31,9 @@ entity ip_xpm_rom_r is
 		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
 	);
 	PORT(
-		rdaddress : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
-		rdclock   : IN  STD_LOGIC;
-		rdclocken : IN  STD_LOGIC := '1';
+		address : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
+		clock   : IN  STD_LOGIC;
+		clocken : IN  STD_LOGIC := '1';
 		q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
 end ip_xpm_rom_r;
@@ -72,9 +72,9 @@ begin
 		dbiterra => open, 			-- 1-bit output: Leave open.
 		douta => sub_wire0,			-- READ_DATA_WIDTH_A-bit output: Data output for port A read operations.
 		sbiterra => open, 			-- 1-bit output: Leave open.
-		addra => rdaddress, 		-- ADDR_WIDTH_A-bit input: Address for port A read operations.
-		clka => rdclock, 				-- 1-bit input: Clock signal for port A.
-		ena => rdclocken, 			-- 1-bit input: Memory enable signal for port A. Must be high on clock
+		addra => address, 		-- ADDR_WIDTH_A-bit input: Address for port A read operations.
+		clka => clock, 				-- 1-bit input: Clock signal for port A.
+		ena => clocken, 			-- 1-bit input: Memory enable signal for port A. Must be high on clock
 														-- cycles when read operations are initiated. Pipelined internally.
 		injectdbiterra => '0', 	-- 1-bit input: Do not change from the provided value.
 		injectsbiterra => '0', 	-- 1-bit input: Do not change from the provided value.
