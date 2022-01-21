@@ -78,10 +78,10 @@ BEGIN
 			g_ram_primitive => g_ram_primitive
 		)
 		PORT MAP(
-			rdaddress_a => adr_a,
-			rdaddress_b => adr_b,
-			rdclock     => clk,
-			rdclocken   => clken,
+			address_a => adr_a,
+			address_b => adr_b,
+			clock     => clk,
+			clocken   => clken,
 			q_a         => ram_rd_dat_a,
 			q_b         => ram_rd_dat_b
 		);
@@ -98,10 +98,10 @@ BEGIN
 			g_ram_primitive => g_ram_primitive
 		)
 		PORT MAP(
-			rdaddress => adr_a,
-			rdclock   => clk,
-			rdclocken => clken,
-			q      	  => ram_rd_dat_a
+			address => adr_a,
+			clock   => clk,
+			clocken => clken,
+			q      	=> ram_rd_dat_a
 		);
 	END GENERATE;
 

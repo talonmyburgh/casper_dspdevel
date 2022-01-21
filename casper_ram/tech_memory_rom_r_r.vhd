@@ -18,9 +18,10 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY ieee;
+LIBRARY ieee, technology_lib, ip_xpm_ram_lib;
 USE ieee.std_logic_1164.all;
 USE work.tech_memory_component_pkg.ALL;
+USE technology_lib.technology_select_pkg.all;
 
 --USE technology_lib.technology_pkg.ALL;
 --USE technology_lib.technology_select_pkg.ALL;
@@ -33,7 +34,6 @@ USE work.tech_memory_component_pkg.ALL;
 
 ENTITY tech_memory_rom_r_r IS
 	GENERIC(
-		g_technology    : NATURAL := 0; --c_tech_select_default;
 		g_adr_a_w       : NATURAL := 10;
 		g_adr_b_w       : NATURAL := 10;
 		g_dat_w         : NATURAL := 22;
@@ -43,10 +43,10 @@ ENTITY tech_memory_rom_r_r IS
 		g_ram_primitive : STRING  := "auto"
 	);
 	PORT(
-		rdaddress_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
-		rdaddress_b : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
-		rdclock     : IN  STD_LOGIC;
-		rdclocken   : IN  STD_LOGIC := '1';
+		address_a : IN  STD_LOGIC_VECTOR(g_adr_a_w - 1 DOWNTO 0);
+		address_b : IN  STD_LOGIC_VECTOR(g_adr_b_w - 1 DOWNTO 0);
+		clock     : IN  STD_LOGIC;
+		clocken   : IN  STD_LOGIC := '1';
 		q_a         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 		q_B         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
