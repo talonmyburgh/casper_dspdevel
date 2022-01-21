@@ -119,10 +119,11 @@ begin
 	gen_fft : for stage in c_nof_stages downto 1 generate
         u_stage : entity r2sdf_fft_lib.rTwoSDFStage
             generic map(
-                g_nof_chan       => g_fft.nof_chan,
-                g_stage          => stage,
-                g_stage_offset   => c_stage_offset,
+            	g_nof_chan       => g_fft.nof_chan,
+            	g_stage          => stage,
+            	g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
+				g_twid_dat_w	 => g_fft.twiddle_dat_w,
 				g_use_variant	 => g_use_variant,
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
