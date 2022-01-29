@@ -78,13 +78,19 @@ def run(argv):
 
     """ Takes in details regarding the sdf FFT. Furthermore it takes which stage and which wb
         instance it is. This will dictate the unique coefficients required for that rom.
+        Assumes stage in range 1 -> log2(fft size)
+        Assumes wb_instance in range 0 -> wideband factor - 1
+        Returns complex values
     """
     def gen_twiddles(sdf, stage, wb_instance):
         ##################################################################
         #  Andrew here is where we must calculate the coefficients 
         #  depending on stage and wb_instance.
         ##################################################################
-        return np.sin(np.arange(1024))
+
+        coeff_indices = np.arange(wb_instance, 2**(stage - 1), wb_factor)
+        coeffs = np.exp(-1.0j * np.pi * coeff_indices / (2**(stage - 1)))
+        return coeffs
 
     """ Here we write to mem files the required coefficients per wb_instance per stage
     """
@@ -92,7 +98,7 @@ def run(argv):
         if not sdf.gen_files:
             ret_twids = []
         for p in range(sdf.nof_stages):
-            twids_tmp = []
+           twids_tmp = []
             for w in range(sdf.wb_factor):
                 #Logic to scale up the coefficients to integer values for later hex conversion
                 s = gen_twiddles(sdf,p,w)
