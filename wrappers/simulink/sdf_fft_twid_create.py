@@ -88,8 +88,9 @@ def run(argv):
         #  depending on stage and wb_instance.
         ##################################################################
 
-        coeff_indices = np.arange(wb_instance, 2**(stage - 1), wb_factor)
+        coeff_indices = np.arange(wb_instance, 2**(stage - 1), sdf.wb_factor)
         coeffs = np.exp(-1.0j * np.pi * coeff_indices / (2**(stage - 1)))
+        print("\nCoefs: ",coeffs,"\nCoeff indices: ",coeff_indices, "\nStage: ",stage, "\nWB instance: ", wb_instance, "\nWB Factor: ", sdf.wb_factor)
         return coeffs
 
     """ Here we write to mem files the required coefficients per wb_instance per stage
@@ -98,22 +99,32 @@ def run(argv):
         if not sdf.gen_files:
             ret_twids = []
         for p in range(sdf.nof_stages):
-           twids_tmp = []
+            twids_tmp = []
             for w in range(sdf.wb_factor):
                 #Logic to scale up the coefficients to integer values for later hex conversion
                 s = gen_twiddles(sdf,p,w)
-                s = (s*(2**(sdf.coef_w-1))).astype(int)
-                s = s & (2**sdf.coef_w-1)
-                twids = s
+                #What is returned is complex, so split it into real and image.
+                s_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(int)
+                s_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(int)
+                s_re = s_re & (2**sdf.coef_w-1)
+                s_im = s_im & (2**sdf.coef_w-1)
+                twids_re = s_re
+                twids_im = s_im
                 if sdf.gen_files:
                     t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) +("_%dstg_" % (p)) + ".mem" 
                     with open(t_outfilename,'w+') as fp:
-                        for i in range(twids.size):
-                            s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids[i])
+                        for i in range(twids_re.size):
+                            #Write the real coefficient line
+                            s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_re[i])
+                            fp.write(s)
+                            #Write the imaginary coefficient line
+                            s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_im[i])
                             fp.write(s)
                 else:
-                    for i in range(twids.size):
-                        s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids[i])
+                    for i in range(twids_re.size):
+                        s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_re[i])
+                        twids_tmp.append(s)
+                        s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_im[i])
                         twids_tmp.append(s)
                     ret_twids.append(",".join(twids_tmp))
                 
@@ -130,9 +141,12 @@ def run(argv):
             for w in range(sdf.wb_factor):
                  #Logic to scale up the coefficients to integer values for later hex conversion
                 s = gen_twiddles(sdf,p,w)
-                s = (s*(2**(sdf.coef_w-1))).astype(int)
-                s = s & (2**sdf.coef_w-1)
-                twids = s
+                s_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(int)
+                s_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(int)
+                s_re = s_re & (2**sdf.coef_w-1)
+                s_im = s_im & (2**sdf.coef_w-1)
+                twids_re = s_re
+                twids_im = s_im
                 if sdf.gen_files:
                     t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) + ("_stg_%d" % (p)) + ".mif"
                     with open(t_outfilename,'w+') as fp:
@@ -147,20 +161,25 @@ def run(argv):
                         s = 'CONTENT BEGIN\n'
                         fp.write(s)
 
-                        for i in range(twids.size):
-                            s =  ' %x   :  %x ; \n' % (i, twids[i])
+                        for i in range(twids_re.size):
+                            #Write the real coefficient line
+                            s = '%x   :  %x ; \n' % (i, twids_re[i])
+                            fp.write(s)
+                            #Write the imaginary coefficient line
+                            s = '%x   :  %x ; \n' % (i, twids_im[i])
                             fp.write(s)
                         s= 'END;\n'
                         fp.write(s)
                 else:
                     for i in range(twids.size):
-                        s =  ' %x   :  %x ; \n' % (i, twids[i])
+                        s =  ' %x   :  %x ; \n' % (i, twids_re[i])
+                        twids_tmp.append(s)
+                        s =  ' %x   :  %x ; \n' % (i, twids_im[i])
                         twids_tmp.append(s)
                     twids.append(",".join(twids_tmp))
         if not sdf.gen_files:
             return twids
         
-
 ###############################################################################################################
 # Prepare coefficients for writing to bram file
 ###############################################################################################################
