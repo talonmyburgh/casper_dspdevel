@@ -83,13 +83,8 @@ def run(argv):
         Returns complex values
     """
     def gen_twiddles(sdf, stage, wb_instance):
-        ##################################################################
-        #  Andrew here is where we must calculate the coefficients 
-        #  depending on stage and wb_instance.
-        ##################################################################
-
-        coeff_indices = np.arange(wb_instance, 2**(stage - 1), sdf.wb_factor)
-        coeffs = np.exp(-1.0j * np.pi * coeff_indices / (2**(stage - 1)))
+        coeff_indices = np.arange(wb_instance%2**stage, 2**stage, sdf.wb_factor)
+        coeffs = np.exp(-1.0j * np.pi * coeff_indices / 2**stage)
         print("\nCoefs: ",coeffs,"\nCoeff indices: ",coeff_indices, "\nStage: ",stage, "\nWB instance: ", wb_instance, "\nWB Factor: ", sdf.wb_factor)
         return coeffs
 
