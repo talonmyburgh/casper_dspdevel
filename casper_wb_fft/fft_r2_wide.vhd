@@ -286,6 +286,7 @@ begin
 				generic map(
 					g_fft      			=> c_fft_r2_pipe_arr(I), -- generics for the pipelined FFTs
 					g_pipeline 			=> g_pft_pipeline, -- pipeline generics for the pipelined FFTs
+					g_wb_inst			=> I,
 					g_use_variant 		=> g_use_variant,
 					g_use_dsp	   		=> g_use_dsp,
 					g_ovflw_behav  		=> g_ovflw_behav,
@@ -301,7 +302,7 @@ begin
 					in_val  	=> in_val,
 					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
 					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					ovflw			=> fft_pipe_ovflw_arr(I),
+					ovflw		=> fft_pipe_ovflw_arr(I),
 					out_val 	=> int_val(I)
 				);
 		end generate;

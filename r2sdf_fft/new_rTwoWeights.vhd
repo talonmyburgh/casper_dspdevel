@@ -9,12 +9,14 @@ use technology_lib.technology_select_pkg.all;
 entity rTwoWeights is
 	generic(
 		g_stage           : natural := 4; -- The stage number of the pft
+		g_wb_factor	      : natural := 1; -- The wideband factor of the wideband FFT
 		g_wb_inst		  : natural := 1; -- WB instance index
-		g_lat             : natural := 1; -- latency 0 or 1
-		g_twid_dat_w	  : natural := 18; -- coefficient data width
 		g_twiddle_offset  : natural := 0; -- The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_max_addr_w	  : natural := 10; -- address width above which to implement in block/ultra ram.
 		g_twid_file_stem  : string  := c_twid_file_stem; -- Pull the file stem from the rTwoSDFPkg
-		g_stage_offset    : natural := 0 -- The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_stage_offset    : natural := 0; -- The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_ram_primitive   : string  := "block";	-- BRAM primitive for Weights 
+		g_ram			  : t_c_mem := c_mem_ram -- RAM parameters
 	);
 	port(
 		clk       : in  std_logic;
@@ -27,30 +29,32 @@ end;
 architecture rtl of rTwoWeights is
 	
 	-- Ought to just be unique across stages
-	constant c_twid_file : string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst) & "wb_" & integer'image(g_stage) & "stg_"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
-	-- Calculate the address width needed to represent all values
-	constant c_adr_w : natural := 9; 
-	-- then we will calculate whether to implement in block or distributed based on the address width
-	constant c_num_coefs : natural := 30;
-	constant c_ram_primitive : string := "block";
-	constant c_ram : t_c_mem := (g_lat, c_adr_w, g_twid_dat_w, c_num_coefs, '0');
+	-- g_stage : log2(nof_points) -> log2(wb_factor) = log2(nof_points/wb_factor) stage.
+	-- stage indexing goes from log2(nof_points) -> log2(wb_factor) + 1  
+	-- g_wb_inst : 1 -> wb_factor
+	constant c_twid_file : string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst - 1) & "wb_" & (integer'image(g_stage + true_log2(g_wb_factor) - 1))  & "stg"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
 
-	signal im_addr : std_logic_vector(in_wAdr'range) := std_logic_vector(unsigned(in_wAdr) + 1); 
+	signal re_addr : std_logic_vector(in_wAdr'length downto 0);
+	signal im_addr : std_logic_vector(in_wAdr'length downto 0);
+
 
     begin
+		--Real address addresses all odd indices, Imag all even. This also gives address widths g_stage which is the size of the bram.
+		re_addr <= in_wAdr & '0';
+		im_addr <= in_wAdr & '1';
 
         -- Instantiate a BRAM for the coefficients
 		coef_mem : entity casper_ram_lib.common_rom_r_r
 			generic map(
-				g_ram => c_ram,
+				g_ram => g_ram,
 				g_init_file => c_twid_file,
 				g_true_dual_port => TRUE, 
-				g_ram_primitive => c_ram_primitive
+				g_ram_primitive => g_ram_primitive
 			)
 			port map(
 				clk => clk,
 				clken => std_logic'('1'),
-				adr_a => in_wAdr,
+				adr_a => re_addr,
 				adr_b => im_addr,
 				rd_en_a => std_logic'('1'),
 				rd_en_b => std_logic'('1'),
