@@ -353,17 +353,17 @@ begin
         v_test_pass_sync := out_sync = gold_sync;
         if not v_test_pass_sync then
           o_test_msg <= pad("Output sync error",o_test_msg'length,'.');
-          report "Output sync error"      severity failure;
+          report "Output sync error"      severity error;
         end if;
         v_test_pass_re := diff_re >= -g_diff_margin and diff_re <= g_diff_margin;
         if not v_test_pass_re then
           o_test_msg <= pad("Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re),o_test_msg'length,'.');
-          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity failure;
+          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity error;
         end if;
         v_test_pass_im := diff_im >= -g_diff_margin and diff_im <= g_diff_margin;
         if not v_test_pass_im then
           o_test_msg <= pad("Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im),o_test_msg'length,'.');
-          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity failure;
+          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity error;
         end if;
       end if;
     end if;
