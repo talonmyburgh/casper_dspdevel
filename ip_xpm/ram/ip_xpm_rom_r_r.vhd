@@ -44,13 +44,14 @@ end ip_xpm_rom_r_r;
 architecture Behavioral of ip_xpm_rom_r_r is
 
 	SIGNAL sub_wire0    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+	SIGNAL sub_wire1    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
 	-- CONSTANT c_memsize  : NATURAL := g_nof_words * g_dat_w;
-	CONSTANT c_memsize  : NATURAL := (2**sel_a_b( g_adr_a_w >= g_adr_b_w, g_adr_a_w, g_adr_b_w)-1) * g_dat_w ;
+	CONSTANT c_memsize  : NATURAL := (2**sel_a_b( g_adr_a_w >= g_adr_b_w, g_adr_a_w, g_adr_b_w)) * g_dat_w ;
 
 begin
 	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);
-	q_b <= sub_wire0(g_dat_w - 1 DOWNTO 0);
+	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0);
 
 	-- xpm_memory_dprom: Dual Port ROM
 	-- Xilinx Parameterized Macro, version 2018.1
@@ -79,8 +80,8 @@ begin
 	port map (
 		dbiterra => open, -- 1-bit output: Leave open.
 		dbiterrb => open, -- 1-bit output: Leave open.
-		douta => q_a, -- READ_DATA_WIDTH_A-bit output: Data output for port A read operations.
-		doutb => q_b, -- READ_DATA_WIDTH_B-bit output: Data output for port B read operations.
+		douta => sub_wire0, -- READ_DATA_WIDTH_A-bit output: Data output for port A read operations.
+		doutb => sub_wire1, -- READ_DATA_WIDTH_B-bit output: Data output for port B read operations.
 		sbiterra => open, -- 1-bit output: Leave open.
 		sbiterrb => open, -- 1-bit output: Leave open.
 		addra => address_a, -- ADDR_WIDTH_A-bit input: Address for port A read operations.

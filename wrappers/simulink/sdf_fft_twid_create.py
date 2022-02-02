@@ -78,7 +78,7 @@ def run(argv):
 
     """ Takes in details regarding the sdf FFT. Furthermore it takes which stage and which wb
         instance it is. This will dictate the unique coefficients required for that rom.
-        Assumes stage in range 1 -> log2(fft size)
+        Assumes stage in range 0 -> log2(fft size) -1
         Assumes wb_instance in range 0 -> wideband factor - 1
         Returns complex values
     """
@@ -101,12 +101,10 @@ def run(argv):
                 #What is returned is complex, so split it into real and image.
                 s_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(int)
                 s_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(int)
-                s_re = s_re & (2**sdf.coef_w-1)
-                s_im = s_im & (2**sdf.coef_w-1)
-                twids_re = s_re
-                twids_im = s_im
+                twids_re = s_re & (2**sdf.coef_w-1)
+                twids_im = s_im & (2**sdf.coef_w-1)
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) +("_%dstg_" % (p)) + ".mem" 
+                    t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) +("%dstg" % (p)) + ".mem" 
                     with open(t_outfilename,'w+') as fp:
                         for i in range(twids_re.size):
                             #Write the real coefficient line

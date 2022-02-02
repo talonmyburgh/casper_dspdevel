@@ -57,6 +57,7 @@ entity fft_r2_pipe is
 		g_fft                : t_fft          				:= c_fft; 		 			--! generics for the FFT
 		g_pipeline           : t_fft_pipeline 				:= c_fft_pipeline; 			--! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
 		g_dont_flip_channels : boolean        				:= false; 					--! generic to prevent re-ordering of the channels
+		g_wb_inst	     	 : natural						:= 1;						--! pipeline instance in a wb fft. =1 if r2sdf_fft.
 		g_use_variant    	 : string  		  				:= "4DSP";        			--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        	 : string  		  				:= "yes";        			--! = "yes" or "no"
 		g_ovflw_behav    	 : string  		  				:= "WRAP";        			--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
@@ -121,13 +122,17 @@ begin
             generic map(
             	g_nof_chan       => g_fft.nof_chan,
             	g_stage          => stage,
+				g_wb_factor	     => g_fft.wb_factor,
+				g_wb_inst	     => g_wb_inst,
             	g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => g_fft.twiddle_offset,
 				g_twid_dat_w	 => g_fft.twiddle_dat_w,
+				g_max_addr_w	 => g_fft.max_addr_w,
 				g_use_variant	 => g_use_variant,
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
-				g_use_round		 => g_use_round, 
+				g_use_round		 => g_use_round,
+				g_ram_primitive  => g_ram_primitive, 
 				g_pipeline       => g_pipeline
 			)
 			port map(
