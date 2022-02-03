@@ -21,7 +21,6 @@
 library ieee, common_pkg_lib, casper_ram_lib, common_components_lib, casper_counter_lib, casper_requantize_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
-use work.twiddlesPkg.all;
 use work.rTwoSDFPkg.all;
 use casper_ram_lib.common_ram_pkg.all;
 
@@ -29,6 +28,7 @@ entity rTwoSDFStage is
 	generic(
 		g_nof_chan       : natural        := 0; 				--! Exponent of nr of subbands (0 means 1 subband)
 		g_stage          : natural        := 8; 				--! Stage number
+		g_nof_points	 : natural 		  := 1024;				--! Number of points
 		g_wb_factor		 : natural 		  := 1;				    --! WB factor of a wideband FFT
 		g_wb_inst		 : natural 		  := 1; 				--! WB instance index. Altered for WB_FACTOR > 1
 		g_stage_offset   : natural        := 0; 				--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
@@ -64,6 +64,8 @@ architecture str of rTwoSDFStage is
 
 	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
+
+	constant c_coefs_file_stem : string := c_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b";
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
 	
@@ -149,14 +151,15 @@ begin
 
 	u_weights : entity work.rTwoWeights
 		generic map(
-			g_stage          => g_stage,
-			g_wb_factor		 => g_wb_factor,
-			g_wb_inst		 => g_wb_inst,
-			g_twiddle_offset => g_twiddle_offset,
-			g_max_addr_w	 => g_max_addr_w,
-			g_stage_offset   => g_stage_offset,
-			g_ram_primitive	 => c_ram_primitive,
-			g_ram			 => c_ram
+			g_stage          	=> g_stage,
+			g_wb_factor		 	=> g_wb_factor,
+			g_wb_inst		 	=> g_wb_inst,
+			g_twid_file_stem  => c_coefs_file_stem,
+			g_twiddle_offset 	=> g_twiddle_offset,
+			g_max_addr_w	 	=> g_max_addr_w,
+			g_stage_offset   	=> g_stage_offset,
+			g_ram_primitive	 	=> c_ram_primitive,
+			g_ram			 	=> c_ram
 		)
 		port map(
 			clk       => clk,

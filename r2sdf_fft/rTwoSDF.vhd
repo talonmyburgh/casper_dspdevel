@@ -29,7 +29,6 @@
 library ieee, common_pkg_lib, casper_requantize_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
-use work.twiddlesPkg.all;
 use work.rTwoSDFPkg.all;
 
 --! @dot 
