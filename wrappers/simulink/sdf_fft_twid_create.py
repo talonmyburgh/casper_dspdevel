@@ -8,6 +8,19 @@ import getopt
 import os
 import numpy as np
 
+"""
+Value must be of type integer scaled
+"""
+def hexstring_bitwidth_format(value, bitwidth):
+    ceil_nibwidth = np.ceil(bitwidth/4).astype(np.uint)
+    format_str = "%%0%dx"% ceil_nibwidth
+    hex_str = format_str % np.uint64(value)
+    hex_str = hex_str[0-ceil_nibwidth:]
+    msn = hex_str[0]
+    bits_to_drop = 4 - (bitwidth%4)
+    msn = int(msn, base=16) & ((1 << bits_to_drop) -1)
+    return "%x%s" % (msn, hex_str[1:])
+
 def run(argv):
     # Arguments
     class sdf:
@@ -73,8 +86,7 @@ def run(argv):
 
     # Create base file name for the memory files.
         if sdf.verbose:
-            sdf.outfileprefix = os.path.join(pathforstore, "sdf_twiddle_coeffs_%dp_%db" % (
-                sdf.nof_points, sdf.coef_w))
+            sdf.outfileprefix = os.path.join(pathforstore, "sdf_twiddle_coeffs")
 
     """ Takes in details regarding the sdf FFT. Furthermore it takes which stage and which wb
         instance it is. This will dictate the unique coefficients required for that rom.
@@ -85,7 +97,7 @@ def run(argv):
     def gen_twiddles(sdf, stage, wb_instance):
         coeff_indices = np.arange(wb_instance%2**stage, 2**stage, sdf.wb_factor)
         coeffs = np.exp(-1.0j * np.pi * coeff_indices / 2**stage)
-        print("\nCoefs: ",coeffs,"\nCoeff indices: ",coeff_indices, "\nStage: ",stage, "\nWB instance: ", wb_instance, "\nWB Factor: ", sdf.wb_factor)
+        # print("\nCoefs: ",coeffs,"\nCoeff indices: ",coeff_indices, "\nStage: ",stage, "\nWB instance: ", wb_instance, "\nWB Factor: ", sdf.wb_factor)
         return coeffs
 
     """ Here we write to mem files the required coefficients per wb_instance per stage
@@ -99,25 +111,26 @@ def run(argv):
                 #Logic to scale up the coefficients to integer values for later hex conversion
                 s = gen_twiddles(sdf,p,w)
                 #What is returned is complex, so split it into real and image.
-                s_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(int)
-                s_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(int)
-                twids_re = s_re & (2**sdf.coef_w-1)
-                twids_im = s_im & (2**sdf.coef_w-1)
+                twids_re = np.floor((np.real(s)*(2**(sdf.coef_w-1)))).astype(int)
+                twids_im = np.floor((np.imag(s)*(2**(sdf.coef_w-1)))).astype(int)
+                max_pos = (1 << (sdf.coef_w-1)) - 1 
+                twids_re[twids_re > max_pos] = max_pos
+                twids_im[twids_im > max_pos] = max_pos
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) +("%dstg" % (p)) + ".mem" 
+                    t_outfilename = sdf.outfileprefix + ("_%dp" % (sdf.nof_points)) + ("_%db" % (sdf.coef_w)) + ("_%dwb_" % (w)) +("%dstg" % (p)) + ".mem" 
                     with open(t_outfilename,'w+') as fp:
                         for i in range(twids_re.size):
                             #Write the real coefficient line
-                            s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_re[i])
+                            s = hexstring_bitwidth_format(twids_re[i],sdf.coef_w) +"\n"
                             fp.write(s)
                             #Write the imaginary coefficient line
-                            s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_im[i])
+                            s = hexstring_bitwidth_format(twids_im[i],sdf.coef_w) +"\n"
                             fp.write(s)
                 else:
                     for i in range(twids_re.size):
-                        s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_re[i])
+                        s = hexstring_bitwidth_format(twids_re[i],sdf.coef_w) +"\n"
                         twids_tmp.append(s)
-                        s = ('%%0%dx\n' % np.ceil(sdf.coef_w/4)) % (twids_im[i])
+                        s = hexstring_bitwidth_format(twids_im[i],sdf.coef_w) +"\n"
                         twids_tmp.append(s)
                     ret_twids.append(",".join(twids_tmp))
                 
@@ -134,14 +147,14 @@ def run(argv):
             for w in range(sdf.wb_factor):
                  #Logic to scale up the coefficients to integer values for later hex conversion
                 s = gen_twiddles(sdf,p,w)
-                s_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(int)
-                s_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(int)
-                s_re = s_re & (2**sdf.coef_w-1)
-                s_im = s_im & (2**sdf.coef_w-1)
-                twids_re = s_re
-                twids_im = s_im
+                twids_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(np.uint)
+                twids_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(np.uint)
+                # s_re = s_re & (2**sdf.coef_w-1)
+                # s_im = s_im & (2**sdf.coef_w-1)
+                # twids_re = s_re
+                # twids_im = s_im
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + ("_%dwb_" % (w)) + ("_stg_%d" % (p)) + ".mif"
+                    t_outfilename = sdf.outfileprefix + + ("_%dp" % (sdf.nof_points)) + ("_%db" % (sdf.coef_w)) + ("_%dwb_" % (w)) +("%dstg" % (p))  + ".mif"
                     with open(t_outfilename,'w+') as fp:
                         s = 'WIDTH=%d;\n' % sdf.coef_w
                         fp.write(s)
@@ -156,18 +169,22 @@ def run(argv):
 
                         for i in range(twids_re.size):
                             #Write the real coefficient line
-                            s = '%x   :  %x ; \n' % (i, twids_re[i])
+                            s = hexstring_bitwidth_format(twids_re[i],sdf.coef_w)
+                            s = '%x   :  %s ; \n' % (i, s)
                             fp.write(s)
                             #Write the imaginary coefficient line
-                            s = '%x   :  %x ; \n' % (i, twids_im[i])
+                            s = hexstring_bitwidth_format(twids_im[i],sdf.coef_w)
+                            s = '%x   :  %s ; \n' % (i, s)
                             fp.write(s)
                         s= 'END;\n'
                         fp.write(s)
                 else:
                     for i in range(twids.size):
-                        s =  ' %x   :  %x ; \n' % (i, twids_re[i])
+                        s = hexstring_bitwidth_format(twids_re[i],sdf.coef_w)
+                        s = '%x   :  %s ; \n' % (i, s)
                         twids_tmp.append(s)
-                        s =  ' %x   :  %x ; \n' % (i, twids_im[i])
+                        s = hexstring_bitwidth_format(twids_im[i],sdf.coef_w)
+                        s = '%x   :  %s ; \n' % (i, s)
                         twids_tmp.append(s)
                     twids.append(",".join(twids_tmp))
         if not sdf.gen_files:

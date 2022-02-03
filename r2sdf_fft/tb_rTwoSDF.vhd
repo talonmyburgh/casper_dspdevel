@@ -69,7 +69,6 @@ use common_pkg_lib.common_pkg.all;
 use common_pkg_lib.common_lfsr_sequences_pkg.all;
 use common_pkg_lib.tb_common_pkg.all;
 use work.rTwoSDFPkg.all;
-use work.twiddlesPkg.all;
 
 
 entity tb_rTwoSDF is
@@ -353,17 +352,17 @@ begin
         v_test_pass_sync := out_sync = gold_sync;
         if not v_test_pass_sync then
           o_test_msg <= pad("Output sync error",o_test_msg'length,'.');
-          report "Output sync error"      severity error;
+          report "Output sync error"      severity failure;
         end if;
         v_test_pass_re := diff_re >= -g_diff_margin and diff_re <= g_diff_margin;
         if not v_test_pass_re then
           o_test_msg <= pad("Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re),o_test_msg'length,'.');
-          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity error;
+          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity failure;
         end if;
         v_test_pass_im := diff_im >= -g_diff_margin and diff_im <= g_diff_margin;
         if not v_test_pass_im then
           o_test_msg <= pad("Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im),o_test_msg'length,'.');
-          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity error;
+          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity failure;
         end if;
       end if;
     end if;
