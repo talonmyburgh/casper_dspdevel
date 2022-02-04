@@ -31,8 +31,8 @@ architecture rtl of rTwoWeights is
 	-- Ought to just be unique across stages
 	-- g_stage : log2(nof_points) -> log2(wb_factor) = log2(nof_points/wb_factor) stage.
 	-- stage indexing goes from log2(nof_points) -> log2(wb_factor) + 1  
-	-- g_wb_inst : 1 -> wb_factor
-	constant c_twid_file : string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst - 1) & "wb_" & (integer'image(g_stage + true_log2(g_wb_factor) - 1))  & "stg"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
+	-- g_wb_inst : 0 -> wb_factor - 1
+	constant c_twid_file : string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst) & "wbinst_" & (integer'image(g_stage + true_log2(g_wb_factor) - 1))  & "stg"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
 
 	signal re_addr : std_logic_vector(in_wAdr'length downto 0);
 	signal im_addr : std_logic_vector(in_wAdr'length downto 0);
