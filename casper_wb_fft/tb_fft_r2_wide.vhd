@@ -58,7 +58,7 @@ entity tb_fft_r2_wide is
   generic(
     -- DUT generics
     --g_fft : t_fft := ( true, false,  true, 0, 4, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2);         -- two real inputs A and B
     --g_fft : t_fft := ( true, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
     --g_fft : t_fft := (false, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
@@ -451,12 +451,12 @@ begin
           v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
         end if;
       end if;

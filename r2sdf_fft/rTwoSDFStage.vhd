@@ -28,9 +28,9 @@ entity rTwoSDFStage is
 	generic(
 		g_nof_chan       : natural        := 0; 				--! Exponent of nr of subbands (0 means 1 subband)
 		g_stage          : natural        := 8; 				--! Stage number
-		g_nof_points	 : natural 		  := 1024;				--! Number of points
+		g_nof_points	 : natural 		  := 32;				--! Number of points
 		g_wb_factor		 : natural 		  := 1;				    --! WB factor of a wideband FFT
-		g_wb_inst		 : natural 		  := 1; 				--! WB instance index. Altered for WB_FACTOR > 1
+		g_wb_inst		 : natural 		  := 0; 				--! WB instance index. Altered for WB_FACTOR > 1
 		g_stage_offset   : natural        := 0; 				--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twiddle_offset : natural        := 0; 				--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twid_dat_w     : natural		  := 18;				--! The coefficient data width
@@ -65,7 +65,7 @@ architecture str of rTwoSDFStage is
 	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
-	constant c_coefs_file_stem : string := c_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b";
+	constant c_coefs_file_stem : string := c_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
 	

@@ -72,7 +72,7 @@ entity rTwoSDF is
 		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_twid_dat_w	: natural := 18;
-		g_max_addr_w	: natural := 7;
+		g_max_addr_w	: natural := 9;
 		-- pipeline generics
 		g_stage_lat     : natural := 1; --! stage latencies
 		g_weight_lat    : natural := 1;
@@ -148,6 +148,9 @@ begin
 			generic map(
 				g_nof_chan       => g_nof_chan,
 				g_stage          => stage,
+				g_nof_points	 => g_nof_points,
+				g_wb_factor		 => 1,
+				g_wb_inst		 => 0,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
 				g_twid_dat_w	 => g_twid_dat_w,
