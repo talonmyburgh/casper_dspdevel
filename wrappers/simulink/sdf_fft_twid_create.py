@@ -117,7 +117,7 @@ def run(argv):
                 twids_re[twids_re > max_pos] = max_pos
                 twids_im[twids_im > max_pos] = max_pos
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + ("_%dp" % (sdf.nof_points)) + ("_%db" % (sdf.coef_w)) + ("_%dwb_" % (w)) +("%dstg" % (p)) + ".mem" 
+                    t_outfilename = sdf.outfileprefix + ("_%dp" % (sdf.nof_points//sdf.wb_factor)) + ("_%db" % (sdf.coef_w)) + ("_%dwb" % (sdf.wb_factor)) + ("_%dwbinst" % (w)) + ("_%dstg" % (p)) + ".mem" 
                     with open(t_outfilename,'w+') as fp:
                         for i in range(twids_re.size):
                             #Write the real coefficient line
@@ -154,7 +154,7 @@ def run(argv):
                 # twids_re = s_re
                 # twids_im = s_im
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + + ("_%dp" % (sdf.nof_points)) + ("_%db" % (sdf.coef_w)) + ("_%dwb_" % (w)) +("%dstg" % (p))  + ".mif"
+                    t_outfilename = sdf.outfileprefix + + ("_%dp" % (sdf.nof_points//sdf.wb_factor)) + ("_%db" % (sdf.coef_w)) + ("_%dwb" % (sdf.wb_factor)) + ("_%dwbinst" % (w)) +("_%dstg" % (p))  + ".mif"
                     with open(t_outfilename,'w+') as fp:
                         s = 'WIDTH=%d;\n' % sdf.coef_w
                         fp.write(s)
