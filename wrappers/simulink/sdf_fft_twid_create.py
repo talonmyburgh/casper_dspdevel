@@ -85,8 +85,8 @@ def run(argv):
                 print("Directory ", pathforstore, " already exists!")
 
     # Create base file name for the memory files.
-        if sdf.verbose:
-            sdf.outfileprefix = os.path.join(pathforstore, "sdf_twiddle_coeffs")
+
+        sdf.outfileprefix = os.path.join(pathforstore, "sdf_twiddle_coeffs")
 
     """ Takes in details regarding the sdf FFT. Furthermore it takes which stage and which wb
         instance it is. This will dictate the unique coefficients required for that rom.
@@ -97,7 +97,6 @@ def run(argv):
     def gen_twiddles(sdf, stage, wb_instance):
         coeff_indices = np.arange(wb_instance%2**stage, 2**stage, sdf.wb_factor)
         coeffs = np.exp(-1.0j * np.pi * coeff_indices / 2**stage)
-        # print("\nCoefs: ",coeffs,"\nCoeff indices: ",coeff_indices, "\nStage: ",stage, "\nWB instance: ", wb_instance, "\nWB Factor: ", sdf.wb_factor)
         return coeffs
 
     """ Here we write to mem files the required coefficients per wb_instance per stage
@@ -149,10 +148,9 @@ def run(argv):
                 s = gen_twiddles(sdf,p,w)
                 twids_re = (np.real(s)*(2**(sdf.coef_w-1))).astype(np.uint)
                 twids_im = (np.imag(s)*(2**(sdf.coef_w-1))).astype(np.uint)
-                # s_re = s_re & (2**sdf.coef_w-1)
-                # s_im = s_im & (2**sdf.coef_w-1)
-                # twids_re = s_re
-                # twids_im = s_im
+                max_pos = (1 << (sdf.coef_w-1)) - 1 
+                twids_re[twids_re > max_pos] = max_pos
+                twids_im[twids_im > max_pos] = max_pos
                 if sdf.gen_files:
                     t_outfilename = sdf.outfileprefix + + ("_%dp" % (sdf.nof_points//sdf.wb_factor)) + ("_%db" % (sdf.coef_w)) + ("_%dwb" % (sdf.wb_factor)) + ("_%dwbinst" % (w)) +("_%dstg" % (p))  + ".mif"
                     with open(t_outfilename,'w+') as fp:
