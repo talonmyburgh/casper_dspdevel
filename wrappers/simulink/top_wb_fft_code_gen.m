@@ -234,7 +234,7 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
 
     %Generate twiddle coefficient mem files for the fft:
     pyscriptloc = fullfile(filepathscript , 'sdf_fft_twid_create.py');
-    command = strrep(sprintf("python %s -o %s -g 1 -p %d -w %d -c %d -v %d -V 0", pyscriptloc, vhdlfilefolder, nof_points, wb_factor, twid_dat_w, vendor),'\','\\') ;
+    command = sprintf("python %s -o %s -g 1 -p %d -w %d -c %d -v %d -V 0",strrep(pyscriptloc,'\','\\'), strrep(vhdlfilefolder,'\','\\'), nof_points, wb_factor, twid_dat_w, vendor) ;
     fprintf(command)
     [status,cmdout] = system(command); %coefficient files will be generated at filepath/twids/
     
