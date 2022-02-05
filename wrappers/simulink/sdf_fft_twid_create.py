@@ -12,7 +12,7 @@ import numpy as np
 Value must be of type integer scaled
 """
 def hexstring_bitwidth_format(value, bitwidth):
-    ceil_nibwidth = np.ceil(bitwidth/4).astype(np.uint)
+    ceil_nibwidth = int(np.ceil(bitwidth/4))
     format_str = "%%0%dx"% ceil_nibwidth
     hex_str = format_str % np.uint64(value)
     hex_str = hex_str[0-ceil_nibwidth:]
