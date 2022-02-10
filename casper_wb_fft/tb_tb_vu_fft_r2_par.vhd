@@ -37,6 +37,7 @@ entity tb_tb_vu_fft_r2_par is
         g_use_variant           : STRING     := "4DSP";
         g_ovflw_behav           : STRING     := "WRAP";
         g_use_round             : STRING     := "TRUNCATE";
+        g_twid_file_stem        : string     := "UNUSED";
         runner_cfg              : string
     );
 end tb_tb_vu_fft_r2_par;
@@ -66,7 +67,8 @@ BEGIN
             g_enable_in_val_gaps => g_enable_in_val_gaps,
             g_use_variant => g_use_variant,
             g_ovflw_behav => g_ovflw_behav,
-            g_use_round => g_use_round
+            g_use_round => g_use_round,
+            g_twid_file_stem => g_twid_file_stem
         )
 		PORT MAP(
 			o_rst => rst,
