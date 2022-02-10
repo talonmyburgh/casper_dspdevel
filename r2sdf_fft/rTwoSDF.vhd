@@ -73,6 +73,7 @@ entity rTwoSDF is
 		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_twid_dat_w	: natural := 18;
 		g_max_addr_w	: natural := 9;
+		g_twid_file_stem: string  := c_twid_file_stem;
 		-- pipeline generics
 		g_stage_lat     : natural := 1; --! stage latencies
 		g_weight_lat    : natural := 1;
@@ -155,11 +156,12 @@ begin
 				g_twiddle_offset => c_twiddle_offset,
 				g_twid_dat_w	 => g_twid_dat_w,
 				g_max_addr_w	 => g_max_addr_w,
-				g_ram_primitive	 => g_ram_primitive,
 				g_use_variant    => g_variant,
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
 				g_use_round		 => g_use_round, 
+				g_ram_primitive	 => g_ram_primitive,
+				g_twid_file_stem => g_twid_file_stem,
 				g_pipeline       => pipeline
 			)
 			port map(

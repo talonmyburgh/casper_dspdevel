@@ -3,11 +3,7 @@ from os.path import join, abspath, split
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
-# script_dir = dirname(__file__)
 script_dir,_ = split(abspath(__file__))
-print(script_dir)
-
-
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
@@ -109,11 +105,15 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_crw_crw.vhd"))
 
 # RTWOSDF Library
+# Pathline for twid coefficients
+twid_path_stem = script_dir + '/data/twids/sdf_twiddle_coeffs'
+print(twid_path_stem)
+
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBFStage.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoOrder.vhd"))
-# r2sdf_fft_lib.add_source_file(join(script_dir,"twiddlesPkg.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"twiddlesPkg.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDFPkg.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"new_rTwoWeights.vhd"))
 # r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoWeights.vhd"))
@@ -127,16 +127,16 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
     name = "u_act_impulse_16p_16i_16o",
-    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_act_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o_flipped",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])

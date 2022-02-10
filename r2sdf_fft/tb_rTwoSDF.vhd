@@ -83,7 +83,8 @@ entity tb_rTwoSDF is
     g_out_dat_w         : natural  := 14;   
     g_guard_w           : natural  := 2;      -- guard bits are used to avoid overflow in single FFT stage.
     g_diff_margin       : natural  := 2;
-    g_file_loc_prefix   : string   := "../../../../../"
+    g_file_loc_prefix   : string   := "../../../../../";
+    g_twid_file_stem    : string   := "UNUSED"
   );
   port(
     o_rst       : out std_logic;
@@ -271,7 +272,8 @@ begin
     g_guard_w     => g_guard_w,
     g_nof_points  => g_nof_points,
     -- generics for rTwoSDFStage
-    g_variant     => "4DSP"   -- Use 3DSP or 4DSP for multiplication
+    g_variant     => "4DSP",   -- Use 3DSP or 4DSP for multiplication
+    g_twid_file_stem => g_twid_file_stem
   )
   port map(
     clk       => clk,
