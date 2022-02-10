@@ -13,7 +13,7 @@ entity rTwoWeights is
 		g_wb_inst		  : natural := 1; -- WB instance index
 		g_twiddle_offset  : natural := 0; -- The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_max_addr_w	  : natural := 10; -- address width above which to implement in block/ultra ram.
-		g_twid_file_stem  : string  := c_twid_file_stem; -- Pull the file stem from the rTwoSDFPkg
+		g_twid_file_stem  : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
 		g_stage_offset    : natural := 0; -- The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_ram_primitive   : string  := "block";	-- BRAM primitive for Weights 
 		g_ram			  : t_c_mem := c_mem_ram -- RAM parameters

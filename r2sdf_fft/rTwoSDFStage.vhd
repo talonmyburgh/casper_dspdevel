@@ -40,6 +40,7 @@ entity rTwoSDFStage is
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
 		g_ram_primitive  : string		  := "block";			--! BRAM primitive for the Weights
+		g_twid_file_stem : string  		  := "UNUSED";			--! Path stem for the twiddle coefficient files
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
 	);
 	port(
@@ -65,7 +66,7 @@ architecture str of rTwoSDFStage is
 	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
-	constant c_coefs_file_stem : string := c_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
+	constant c_coefs_file_stem : string := g_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
 	
