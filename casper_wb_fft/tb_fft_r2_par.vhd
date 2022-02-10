@@ -114,6 +114,7 @@ entity tb_fft_r2_par is
     
     g_data_file_nof_lines   : natural := 160;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_twid_file_stem        : string := "UNUSED";
     g_use_variant           : string := "4DSP";
     g_ovflw_behav           : string := "WRAP";
     g_use_round             : string := "TRUNCATE"
@@ -322,7 +323,8 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_use_round => g_use_round,
+    g_twid_file_stem => g_twid_file_stem
   )
   port map(
     clk        => dut_clk,

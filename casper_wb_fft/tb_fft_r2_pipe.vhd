@@ -146,6 +146,7 @@ entity tb_fft_r2_pipe is
     
     g_data_file_nof_lines   : natural := 6400;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_twid_file_stem        : string := "UNUSED";
     g_use_variant : STRING := "4DSP";
     g_ovflw_behav : STRING := "WRAP";
     g_use_round   : STRING := "TRUNCATE"
@@ -344,7 +345,8 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_use_round => g_use_round,
+    g_twid_file_stem => g_twid_file_stem
   )
   port map (
     clken    => std_logic'('1'),

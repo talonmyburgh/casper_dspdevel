@@ -146,6 +146,9 @@ casper_sim_tools_lib =vu.add_library("casper_sim_tools_lib")
 casper_sim_tools_lib.add_source_file(join(script_dir,"../casper_sim_tools/common_wideband_data_scope.vhd"))
 
 # RTWOSDF Library
+# Pathline for twid coefficients
+twid_path_stem = abspath(script_dir + '/../r2sdf_fft/data/twids/sdf_twiddle_coeffs')
+print(twid_path_stem)
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBFStage.vhd"))
@@ -182,14 +185,17 @@ if args.par or args.pipe or run_all or args.wide:
         g_use_separate = True,
         g_nof_chan = 0,
         g_wb_factor = 1,
-        g_twiddle_offset = 0, 
+        g_twiddle_offset = 0,
+        g_twid_dat_w = 18,
+        g_max_addr_w = 8,
         g_nof_points = 128,
         g_in_dat_w = 8,
         g_out_dat_w = 16,
         g_out_gain_w = 0,
         g_stage_dat_w = 18,
         g_guard_w = 2,
-        g_guard_enable = True
+        g_guard_enable = True,
+        g_twid_file_stem = twid_path_stem
     )
     c_fft_complex = c_fft_two_real.copy()
     c_fft_complex.update({'g_nof_points':64})
