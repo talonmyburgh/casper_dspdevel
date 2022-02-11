@@ -260,6 +260,9 @@ begin
 			out_val   	 	=> mul_out_val
 		);
 
+	------------------------------------------------------------------------------
+	-- fetch twiddle coefficient values
+	------------------------------------------------------------------------------
 	weight_re <= wRe(wMap(g_element, g_stage));
 	weight_im <= wIm(wMap(g_element, g_stage));
 
