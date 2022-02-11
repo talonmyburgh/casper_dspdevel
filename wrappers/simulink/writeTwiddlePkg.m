@@ -20,22 +20,20 @@
 %   You should have received a copy of the GNU General Public License
 %   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 %-------------------------------------------------------------------------%
-function writeVhdl(w_re,w_im,wMap)
+function writeTwiddlePkg(w_re,w_im,wMap,destfolder)
 
   Np=2*size(w_re,1);
   Nb=size(w_re,2);
   
   WRITE_RAW_TWIDDLES    =1;
   WRITE_TWIDDLE_MATRIX  =1;
-  
-  wrkingDir = fileparts(which('writeVhdl'));
+
   %write vhdl pkg containing the twiddles
   %--header--
   if ispc
-    [fid,errmsg]= fopen(fullfile(wrkingDir, '\..\twiddlesPkg.vhd'),'w');
-    errmsg
+    [fid,errmsg]= fopen(fullfile(destfolder, './twiddlesPkg.vhd'),'w');
   else
-    fid= fopen(fullfile(wrkingDir, '/../twiddlesPkg.vhd'),'w');
+    fid= fopen(fullfile(destfolder, './twiddlesPkg.vhd'),'w');
   end
   if fid == -1
      error("file not created"); 
