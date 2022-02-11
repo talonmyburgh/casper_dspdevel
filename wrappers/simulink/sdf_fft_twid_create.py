@@ -26,13 +26,11 @@ def run(argv):
     class sdf:
         outdestfolder = ''
         outfileprefix = ''
-        filename = ''
         nof_points = 0
         nof_stages = 0
         wb_factor = 0
         coef_w = 0
         ext = ''
-        # fixed use False to create mif files for fil_ppf_wide.vhd and for apertif_unb1_bn_filterbank
         verbose = False
         gen_files = True
     
@@ -85,7 +83,6 @@ def run(argv):
                 print("Directory ", pathforstore, " already exists!")
 
     # Create base file name for the memory files.
-
         sdf.outfileprefix = os.path.join(pathforstore, "sdf_twiddle_coeffs")
 
     """ Takes in details regarding the sdf FFT. Furthermore it takes which stage and which wb
