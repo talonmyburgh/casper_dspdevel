@@ -1,2 +1,0 @@
-<testsuite name="testsuite" errors="0" failures="0" skipped="0" tests="1" hostname="fv-az191-422"><testcase classname="tb_lib.tb_tb_vu_common_fifo_rd" name="random" time="0.5"><system-out>simulation stopped @20us with status 0
-</system-out></testcase></testsuite>

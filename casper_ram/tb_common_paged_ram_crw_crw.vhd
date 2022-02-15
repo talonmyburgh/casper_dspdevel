@@ -37,13 +37,6 @@ USE common_pkg_lib.tb_common_pkg.ALL;
   
 
 ENTITY tb_common_paged_ram_crw_crw IS
-PORT(
-  o_rst		   : OUT STD_LOGIC;
-  o_clk		   : OUT STD_LOGIC;
-  o_tb_end	   : OUT STD_LOGIC;
-  o_test_msg	   : OUT STRING(1 to 80);
-  o_test_pass	   : OUT BOOLEAN
-);
 END tb_common_paged_ram_crw_crw;
 
 ARCHITECTURE tb OF tb_common_paged_ram_crw_crw IS
@@ -90,25 +83,11 @@ ARCHITECTURE tb OF tb_common_paged_ram_crw_crw IS
   SIGNAL prev_mux_rd_dat_b : STD_LOGIC_VECTOR(c_data_w-1 DOWNTO 0);
   SIGNAL prev_adr_rd_dat_b : STD_LOGIC_VECTOR(c_data_w-1 DOWNTO 0);
   SIGNAL prev_ofs_rd_dat_b : STD_LOGIC_VECTOR(c_data_w-1 DOWNTO 0);
-
-	SIGNAL mux_test_pass : BOOLEAN;
-	SIGNAL mux_test_msg : STRING(o_test_msg'range);
-  SIGNAL ofs_test_pass : BOOLEAN;
-	SIGNAL ofs_test_msg : STRING(o_test_msg'range);
-	SIGNAL adr_test_pass : BOOLEAN;
-	SIGNAL adr_test_msg : STRING(o_test_msg'range);
   
 BEGIN
 
   clk <= NOT clk AND NOT tb_end AFTER clk_period/2;
   rst <= '1', '0' AFTER clk_period*7;
-
-  o_clk <= clk;
-  o_rst <= rst;
-  o_tb_end <= tb_end;
-  o_test_pass <= mux_test_pass and ofs_test_pass and adr_test_pass;
-  o_test_msg <= pad("DUT : read data/valid differs between two implementations", o_test_msg'length, '.');
-
   
   verify_en <= '0', '1' AFTER clk_period*(15+(c_nof_pages-1)*c_page_sz);
   
@@ -242,22 +221,21 @@ BEGIN
   );
 
   -- Verify that the read data is incrementing data
-  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, mux_rd_val_b, mux_rd_dat_b, prev_mux_rd_dat_b,mux_test_msg,mux_test_pass);
-  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, adr_rd_val_b, adr_rd_dat_b, prev_adr_rd_dat_b,adr_test_msg,adr_test_pass);
-  proc_common_verify_data(c_rl, clk, rst, verify_en, ready, ofs_rd_val_b, ofs_rd_dat_b, prev_ofs_rd_dat_b,ofs_test_msg,ofs_test_pass);
+  proc_common_verify_data(c_rl, clk, verify_en, ready, mux_rd_val_b, mux_rd_dat_b, prev_mux_rd_dat_b);
+  proc_common_verify_data(c_rl, clk, verify_en, ready, adr_rd_val_b, adr_rd_dat_b, prev_adr_rd_dat_b);
+  proc_common_verify_data(c_rl, clk, verify_en, ready, ofs_rd_val_b, ofs_rd_dat_b, prev_ofs_rd_dat_b);
      
   -- Verify that the read data is the same for all three DUT variants
   p_verify_equal : PROCESS(clk)  
   BEGIN
-    If rst = '0' then
-      IF rising_edge(clk) THEN
-        IF UNSIGNED(mux_rd_dat_b) /= UNSIGNED(adr_rd_dat_b) OR UNSIGNED(mux_rd_dat_b) /= UNSIGNED(ofs_rd_dat_b) THEN
-          REPORT "DUT : read data differs between two implementations" SEVERITY FAILURE;
-        END IF;
-        IF mux_rd_val_b /= adr_rd_val_b OR mux_rd_val_b /= ofs_rd_val_b THEN
-          REPORT "DUT : read valid differs between two implementations" SEVERITY FAILURE;
-        END IF;
+    IF rising_edge(clk) THEN
+      IF UNSIGNED(mux_rd_dat_b) /= UNSIGNED(adr_rd_dat_b) OR UNSIGNED(mux_rd_dat_b) /= UNSIGNED(ofs_rd_dat_b) THEN
+        REPORT "DUT : read data differs between two implementations" SEVERITY ERROR;
       END IF;
-    end if;
+      IF mux_rd_val_b /= adr_rd_val_b OR mux_rd_val_b /= ofs_rd_val_b THEN
+        REPORT "DUT : read valid differs between two implementations" SEVERITY ERROR;
+      END IF;
+    END IF;
   END PROCESS;
+  
 END tb;

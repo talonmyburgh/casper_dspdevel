@@ -33,9 +33,7 @@ function filterbank_top_config(this_block)
   nof_chan = get_param(filterbank_blk_parent,'nof_chan');
   nof_bands = get_param(filterbank_blk_parent,'nof_bands');
   i_d_w = get_param(filterbank_blk_parent,'in_dat_w');
-  str_i_dat_type = sprintf('Fix_%s_0',i_d_w);
   o_d_w = get_param(filterbank_blk_parent,'out_dat_w');
-  str_o_dat_type = sprintf('Fix_%s_0',o_d_w);
   c_d_w = get_param(filterbank_blk_parent,'coef_dat_w');
   win = get_param(filterbank_blk_parent, 'win');
   fwidth = get_param(filterbank_blk_parent, 'fwidth');
@@ -45,46 +43,54 @@ function filterbank_top_config(this_block)
   technology = get_param(filterbank_blk_parent,'technology');
   ram_primitive = get_param(filterbank_blk_parent,'ram_primitive');
 
-  technology_int = 0;
-  if strcmp(technology, 'Xilinx')
-    technology_int = 0;
-  end % if technology Xilinx
-  if strcmp(technology, 'UniBoard')
-    technology_int = 1;
-  end % if technology UniBoard
-
   %Generate the top level vhdl file as well as the mem files. Returned is the location of the mem files for adding to the project.
-  vhdlfile = top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
-      str2double(fwidth),technology_int,str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
+  top_fil_code_gen(wb_factor,str2double(nof_bands),nof_taps,win,...
+      str2double(fwidth),str2double(technology),str2double(i_d_w),str2double(o_d_w),str2double(c_d_w));
 
   %Input signals
   this_block.addSimulinkInport('rst');
-  rst_port = this_block.port('rst');
-  rst_port.setType('Ufix_1_0');
-  rst_port.useHDLVector(false);
-
   this_block.addSimulinkInport('in_val');
-  in_val_port = this_block.port('in_val');
-  in_val_port.setType('Ufix_1_0');
-  in_val_port.useHDLVector(false);
-
+  for i=0:wb_factor-1
+      this_block.addSimulinkInport(sprintf('in_dat_%d',i));
+  end
+  
   %Output signals
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
-  out_val_port.setType('Ufix_1_0');
+  out_val_port.setType('UFix_1_0');
   out_val_port.useHDLVector(false);
-
-  %Data in/out signals
   for i=0:wb_factor-1
-    in_dat_str = sprintf('in_dat_%d',i);
-    this_block.addSimulinkInport(in_dat_str);
-    this_block.port(in_dat_str).setType(str_i_dat_type);
-    this_block.port(in_dat_str).useHDLVector(true);
-    out_dat_str = sprintf('out_dat_%d',i);
-    this_block.addSimulinkOutport(out_dat_str);
-    this_block.port(out_dat_str).setType(str_o_dat_type);
-    this_block.port(out_dat_str).useHDLVector(true);
+      this_block.addSimulinkOutport(sprintf('out_dat_%d',i));
   end
+
+  % System Generator has to assume that your entity has a combinational feed through; 
+  %   if it  doesn't, then comment out the following line:
+  this_block.tagAsCombinational;
+  % -----------------------------
+  if (this_block.inputTypesKnown)
+    % do input type checking, dynamic output type and generic setup in this code block.
+
+    if (this_block.port('rst').width ~= 1)
+      this_block.setError('Input data type for port "rst" must have width=1.');
+    end
+
+    this_block.port('rst').useHDLVector(false);
+
+    if (this_block.port('in_val').width ~= 1)
+      this_block.setError('Input data type for port "in_val" must have width=1.');
+    end
+
+    this_block.port('in_val').useHDLVector(false);
+
+    for j=0:wb_factor-1
+      this_block.port(sprintf('in_dat_%d',j)).useHDLVector(true);
+      this_block.port(sprintf('in_dat_%d',j)).setWidth(str2double(i_d_w));
+      this_block.port(sprintf('out_dat_%d',j)).useHDLVector(true);
+      this_block.port(sprintf('out_dat_%d',j)).setWidth(str2double(o_d_w));
+    end
+  
+  end  % if(inputTypesKnown)
+  % -----------------------------
 
   % -----------------------------
    if (this_block.inputRatesKnown)
@@ -109,31 +115,18 @@ function filterbank_top_config(this_block)
   this_block.addGeneric('g_nof_taps','natural',num2str(nof_taps));
   this_block.addGeneric('g_nof_streams','natural',nof_streams);
   this_block.addGeneric('g_backoff_w','natural',backoff_w);
+  this_block.addGeneric('g_technology','natural',technology);
   this_block.addGeneric('g_ram_primitive','String',ram_primitive);
 
-  %get location of generated hdl source files:
-  srcloc = fileparts(vhdlfile);
-  
-  % Copy across the technology_select_pkg as per mask's vendor_technology
-  source_technology_select_pkg = '';
-  if strcmp(technology, 'Xilinx')
-    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperxpm.vhd'];
-  end % if technology Xilinx
-  if strcmp(technology, 'UniBoard')
-    source_technology_select_pkg = [filepath '/../../technology/technology_select_pkg_casperunb1.vhd'];
-  end % if technology UniBoard
-  copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
-
   %Add files:
-  this_block.addFileToLibrary(vhdlfile,'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
+  this_block.addFileToLibrary([fileparts(which(bdroot)) '/' gcs '_fil_top.vhd'],'xil_defaultlib'); %weirdly this file should come first... but then the compile order changes.
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/casper_common_add_sub.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_adder_tree_a_str.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
-  this_block.addFileToLibrary([srcloc '/technology_select_pkg.vhd'],'technology_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult.vhd'],'casper_multiplier_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');
@@ -147,14 +140,14 @@ function filterbank_top_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
-  this_block.addFileToLibrary([srcloc '/fil_pkg.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_filter/fil_pkg.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_ctrl.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_filter.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_single.vhd'],'casper_filter_lib');
-  this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_mult_infer.vhd'],'ip_xpm_mult_lib');
-  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
-  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_filter/fil_ppf_wide.vhd'],'casper_filter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/ip_mult_infer.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_cr_cw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/ip_xpm_ram_crw_crw.vhd'],'casper_ram_lib');
 return;
 end
 

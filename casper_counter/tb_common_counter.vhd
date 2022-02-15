@@ -18,20 +18,12 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, std, common_pkg_lib;
+LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-USE STD.TEXTIO.ALL;
 
 ENTITY tb_common_counter IS
-  PORT(
-    o_rst       : out std_logic;
-    o_clk       : out std_logic;
-    o_tb_end    : out std_logic;
-    o_test_pass : out boolean;
-    o_test_msg  : out string(1 to 80)
-  );
 END tb_common_counter;
 
 ARCHITECTURE tb OF tb_common_counter IS
@@ -41,7 +33,6 @@ ARCHITECTURE tb OF tb_common_counter IS
   CONSTANT c_cnt_init   : NATURAL := 3;
   CONSTANT c_cnt_w      : NATURAL := 5;
 
-  SIGNAL tb_end   : STD_LOGIC := '0';
   SIGNAL rst      : STD_LOGIC;
   SIGNAL clk      : STD_LOGIC := '0';
   
@@ -51,23 +42,15 @@ ARCHITECTURE tb OF tb_common_counter IS
   SIGNAL load     : STD_LOGIC_VECTOR(c_cnt_w-1 DOWNTO 0) := TO_UVEC(c_cnt_init, c_cnt_w);
   SIGNAL count    : STD_LOGIC_VECTOR(c_cnt_w-1 DOWNTO 0);
   SIGNAL cnt_max  : STD_LOGIC_VECTOR(c_cnt_w-1 DOWNTO 0);
-  SIGNAL stdcheck : STD_LOGIC_VECTOR(c_cnt_w - 1 downto 0) := "01100";
 
 BEGIN
 
-  clk <= (NOT clk) OR tb_end AFTER clk_period/2;
+  clk <= NOT clk AFTER clk_period/2;
   rst <= '1', '0' AFTER clk_period*3;
-  o_clk <= clk;
-  o_rst <= rst;
-  o_tb_end <= tb_end;
   
   -- run 1 us
   p_in_stimuli : PROCESS
-  VARIABLE v_test_pass : BOOLEAN := TRUE;
-  VARIABLE v_test_msg  : STRING(1 to o_test_msg'length) := (OTHERS => '.');
   BEGIN
-    o_test_msg <= v_test_msg;
-    o_test_pass <= v_test_pass;
     cnt_clr <= '0';
     cnt_ld  <= '0';
     cnt_en  <= '0';
@@ -81,12 +64,6 @@ BEGIN
       WAIT UNTIL rising_edge(clk);
     END LOOP;
     
-    v_test_pass := count = stdcheck;
-    if not v_test_pass then
-      v_test_msg := pad("Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count),o_test_msg'length,'.');
-      REPORT "Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count) severity failure;
-    end if;
-    
     -- Reload counter
     cnt_ld  <= '1';
     WAIT UNTIL rising_edge(clk);
@@ -94,12 +71,6 @@ BEGIN
     FOR I IN 0 TO 9 LOOP
       WAIT UNTIL rising_edge(clk);
     END LOOP;
-
-    v_test_pass := count = stdcheck;
-    if not v_test_pass then
-      v_test_msg := pad("Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count),o_test_msg'length,'.');
-      REPORT "Invalid count value. Expected: " & to_hstring(stdcheck) & " but got: " & to_hstring(count) severity failure;
-    end if;
     
     -- briefly stop counting
     cnt_en  <= '0';
@@ -112,9 +83,7 @@ BEGIN
 
     -- set the cnt_max
     cnt_max <= TO_UVEC(2**(c_cnt_w-1), c_cnt_w);    
-    o_test_msg <= v_test_msg;
-    o_test_pass <= v_test_pass;
-    tb_end <= '1';
+    
     WAIT;
   END PROCESS;
 

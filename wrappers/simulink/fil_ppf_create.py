@@ -73,6 +73,8 @@ import sys
 import getopt
 import os
 import numpy as np
+from re import escape
+
 
 def run(argv):
     # Arguments
@@ -161,8 +163,8 @@ def run(argv):
         else:
             if pfir.verbose:
                 print("No input filename specified - will create one from the provided paramenters.")
-            pfir.outfileprefix = os.path.join(pathforstore, "pfir_coeffs_%s_%dt_%dp_%db" % (
-                pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w)
+            pfir.outfileprefix = os.path.join(pathforstore, "pfir_coeffs_%s_%dt_%dp_%db_%dwb" % (
+                pfir.window_func, pfir.nof_taps, pfir.nof_points, pfir.coef_w, pfir.wb_factor)
             )
 
     def fetchdatcoeffs(pfir):
@@ -217,7 +219,7 @@ def run(argv):
                         '_%d.%s' % (k*pfir.nof_taps+j, pfir.ext)
                     with open(t_outfilename, 'w+') as fp:
                         for i in range(pfir.file_nof_points):
-                            s = ('%%0%dx\n' % np.ceil(pfir.coef_w/4)) % (
+                            s = '%x\n' % (
                                 pfir_coefs_flip[j*pfir.nof_points+i*pfir.wb_factor+kk])  # use kk
                             fp.write(s)
                 else:
@@ -304,7 +306,7 @@ def run(argv):
 
     if pfir.ext == 'mem' and pfir.gen_files:
         writemem(pfir, pfir_coefs_flip)
-        return pfir.outfileprefix.replace('\\', '/')
+        return escape(pfir.outfileprefix.replace('\\', '/'))
     elif pfir.ext == 'mem' and not pfir.gen_files:
         coefs = writemem(pfir, pfir_coefs_flip)
         return coefs

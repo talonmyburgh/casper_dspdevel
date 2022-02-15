@@ -46,11 +46,12 @@ entity fft_wide_unit_control is
 	generic(
 		g_fft      : t_fft   := c_fft;
 		g_nof_ffts : natural := 1;
-		g_use_variant    : string  := "4DSP";       --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_variant    : string  := "4DSP";        --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  := "yes";        --! = "yes" or "no"
-		g_ovflw_behav    : string  := "WRAP";       --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  := "ROUND";      --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  : string  := "auto";       --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_representation : string  := "SIGNED";        --! = "SIGNED" or "UNSIGNED" for data type representation
+		g_ovflw_behav    : string  := "WRAP";        --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";        --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  := "auto";        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_fifo_primitive : string  := "auto"        --! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
 	port(
@@ -59,8 +60,8 @@ entity fft_wide_unit_control is
 		in_re_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
 		in_im_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
 		in_val       : in  std_logic;
-		ctrl_sosi    : in  t_fft_sosi_in;   -- Inputrecord for tapping off the sync, bsn and err.              
-		out_sosi_arr : out t_fft_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
+		ctrl_sosi    : in  t_bb_sosi_in;   -- Inputrecord for tapping off the sync, bsn and err.              
+		out_sosi_arr : out t_bb_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
 	);
 end fft_wide_unit_control;
 
@@ -76,7 +77,7 @@ architecture rtl of fft_wide_unit_control is
 	type state_type is (s_idle, s_run, s_hold);
 
 	type reg_type is record
-		out_sosi_arr   : t_fft_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- Register that holds the streaming interface          
+		out_sosi_arr   : t_bb_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- Register that holds the streaming interface          
 		in_re_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the real data 
 		in_im_arr2_dly : t_fft_slv_arr2(c_pipe_data - 1 downto 0); -- Input registers for the imag data
 		val_dly        : std_logic_vector(c_pipe_ctrl - 1 downto 0); -- Delay-register for the valid signal
@@ -87,7 +88,7 @@ architecture rtl of fft_wide_unit_control is
 		state          : state_type;    -- The state machine. 
 	end record;
 	
-	constant reg_default : reg_type := ((others=>c_fft_sosi_rst_out),(others=>(others=>(others=>'0'))),(others=>(others=>(others=>'0'))),(others=>'0'),(others=>'0'),(others=>'0'),'0',0,s_idle);
+	constant reg_default : reg_type := ((others=>c_bb_sosi_rst_out),(others=>(others=>(others=>'0'))),(others=>(others=>(others=>'0'))),(others=>'0'),(others=>'0'),(others=>'0'),'0',0,s_idle);
 
 	signal r, rin   : reg_type := reg_default;
 	signal bsn      : std_logic_vector(c_dp_stream_bsn_w - 1 downto 0);
@@ -276,7 +277,7 @@ begin
 		end case;
 
 		if (rst = '1') then
-			v.out_sosi_arr  := (others => c_fft_sosi_rst_out);
+			v.out_sosi_arr  := (others => c_bb_sosi_rst_out);
 			v.val_dly       := (others => '0');
 			v.sop_dly       := (others => '0');
 			v.eop_dly       := (others => '0');

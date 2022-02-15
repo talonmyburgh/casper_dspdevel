@@ -72,28 +72,28 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_wide is
 	generic(
-		g_fft          	 : t_fft          := c_fft; 											--! generics for the FFT
-		g_pft_pipeline 	 : t_fft_pipeline := c_fft_pipeline; 									--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_fft_pipeline 	 : t_fft_pipeline := c_fft_pipeline; 									--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_use_variant    : string  		  := "4DSP";        										--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-		g_use_dsp        : string  		  := "yes";        										--! = "yes" or "no"
-		g_ovflw_behav    : string  		  := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  		  := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  : string  		  := "auto";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive : string  		  := "auto"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_fft          : t_fft          := c_fft; 									--! generics for the FFT
+		g_pft_pipeline : t_fft_pipeline := c_fft_pipeline; 					--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_fft_pipeline : t_fft_pipeline := c_fft_pipeline; 					--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+		g_use_variant    : string  := "4DSP";        								--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_dsp        : string  := "yes";        								--! = "yes" or "no"
+		g_ovflw_behav    : string  := "WRAP";        								--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  := "ROUND";        							--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  := "auto";        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_fifo_primitive : string  := "auto"        								--! = "auto", "distributed", "block" or "ultra" for RAM architecture
 	);
 	port(
-		clken      		 : in  std_logic;													--! Clock enable
-		clk        		 : in  std_logic;													--! Clock
-		rst        		 : in  std_logic := '0';											--! Reset
-		shiftreg   		 : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); 	--! Shift register
-		in_re_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);				--! Input real data (wb_factor wide)
-		in_im_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);				--! Input imag data (wb_factor wide)
-		in_val     		 : in  std_logic := '1';											--! In data valid
-		out_re_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);				--! Output real data (wb_factor wide)
-		out_im_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);				--! Output imag data (wb_factor wide)
-		ovflw 	   		 : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0);	--! Overflow register
-		out_val    		 : out std_logic													--! Out data valid
+		clken      		 : in  std_logic;											--! Clock enable
+		clk        		 : in  std_logic;											--! Clock
+		rst        		 : in  std_logic := '0';									--! Reset
+		shiftreg   		 : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); 			--! Shift register
+		in_re_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);		--! Input real data (wb_factor wide)
+		in_im_arr  		 : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);		--! Input imag data (wb_factor wide)
+		in_val     		 : in  std_logic := '1';									--! In data valid
+		out_re_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);		--! Output real data (wb_factor wide)
+		out_im_arr 		 : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);		--! Output imag data (wb_factor wide)
+		ovflw 	   		 : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0);				--! Overflow register
+		out_val    		 : out std_logic											--! Out data valid
 	);
 end entity fft_r2_wide;
 

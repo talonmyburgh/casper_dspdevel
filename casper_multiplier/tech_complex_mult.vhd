@@ -30,7 +30,7 @@ LIBRARY ip_xpm_mult_lib;
 
 ENTITY tech_complex_mult IS
 	GENERIC(
-		g_use_ip           : BOOLEAN := FALSE;  -- Use IP component when TRUE, else rtl component when FALSE
+		g_use_ip           : BOOLEAN := TRUE;  -- Use IP component when TRUE, else rtl component when FALSE
 		g_use_variant      : STRING  := "4DSP";
 		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;

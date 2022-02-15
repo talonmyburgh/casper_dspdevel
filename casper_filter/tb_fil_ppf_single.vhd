@@ -129,7 +129,7 @@
 --   > observe out_dat in analogue format in Wave window
 --   > testbench is selftesting.
 --
-library ieee, std, common_pkg_lib, casper_ram_lib, technology_lib; -- casper_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib; -- casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -139,7 +139,7 @@ use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
 -- use casper_mm_lib.tb_common_mem_pkg.ALL;
-use technology_lib.technology_select_pkg.ALL;
+use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fil_pkg.all;
 
 entity tb_fil_ppf_single is
@@ -172,15 +172,8 @@ entity tb_fil_ppf_single is
       --   coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
       -- end record;
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
-    g_enable_in_val_gaps : boolean := FALSE
-  );
-  PORT
-  (
-    o_rst       : out std_logic;
-    o_clk       : out std_logic;
-    o_tb_end    : out std_logic;
-    o_test_msg  : out string(1 to 80);
-    o_test_pass : out boolean
+    g_enable_in_val_gaps : boolean := FALSE;
+    g_technology         : natural := 0
   );
 end entity tb_fil_ppf_single;
 
@@ -213,13 +206,14 @@ architecture tb of tb_fil_ppf_single is
 
   -- signal definitions
   signal tb_end         : std_logic := '0';
+  signal tb_end_mm      : std_logic := '0';
   signal tb_end_almost  : std_logic := '0';
   signal clk            : std_logic := '0';
   signal rst            : std_logic := '0';
   signal random         : std_logic_vector(15 DOWNTO 0) := (OTHERS=>'0');  -- use different lengths to have different random sequences
 
-  -- signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
-  -- signal ram_coefs_miso : t_mem_miso;
+  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
+  signal ram_coefs_miso : t_mem_miso;
 
   signal in_dat         : std_logic_vector(g_fil_ppf.nof_streams*c_in_dat_w-1 downto 0);
   signal in_val         : std_logic;
@@ -245,10 +239,6 @@ begin
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
   in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps=TRUE ELSE '0';
-
-  o_clk <= clk;
-  o_rst <= rst;
-  o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
   -- SEND PULSE TO THE DATA INPUT
@@ -290,6 +280,7 @@ begin
 
     -- Wait until done
     proc_common_wait_some_cycles(clk, c_gap_factor*c_nof_data_per_tap);  -- PPF latency of 1 tap
+    proc_common_wait_until_high(clk, tb_end_mm);                         -- MM read done
     tb_end_almost <= '1';
     proc_common_wait_some_cycles(clk, 10);
     tb_end <= '1';
@@ -324,9 +315,9 @@ begin
   begin
     for J in 0 to g_fil_ppf.nof_taps-1 loop
       -- Read coeffs per tap from MEMORY file
-      if c_tech_select_default = c_tech_stratixiv then
+      if g_technology = 1 then
         proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(J) & ".mif", memory_coefs_arr);
-      elsif c_tech_select_default = c_tech_xpm then
+      elsif g_technology = 0 then
         proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(J) & ".mem", memory_coefs_arr);
       end if;
       wait for 1 ns;
@@ -365,7 +356,7 @@ begin
   begin
     -- Wait until the coeff dat file and coeff MIF files have been read
     proc_common_wait_until_low(clk, rst);
-    assert file_dat_arr = ref_dat_arr   report "Coefs file does not match coefs memory files"   severity failure;
+    assert file_dat_arr = ref_dat_arr   report "Coefs file does not match coefs memory files"   severity error;
     wait;
   end process;
 
@@ -373,7 +364,7 @@ begin
   -- begin
   --   -- Wait until the coeff dat file has been read and the coeff have been read via MM
   --   proc_common_wait_until_high(clk, tb_end_almost);
-  --   assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity failure;
+  --   assert read_coefs_arr = ref_coefs_arr report "Coefs file does not match coefs read via MM" severity error;
   --   wait;
   -- end process;
 
@@ -385,7 +376,8 @@ begin
     g_fil_ppf           => g_fil_ppf,
     g_fil_ppf_pipeline  => g_fil_ppf_pipeline,
     g_file_index_arr    => c_file_index_arr,
-    g_coefs_file_prefix => c_coefs_file_prefix
+    g_coefs_file_prefix => c_coefs_file_prefix,
+    g_technology        => g_technology
   )
   port map (
     clk         => clk,
@@ -408,7 +400,7 @@ begin
   begin
     -- Wait until tb_end_almost to avoid that the Error message gets lost in earlier messages
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity failure;
+    assert g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w report "Output data width too small for coefficients" severity error;
     wait;
   end process;
   
@@ -417,8 +409,8 @@ begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
     -- The filter has a latency of 1 tap, so there remains in_dat for tap in the filter
-    assert in_val_cnt > 0                              report "Test did not run, no valid input data" severity failure;
-    assert out_val_cnt = in_val_cnt-c_nof_data_per_tap report "Unexpected number of valid output data coefficients" severity failure;
+    assert in_val_cnt > 0                              report "Test did not run, no valid input data" severity error;
+    assert out_val_cnt = in_val_cnt-c_nof_data_per_tap report "Unexpected number of valid output data coefficients" severity error;
     wait;
   end process;
   
@@ -429,12 +421,9 @@ begin
 
   p_verify_out_dat : process(clk)
     variable v_coeff : integer;
-    variable v_test_pass : BOOLEAN := TRUE;
-    variable v_test_msg : STRING(1 to 80);
-    variable v_tmp_val : integer;
   begin
-    if out_val='1' then
-      if rising_edge(clk) then
+    if rising_edge(clk) then
+      if out_val='1' then
         if g_fil_ppf.out_dat_w >= g_fil_ppf.coef_dat_w then
           if g_fil_ppf.out_dat_w > g_fil_ppf.coef_dat_w then
             v_coeff := ref_dat;  -- positive input pulse
@@ -443,18 +432,11 @@ begin
           end if;
           for S in 0 to g_fil_ppf.nof_streams-1 loop
             -- all streams carry the same data
-            v_tmp_val := TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w));
-            v_test_pass := v_tmp_val = v_coeff;
-            if not v_test_pass then
-              v_test_msg := pad("Output data error, expected: " & integer'image(v_tmp_val) & " but got: " & integer'image(v_coeff),o_test_msg'length,'.');
-            end if;
-            assert v_test_pass report v_test_msg severity error;
+            assert TO_SINT(out_dat((S+1)*g_fil_ppf.out_dat_w-1 downto S*g_fil_ppf.out_dat_w)) = v_coeff report "Output data error" severity error;
           end loop;
         end if;
       end if;
     end if;
-    o_test_msg <= v_test_msg;
-    o_test_pass <= v_test_pass;
   end process;
 
 end tb;

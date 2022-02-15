@@ -90,6 +90,7 @@ architecture str of fft_r2_bf_par is
 	signal bf_dif_complex     : std_logic_vector(c_nof_complex * c_out_dat_w - 1 downto 0);
 	signal bf_dif_complex_dly : std_logic_vector(bf_dif_complex'range);
 
+	signal weight_addr : std_logic_vector(g_stage - 1 downto 1);
 	signal weight_re   : wTyp;
 	signal weight_im   : wTyp;
 

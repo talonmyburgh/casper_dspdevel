@@ -39,8 +39,7 @@ end entity tb_tb_rTwoSDF;
 
 architecture tb of tb_tb_rTwoSDF is
 
-  signal tb_end             : std_logic := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
-  CONSTANT c_diff_margin    : natural := 1;
+  signal tb_end : std_logic := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
   
 begin
 
@@ -54,9 +53,9 @@ begin
 --  g_out_dat_w         : natural  := 14;   
 --  g_guard_w           : natural  := 2      -- guard bits are used to avoid overflow in single FFT stage.   
 
-  u_act_impulse_16p_16i_16o          : entity work.tb_rTwoSDF generic map (false, 1,  true,   16, 16, 16, 2, c_diff_margin);
-  u_act_noise_1024p_8i_14o           : entity work.tb_rTwoSDF generic map (true,  1,  true, 1024,  8, 14, 2, c_diff_margin);
-  u_rnd_noise_1024p_8i_14o           : entity work.tb_rTwoSDF generic map (true,  0,  true, 1024,  8, 14, 2, c_diff_margin);
-  u_rnd_noise_1024p_8i_14o_flipped   : entity work.tb_rTwoSDF generic map (true,  0, false, 1024,  8, 14, 2, c_diff_margin);
+  --u_act_impulse_16p_16i_16o         : entity work.tb_rTwoSDF generic map (false, 1,  true,   16, 16, 16, 2);
+  u_act_noise_1024p_8i_14o          : entity work.tb_rTwoSDF generic map (true,  1,  true, 1024,  8, 14, 2);
+  u_rnd_noise_1024p_8i_14o          : entity work.tb_rTwoSDF generic map (true,  0,  true, 1024,  8, 14, 2);
+  u_rnd_noise_1024p_8i_14o_flipped  : entity work.tb_rTwoSDF generic map (true,  0, false, 1024,  8, 14, 2);
   
 end tb;

@@ -208,7 +208,7 @@ begin
 					out_val  => data_val(stage - 1)(element)
 			);
 		end generate;
-		ovflw(stage - 1) <= '0' when is_all(fft_par_bf_ovflw_arr(stage - 1), '0') else '1';
+		ovflw(stage - 1) <= '0' when TO_UINT(fft_par_bf_ovflw_arr(stage - 1)) = 0 else '1';
 	end generate;
 
 	--------------------------------------------------------------------------------

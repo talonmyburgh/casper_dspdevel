@@ -82,16 +82,7 @@ entity tb_rTwoSDF is
     g_nof_points        : natural  := 1024;
     g_in_dat_w          : natural  := 8;   
     g_out_dat_w         : natural  := 14;   
-    g_guard_w           : natural  := 2;      -- guard bits are used to avoid overflow in single FFT stage.
-    g_diff_margin       : natural  := 2;
-    g_file_loc_prefix   : string   := "../../../../../"
-  );
-  port(
-    o_rst       : out std_logic;
-    o_clk       : out std_logic;
-    o_tb_end    : out std_logic;
-    o_test_msg  : out string(1 to 80);
-    o_test_pass : out boolean
+    g_guard_w           : natural  := 2      -- guard bits are used to avoid overflow in single FFT stage.
   );
 end entity tb_rTwoSDF;
 
@@ -110,14 +101,14 @@ architecture tb of tb_rTwoSDF is
   constant c_repeat     : natural := 2;  -- >= 2 to have sufficent frames for c_outputFile evaluation by testFFT_output.m
 
   -- input from uniform noise file created automatically by MATLAB testFFT_input.m
-  constant c_noiseInputFile    : string := g_file_loc_prefix & "data/test/in/uniNoise_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w) &"_in.txt";
-  constant c_noiseGoldenFile   : string := g_file_loc_prefix & "data/test/out/uniNoise_p" & natural'image(g_nof_points)& "_in"& natural'image(g_in_dat_w) &"_out"&natural'image(g_out_dat_w) &"_out.txt";
-  constant c_noiseOutputFile   : string := g_file_loc_prefix & "data/test/out/uniNoise_out.txt";
+  constant c_noiseInputFile    : string := "data/test/in/uniNoise_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w) &"_in.txt";
+  constant c_noiseGoldenFile   : string := "data/test/out/uniNoise_p" & natural'image(g_nof_points)& "_in"& natural'image(g_in_dat_w) &"_out"&natural'image(g_out_dat_w) &"_out.txt";
+  constant c_noiseOutputFile   : string := "data/test/out/uniNoise_out.txt";
 
   -- input from manually created file
-  constant c_impulseInputFile  : string := g_file_loc_prefix & "data/test/in/impulse_p"   & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_in.txt";
-  constant c_impulseGoldenFile : string := g_file_loc_prefix & "data/test/out/impulse_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_out.txt";
-  constant c_impulseOutputFile : string := g_file_loc_prefix & "data/test/out/impulse_out.txt";
+  constant c_impulseInputFile  : string := "data/test/in/impulse_p"   & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_in.txt";
+  constant c_impulseGoldenFile : string := "data/test/out/impulse_p"  & natural'image(g_nof_points)& "_b"& natural'image(g_in_dat_w)& "_out.txt";
+  constant c_impulseOutputFile : string := "data/test/out/impulse_out.txt";
 
   -- determine active stimuli and result files
   constant c_inputFile  : string := sel_a_b(g_use_uniNoise_file, c_noiseInputFile,  c_impulseInputFile);
@@ -159,20 +150,11 @@ architecture tb of tb_rTwoSDF is
   signal gold_sync      : std_logic;
   signal gold_re        : integer;
   signal gold_im        : integer;
-
-  signal diff_re        : integer;
-  signal diff_im        : integer;
-  signal sint_re        : integer;
-  signal sint_im        : integer;
   
 begin
 
   clk <= (not clk) or tb_end after c_clk_period/2;
   rst <= '1', '0' after c_clk_period*7;
-  o_clk <= clk;
-  o_rst <= rst;
-  o_tb_end <= tb_end;
-
   enable <= '0', '1' after c_clk_period*23;
   random <= func_common_random(random) when rising_edge(clk);
   in_en <= '1' when g_in_en=1 else random(random'HIGH);
@@ -280,11 +262,9 @@ begin
     in_re     => in_re,
     in_im     => in_im,
     in_val    => in_val,
-    shiftreg  => (0=>'0', 1=>'0', others=>'1'),
     out_re    => out_re,
     out_im    => out_im,
-    out_val   => out_val,
-    ovflw     => open
+    out_val   => out_val
   );   
 
   -- Read golden file with the expected DUT output
@@ -335,39 +315,19 @@ begin
   gold_sync  <= gold_file_sync(gold_index);
   gold_re    <= gold_file_data(gold_index,1) when g_use_reorder=true else gold_file_data(flip_index,1);
   gold_im    <= gold_file_data(gold_index,2) when g_use_reorder=true else gold_file_data(flip_index,2);
-  sint_re <= TO_SINT(out_re);
-  sint_im <= TO_SINT(out_im);
-  diff_re <= (sint_re - gold_re);
-  diff_im <= (sint_im - gold_im);
-
+    
   -- Verify the output of the DUT with the expected output from the golden reference file
   p_verify_output : process(clk)
-  VARIABLE v_test_pass_sync : BOOLEAN := TRUE;
-  VARIABLE v_test_pass_re : BOOLEAN := TRUE;
-  VARIABLE v_test_pass_im : BOOLEAN := TRUE;
   begin
     -- Compare
     if rising_edge(clk) then
       if out_val='1' and gold_index <= gold_index_max then
         -- only write when out_val='1', because then the file is independent of cycles with invalid out_dat
-        v_test_pass_sync := out_sync = gold_sync;
-        if not v_test_pass_sync then
-          o_test_msg <= pad("Output sync error",o_test_msg'length,'.');
-          report "Output sync error"      severity failure;
-        end if;
-        v_test_pass_re := diff_re >= -g_diff_margin and diff_re <= g_diff_margin;
-        if not v_test_pass_re then
-          o_test_msg <= pad("Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re),o_test_msg'length,'.');
-          report "Output real data error, expected: " & integer'image(gold_re) & " but got: " & integer'image(sint_re) severity failure;
-        end if;
-        v_test_pass_im := diff_im >= -g_diff_margin and diff_im <= g_diff_margin;
-        if not v_test_pass_im then
-          o_test_msg <= pad("Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im),o_test_msg'length,'.');
-          report "Output imag data error, expected: " & integer'image(gold_im) & " but got: " & integer'image(sint_im) severity failure;
-        end if;
+        assert out_sync        = gold_sync report "Output sync error"      severity error;
+        assert TO_SINT(out_re) = gold_re   report "Output real data error" severity error;
+        assert TO_SINT(out_im) = gold_im   report "Output imag data error" severity error;
       end if;
     end if;
-    o_test_pass <= v_test_pass_sync or v_test_pass_re or v_test_pass_im;
   end process;
   
   -- Write to default output file, this allows using command line diff or graphical diff viewer to compare it with the golden result file

@@ -38,26 +38,26 @@ END tb_tb_fft_r2_pipe;
 
 ARCHITECTURE tb OF tb_tb_fft_r2_pipe IS
   
-CONSTANT c_fft_two_real                         : t_fft := ( true, false,  true, 0, 1, 0, 128, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_two_real_more_channels          : t_fft := ( true, false,  true, 1, 1, 0, 128, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex                         : t_fft := ( true, false, false, 0, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex_more_channels           : t_fft := ( true, false, false, 1, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex_fft_shift               : t_fft := ( true,  true, false, 0, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex_fft_shift_more_channels : t_fft := ( true,  true, false, 1, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex_flipped                 : t_fft := (false, false, false, 0, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
- CONSTANT c_fft_complex_flipped_more_channels   : t_fft := (false, false, false, 1, 1, 0,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+CONSTANT c_fft_two_real                         : t_fft := ( true, false,  true, 0, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_two_real_more_channels          : t_fft := ( true, false,  true, 1, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex                         : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex_more_channels           : t_fft := ( true, false, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex_fft_shift               : t_fft := ( true,  true, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex_fft_shift_more_channels : t_fft := ( true,  true, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex_flipped                 : t_fft := (false, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+ CONSTANT c_fft_complex_flipped_more_channels   : t_fft := (false, false, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
 
   CONSTANT c_diff_margin    : natural := 2;
   
   -- Real input  
-  CONSTANT c_impulse_chirp  : string := "../../../../../data/run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
-  CONSTANT c_sinusoid_chirp : string := "../../../../../data/run_pfft_m_sinusoid_chirp_8b_128points_16b.dat";         -- 25600 lines
-  CONSTANT c_noise          : string := "../../../../../data/run_pfft_m_noise_8b_128points_16b.dat";                  --  1280 lines
-  CONSTANT c_dc_agwn        : string := "../../../../../data/run_pfft_m_dc_agwn_8b_128points_16b.dat";                --  1280 lines
+  CONSTANT c_impulse_chirp  : string := "run_pfft_m_impulse_chirp_8b_128points_16b.dat";          -- 25600 lines
+  CONSTANT c_sinusoid_chirp : string := "run_pfft_m_sinusoid_chirp_8b_128points_16b.dat";         -- 25600 lines
+  CONSTANT c_noise          : string := "run_pfft_m_noise_8b_128points_16b.dat";                  --  1280 lines
+  CONSTANT c_dc_agwn        : string := "run_pfft_m_dc_agwn_8b_128points_16b.dat";                --  1280 lines
   -- Complex input  
-  CONSTANT c_phasor_chirp   : string := "../../../../../data/run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";    -- 12800 lines
-  CONSTANT c_phasor         : string := "../../../../../data/run_pfft_complex_m_phasor_8b_64points_16b.dat";          --   320 lines
-  CONSTANT c_noise_complex  : string := "../../../../../data/run_pfft_complex_m_noise_complex_8b_64points_16b.dat";   --   620 lines
+  CONSTANT c_phasor_chirp   : string := "run_pfft_complex_m_phasor_chirp_8b_64points_16b.dat";    -- 12800 lines
+  CONSTANT c_phasor         : string := "run_pfft_complex_m_phasor_8b_64points_16b.dat";          --   320 lines
+  CONSTANT c_noise_complex  : string := "run_pfft_complex_m_noise_complex_8b_64points_16b.dat";   --   620 lines
   -- Zero input
   CONSTANT c_zero           : string := "UNUSED";
   CONSTANT c_unused         : string := "UNUSED";

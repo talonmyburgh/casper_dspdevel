@@ -67,6 +67,7 @@ ENTITY dp_hold_input IS
   );
 END dp_hold_input;
 
+
 ARCHITECTURE rtl OF dp_hold_input IS
   
   SIGNAL i_pend_src_out : t_dp_sosi;
@@ -152,110 +153,3 @@ BEGIN
   END PROCESS;
     
 END rtl;
-
-LIBRARY IEEE, wb_fft_lib, wpfb_lib;
-USE IEEE.std_logic_1164.all;
-USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
-USE wpfb_lib.wbpfb_gnrcs_intrfcs_pkg.ALL;
-
-ENTITY dp_hold_input_fft_out IS
-  PORT (
-    rst              : IN  STD_LOGIC;
-    clk              : IN  STD_LOGIC;
-    -- ST sink
-    snk_out          : OUT t_dp_siso;
-    snk_in           : IN  t_fft_sosi_out;
-    -- ST source
-    src_in           : IN  t_dp_siso;
-    next_src_out     : OUT t_fft_sosi_out;
-    pend_src_out     : OUT t_fft_sosi_out;  -- the SOSI data fields are the same as for next_src_out
-    src_out_reg      : IN  t_fft_sosi_out   -- uses only the SOSI data fields
-  );
-END dp_hold_input_fft_out;
-
-ARCHITECTURE rtl OF dp_hold_input_fft_out IS
-  
-  SIGNAL i_pend_src_out : t_fft_sosi_out;
-  SIGNAL hold_in        : t_fft_sosi_out;  -- uses only the SOSI ctrl fields
-  
-BEGIN
-
-  pend_src_out <= i_pend_src_out;
-
-  -- SISO:
-  snk_out <= src_in;  --  No change in ready latency, pass on xon frame level flow control
-  
-  -- SOSI:
-  -- Take care of active snk_in.valid, snk_in.sync, snk_in.sop and snk_in.eop
-  -- when src_in.ready went low. If hold_in.valid would not be used for
-  -- pend_src_out.valid and next_src_out.valid, then the pipeline would still
-  -- work, but the valid snk_in.data that came when src_in.ready went low,
-  -- will then only get pushed out on the next valid snk_in.valid. Whereas
-  -- hold_in.valid ensures that it will get pushed out as soon as src_in.ready
-  -- goes high again. This is typically necessary in case of packetized data
-  -- where the eop of one packet should not have to wait for the valid (sop)
-  -- of a next packet to get pushed out.
-  
-  u_hold_val : ENTITY work.dp_hold_ctrl
-  PORT MAP (
-    rst      => rst,
-    clk      => clk,
-    ready    => src_in.ready,
-    in_ctrl  => snk_in.valid,
-    hld_ctrl => hold_in.valid
-  );
-  
-  u_hold_sync : ENTITY work.dp_hold_ctrl
-  PORT MAP (
-    rst      => rst,
-    clk      => clk,
-    ready    => src_in.ready,
-    in_ctrl  => snk_in.sync,
-    hld_ctrl => hold_in.sync
-  );
-  
-  u_hold_sop : ENTITY work.dp_hold_ctrl
-  PORT MAP (
-    rst      => rst,
-    clk      => clk,
-    ready    => src_in.ready,
-    in_ctrl  => snk_in.sop,
-    hld_ctrl => hold_in.sop
-  );
-  
-  u_hold_eop : ENTITY work.dp_hold_ctrl
-  PORT MAP (
-    rst      => rst,
-    clk      => clk,
-    ready    => src_in.ready,
-    in_ctrl  => snk_in.eop,
-    hld_ctrl => hold_in.eop
-  );
-  
-  p_pend_src_out : PROCESS(snk_in, src_out_reg, hold_in)
-  BEGIN
-    -- Pend data
-    IF snk_in.valid='1' THEN
-      i_pend_src_out <= snk_in;       -- Input data
-    ELSE
-      i_pend_src_out <= src_out_reg;  -- Hold data
-    END IF;
-    i_pend_src_out.valid <= snk_in.valid OR hold_in.valid;
-    i_pend_src_out.sync  <= snk_in.sync  OR hold_in.sync;
-    i_pend_src_out.sop   <= snk_in.sop   OR hold_in.sop;
-    i_pend_src_out.eop   <= snk_in.eop   OR hold_in.eop;
-  END PROCESS;
-  
-  p_next_src_out : PROCESS(i_pend_src_out, src_in)
-  BEGIN
-    -- Next data
-    next_src_out       <= i_pend_src_out;
-    -- Next control
-    next_src_out.valid <= i_pend_src_out.valid AND src_in.ready;
-    next_src_out.sync  <= i_pend_src_out.sync  AND src_in.ready;
-    next_src_out.sop   <= i_pend_src_out.sop   AND src_in.ready;
-    next_src_out.eop   <= i_pend_src_out.eop   AND src_in.ready;
-  END PROCESS;
-    
-END rtl;
-

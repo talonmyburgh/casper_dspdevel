@@ -20,11 +20,10 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib, wb_fft_lib, casper_pipeline_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, dp_pkg_lib, astron_pipeline_lib;
 USE IEEE.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
-USE wb_fft_lib.fft_gnrcs_intrfcs_pkg.ALL;
-USE work.wbpfb_gnrcs_intrfcs_pkg.ALL;
+USE dp_pkg_lib.dp_stream_pkg.ALL;
 
 -- Author: Eric Kooistra, 17 nov 2017
 -- Purpose:
@@ -51,10 +50,10 @@ ENTITY dp_bsn_restore_global IS
     clk          : IN  STD_LOGIC;
     -- ST sink
     snk_out      : OUT t_dp_siso;
-    snk_in       : IN  t_fft_sosi_out;
+    snk_in       : IN  t_dp_sosi;
     -- ST source
     src_in       : IN  t_dp_siso := c_dp_siso_rdy;
-    src_out      : OUT t_fft_sosi_out
+    src_out      : OUT t_dp_sosi
   );
 END dp_bsn_restore_global;
 
@@ -65,7 +64,7 @@ ARCHITECTURE str OF dp_bsn_restore_global IS
   SIGNAL bsn_at_sync       : STD_LOGIC_VECTOR(g_bsn_w-1 DOWNTO 0);
   SIGNAL nxt_bsn_at_sync   : STD_LOGIC_VECTOR(g_bsn_w-1 DOWNTO 0);
   SIGNAL bsn_restored      : STD_LOGIC_VECTOR(g_bsn_w-1 DOWNTO 0);
-  SIGNAL snk_in_restored   : t_fft_sosi_out;
+  SIGNAL snk_in_restored   : t_dp_sosi;
   
 BEGIN
 
@@ -104,7 +103,7 @@ BEGIN
   snk_in_restored <= func_dp_stream_bsn_set(snk_in, bsn_restored);
   
   -- Add pipeline to ensure timing closure for the restored BSN summation
-  u_pipeline : ENTITY casper_pipeline_lib.dp_pipeline_fft_out
+  u_pipeline : ENTITY astron_pipeline_lib.dp_pipeline
   GENERIC MAP (
     g_pipeline => g_pipeline  -- 0 for wires, > 0 for registers
   )

@@ -46,7 +46,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_complex_mult IS
 	GENERIC(
-		g_use_ip           : BOOLEAN := FALSE;  -- Use IP component when TRUE, else rtl component when FALSE
+		g_use_ip           : BOOLEAN := TRUE;  -- Use IP component when TRUE, else rtl component when FALSE
 		g_use_variant      : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
 		g_use_dsp          : STRING  := "YES";
 		g_in_a_w           : POSITIVE;  --! Input A-bitwidth
