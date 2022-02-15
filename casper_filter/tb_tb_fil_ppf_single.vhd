@@ -73,10 +73,10 @@ BEGIN
 --g_coefs_file_prefix  : string  := "hex/run_pfir_coeff_m_incrementing";
 --g_enable_in_val_gaps : boolean := FALSE
 
-  u_act           : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, FALSE, 0);
-  -- u_rnd_quant     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
-  -- u_rnd_9taps     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
-  -- u_rnd_3streams  : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
-  -- u_rnd_4channels : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, in_dat_w, out_dat_w, coef_dat_w), c_prefix, TRUE, 0);
+  u_act           : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w), c_prefix, FALSE);
+  -- u_rnd_quant     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 8, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w), c_prefix, TRUE);
+  -- u_rnd_9taps     : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 1, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w), c_prefix, TRUE);
+  -- u_rnd_3streams  : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 0, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w), c_prefix, TRUE);
+  -- u_rnd_4channels : ENTITY work.tb_fil_ppf_single GENERIC MAP ((1, 1, 1, 1, 1, 1, 0), (1, 2, 64, 9, 3, 0, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w), c_prefix, TRUE);
   
 END tb;

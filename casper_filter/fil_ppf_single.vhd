@@ -63,11 +63,12 @@
 -- Remarks:
 -- .  See also description tb_fil_ppf_single.vhd for more info.
 --
-library IEEE, common_pkg_lib, casper_ram_lib, casper_mm_lib;
+library IEEE, common_pkg_lib, casper_ram_lib, technology_lib; --casper_mm_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL; 
 use casper_ram_lib.common_ram_pkg.ALL;  
+use technology_lib.technology_select_pkg.ALL;
 use work.fil_pkg.ALL;
 
 entity fil_ppf_single is
@@ -76,7 +77,6 @@ entity fil_ppf_single is
     g_fil_ppf_pipeline  : t_fil_ppf_pipeline := c_fil_ppf_pipeline; 
     g_file_index_arr    : t_nat_natural_arr  := array_init(0, 128, 1);  -- default use the instance index as file index 0, 1, 2, 3, 4 ...
     g_coefs_file_prefix : string             := c_coefs_file;    -- Relative path to the mem files that contain the initial data for the coefficients memories
-    g_technology        : natural            := 0;
     g_ram_primitive     : string             := "auto" 
   );                                                                    
   port (
@@ -96,7 +96,7 @@ end fil_ppf_single;
 
 architecture rtl of fil_ppf_single is                                                                                
   
-  constant c_coefs_postfix   : string  := sel_a_b(g_technology = 0, ".mem", ".mif"); 
+  constant c_coefs_postfix   : string  := sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif"); 
   constant c_taps_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands * (2**g_fil_ppf.nof_chan));
   constant c_coef_mem_addr_w : natural := ceil_log2(g_fil_ppf.nof_bands);
   constant c_taps_mem_delay  : natural := g_fil_ppf_pipeline.mem_delay;                                                                                                              

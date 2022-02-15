@@ -12,46 +12,786 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-
-  # This workflow contains a single job called "testbenches"
-  testbenches:
+  
+  files_changed:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      adder: ${{ steps.adder.outputs.any_changed }}
+      counter: ${{ steps.counter.outputs.any_changed }}
+      multiplexer: ${{ steps.multiplexer.outputs.any_changed }}
+      multiplier: ${{ steps.multiplier.outputs.any_changed }}
+      fifo: ${{ steps.fifo.outputs.any_changed }}
+      ram: ${{ steps.ram.outputs.any_changed }}
+      r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
+      pipe_fft: ${{ steps.pipe_fft.outputs.any_changed }}
+      par_fft: ${{ steps.par_fft.outputs.any_changed }}
+      wide_fft: ${{ steps.wide_fft.outputs.any_changed }}
+      # all_fft: ${{ steps.all_fft.outputs.any_changed }}
+      single_filter: ${{ steps.single_filter.outputs.any_changed }}
+      wide_filter: ${{ steps.wide_filter.outputs.any_changed }}
+      wbpfb: ${{ steps.wbpfb.outputs.any_changed }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out only the latest commit to assess which files changed
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Assess adder files changes
+        id: adder
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_adder/.*\.vhd$
+            casper_adder/run.py
+      - name: Assess counter files changes
+        id: counter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_counter/.*\.vhd$
+            casper_counter/run.py
+      - name: Assess multiplexer files changes
+        id: multiplexer
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_multiplexer/.*\.vhd$
+            casper_multiplexer/run.py
+      - name: Assess multiplier files changes
+        id: multiplier
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_multiplier/.*\.vhd$
+            casper_multiplier/run.py
+      - name: Assess FIFO files changes
+        id: fifo
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_fifo/.*\.vhd$
+            casper_fifo/run.py
+      - name: Assess RAM files changes
+        id: ram
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_ram/.*\.vhd$
+            casper_ram/run.py
+      - name: Assess r2SDF_FFT files changes
+        id: r2sdf_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            r2sdf_fft/.*\.vhd$
+            r2sdf_fft/run.py
+      - name: Assess PIPELINE_FFT files changes
+        id: pipe_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wb_fft/.*pipe\.vhd$
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
+      - name: Assess PARALLEL_FFT files changes
+        id: par_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wb_fft/.*par\.vhd$
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
+      - name: Assess WIDE_FFT files changes
+        id: wide_fft
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wb_fft/.*wide\.vhd$
+            casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+            casper_wb_fft/tb_fft_functions.vhd
+            casper_wb_fft/run.py
+            casper_wb_fft/tb_fft_pkg.vhd
+            casper_wb_fft/fft_sepa.vhd
+      # - name: Assess ALL_FFT files changes
+      #   id: all_fft
+      #   uses: tj-actions/changed-files@v1.2.0
+      #   with:
+      #     files: |
+      #       casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd
+      #       casper_wb_fft/tb_fft_functions.vhd
+      #       casper_wb_fft/run.py
+      #       casper_wb_fft/tb_fft_pkg.vhd
+      #       casper_wb_fft/fft_sepa.vhd
+      - name: Assess single_filter files changes
+        id: single_filter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_filter/.*single\.vhd$
+            casper_filter/fil_pkg.vhd
+            casper_filter/fil_ppf_ctrl.vhd
+            casper_filter/fil_ppf_filter.vhd
+      - name: Assess wide_filter files changes
+        id: wide_filter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_filter/.*wide\.vhd$
+            casper_filter/fil_pkg.vhd
+            casper_filter/fil_ppf_ctrl.vhd
+            casper_filter/fil_ppf_filter.vhd
+      - name: Assess wbpfb files changes
+        id: wbpfb
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_wbpfb/.*\.vhd$
+            casper_wbpfb/run.py
+
+  adder:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.adder == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2  
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v2
+      - id: casper_adder_test
+        uses: VUnit/vunit_action@master
         with:
-          python-version: 3.8
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
 
-      - name: Install GNAT compiler
-        run: sudo apt-get install libgnat-8
+      - name: Note casper_adder_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_adder
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_adder_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_adder_test Success
+        if: ${{ steps.casper_adder_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_adder
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_adder_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_adder_report
+          path: ./casper_adder/casper_adder_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  counter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.counter == 'true'
 
-      - name: Install GHDL
-        run: |
-          curl -fsSL -o ghdl.tgz https://github.com/ghdl/ghdl/releases/download/v0.37/ghdl-0.37-buster-mcode.tgz
-          mkdir ../ghdl
-          tar -xf ghdl.tgz --directory ../ghdl
-          cd ../ghdl/bin
-          pwd >> $GITHUB_PATH
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - id: casper_counter_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
-      - name: Install VUnit
-        run: |
-          pip install -U pip --progress-bar off
-          pip install vunit_hdl --progress-bar off
+      - name: Note casper_counter_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_counter
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_counter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_counter_test Success
+        if: ${{ steps.casper_counter_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_counter
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_counter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_counter_report
+          path: ./casper_counter/casper_counter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
-      # Runs a set of commands using the runners shell
-      - name: Casper_adder Run.py
-        run: |
-          cd casper_adder/
-          python run.py --xunit-xml casper_adder_report.xml
-      
-      - name: Commit report
-        run: |
-          git add -f ./casper_adder/casper_adder_report.xml
-          git config --global user.name 'TalonMyburgh Action'
-          git config --global user.email 'talonmyburgh@users.noreply.github.com'
-          git commit -am "VUnit Test Reports"
-          git push
+  multiplexer:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.multiplexer == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - id: casper_multiplexer_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+
+      - name: Note casper_multiplexer_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_multiplexer
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_multiplexer_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_multiplexer_test Success
+        if: ${{ steps.casper_multiplexer_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_multiplexer
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_multiplexer_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_multiplexer_report
+          path: ./casper_multiplexer/casper_multiplexer_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  multiplier:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.multiplier == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - id: casper_multiplier_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+
+      - name: Note casper_multiplier_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_multiplier
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_multiplier_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_multiplier_test Success
+        if: ${{ steps.casper_multiplier_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_multiplier
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_multiplier_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_multiplier_report
+          path: ./casper_multiplier/casper_multiplier_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  fifo:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.fifo == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - id: casper_fifo_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+
+      - name: Note casper_fifo_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_fifo
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_fifo_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_fifo_test Success
+        if: ${{ steps.casper_fifo_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_fifo
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_fifo_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_fifo_report
+          path: ./casper_fifo/casper_fifo_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  ram:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.ram == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_ram_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+
+      - name: Note casper_ram_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_ram
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_ram_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_ram_test Success
+        if: ${{ steps.casper_ram_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_ram
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_ram_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_ram_report
+          path: ./casper_ram/casper_ram_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  rtwosdf_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.r2sdf_fft == 'true' 
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: r2sdf_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
+
+      - name: Note r2sdf_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: r2sdf_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: r2sdf_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note r2sdf_fft_test Success
+        if: ${{ steps.r2sdf_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: r2sdf_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: r2sdf_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: r2sdf_fft_report
+          path: ./r2sdf_fft/r2sdf_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+  
+  pipe_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.pipe_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_pipe_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
+
+      - name: Note casper_pipe_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_pipe_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_pipe_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_pipe_fft_test Success
+        if: ${{ steps.casper_pipe_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_pipe_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_pipe_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pipe_fft_report
+          path: ./casper_wb_fft/pipe_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  par_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.par_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_par_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
+
+      - name: Note casper_par_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_par_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_par_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_par_fft_test Success
+        if: ${{ steps.casper_par_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_par_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_par_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: par_fft_report
+          path: ./casper_wb_fft/par_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  wide_fft:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.wide_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_wide_fft_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
+
+      - name: Note casper_wide_fft_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_fft
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_wb_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_wide_fft_test Success
+        if: ${{ steps.casper_wide_fft_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_fft
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_wide_fft_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wide_fft_report
+          path: ./casper_wb_fft/wide_fft_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  # all_fft:
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   needs: [files_changed]
+    # if: needs.files_changed.outputs.all_fft == 'true'
+
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         submodules: 'true'
+  #         token: ${{ secrets.TOKEN }}
+  #     - id: casper_all_fft_test
+  #       uses: VUnit/vunit_action@master
+  #       with:
+  #         image: ghdl/vunit:llvm
+  #         cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml
+
+  #     - name: Note casper_all_fft_test Failure
+  #       if: ${{ failure() }}
+  #       uses: action-badges/core@0.2.2
+  #       with:
+  #         label: casper_all_fft
+  #         message: failing
+  #         message-color: "C74D1F"
+  #         file-name: casper_all_fft_test.svg
+  #         badge-branch: badges
+  #         style: flat
+  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
+  #     - name: Note casper_all_fft_test Success
+  #       if: ${{ steps.casper_wide_fft_test.outcome == 'success' }}
+  #       uses: action-badges/core@0.2.2
+  #       with:
+  #         label: casper_all_fft
+  #         message: passing
+  #         message-color: "4DC71F"
+  #         file-name: casper_all_fft_test.svg
+  #         badge-branch: badges
+  #         style: flat
+  #         github-token: "${{ secrets.GITHUB_TOKEN }}"
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: wide_fft_report
+  #         path: ./casper_wb_fft/wide_all_report.xml
+  #         if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  single_filter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.single_filter == 'true'
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_single_filter_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml --single
+
+      - name: Note casper_single_filter_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_single_filter
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_single_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_single_filter_test Success
+        if: ${{ steps.casper_single_filter_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_single_filter
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_single_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: single_filter_report
+          path: ./casper_filter/single_filter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  wide_filter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.wide_filter == 'true'
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_wide_filter_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/wide_filter_report.xml --wide
+
+      - name: Note casper_wide_filter_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_filter
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_wide_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_wide_filter_test Success
+        if: ${{ steps.casper_wide_filter_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wide_filter
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_wide_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wide_filter_report
+          path: ./casper_filter/wide_filter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  wbpfb:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: [files_changed]
+    # if: needs.files_changed.outputs.wbpfb == 'true'
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_wbpfb_test
+        uses: VUnit/vunit_action@master
+        with:
+          image: ghdl/vunit:llvm
+          cmd: python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
+
+      - name: Note casper_wbpfb_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wbpfb
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_wbpfb_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_wbpfb_test Success
+        if: ${{ steps.casper_wbpfb_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_wbpfb
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_wbpfb_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: wbpfb_report
+          path: ./casper_wbpfb/wbpfb_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']

@@ -1,8 +1,14 @@
-function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, in_dat_w, out_dat_w, coef_dat_w)
+function vhdlfile = top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, in_dat_w, out_dat_w, coef_dat_w)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('top_fil_code_gen'));                 %get the filepath of this script (and thereby all scripts needed)
-    filepath = fileparts(which(bdroot));                                   %get filepath of this sim design
-    vhdlfile = filepath+"/"+bdroot+"_fil_top.vhd";                         %filename for vhd file
+    %where the top vhdl file will be generated
+    vhdlfilefolder = [fileparts(which(bdroot)) '/tmp_dspdevel'];
+    if ~exist(vhdlfilefolder, 'dir')
+        mkdir(vhdlfilefolder)
+    end
+    %and what it will be named
+    vhdlfile = [vhdlfilefolder '/' bdroot '_fil_top.vhd'];              %filename for vhd file
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%prtdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     lnsuptoportdec = ["library IEEE, common_pkg_lib, casper_ram_lib, casper_filter_lib, casper_mm_lib;"
     "use IEEE.std_logic_1164.ALL;"
@@ -22,14 +28,13 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     "g_nof_taps          : natural;          -- number of taps"
     "g_nof_streams       : natural;          -- number of streams"
     "g_backoff_w         : natural;          -- backoff width"
-    "g_technology        : natural;          -- 0 for Xilinx, 1 for Altera"
     "g_ram_primitive     : string);          -- ram primitive function for use"
     "port("
     "clk            : in  std_logic;"
-    "ce             : in  std_logic           := '1';"
+    "ce             : in  std_logic;"
     "rst            : in  std_logic;"
     "in_val         : in  std_logic;"
-    "out_val        : out std_logic;"];
+    "out_val        : out std_logic := '1';"];
 
     portdec = join(mknprts(wb_factor),'\n');
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%archdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -38,17 +43,16 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     "end top_fil;"
     "architecture rtl of top_fil is"
     "constant cc_fil_ppf : t_fil_ppf := (g_wb_factor, g_nof_chan, g_nof_bands, g_nof_taps, g_nof_streams, g_backoff_w, g_in_dat_w, g_out_dat_w, g_coef_dat_w);"
-    "signal in_dat_arr : t_slv_arr_in(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
-    "signal out_dat_arr : t_slv_arr_out(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
+    "signal in_dat_arr : t_fil_slv_arr_in(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
+    "signal out_dat_arr : t_fil_slv_arr_out(g_wb_factor*g_nof_streams -1 DOWNTO 0);"
     "begin"
     "wide_ppf : entity casper_filter_lib.fil_ppf_wide"
     "generic map("
-    "g_big_endian_wb_in  => false,"
-    "g_big_endian_wb_out => false,"
+    "g_big_endian_wb_in  => g_big_endian_wb_in,"
+    "g_big_endian_wb_out => g_big_endian_wb_out,"
     "g_fil_ppf           => cc_fil_ppf,"
     "g_fil_ppf_pipeline  => c_fil_ppf_pipeline,"
     "g_coefs_file_prefix => c_coefs_file,"
-    "g_technology        => g_technology,"
     "g_ram_primitive     => g_ram_primitive)"
     "port map("
     "clk => clk,"
@@ -72,7 +76,7 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
 
     %Generate coefficients mem file for the filter:
     pyscriptloc = [filepathscript , '/fil_ppf_create.py'];
-    command = sprintf("python %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth)';
+    command = sprintf("python %s -o %s -g 1 -t %d -p %d -w %d -c %d -v %d -W %s -F %d -V 0", pyscriptloc, vhdlfilefolder, nof_taps, nof_bands, wb_factor, coef_dat_w, vendor, win, fwidth);
     [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
     
     if(status ~= 0)
@@ -81,13 +85,13 @@ function top_fil_code_gen(wb_factor, nof_bands, nof_taps, win, fwidth, vendor, i
     
     %Update fil_pkg.vhd:
     coef_filepath_stem = strtrim(cmdout);
-    updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem);
+    updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem);
 end
 
 function chararr = mknprts(wb_factor)
     chararr = strings(2*wb_factor,0);
-    indatchar = "in_dat_%c    : in std_logic_vector(in_dat_w-1 DOWNTO 0);";
-    outdatchar = "out_dat_%c   : out std_logic_vector(out_dat_w -1 DOWNTO 0);";
+    indatchar = "in_dat_%c    : in std_logic_vector(c_fil_in_dat_w-1 DOWNTO 0);";
+    outdatchar = "out_dat_%c   : out std_logic_vector(c_fil_out_dat_w -1 DOWNTO 0);";
     i=1;
     for j=0:1:wb_factor-1
         jj = int2str(j);
@@ -116,12 +120,14 @@ function achararr = mkarch(wb_factor)
     end
 end
 
-function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem)
+function updatepkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb_factor, coef_filepath_stem)
     insertloc = 7;
     vhdlgenfileloc = [filepathscript '/../../casper_filter/fil_pkg.vhd'];
-    lineone = sprintf("CONSTANT in_dat_w : natural := %d;",in_dat_w);
-    linetwo = sprintf("CONSTANT out_dat_w : natural := %d;", out_dat_w);
-    linethree = sprintf("CONSTANT coef_dat_w : natural :=%d;",coef_dat_w);
+    pkgdest = [vhdlfilefolder '/fil_pkg.vhd'];
+
+    lineone = sprintf("CONSTANT c_fil_in_dat_w : natural := %d;",in_dat_w);
+    linetwo = sprintf("CONSTANT c_fil_out_dat_w : natural := %d;", out_dat_w);
+    linethree = sprintf("CONSTANT c_fil_coef_dat_w : natural :=%d;",coef_dat_w);
     linefour = sprintf("CONSTANT c_coefs_file : string := ""%s"";", coef_filepath_stem);
     fid = fopen(vhdlgenfileloc,'r');
     if fid==-1
@@ -131,7 +137,7 @@ function updatepkg(filepathscript, in_dat_w, out_dat_w, coef_dat_w, nof_taps, wb
     lines = lines{1};
     fclose(fid);
 
-    fid=fopen(vhdlgenfileloc,'w');
+    fid=fopen(pkgdest,'w');
     for jj = 1:insertloc
         fprintf(fid,'%s\n',lines{jj} );
     end

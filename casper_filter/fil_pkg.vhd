@@ -5,18 +5,18 @@ use common_pkg_lib.common_pkg.all;
 package fil_pkg is
 
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT in_dat_w : natural := 8;
-CONSTANT out_dat_w : natural := 16;
-CONSTANT coef_dat_w : natural :=16;
-CONSTANT c_coefs_file : string := "C:/Users/mybur/Work/filter/src/hex/mem/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+CONSTANT c_fil_in_dat_w       : natural := 8;
+CONSTANT c_fil_out_dat_w      : natural := 16;
+CONSTANT c_fil_coef_dat_w    : natural := 16;
+CONSTANT c_coefs_file       : string  := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
-CONSTANT c_wb_factor: natural :=1;
-CONSTANT c_nof_taps : natural :=8; 
-CONSTANT c_nof_chan : natural := 0;
-CONSTANT c_nof_bands : natural := 64;
-CONSTANT c_nof_streams : natural := 1;
-CONSTANT c_backoff_w : natural := 0;
+CONSTANT c_fil_wb_factor    : natural   := 1;
+CONSTANT c_fil_nof_taps     : natural   := 16; 
+CONSTANT c_fil_nof_chan     : natural   := 0;
+CONSTANT c_fil_nof_bands    : natural   := 1024;
+CONSTANT c_fil_nof_streams  : natural   := 1;
+CONSTANT c_fil_backoff_w    : natural   := 0;
 
 -- Parameters for the (wideband) poly phase filter. 
 type t_fil_ppf is record
@@ -31,10 +31,10 @@ out_dat_w      : natural; -- = 16, number of output bits per stream
 coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
 end record;
 
-constant c_fil_ppf : t_fil_ppf := (c_wb_factor, c_nof_chan, c_nof_bands, c_nof_taps, c_nof_streams, c_backoff_w, in_dat_w, out_dat_w, coef_dat_w);
-TYPE t_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);
-TYPE t_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-TYPE t_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR(coef_dat_w -1 DOWNTO 0);
+constant c_fil_ppf : t_fil_ppf := (c_fil_wb_factor, c_fil_nof_chan, c_fil_nof_bands, c_fil_nof_taps, c_fil_nof_streams, c_fil_backoff_w, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
+TYPE t_fil_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_in_dat_w-1 DOWNTO 0);
+TYPE t_fil_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);
+TYPE t_fil_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_coef_dat_w -1 DOWNTO 0);
 
 -- Record with the pipeline settings for the filter units. 
 type t_fil_ppf_pipeline is record
@@ -47,8 +47,8 @@ mult_output           : natural;  -- = 1
 -- generics for the adder tree in in the filter unit
 adder_stage           : natural;  -- = 1
 -- generics for the requantizer in the filter unit
-requant_remove_lsb : natural;  -- = 1
-requant_remove_msb : natural;  -- = 0
+requant_remove_lsb    : natural;     -- = 1
+requant_remove_msb    : natural;     -- = 0
 end record;
 
 constant c_fil_ppf_pipeline : t_fil_ppf_pipeline := (1, 1, 1, 1, 1, 1, 0);
