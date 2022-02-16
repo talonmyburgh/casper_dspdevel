@@ -66,7 +66,7 @@ entity tb_wbpfb_unit_wide is
     -- DUT generics
     g_wpfb : t_wpfb := (4, 32, 0, 1,
                         16, 1, 8, 16, 16,
-                        true, false, true, 16, 16, 1, c_dsp_mult_w, 2, true, 56, 2, 20,
+                        true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, 56, 2, 20,
                         c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
     --  type t_wpfb is record  
     --    -- General parameters for the wideband poly phase filter
@@ -150,7 +150,8 @@ entity tb_wbpfb_unit_wide is
     g_data_file_c_nof_lines : natural := 1600;
     
     g_data_file_nof_lines   : natural := 1600;   -- actual number of lines with input data to simulate from the data files, must be <= g_data_file_*_nof_lines
-    g_enable_in_val_gaps    : boolean := FALSE   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_twid_file_stem        : string  := "UNUSED"
   );
   PORT
   (
@@ -481,7 +482,8 @@ begin
     g_big_endian_wb_in  => c_big_endian_wb_in,
     g_wpfb              => g_wpfb,
     g_use_prefilter     => TRUE,
-    g_coefs_file_prefix => c_coefs_memory_file_prefix
+    g_coefs_file_prefix => c_coefs_memory_file_prefix,
+    g_twid_file_stem    => g_twid_file_stem
   )
   port map (
     rst                 => rst,
