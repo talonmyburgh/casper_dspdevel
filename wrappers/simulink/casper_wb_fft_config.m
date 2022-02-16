@@ -308,7 +308,7 @@ this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_ff
 this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_bf_par.vhd'],'casper_wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_r2_par.vhd'],'casper_wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBFStage.vhd'],'r2sdf_fft_lib');
-this_block.addFileToLibrary([filepath '/../../r2sdf_fft/new_rTwoWeights.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWeights.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFStage.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_sepa.vhd'],'casper_wb_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_wb_fft/fft_reorder_sepa_pipe.vhd'],'casper_wb_fft_lib');

@@ -1,101 +1,67 @@
---------------------------------------------------------------------------------
---
--- Copyright 2020
--- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
--- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
--- 
--- Licensed under the Apache License, Version 2.0 (the "License");
--- you may not use this file except in compliance with the License.
--- You may obtain a copy of the License at
--- 
---     http://www.apache.org/licenses/LICENSE-2.0
--- 
--- Unless required by applicable law or agreed to in writing, software
--- distributed under the License is distributed on an "AS IS" BASIS,
--- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
--- See the License for the specific language governing permissions and
--- limitations under the License.
---
---------------------------------------------------------------------------------
-
--- Purpose: Get twiddles from ROM
--- Description:
---   The twiddles ROM is generated twiddlesPkg.vhd.
--- Remark:
--- . Default use g_lat=1 as for synthesis to improve fmax.
--- . Use g_lat=0 for no digital latency to show the pure functional behavior
---   of a pipelined FFT.  
--- . When the pipelined FFT is used in a Wideband FFT configuration the 
---   rTwoWeights unit compensates for this by estimating the virtual stage and
---   applying the twiddle-offset and the stage-offset. 
-
-library ieee, common_pkg_lib;
+library ieee, common_pkg_lib, casper_ram_lib, technology_lib;
 use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
-use work.twiddlesPkg.all;
+use casper_ram_lib.common_ram_pkg.all;
+use work.rTwoSDFPkg.all;
+use technology_lib.technology_select_pkg.all;
 
 entity rTwoWeights is
 	generic(
-		g_stage          : natural := 4; -- The stage number of the pft
-		g_lat            : natural := 1; -- latency 0 or 1
-		g_twiddle_offset : natural := 0; -- The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_stage_offset   : natural := 0 -- The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_stage           : natural := 4; -- The stage number of the pft
+		g_wb_factor	      : natural := 1; -- The wideband factor of the wideband FFT
+		g_wb_inst		  : natural := 1; -- WB instance index
+		g_twiddle_offset  : natural := 0; -- The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_max_addr_w	  : natural := 10; -- address width above which to implement in block/ultra ram.
+		g_twid_file_stem  : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
+		g_stage_offset    : natural := 0; -- The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
+		g_ram_primitive   : string  := "block";	-- BRAM primitive for Weights 
+		g_ram			  : t_c_mem := c_mem_ram -- RAM parameters
 	);
 	port(
 		clk       : in  std_logic;
 		in_wAdr   : in  std_logic_vector;
-		weight_re : out wTyp;
-		weight_im : out wTyp
+		weight_re : out std_logic_vector;
+		weight_im : out std_logic_vector
 	);
 end;
 
 architecture rtl of rTwoWeights is
+	
+	-- Ought to just be unique across stages
+	-- g_stage : log2(nof_points) -> log2(wb_factor) = log2(nof_points/wb_factor) stage.
+	-- stage indexing goes from log2(nof_points) -> log2(wb_factor) + 1  
+	-- g_wb_inst : 0 -> wb_factor - 1
+	constant c_twid_file : string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst) & "wbinst_" & (integer'image(g_stage + true_log2(g_wb_factor) - 1))  & "stg"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
 
-	constant c_virtual_stage : integer := g_stage + g_stage_offset; -- Virtual stage based on the real stage and the stage_offset.
-	constant c_nof_shifts    : integer := -1 * g_stage_offset; -- Shift factor when fft is used in wfft configuration  
+	signal re_addr : std_logic_vector(in_wAdr'length downto 0);
+	signal im_addr : std_logic_vector(in_wAdr'length downto 0);
 
-	signal nxt_weight_re  : wTyp;
-	signal nxt_weight_im  : wTyp;
-	signal wAdr_shift     : std_logic_vector(c_virtual_stage - 1 downto 1);
-	signal wAdr_unshift   : std_logic_vector(c_virtual_stage - 1 downto 1);
-	signal wAdr_tw_offset : integer := 0;
 
-begin
+    begin
+		--Real address addresses all odd indices, Imag all even. This also gives address widths g_stage which is the size of the bram.
+		re_addr <= in_wAdr & '0';
+		im_addr <= in_wAdr & '1';
 
-	-- Estimate the correct twiddle address. 
-	-- In case of a wfft configuration the address will be shifted and the twiddle offset will be added. 
-	wAdr_unshift   <= RESIZE_UVEC(in_wAdr, wAdr_unshift'length);
-	wAdr_shift     <= SHIFT_UVEC(wAdr_unshift, c_nof_shifts) when in_wAdr'length > 0 else (others => '0');
-	wAdr_tw_offset <= TO_UINT(wAdr_shift) + g_twiddle_offset when in_wAdr'length > 0 else g_twiddle_offset;
-
-	-- functionality
-	p_get_weights : process(wAdr_tw_offset)
-	begin
-		if c_virtual_stage = 1 then
-			nxt_weight_re <= wRe(wMap(0, 1));
-			nxt_weight_im <= wIm(wMap(0, 1));
-		else
-			nxt_weight_re <= wRe(wMap(wAdr_tw_offset, c_virtual_stage));
-			nxt_weight_im <= wIm(wMap(wAdr_tw_offset, c_virtual_stage));
-		end if;
-	end process;
-
-	-- latency
-	no_reg : if g_lat = 0 generate
-		weight_re <= nxt_weight_re;
-		weight_im <= nxt_weight_im;
-	end generate;
-
-	gen_reg : if g_lat = 1 generate
-		p_clk : process(clk)
-		begin
-			if rising_edge(clk) then
-				weight_re <= nxt_weight_re;
-				weight_im <= nxt_weight_im;
-			end if;
-		end process;
-	end generate;
-
-	assert g_lat <= 1 report "rTwoWeights : g_lat must be 0 or 1" severity failure;
+        -- Instantiate a BRAM for the coefficients
+		coef_mem : entity casper_ram_lib.common_rom_r_r
+			generic map(
+				g_ram => g_ram,
+				g_init_file => c_twid_file,
+				g_true_dual_port => TRUE, 
+				g_ram_primitive => g_ram_primitive
+			)
+			port map(
+				clk => clk,
+				clken => std_logic'('1'),
+				adr_a => re_addr,
+				adr_b => im_addr,
+				rd_en_a => std_logic'('1'),
+				rd_en_b => std_logic'('1'),
+				rd_dat_a => weight_re,
+				rd_dat_b => weight_im,
+				rd_val_a => open,
+				rd_val_b => open
+			);
 
 end rtl;
