@@ -47,7 +47,7 @@ entity tb_tb_vu_wbpfb_unit_wide is
         g_use_variant           : STRING    := "4DSP";
         g_ovflw_behav           : STRING    := "WRAP";
         g_use_round             : STRING    := "TRUNCATE";
-        g_twid_file_stem        : string    := "UNUSED";
+        g_twid_file_stem        : string    := c_twid_file_stem;
         runner_cfg              : string    := runner_cfg_default 
     );
 end tb_tb_vu_wbpfb_unit_wide;
