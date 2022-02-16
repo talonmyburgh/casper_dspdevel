@@ -148,7 +148,6 @@ casper_sim_tools_lib.add_source_file(join(script_dir,"../casper_sim_tools/common
 # RTWOSDF Library
 # Pathline for twid coefficients
 twid_path_stem = abspath(script_dir + '/../r2sdf_fft/data/twids/sdf_twiddle_coeffs')
-print(twid_path_stem)
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBFStage.vhd"))
