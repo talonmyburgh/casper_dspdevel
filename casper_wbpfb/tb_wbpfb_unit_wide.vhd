@@ -530,14 +530,14 @@ begin
   begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity error;
+    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity failure;
     -- The WPFB has a memory of 2 block, independent of use_reorder and use_separate, but without the
     -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
     -- Ensure g_data_file_nof_lines is multiple of g_wpfb.nof_points.
     if g_wpfb.use_reorder=true then
-      assert out_val_cnt = in_val_cnt-2*c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+      assert out_val_cnt = in_val_cnt-2*c_nof_valid_per_block                report "Unexpected number of valid output data" severity failure;
     else
-      assert out_val_cnt = in_val_cnt-2*c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
+      assert out_val_cnt = in_val_cnt-2*c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
     end if;
     wait;
   end process;
@@ -605,13 +605,13 @@ begin
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A real error in channel",o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
             v_test_pass := out_im_a_scope = 0;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A imag error in channel",o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           --end if;
           if reg_out_val_b = '1' then
@@ -619,13 +619,13 @@ begin
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data B real error in channel",o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
             v_test_pass := out_im_b_scope = 0;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data B imag error in channel",o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           end if;
         else
@@ -634,13 +634,13 @@ begin
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A real error, expected: "& integer'image(exp_re_a_scope) & " but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
             v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data A imag error, expected: "& integer'image(exp_im_a_scope) & " but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           --end if;
           if reg_out_val_b='1' then
@@ -648,13 +648,13 @@ begin
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data B real error, expected: "& integer'image(exp_re_b_scope) & " but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
             v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data B imag error, expected: "& integer'image(exp_im_b_scope) & " but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           end if;
         end if;
@@ -665,20 +665,20 @@ begin
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data C real/imag error in channel",o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           else
             v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data C real error, expected: "& integer'image(exp_re_c_scope) & " but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
             v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
             v_all_tests_pass := v_all_tests_pass and v_test_pass;
             if not v_test_pass then
               v_test_msg := pad("Output data C imag error, expected: "& integer'image(exp_im_c_scope) & " but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-              report v_test_msg severity error;
+              report v_test_msg severity failure;
             end if;
           end if;
         end if;

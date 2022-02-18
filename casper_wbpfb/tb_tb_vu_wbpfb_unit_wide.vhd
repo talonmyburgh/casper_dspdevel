@@ -29,7 +29,7 @@ entity tb_tb_vu_wbpfb_unit_wide is
         g_fft_out_dat_w         : natural   := c_fft_out_dat_w;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
         g_fft_out_gain_w        : natural   := c_fft_out_gain_w;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
         g_stage_dat_w           : natural   := c_fft_stage_dat_w;  -- = 18, data width used between the stages(= DSP multiplier-width)
-        g_twiddle_dat_w            : natural   := c_fft_twiddle_dat_w;
+        g_twiddle_dat_w         : natural   := c_fft_twiddle_dat_w;
         g_max_addr_w            : natural   := c_max_addr_w;
         g_guard_w               : natural   := c_fft_guard_w;  -- = 2,  Guard used to avoid overflow in FFT stage. 
         g_guard_enable          : boolean   := c_fft_guard_enable;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
