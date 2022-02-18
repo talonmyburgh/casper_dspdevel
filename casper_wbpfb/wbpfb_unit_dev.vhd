@@ -241,7 +241,8 @@ begin
           g_use_dsp            => g_use_dsp,
           g_ovflw_behav        => g_ovflw_behav,
           g_use_round          => g_use_round,
-          g_ram_primitive      => g_fft_ram_primitive
+          g_ram_primitive      => g_fft_ram_primitive,
+          g_twid_file_stem     => g_twid_file_stem
         )
         port map(
           clk       => clk,
