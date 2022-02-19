@@ -1,6 +1,6 @@
-function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, nof_taps, win, fwidth... 
+function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, nof_points, nof_taps, win, fwidth... 
     ,xtra_dat_sigs, fft_in_dat_w, fft_out_dat_w, fft_stage_dat_w...
-    ,fil_coef_dat_w,fil_in_dat_w, fil_out_dat_w)
+    ,fil_coef_dat_w,fil_in_dat_w, fil_out_dat_w, vendor)
     %Locate where this matlab script is
     filepathscript = fileparts(which('top_wbpfb_code_gen'));
     %where the top vhdl file will be generated
@@ -42,6 +42,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     "    g_fft_out_dat_w     : natural          := 16;      -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13"
     "    g_fft_out_gain_w    : natural          := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
     "    g_stage_dat_w       : natural          := 18;      -- = 18, number of bits that are used inter-stage"
+    "    g_twiddle_dat_w     : natural;                     -- = 18, the twiddle coefficient data width"
+    "    g_max_addr_w        : natural;                     -- = 8, ceoff address widths above which to implement in bram/ultraram"
     "    g_guard_w           : natural          := 2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
     "                                                    --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
     "                                                    --   12.3.2], therefore use input guard_w = 2."
@@ -123,6 +125,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     "    g_fft_out_dat_w     : natural          := 16;      -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13"
     "    g_fft_out_gain_w    : natural          := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
     "    g_stage_dat_w       : natural          := 18;      -- = 18, number of bits that are used inter-stage"
+    "    g_twiddle_dat_w     : natural;                     -- = 18, the twiddle coefficient data width"
+    "    g_max_addr_w        : natural;                     -- = 8, ceoff address widths above which to implement in bram/ultraram"
     "    g_guard_w           : natural          := 2;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. "
     "                                                    --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section"
     "                                                    --   12.3.2], therefore use input guard_w = 2."
@@ -163,7 +167,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
         "architecture RTL of wbpfb_unit_top is"
         "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
-                                 "g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
+                                 "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
@@ -230,7 +234,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
     "architecture RTL of wbpfb_unit_top is"
     "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
-                             "g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
+                             "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
@@ -309,8 +313,23 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, nof_points, no
 
     %update generics package
     coef_filepath_stem = strtrim(cmdout);
-    updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w);
     updatefilpkg(filepathscript,vhdlfilefolder,fil_in_dat_w,fil_out_dat_w,fil_coef_dat_w,coef_filepath_stem);
+
+    %Generate coefficients mem file for the fft:
+    pyscriptloc = fullfile(filepathscript , 'sdf_fft_twid_create.py');
+    command = sprintf("python %s -o %s -g 1 -p %d -w %d -c %d -v %d -V 0",strrep(pyscriptloc,'\','\\'), strrep(vhdlfilefolder,'\','\\'), nof_points, wb_factor, twid_dat_w, vendor);
+    [status,cmdout] = system(command); %coefficient files will be generated at filepath/hex/
+    
+    if(status ~= 0)
+        error("Filter coefficients not correctly generated by fil_ppf_create.py");
+    end
+
+    %update generics package
+    twid_filepath_stem = strtrim(cmdout);
+    updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w,twid_filepath_stem);
+
+    %generate twiddlePkg for parallel twiddle factors:
+    par_twiddle_pkg_gen(nof_points, twid_dat_w, vhdlfilefolder);
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
@@ -370,7 +389,8 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
     end
 end
 
-function updatefftpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage_dat_w)
+function updatefftpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage_dat_w, twid_filepath_stem)
+    %WRITE OUT THE FFTGNRCSINTRFCSPKG
     insertloc = 7; %Change this if you change the fft_gnrcs_intrfcs_pkg.vhd file so the line numbers change
     pkgsource = [filepathscript '/../../casper_wb_fft/fft_gnrcs_intrfcs_pkg.vhd'];
     pkgdest = [vhdlfilefolder '/fft_gnrcs_intrfcs_pkg.vhd'];
@@ -400,7 +420,33 @@ function updatefftpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage
         fprintf( fid, '%s\n', lines{jj} );
     end
     fclose(fid);
+
+    %WRITE OUT THE RTWOSDFPKG
+    insertloc = 5; %Change this if you change the rTwoSDFPkg.vhd file such that the line numbers change
+    pkgsource = [filepathscript '/../../r2sdf_fft/rTwoSDFPkg.vhd'];
+    pkgdest = [vhdlfilefolder '/rTwoSDFPkg.vhd'];
+    line = sprintf("constant c_twid_file_stem : string := ""%s"";",twid_filepath_stem);
+    fid = fopen(pkgsource,'r');
+    if(fid == -1) 
+        error("Cannot open vhdl file: %s",pkgsource); 
+    end
+    lines = textscan(fid, '%s', 'Delimiter', '\n', 'CollectOutput',true);
+    lines = lines{1};
+    fclose(fid);
+    fid = fopen(pkgdest, 'w');
+    if(fid == -1) 
+        error("Cannot open vhdl file: %s",pkgdest); 
+    end
+    for jj = 1: insertloc
+        fprintf(fid,'%s\n',lines{jj});
+    end
+    fprintf(fid,'%s\n', line);
+    for jj = insertloc+4 : length(lines)
+        fprintf( fid, '%s\n', lines{jj} );
+    end
+    fclose(fid);
 end
+
 function updatefilpkg(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, coef_dat_w, coef_filepath_stem)
     insertloc = 7;
     pkgsource = [filepathscript '/../../casper_filter/fil_pkg.vhd'];

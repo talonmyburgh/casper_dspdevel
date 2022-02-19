@@ -1,4 +1,3 @@
-
 function wbpfb_unit_top_config(this_block)
 
   % Revision History:
@@ -64,6 +63,9 @@ end
  o_g_w = get_param(wb_pfb_blk_parent,'out_gain_w');
  fft_s_d_w = get_param(wb_pfb_blk_parent,'fft_stage_dat_w');
  fil_c_d_w = get_param(wb_pfb_blk_parent,'fil_coef_dat_w');
+ t_d_w = get_param(wb_pfb_blk_parent,'twid_dat_w');
+ double_t_d_w = str2double(t_d_w);
+ max_addr_w = get_param(wb_pfb_blk_parent,'max_addr_w');
  fft_guard_w = get_param(wb_pfb_blk_parent,'fft_guard_w');
  fft_guard_en = get_param(wb_pfb_blk_parent,'fft_guard_enable');
  variant = get_param(wb_pfb_blk_parent,'use_variant');
@@ -93,10 +95,18 @@ end
 num_stages = stagecalc(dbl_nof_points);
 ovflwshiftreg_type = sprintf('Ufix_%d_0',num_stages);
 
+technology_int = 0;
+if strcmp(technology, 'Xilinx')
+  technology_int = 0;
+end % if technology Xilinx
+if strcmp(technology, 'UniBoard')
+  technology_int = 1;
+end % if technology UniBoard
+
 %Update the vhdl top file with the required ports per wb_factor:
-vhdlfile = top_wbpfb_code_gen(dbl_wb_factor,dbl_nof_wb_streams,dbl_nof_points,dbl_nof_taps,win,str2double(fwidth)...
-          ,xtra_dat_sigs,str2double(fft_i_d_w),str2double(fft_o_d_w),str2double(fft_s_d_w),str2double(fil_c_d_w)...
-          ,str2double(fil_i_d_w),str2double(fil_o_d_w));
+vhdlfile = top_wbpfb_code_gen(dbl_wb_factor, dbl_nof_wb_streams, double_t_d_w, dbl_nof_points, dbl_nof_taps, win, str2double(fwidth)...
+          ,xtra_dat_sigs, str2double(fft_i_d_w), str2double(fft_o_d_w), str2double(fft_s_d_w), str2double(fil_c_d_w)...
+          ,str2double(fil_i_d_w), str2double(fil_o_d_w), technology_int);
 
 %inport declarations
 this_block.addSimulinkInport('rst');
@@ -278,6 +288,8 @@ end
   this_block.addGeneric('g_fft_out_dat_w','natural',fft_o_d_w);
   this_block.addGeneric('g_fft_out_gain_w','natural',o_g_w);
   this_block.addGeneric('g_stage_dat_w','natural',fft_s_d_w);
+  this_block.addGeneric('g_twiddle_dat_w','natural',t_d_w);
+  this_block.addGeneric('g_max_addr_w','natural',max_addr_w);
   this_block.addGeneric('g_guard_w','natural',fft_guard_w);
   this_block.addGeneric('g_guard_enable','boolean',checkbox2str(fft_guard_en));
   this_block.addGeneric('g_dont_flip_channels','boolean',checkbox2str(dont_flip_channels));
@@ -323,7 +335,7 @@ end
   this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
-  this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
+  this_block.addFileToLibrary([srcloc   '/technology_select_pkg.vhd'],'technology_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
   this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
@@ -344,11 +356,14 @@ end
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_rom_r_r.vhd'],'casper_ram_lib');
+ this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_rom_r.vhd'],'casper_ram_lib');
+ this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r_r.vhd'],'casper_ram_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_switch.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
   this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'wb_fft_lib');
-  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([srcloc   '/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([srcloc   '/fil_pkg.vhd'],'casper_filter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_gnrcs_intrfcs_pkg.vhd'],'wpfb_lib');
   this_block.addFileToLibrary([filepath '/../../casper_dp_pkg/dp_stream_pkg.vhd'],'dp_pkg_lib');
@@ -357,7 +372,7 @@ end
   this_block.addFileToLibrary([filepath '/../../casper_pipeline/dp_pipeline.vhd'],'casper_pipeline_lib');
   this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_bsn_restore_global.vhd'],'wpfb_lib');
   this_block.addFileToLibrary([filepath '/../../casper_wbpfb/dp_block_gen_valid_arr.vhd'],'wpfb_lib');
-  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
+  this_block.addFileToLibrary([srcloc   '/twiddlesPkg.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
   this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
   this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
@@ -380,6 +395,8 @@ end
   this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_mult_infer.vhd'],'ip_xpm_mult_lib');
   this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
   this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_rom_r.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_rom_r_r.vhd'],'ip_xpm_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_wbpfb/wbpfb_unit_dev.vhd'],'wpfb_lib');
   return;
 end

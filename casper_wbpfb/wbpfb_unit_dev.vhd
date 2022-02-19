@@ -28,7 +28,7 @@ entity wbpfb_unit_dev is
     g_use_round         : string  		    := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
     g_fft_ram_primitive : string  		    := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
     g_fifo_primitive    : string  		    := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-    g_twid_file_stem    : string          := "UNUSED"                           --! file stem for the twiddle coefficients                  
+    g_twid_file_stem    : string          := c_twid_file_stem                   --! file stem for the twiddle coefficients                  
    );
   port (
     rst                	: in  std_logic := '0';
