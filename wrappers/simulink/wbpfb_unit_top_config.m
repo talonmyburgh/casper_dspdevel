@@ -53,7 +53,6 @@ end
  end
  nof_points = get_param(wb_pfb_blk_parent,'nof_points');
  dbl_nof_points = str2double(nof_points);
- fft_i_d_w = get_param(wb_pfb_blk_parent,'fft_in_dat_w');
  fil_i_d_w = get_param(wb_pfb_blk_parent,'fil_in_dat_w');
  in_fil_data_type = sprintf('Fix_%s_0', fil_i_d_w);
  fft_o_d_w = get_param(wb_pfb_blk_parent,'fft_out_dat_w');
@@ -105,7 +104,7 @@ end % if technology UniBoard
 
 %Update the vhdl top file with the required ports per wb_factor:
 vhdlfile = top_wbpfb_code_gen(dbl_wb_factor, dbl_nof_wb_streams, double_t_d_w, dbl_nof_points, dbl_nof_taps, win, str2double(fwidth)...
-          ,xtra_dat_sigs, str2double(fft_i_d_w), str2double(fft_o_d_w), str2double(fft_s_d_w), str2double(fil_c_d_w)...
+          ,xtra_dat_sigs, str2double(fil_o_d_w), str2double(fft_o_d_w), str2double(fft_s_d_w), str2double(fil_c_d_w)...
           ,str2double(fil_i_d_w), str2double(fil_o_d_w), technology_int);
 
 %inport declarations
@@ -284,7 +283,7 @@ end
   this_block.addGeneric('g_use_reorder','boolean',checkbox2str(use_reorder));
   this_block.addGeneric('g_use_fft_shift','boolean',checkbox2str(use_fft_shift));
   this_block.addGeneric('g_use_separate','boolean',checkbox2str(use_separate));
-  this_block.addGeneric('g_fft_in_dat_w','natural',fft_i_d_w);
+  this_block.addGeneric('g_fft_in_dat_w','natural',fil_o_d_w);
   this_block.addGeneric('g_fft_out_dat_w','natural',fft_o_d_w);
   this_block.addGeneric('g_fft_out_gain_w','natural',o_g_w);
   this_block.addGeneric('g_stage_dat_w','natural',fft_s_d_w);
