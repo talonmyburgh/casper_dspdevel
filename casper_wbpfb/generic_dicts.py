@@ -26,6 +26,8 @@ c_wb1_two_real_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -52,6 +54,8 @@ c_wb1_two_real = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -78,6 +82,8 @@ c_wb1_two_real_4streams = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -104,6 +110,8 @@ c_wb1_two_real_4channels = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -130,6 +138,8 @@ c_wb4_two_real_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_stage_dat_extra_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -156,6 +166,8 @@ c_wb4_two_real = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -182,6 +194,8 @@ c_wb4_two_real_4streams = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -208,6 +222,8 @@ c_wb4_two_real_4channels = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 1,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -234,6 +250,8 @@ c_wb1_complex_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -260,6 +278,8 @@ c_wb1_complex_64 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -286,6 +306,8 @@ c_wb1_complex = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -312,6 +334,8 @@ c_wb1_complex_4streams = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -338,6 +362,8 @@ c_wb1_complex_4channels = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -364,6 +390,8 @@ c_wb1_complex_fft_shift = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -390,6 +418,8 @@ c_wb1_complex_flipped_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -416,6 +446,8 @@ c_wb1_complex_flipped_64 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -442,6 +474,8 @@ c_wb1_complex_flipped = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -468,6 +502,8 @@ c_wb4_complex_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -494,6 +530,8 @@ c_wb4_complex_64 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -520,6 +558,8 @@ c_wb4_complex = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -546,6 +586,8 @@ c_wb4_complex_4streams = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -572,6 +614,8 @@ c_wb4_complex_4channels = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -598,6 +642,8 @@ c_wb4_complex_fft_shift = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -624,6 +670,8 @@ c_wb4_complex_flipped_1024 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -650,6 +698,8 @@ c_wb4_complex_flipped_64 = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -676,6 +726,8 @@ c_wb4_complex_flipped = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -702,6 +754,8 @@ c_wb4_complex_flipped_channels = {
     # "g_fft_out_dat_w": 16,
     "g_fft_out_gain_w": 0,
     # "g_stage_dat_w": c_dsp_mult_w,
+    # "g_twid_dat_w": 18,
+    # "g_max_addr_w": 8, 
     "g_guard_w": 2,
     "g_guard_enable": True,
     # "stat_data_w": 56,
@@ -712,6 +766,8 @@ c_wb4_complex_flipped_channels = {
     # "fil_pipeline": c_fil_ppf_pipeline
     }
 
+#Get twid file path
+twid_path_stem        = abspath(script_dir + '/../r2sdf_fft/data/twids/sdf_twiddle_coeffs')
 c_pre_ab              = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_32points_16b"))
 c_pre_ab_1024         = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b"))
 c_pre_ab_v2           = abspath(join(script_dir, "./data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b"))
@@ -748,7 +804,8 @@ u_act_wb4_two_real_a0_1024 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_two_real_a0_1024.update(c_wb4_two_real_1024)
 
@@ -763,7 +820,8 @@ u_act_wb4_two_real_ab_1024 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_two_real_ab_1024.update(c_wb4_two_real_1024)
 
@@ -778,7 +836,8 @@ u_act_wb1_two_real_ab_1024 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_two_real_ab_1024.update(c_wb1_two_real_1024)
 
@@ -793,7 +852,8 @@ u_act_wb1_two_real_chirp_1024 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_two_real_chirp_1024.update(c_wb1_two_real_1024)
 
@@ -808,7 +868,8 @@ u_act_wb1_two_real_chirp = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_two_real_chirp.update(c_wb1_two_real)
 
@@ -823,7 +884,8 @@ u_act_wb1_two_real_a0 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_two_real_a0.update(c_wb1_two_real)
 
@@ -838,7 +900,8 @@ u_act_wb1_two_real_b0 = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_two_real_b0.update(c_wb1_two_real)
 
@@ -853,7 +916,8 @@ u_rnd_wb4_two_real_noise = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_two_real_noise.update(c_wb4_two_real)
 
@@ -868,7 +932,8 @@ u_rnd_wb4_two_real_noise_channels = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_two_real_noise_channels.update(c_wb4_two_real_4channels)
 
@@ -883,7 +948,8 @@ u_rnd_wb4_two_real_noise_streams = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_two_real_noise_streams.update(c_wb4_two_real_4streams)
 
@@ -898,7 +964,8 @@ u_rnd_wb1_two_real_noise = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_two_real_noise.update(c_wb1_two_real)
 
@@ -913,7 +980,8 @@ u_rnd_wb1_two_real_noise_channels = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_two_real_noise_channels.update(c_wb1_two_real_4channels)
 
@@ -928,7 +996,8 @@ u_rnd_wb1_two_real_noise_streams = {
   "g_data_file_c": "UNUSED",
   "g_data_file_c_nof_lines": 0,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_two_real_noise_streams.update(c_wb1_two_real_4streams)
 
@@ -943,7 +1012,8 @@ u_act_wb1_complex_chirp_1024 = {
   "g_data_file_c": c_phasor_chirp_1024,
   "g_data_file_c_nof_lines": 204800,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_complex_chirp_1024.update(c_wb1_complex_1024)
 
@@ -958,7 +1028,8 @@ u_act_wb4_complex_chirp_1024 = {
   "g_data_file_c": c_phasor_chirp_1024,
   "g_data_file_c_nof_lines": 204800,
   "g_data_file_nof_lines": 51200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_complex_chirp_1024.update(c_wb4_complex_1024)
 
@@ -973,7 +1044,8 @@ u_act_wb1_complex_chirp_64 = {
   "g_data_file_c": c_phasor_chirp_64,
   "g_data_file_c_nof_lines": 12800,
   "g_data_file_nof_lines": 12800,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_complex_chirp_64.update(c_wb1_complex_64)
 
@@ -988,7 +1060,8 @@ u_act_wb4_complex_chirp_64 = {
   "g_data_file_c": c_phasor_chirp_64,
   "g_data_file_c_nof_lines": 12800,
   "g_data_file_nof_lines": 12800,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_complex_chirp_64.update(c_wb4_complex_64)
 
@@ -1003,7 +1076,8 @@ u_act_wb1_complex_flipped_noise_64 = {
   "g_data_file_c": c_noise_complex_64,
   "g_data_file_c_nof_lines": 3200,
   "g_data_file_nof_lines": 3200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb1_complex_flipped_noise_64.update(c_wb1_complex_flipped_64)
 
@@ -1018,7 +1092,8 @@ u_act_wb4_complex_flipped_noise_64 = {
   "g_data_file_c": c_noise_complex_64,
   "g_data_file_c_nof_lines": 3200,
   "g_data_file_nof_lines": 3200,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_complex_flipped_noise_64.update(c_wb4_complex_flipped_64)
 
@@ -1033,7 +1108,8 @@ u_act_wb4_complex_chirp = {
   "g_data_file_c": c_phasor_chirp,
   "g_data_file_c_nof_lines": 6400,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_complex_chirp.update(c_wb4_complex)
 
@@ -1048,7 +1124,8 @@ u_act_wb4_complex_flipped = {
   "g_data_file_c": c_phasor_chirp,
   "g_data_file_c_nof_lines": 6400,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_act_wb4_complex_flipped.update(c_wb4_complex_flipped)
 
@@ -1063,7 +1140,8 @@ u_rnd_wb4_complex_flipped_channels = {
   "g_data_file_c": c_phasor_chirp,
   "g_data_file_c_nof_lines": 6400,
   "g_data_file_nof_lines": 6400,
-  "g_enable_in_val_gaps": False
+  "g_enable_in_val_gaps": False,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_flipped_channels.update(c_wb4_complex_flipped_channels)
 
@@ -1078,7 +1156,8 @@ u_rnd_wb1_complex_phasor = {
   "g_data_file_c": c_phasor,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_complex_phasor.update(c_wb1_complex)
 
@@ -1093,7 +1172,8 @@ u_rnd_wb4_complex_phasor = {
   "g_data_file_c": c_phasor,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_phasor.update(c_wb4_complex)
 
@@ -1108,7 +1188,8 @@ u_rnd_wb1_complex_fft_shift_phasor = {
   "g_data_file_c": c_phasor,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_complex_fft_shift_phasor.update(c_wb1_complex_fft_shift)
 
@@ -1123,7 +1204,8 @@ u_rnd_wb4_complex_fft_shift_phasor = {
   "g_data_file_c": c_phasor,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_fft_shift_phasor.update(c_wb4_complex_fft_shift)
 
@@ -1138,7 +1220,8 @@ u_rnd_wb1_complex_noise = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_complex_noise.update(c_wb1_complex)
 
@@ -1153,7 +1236,8 @@ u_rnd_wb1_complex_noise_channels = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_complex_noise_channels.update(c_wb1_complex_4channels)
 
@@ -1168,7 +1252,8 @@ u_rnd_wb1_complex_noise_streams = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb1_complex_noise_streams.update(c_wb1_complex_4streams)
 
@@ -1183,7 +1268,8 @@ u_rnd_wb4_complex_noise = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_noise.update(c_wb4_complex)
 
@@ -1198,7 +1284,8 @@ u_rnd_wb4_complex_noise_channels = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_noise_channels.update(c_wb4_complex_4channels)
 
@@ -1213,6 +1300,7 @@ u_rnd_wb4_complex_noise_streams = {
   "g_data_file_c": c_noise_complex,
   "g_data_file_c_nof_lines": 1600,
   "g_data_file_nof_lines": 1600,
-  "g_enable_in_val_gaps": True
+  "g_enable_in_val_gaps": True,
+  "g_twid_file_stem":twid_path_stem
   }
 u_rnd_wb4_complex_noise_streams.update(c_wb4_complex_4streams)

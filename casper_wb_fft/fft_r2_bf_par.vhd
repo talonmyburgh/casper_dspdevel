@@ -36,15 +36,17 @@ use r2sdf_fft_lib.rTwoSDFPkg.all;
 
 entity fft_r2_bf_par is
 	generic(
-		g_stage        : natural        := 3;
-		g_element      : natural        := 1;
+		g_stage        	 : natural        	:= 3;
+		g_element      	 : natural        	:= 1;
 		-- internal pipeline settings
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
-		g_use_variant  : STRING     	:= "4DSP";
-		g_ovflw_behav  : string			:= "WRAP";
-		g_use_round	   : string			:= "ROUND";
-		g_use_dsp      : STRING         := "yes"
+		g_use_variant  	 : STRING     		:= "4DSP";
+		g_ovflw_behav  	 : string			:= "WRAP";
+		g_use_round	   	 : string			:= "ROUND";
+		g_use_dsp      	 : STRING         	:= "yes";
+		g_ram_primitive	 : STRING			:= "auto";
+		g_twid_file_stem : STRING			:= "UNUSED"
 	);
 	port(
 		clk      : in  std_logic;
@@ -258,6 +260,9 @@ begin
 			out_val   	 	=> mul_out_val
 		);
 
+	------------------------------------------------------------------------------
+	-- fetch twiddle coefficient values
+	------------------------------------------------------------------------------
 	weight_re <= wRe(wMap(g_element, g_stage));
 	weight_im <= wIm(wMap(g_element, g_stage));
 

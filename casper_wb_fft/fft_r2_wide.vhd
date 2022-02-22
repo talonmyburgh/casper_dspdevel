@@ -75,12 +75,13 @@ entity fft_r2_wide is
 		g_fft          	 : t_fft          := c_fft; 											--! generics for the FFT
 		g_pft_pipeline 	 : t_fft_pipeline := c_fft_pipeline; 									--! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
 		g_fft_pipeline 	 : t_fft_pipeline := c_fft_pipeline; 									--! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
-		g_use_variant    : string  		  := "4DSP";        										--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+		g_use_variant    : string  		  := "4DSP";        									--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  		  := "yes";        										--! = "yes" or "no"
-		g_ovflw_behav    : string  		  := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  		  := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive  : string  		  := "auto";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive : string  		  := "auto"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_ovflw_behav    : string  		  := "WRAP";        									--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+		g_use_round      : string  		  := "ROUND";        									--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_ram_primitive  : string  		  := "auto";        									--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_fifo_primitive : string  		  := "auto";        									--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+		g_twid_file_stem : string		  := "UNUSED"											--! twid file stem location
 	);
 	port(
 		clken      		 : in  std_logic;													--! Clock enable
@@ -211,7 +212,9 @@ begin
 				g_use_variant  	 => g_use_variant,
 				g_use_dsp	   	 => g_use_dsp,
 				g_ovflw_behav  	 => g_ovflw_behav,
-				g_use_round    	 => g_use_round
+				g_use_round    	 => g_use_round,
+				g_ram_primitive  => g_ram_primitive,
+				g_twid_file_stem => g_twid_file_stem
 			)
 			port map(
 				clken   		 => clken,
@@ -250,7 +253,9 @@ begin
 				g_use_variant  		=> g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
 				g_ovflw_behav  		=> g_ovflw_behav,
-				g_use_round    		=> g_use_round
+				g_use_round    		=> g_use_round,
+				g_ram_primitive		=> g_ram_primitive,
+				g_twid_file_stem	=> g_twid_file_stem
 			)
 			port map(
 				clk        			=> clk,
@@ -286,10 +291,13 @@ begin
 				generic map(
 					g_fft      			=> c_fft_r2_pipe_arr(I), -- generics for the pipelined FFTs
 					g_pipeline 			=> g_pft_pipeline, -- pipeline generics for the pipelined FFTs
+					g_wb_inst			=> I,
 					g_use_variant 		=> g_use_variant,
 					g_use_dsp	   		=> g_use_dsp,
 					g_ovflw_behav  		=> g_ovflw_behav,
-					g_use_round    		=> g_use_round
+					g_use_round    		=> g_use_round,
+					g_ram_primitive		=> g_ram_primitive,
+					g_twid_file_stem	=> g_twid_file_stem
 				)
 				port map(
 					clken   	=> clken,
@@ -301,7 +309,7 @@ begin
 					in_val  	=> in_val,
 					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
 					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					ovflw			=> fft_pipe_ovflw_arr(I),
+					ovflw		=> fft_pipe_ovflw_arr(I),
 					out_val 	=> int_val(I)
 				);
 		end generate;
@@ -331,8 +339,10 @@ begin
 				g_fft      			=> c_fft_r2_par, -- generics for the FFT
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
 				g_use_dsp	   		=> g_use_dsp,
-				g_ovflw_behav  	=> g_ovflw_behav,
-				g_use_round			=> g_use_round
+				g_ovflw_behav  		=> g_ovflw_behav,
+				g_use_round			=> g_use_round,
+				g_ram_primitive		=> g_ram_primitive,
+				g_twid_file_stem	=> g_twid_file_stem
 			)
 			port map(
 				clk        => clk,

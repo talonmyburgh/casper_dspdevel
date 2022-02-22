@@ -18,6 +18,8 @@ entity wideband_fft_top is
 		out_dat_w      : natural := c_fft_out_dat_w;       -- = 13, number of output bits
 		out_gain_w     : natural := c_fft_out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
 		stage_dat_w    : natural := c_fft_stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)
+    twiddle_dat_w  : natural := c_fft_twiddle_dat_w;
+    max_addr_w     : natural := c_max_addr_w;
 		guard_w        : natural := c_fft_guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
                                                     --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
                                                     --   12.3.2], therefore use input guard_w = 2.
@@ -56,7 +58,7 @@ end entity wideband_fft_top;
 
 architecture RTL of wideband_fft_top is
         constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,
-        twiddle_offset,nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,guard_w,guard_enable, 56, 2);
+        twiddle_offset,nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);
         signal in_fft_sosi_arr : t_fft_sosi_arr_in(wb_factor - 1 downto 0);
         signal out_fft_sosi_arr : t_fft_sosi_arr_out(wb_factor - 1 downto 0);
         constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;
