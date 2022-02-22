@@ -33,9 +33,9 @@ function filterbank_top_config(this_block)
   nof_chan = get_param(filterbank_blk_parent,'nof_chan');
   nof_bands = get_param(filterbank_blk_parent,'nof_bands');
   i_d_w = get_param(filterbank_blk_parent,'in_dat_w');
-  str_i_dat_type = sprintf('Fix_%d_0',(str2double(i_d_w)));
+  str_i_dat_type = sprintf('Fix_%s_0',i_d_w);
   o_d_w = get_param(filterbank_blk_parent,'out_dat_w');
-  str_o_dat_type = sprintf('Fix_%d_0',(str2double(o_d_w)));
+  str_o_dat_type = sprintf('Fix_%s_0',o_d_w);
   c_d_w = get_param(filterbank_blk_parent,'coef_dat_w');
   win = get_param(filterbank_blk_parent, 'win');
   fwidth = get_param(filterbank_blk_parent, 'fwidth');
@@ -60,18 +60,18 @@ function filterbank_top_config(this_block)
   %Input signals
   this_block.addSimulinkInport('rst');
   rst_port = this_block.port('rst');
-  rst_port.setType('UFix_1_0');
+  rst_port.setType('Ufix_1_0');
   rst_port.useHDLVector(false);
 
   this_block.addSimulinkInport('in_val');
   in_val_port = this_block.port('in_val');
-  in_val_port.setType('UFix_1_0');
+  in_val_port.setType('Ufix_1_0');
   in_val_port.useHDLVector(false);
 
   %Output signals
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
-  out_val_port.setType('UFix_1_0');
+  out_val_port.setType('Ufix_1_0');
   out_val_port.useHDLVector(false);
 
   %Data in/out signals

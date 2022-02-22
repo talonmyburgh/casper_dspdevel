@@ -18,8 +18,8 @@ entity wideband_fft_top is
 		out_dat_w      : natural := c_fft_out_dat_w;       -- = 13, number of output bits
 		out_gain_w     : natural := c_fft_out_gain_w;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
 		stage_dat_w    : natural := c_fft_stage_dat_w;       -- = 18, data width used between the stages(= DSP multiplier-width)
-      twiddle_dat_w  : natural := c_fft_twiddle_dat_w;
-      max_addr_w     : natural := c_max_addr_w;
+    twiddle_dat_w  : natural := c_fft_twiddle_dat_w;
+    max_addr_w     : natural := c_max_addr_w;
 		guard_w        : natural := c_fft_guard_w;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
                                                     --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
                                                     --   12.3.2], therefore use input guard_w = 2.
