@@ -96,7 +96,7 @@ entity tb_fft_r2_pipe is
   GENERIC(
     -- DUT generics
     --g_fft : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 1, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 1, 0,  32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2);         -- two real inputs A and B
     --g_fft : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
     --g_fft : t_fft := (false, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
@@ -146,6 +146,7 @@ entity tb_fft_r2_pipe is
     
     g_data_file_nof_lines   : natural := 6400;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_twid_file_stem        : string := "UNUSED";
     g_use_variant : STRING := "4DSP";
     g_ovflw_behav : STRING := "WRAP";
     g_use_round   : STRING := "TRUNCATE"
@@ -344,7 +345,8 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_use_round => g_use_round,
+    g_twid_file_stem => g_twid_file_stem
   )
   port map (
     clken    => std_logic'('1'),

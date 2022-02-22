@@ -59,6 +59,9 @@ function casper_wb_fft_config(this_block)
   out_data_type = sprintf('Fix_%s_0', o_d_w);
   o_g_w = get_param(wb_fft_blk_parent,'out_gain_w');
   s_d_w = get_param(wb_fft_blk_parent,'stage_dat_w');
+  t_d_w = get_param(wb_fft_blk_parent,'twid_dat_w');
+  double_t_d_w = str2double(t_d_w);
+  max_addr_w = get_param(wb_fft_blk_parent,'max_addr_w');
   guard_w = get_param(wb_fft_blk_parent,'guard_w');
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
   variant = get_param(wb_fft_blk_parent,'use_variant');
@@ -80,8 +83,16 @@ function casper_wb_fft_config(this_block)
   num_stages = stagecalc(dbl_nof_points);
   ovflwshiftreg_type = sprintf('Ufix_%d_0',num_stages);
 
+  technology_int = 0;
+  if strcmp(technology, 'Xilinx')
+    technology_int = 0;
+  end % if technology Xilinx
+  if strcmp(technology, 'UniBoard')
+    technology_int = 1;
+  end % if technology UniBoard
+
   %Update the vhdl top file with the required ports per wb_factor:
-  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
+  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
 
 %inport declarations
 this_block.addSimulinkInport('rst');
@@ -217,6 +228,8 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('out_dat_w','natural',o_d_w);
   this_block.addGeneric('out_gain_w','natural',o_g_w);
   this_block.addGeneric('stage_dat_w','natural',s_d_w);
+  this_block.addGeneric('twiddle_dat_w','natural',t_d_w);
+  this_block.addGeneric('max_addr_w','natural',max_addr_w);
   this_block.addGeneric('guard_w','natural',guard_w);
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
   this_block.addGeneric('use_variant','String',variant);
@@ -265,10 +278,9 @@ this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mul
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'],'casper_counter_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
-this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
-this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_component_pkg.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_rl_decrease.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_rd.vhd'],'casper_fifo_lib');
+this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_component_pkg.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/tech_fifo_sc.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_fifo/common_fifo_sc.vhd'],'casper_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
@@ -282,10 +294,14 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_paged_ram_r_w.vh
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_round.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_resize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/common_requantize.vhd'],'casper_requantize_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_rom_r_r.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_rom_r.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r_r.vhd'],'casper_ram_lib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
 this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_fft_lib');
-this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'],'r2sdf_fft_lib');
-this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([srcloc   '/twiddlesPkg.vhd'],'r2sdf_fft_lib');
+this_block.addFileToLibrary([srcloc   '/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoWMul.vhd'],'r2sdf_fft_lib');
@@ -306,6 +322,8 @@ this_block.addFileToLibrary([filepath '/../../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd'
 this_block.addFileToLibrary([filepath '/../../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd'],'ip_xpm_fifo_lib');
 this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
 this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_rom_r.vhd'],'ip_xpm_ram_lib');
+this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_rom_r_r.vhd'],'ip_xpm_ram_lib');
 return;
 end
 % ------------------------------------------------------------

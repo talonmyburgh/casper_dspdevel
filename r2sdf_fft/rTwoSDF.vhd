@@ -29,7 +29,6 @@
 library ieee, common_pkg_lib, casper_requantize_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
-use work.twiddlesPkg.all;
 use work.rTwoSDFPkg.all;
 
 --! @dot 
@@ -62,16 +61,19 @@ entity rTwoSDF is
 		-- generics for the FFT    
 		g_nof_chan      : natural := 0; --! Exponent of nr of subbands (0 means 1 subband)
 		g_use_reorder   : boolean := true; --! Reorder output
-		g_in_dat_w      : natural := 12; --! Number of input bits
+		g_in_dat_w      : natural := 14; --! Number of input bits
 		g_out_dat_w     : natural := 18; --! Number of output bits
-		g_stage_dat_w   : natural := 22; --! Number of bits used between the stages
+		g_stage_dat_w   : natural := 18; --! Number of bits used between the stages
 		g_guard_w       : natural := 2; --! Guard bits are used to avoid overflow in single FFT stage   
-		g_nof_points    : natural := 2048; --! N point FFT
+		g_nof_points    : natural := 1024; --! N point FFT
 		-- generics for rTwoSDFStage
-		g_variant       : string  := "3DSP"; --! Use 3dsp or 4dsp for multiplication
+		g_variant       : string  := "4DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_twid_dat_w	: natural := 18;
+		g_max_addr_w	: natural := 9;
+		g_twid_file_stem: string  := c_twid_file_stem;
 		-- pipeline generics
 		g_stage_lat     : natural := 1; --! stage latencies
 		g_weight_lat    : natural := 1;
@@ -147,12 +149,19 @@ begin
 			generic map(
 				g_nof_chan       => g_nof_chan,
 				g_stage          => stage,
+				g_nof_points	 => g_nof_points,
+				g_wb_factor		 => 1,
+				g_wb_inst		 => 0,
 				g_stage_offset   => c_stage_offset,
 				g_twiddle_offset => c_twiddle_offset,
+				g_twid_dat_w	 => g_twid_dat_w,
+				g_max_addr_w	 => g_max_addr_w,
 				g_use_variant    => g_variant,
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
 				g_use_round		 => g_use_round, 
+				g_ram_primitive	 => g_ram_primitive,
+				g_twid_file_stem => g_twid_file_stem,
 				g_pipeline       => pipeline
 			)
 			port map(
