@@ -50,7 +50,6 @@ function casper_wb_fft_config(this_block)
   if dbl_wb_factor<1
        error("Cannot have wideband factor <1"); 
   end 
-  twiddle_offset = get_param(wb_fft_blk_parent,'twiddle_offset');
   nof_points = get_param(wb_fft_blk_parent,'nof_points');
   dbl_nof_points = str2double(nof_points);
   i_d_w = get_param(wb_fft_blk_parent,'in_dat_w');
@@ -222,7 +221,6 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('use_fft_shift','boolean',bool2str(use_fft_shift));
   this_block.addGeneric('use_separate','boolean',bool2str(use_separate));
   this_block.addGeneric('wb_factor','natural',wb_factor);
-  this_block.addGeneric('twiddle_offset','natural',twiddle_offset);
   this_block.addGeneric('nof_points','natural',nof_points);
   this_block.addGeneric('in_dat_w','natural',i_d_w);
   this_block.addGeneric('out_dat_w','natural',o_d_w);
