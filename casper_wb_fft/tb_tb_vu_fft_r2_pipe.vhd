@@ -15,7 +15,6 @@ entity tb_tb_vu_fft_r2_pipe is
         g_use_separate          : boolean;  -- = false for complex input, true for two real inputs
         g_nof_chan              : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
         g_wb_factor             : natural;  -- = default 1, wideband factor
-        g_twiddle_offset        : natural;  -- = default 0, twiddle offset for PFT sections in a wideband FFT
         g_nof_points            : natural;  -- = 1024, N point FFT
         g_in_dat_w              : natural;  -- = 8, number of input bits
         g_out_dat_w             : natural;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
@@ -50,7 +49,7 @@ architecture tb of tb_tb_vu_fft_r2_pipe is
 	SIGNAL test_msg     : STRING(1 to 80);
 	SIGNAL test_pass	: BOOLEAN;
 
-    CONSTANT c_fft_vu : t_fft := (g_use_reorder, g_use_fft_shift, g_use_separate, g_nof_chan, g_wb_factor, g_twiddle_offset, g_nof_points, g_in_dat_w, g_out_dat_w, g_out_gain_w, g_stage_dat_w, g_twid_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2);
+    CONSTANT c_fft_vu : t_fft := (g_use_reorder, g_use_fft_shift, g_use_separate, g_nof_chan, g_wb_factor, g_nof_points, g_in_dat_w, g_out_dat_w, g_out_gain_w, g_stage_dat_w, g_twid_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2);
 
 BEGIN
 	tb_ut : ENTITY work.tb_fft_r2_pipe

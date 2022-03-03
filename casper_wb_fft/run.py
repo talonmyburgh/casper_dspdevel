@@ -184,7 +184,6 @@ if args.par or args.pipe or run_all or args.wide:
         g_use_separate = True,
         g_nof_chan = 0,
         g_wb_factor = 1,
-        g_twiddle_offset = 0,
         g_twid_dat_w = 18,
         g_max_addr_w = 8,
         g_nof_points = 128,
