@@ -109,9 +109,6 @@ architecture str of rTwoSDF is
 	
 	constant c_pipeline_remove_lsb : natural := 0;
 
-	constant c_stage_offset   : natural := 0; -- In "normal" pipelined fft operation the stage offset is 0
-	constant c_twiddle_offset : natural := 0; -- In "normal" pipelined fft operation the twiddle offset is 0
-
 	-- Round last stage output to g_out_dat_w if g_out_dat_w < g_stage_dat_w else resize to g_out_dat_w
 	constant c_out_scale_w : integer := g_stage_dat_w - g_out_dat_w; -- Estimate number of LSBs to round throw away when > 0 or insert when < 0
 
@@ -152,8 +149,6 @@ begin
 				g_nof_points	 => g_nof_points,
 				g_wb_factor		 => 1,
 				g_wb_inst		 => 0,
-				g_stage_offset   => c_stage_offset,
-				g_twiddle_offset => c_twiddle_offset,
 				g_twid_dat_w	 => g_twid_dat_w,
 				g_max_addr_w	 => g_max_addr_w,
 				g_use_variant    => g_variant,
