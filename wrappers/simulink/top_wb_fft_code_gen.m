@@ -251,24 +251,23 @@ end
 function chararr = mknprts(wbfctr)
 
     chararr = strings(4*wbfctr,0);
-    inimchar = "in_im_%c : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);";
-    inrechar = "in_re_%c : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);";
-    outimchar = "out_im_%c : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);";
-    outrechar = "out_re_%c : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);";
+    inimchar = "in_im_%d : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);";
+    inrechar = "in_re_%d : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0);";
+    outimchar = "out_im_%d : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);";
+    outrechar = "out_re_%d : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);";
 
     i=1;
     for j=0:1:wbfctr-1
-        jj = int2str(j);
-        chararr(i,1)=sprintf(inimchar,jj);
+        chararr(i,1)=sprintf(inimchar,j);
         i=i+1;
-        chararr(i,1)=sprintf(inrechar,jj);
+        chararr(i,1)=sprintf(inrechar,j);
         i=i+1;
-        chararr(i,1)=sprintf(outimchar,jj);
+        chararr(i,1)=sprintf(outimchar,j);
         i=i+1;
         if (j ~= wbfctr-1)
-            chararr(i,1)=sprintf(outrechar,jj);
+            chararr(i,1)=sprintf(outrechar,j);
         else
-            chararr(i,1)=sprintf(strip(outrechar,';'),jj);
+            chararr(i,1)=sprintf(strip(outrechar,';'),j);
         end
         i=i+1;
     end
@@ -276,20 +275,19 @@ end
 
 function achararr = mkarch(wbfctr)
     achararr = strings(4*wbfctr,0);
-    imap_re_c = "in_fft_sosi_arr(%c).re <= RESIZE_SVEC(in_re_%c, in_fft_sosi_arr(%c).re'length);";
-    imap_im_c = "in_fft_sosi_arr(%c).im <= RESIZE_SVEC(in_im_%c, in_fft_sosi_arr(%c).im'length);";
-    omap_re_c = "out_re_%c <= RESIZE_SVEC(out_fft_sosi_arr(%c).re,out_dat_w);";
-    omap_im_c = "out_im_%c <= RESIZE_SVEC(out_fft_sosi_arr(%c).im,out_dat_w);";
+    imap_re_c = "in_fft_sosi_arr(%d).re <= RESIZE_SVEC(in_re_%d, in_fft_sosi_arr(%d).re'length);";
+    imap_im_c = "in_fft_sosi_arr(%d).im <= RESIZE_SVEC(in_im_%d, in_fft_sosi_arr(%d).im'length);";
+    omap_re_c = "out_re_%d <= RESIZE_SVEC(out_fft_sosi_arr(%d).re,out_dat_w);";
+    omap_im_c = "out_im_%d <= RESIZE_SVEC(out_fft_sosi_arr(%d).im,out_dat_w);";
     l = 1;
     for m=0:1:wbfctr-1
-        mm = int2str(m);
-        achararr(l,1)=sprintf(imap_re_c,mm,mm,mm);
+        achararr(l,1)=sprintf(imap_re_c,m,m,m);
         l=l+1;
-        achararr(l,1)=sprintf(imap_im_c,mm,mm,mm);
+        achararr(l,1)=sprintf(imap_im_c,m,m,m);
         l=l+1;
-        achararr(l,1)=sprintf(omap_re_c,mm,mm);
+        achararr(l,1)=sprintf(omap_re_c,m,m);
         l=l+1;
-        achararr(l,1)=sprintf(omap_im_c,mm,mm);
+        achararr(l,1)=sprintf(omap_im_c,m,m);
         l=l+1;
    end
 end
