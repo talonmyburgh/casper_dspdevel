@@ -126,8 +126,6 @@ begin
 				g_nof_points	 => g_fft.nof_points,
 				g_wb_factor	     => g_fft.wb_factor,
 				g_wb_inst	     => g_wb_inst,
-            	g_stage_offset   => c_stage_offset,
-				g_twiddle_offset => g_fft.twiddle_offset,
 				g_twid_dat_w	 => g_fft.twiddle_dat_w,
 				g_max_addr_w	 => g_fft.max_addr_w,
 				g_use_variant	 => g_use_variant,
