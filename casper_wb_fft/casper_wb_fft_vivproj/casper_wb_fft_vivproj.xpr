@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="D:/CASPERWORK/Development/casper_dspdevel/casper_wb_fft/casper_wb_fft_vivproj/casper_wb_fft_vivproj.xpr">
+<Project Version="7" Minor="49" Path="D:/CASPERWORK/Development/dspdevel_designs/casper_dspdevel/casper_wb_fft/casper_wb_fft_vivproj/casper_wb_fft_vivproj.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="42eed8497aac428d8794a44a4e77c874"/>
@@ -29,7 +29,7 @@
     <Option Name="ActiveSimSet" Val="sim_1"/>
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="ProjectType" Val="Default"/>
-    <Option Name="IPOutputRepo" Val="$PCACHEDIR/ip"/>
+    <Option Name="IPOutputRepo" Val="D:/CASPERWORK/Development/casper_dspdevel/casper_wb_fft/casper_wb_fft_vivproj/casper_wb_fft_vivproj.cache/ip"/>
     <Option Name="IPCachePermission" Val="read"/>
     <Option Name="IPCachePermission" Val="write"/>
     <Option Name="EnableCoreContainer" Val="FALSE"/>
@@ -364,7 +364,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../r2sdf_fft/new_rTwoWeights.vhd">
+      <File Path="$PPRDIR/../../r2sdf_fft/rTwoWeights.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
