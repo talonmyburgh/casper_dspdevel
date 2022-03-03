@@ -58,7 +58,6 @@ entity tb_fft_wide_unit is
     --    use_separate   : boolean;  -- = false for complex input, true for two real inputs
     --    nof_chan       : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
     --    wb_factor      : natural;  -- = default 1, wideband factor
-    --    twiddle_offset : natural;  -- = default 0, twiddle offset for PFT sections in a wideband FFT
     --    nof_points     : natural;  -- = 1024, N point FFT
     --    in_dat_w       : natural;  -- = 8, number of input bits
     --    out_dat_w      : natural;  -- = 13, number of output bits: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
