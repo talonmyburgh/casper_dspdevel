@@ -350,43 +350,45 @@ function wb_pfb_subsys2bb_knit()
         o_p_h_i = o_basic_prts + 2*(wb_factor*nof_wb_streams);
  
         %create necessary in/out prts and add lines:
-        for i=0:wb_factor*nof_wb_streams-1
-           %add inports/outports and set names to match bb
-            in_im_str_n = sprintf([subsysblk '/in_im_%d'],i);
-            add_block('simulink/Commonly Used Blocks/In1',in_im_str_n);
-            in_im_ph = get_param(in_im_str_n,'PortHandles');
-            add_line(subsysblk,in_im_ph.Outport(1),bbports.Inport(i_p_h_i));
-            i_p_h_i = i_p_h_i+1;
+        for j=0:nof_wb_streams-1
+            for i=0:wb_factor-1
+            %add inports/outports and set names to match bb
+                in_im_str_n = sprintf([subsysblk '/in_im_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/In1',in_im_str_n);
+                in_im_ph = get_param(in_im_str_n,'PortHandles');
+                add_line(subsysblk,in_im_ph.Outport(1),bbports.Inport(i_p_h_i));
+                i_p_h_i = i_p_h_i+1;
 
-            in_re_str_n = sprintf([subsysblk '/in_re_%d'],i);
-            add_block('simulink/Commonly Used Blocks/In1',in_re_str_n);
-            in_re_ph = get_param(in_re_str_n,'PortHandles');
-            add_line(subsysblk,in_re_ph.Outport(1),bbports.Inport(i_p_h_i));
-            i_p_h_i = i_p_h_i+1;
-            
-            fil_im_str_n = sprintf([subsysblk '/fil_im_%d'],i);
-            add_block('simulink/Commonly Used Blocks/Out1',fil_im_str_n);
-            fil_im_ph = get_param(fil_im_str_n,'PortHandles');
-            add_line(subsysblk,bbports.Outport(f_p_h_i),fil_im_ph.Inport(1));
-            f_p_h_i = f_p_h_i+1;
+                in_re_str_n = sprintf([subsysblk '/in_re_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/In1',in_re_str_n);
+                in_re_ph = get_param(in_re_str_n,'PortHandles');
+                add_line(subsysblk,in_re_ph.Outport(1),bbports.Inport(i_p_h_i));
+                i_p_h_i = i_p_h_i+1;
+                
+                fil_im_str_n = sprintf([subsysblk '/fil_im_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/Out1',fil_im_str_n);
+                fil_im_ph = get_param(fil_im_str_n,'PortHandles');
+                add_line(subsysblk,bbports.Outport(f_p_h_i),fil_im_ph.Inport(1));
+                f_p_h_i = f_p_h_i+1;
 
-            fil_re_str_n = sprintf([subsysblk '/fil_re_%d'],i);
-            add_block('simulink/Commonly Used Blocks/Out1',fil_re_str_n);
-            fil_re_ph = get_param(fil_re_str_n,'PortHandles');
-            add_line(subsysblk,bbports.Outport(f_p_h_i),fil_re_ph.Inport(1));
-            f_p_h_i = f_p_h_i+1;
+                fil_re_str_n = sprintf([subsysblk '/fil_re_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/Out1',fil_re_str_n);
+                fil_re_ph = get_param(fil_re_str_n,'PortHandles');
+                add_line(subsysblk,bbports.Outport(f_p_h_i),fil_re_ph.Inport(1));
+                f_p_h_i = f_p_h_i+1;
 
-            out_im_str_n = sprintf([subsysblk '/out_im_%d'],i);
-            add_block('simulink/Commonly Used Blocks/Out1',out_im_str_n);
-            out_im_ph = get_param(out_im_str_n,'PortHandles');
-            add_line(subsysblk,bbports.Outport(o_p_h_i),out_im_ph.Inport(1));
-            o_p_h_i = o_p_h_i+1;
+                out_im_str_n = sprintf([subsysblk '/out_im_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/Out1',out_im_str_n);
+                out_im_ph = get_param(out_im_str_n,'PortHandles');
+                add_line(subsysblk,bbports.Outport(o_p_h_i),out_im_ph.Inport(1));
+                o_p_h_i = o_p_h_i+1;
 
-            out_re_str_n = sprintf([subsysblk '/out_re_%d'],i);
-            add_block('simulink/Commonly Used Blocks/Out1',out_re_str_n);
-            out_re_ph = get_param(out_re_str_n,'PortHandles');
-            add_line(subsysblk,bbports.Outport(o_p_h_i),out_re_ph.Inport(1));
-            o_p_h_i = o_p_h_i+1;
+                out_re_str_n = sprintf([subsysblk '/out_re_str%d_wb%d'],j,i);
+                add_block('simulink/Commonly Used Blocks/Out1',out_re_str_n);
+                out_re_ph = get_param(out_re_str_n,'PortHandles');
+                add_line(subsysblk,bbports.Outport(o_p_h_i),out_re_ph.Inport(1));
+                o_p_h_i = o_p_h_i+1;
+            end
         end
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
