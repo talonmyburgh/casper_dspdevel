@@ -334,32 +334,30 @@ end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
     chararr = strings(6*wbfctr*nof_wb_streams,0);
-    inimchar  = "in_im_str%c_wb%c             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
-    inrechar  = "in_re_str%c_wb%c             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
-    filimchar = "fil_im_str%c_wb%c            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
-    filrechar = "fil_re_str%c_wb%c            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
-    outrechar = "out_re_str%c_wb%c            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
-    outimchar = "out_im_str%c_wb%c            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
+    inimchar  = "in_im_str%d_wb%d             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
+    inrechar  = "in_re_str%d_wb%d             : in  STD_LOGIC_VECTOR(g_fil_in_dat_w -1 DOWNTO 0);";
+    filimchar = "fil_im_str%d_wb%d            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
+    filrechar = "fil_re_str%d_wb%d            : out STD_LOGIC_VECTOR(g_fil_out_dat_w -1 DOWNTO 0);";
+    outrechar = "out_re_str%d_wb%d            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
+    outimchar = "out_im_str%d_wb%d            : out STD_LOGIC_VECTOR(g_fft_out_dat_w -1 DOWNTO 0);";
 
     i=1;
     for k=0:1:nof_wb_streams-1
         for j=0:1:wbfctr-1
-            jj = int2str(j);
-            kk = int2str(k);
-            chararr(i,1)=sprintf(inimchar,kk,jj);
+            chararr(i,1)=sprintf(inimchar,k,j);
             i=i+1;
-            chararr(i,1)=sprintf(inrechar,kk,jj);
+            chararr(i,1)=sprintf(inrechar,k,j);
             i=i+1;
-            chararr(i,1)=sprintf(filimchar,kk,jj);
+            chararr(i,1)=sprintf(filimchar,k,j);
             i=i+1;
-            chararr(i,1)=sprintf(filrechar,kk,jj);
+            chararr(i,1)=sprintf(filrechar,k,j);
             i=i+1;
-            chararr(i,1)=sprintf(outimchar,kk,jj);
+            chararr(i,1)=sprintf(outimchar,k,j);
             i=i+1;
             if (j ~= wbfctr-1)
-                chararr(i,1)=sprintf(outrechar,kk,jj);
+                chararr(i,1)=sprintf(outrechar,k,j);
             else
-                chararr(i,1)=sprintf(strip(outrechar,';'),kk,jj);
+                chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
             end
             i=i+1;
         end
@@ -368,28 +366,27 @@ end
 
 function achararr = mkarch(wbfctr,nof_wb_streams)
     achararr = strings(6*wbfctr*nof_wb_streams,0);
-    imap_re_c = "in_fil_sosi_arr(%d).re <= in_re_str%c_wb%c;";
-    imap_im_c = "in_fil_sosi_arr(%d).im <= in_im_str%c_wb%c;";
-    fmap_re_c = "fil_re_str%c_wb%c <= out_fil_sosi_arr(%d).re;";
-    fmap_im_c = "fil_im_str%c_wb%c <= out_fil_sosi_arr(%d).im;";
-    omap_re_c = "out_re_str%c_wb%c <= out_fft_sosi_arr(%d).re;";
-    omap_im_c = "out_im_str%c_wb%c <= out_fft_sosi_arr(%d).im;";
+    imap_re_c = "in_fil_sosi_arr(%d).re <= in_re_str%d_wb%d;";
+    imap_im_c = "in_fil_sosi_arr(%d).im <= in_im_str%d_wb%d;";
+    fmap_re_c = "fil_re_str%d_wb%d <= out_fil_sosi_arr(%d).re;";
+    fmap_im_c = "fil_im_str%d_wb%d <= out_fil_sosi_arr(%d).im;";
+    omap_re_c = "out_re_str%d_wb%d <= out_fft_sosi_arr(%d).re;";
+    omap_im_c = "out_im_str%d_wb%d <= out_fft_sosi_arr(%d).im;";
     l = 1;
     for n=0:1:nof_wb_streams-1
         for m=0:1:wbfctr-1
-            mm = int2str(m);
-            nn = int2str(n);
-            achararr(l,1)=sprintf(imap_re_c,n*m,nn,mm);
+            arr_index = (n+1)*m;
+            achararr(l,1)=sprintf(imap_re_c,arr_index,n,m);
             l=l+1;
-            achararr(l,1)=sprintf(imap_im_c,n*m,nn,mm);
+            achararr(l,1)=sprintf(imap_im_c,arr_index,n,m);
             l=l+1;
-            achararr(l,1)=sprintf(fmap_re_c,nn,mm,n*m);
+            achararr(l,1)=sprintf(fmap_re_c,n,m,arr_index);
             l=l+1;
-            achararr(l,1)=sprintf(fmap_im_c,nn,mm,n*m);
+            achararr(l,1)=sprintf(fmap_im_c,n,m,arr_index);
             l=l+1;
-            achararr(l,1)=sprintf(omap_re_c,nn,mm,n*m);
+            achararr(l,1)=sprintf(omap_re_c,n,m,arr_index);
             l=l+1;
-            achararr(l,1)=sprintf(omap_im_c,nn,mm,n*m);
+            achararr(l,1)=sprintf(omap_im_c,n,m,arr_index);
             l=l+1;
         end
     end
