@@ -201,11 +201,8 @@ FFT parameters
 | Wideband       | Natural | 4      | The number that defines the wideband factor. It defines the    |
 | factor         |         |        | number of parallel pipelined FFTs.                             |
 +----------------+---------+--------+----------------------------------------------------------------+
-| Twiddle        | Natural | 0      | The twiddle offset is used for the pipelined sections in the   |
-| offsets        |         |        | wideband configuration.                                        |
-+----------------+---------+--------+----------------------------------------------------------------+
 | Number of      | Natural | 1024   | The number of points of the FFT.                               |
-| points         |         |        |                                                                |
+| points         |         |        | The number of points is :math:`2^{nof\_points}`.                                                               |
 +----------------+---------+--------+----------------------------------------------------------------+
 | Extra control  | Boolean | false  | Checking this box enables the usage of addition signals. See   |
 | signals        |         |        | :ref:`_wb_arch` for detail on these ports.                     |
