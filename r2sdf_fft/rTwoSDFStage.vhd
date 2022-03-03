@@ -31,8 +31,6 @@ entity rTwoSDFStage is
 		g_nof_points	 : natural 		  := 32;				--! Number of points
 		g_wb_factor		 : natural 		  := 1;				    --! WB factor of a wideband FFT
 		g_wb_inst		 : natural 		  := 0; 				--! WB instance index. Altered for WB_FACTOR > 1
-		g_stage_offset   : natural        := 0; 				--! The Stage offset: 0 for normal FFT. Other than 0 in wideband FFT
-		g_twiddle_offset : natural        := 0; 				--! The twiddle offset: 0 for normal FFT. Other than 0 in wideband FFT
 		g_twid_dat_w     : natural		  := 18;				--! The coefficient data width
 		g_max_addr_w	 : natural		  := 10;				--! Address width above which to implement in block/ultra ram
 		g_use_variant    : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
@@ -155,10 +153,7 @@ begin
 			g_stage          	=> g_stage,
 			g_wb_factor		 	=> g_wb_factor,
 			g_wb_inst		 	=> g_wb_inst,
-			g_twid_file_stem  => c_coefs_file_stem,
-			g_twiddle_offset 	=> g_twiddle_offset,
-			g_max_addr_w	 	=> g_max_addr_w,
-			g_stage_offset   	=> g_stage_offset,
+			g_twid_file_stem  	=> c_coefs_file_stem,
 			g_ram_primitive	 	=> c_ram_primitive,
 			g_ram			 	=> c_ram
 		)
