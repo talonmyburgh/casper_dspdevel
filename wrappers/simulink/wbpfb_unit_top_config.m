@@ -155,16 +155,18 @@ if xtra_dat_sigs
 end
 
 %Generate im, re per wb_factor*nof_wb_streams:
-for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
-  in_im_port = sprintf('in_im_%d',i);
-  this_block.addSimulinkInport(in_im_port);
-  in_im = this_block.port(in_im_port);
-  in_im.setType(in_fil_data_type);
-  
-  in_re_port = sprintf('in_re_%d',i);
-  this_block.addSimulinkInport(in_re_port);
-  in_re = this_block.port(in_re_port);
+for i=0:dbl_nof_wb_streams-1
+  for j=0:dbl_wb_factor-1
+    in_im_port = sprintf('in_im_str%d_wb%d',i,j);
+    this_block.addSimulinkInport(in_im_port);
+    in_im = this_block.port(in_im_port);
+    in_im.setType(in_fil_data_type);
+    
+    in_re_port = sprintf('in_re_str%d_wb%d',i,j);
+    this_block.addSimulinkInport(in_re_port);
+    in_re = this_block.port(in_re_port);
   in_re.setType(in_fil_data_type);
+  end
 end
 
 % outport declarations
@@ -236,28 +238,32 @@ if xtra_dat_sigs
   out_channel_port.setType(channel_data_type);
 end
 
-for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
-  fil_im_port = sprintf('fil_im_%d',i);
-  this_block.addSimulinkOutport(fil_im_port);
-  fil_im = this_block.port(fil_im_port);
-  fil_im.setType(out_fil_data_type);
+for i=0:dbl_nof_wb_streams-1
+  for j=0:dbl_wb_factor -1
+    fil_im_port = sprintf('fil_im_str%d_wb%d',i,j);
+    this_block.addSimulinkOutport(fil_im_port);
+    fil_im = this_block.port(fil_im_port);
+    fil_im.setType(out_fil_data_type);
 
-  fil_re_port = sprintf('fil_re_%d',i);
-  this_block.addSimulinkOutport(fil_re_port);
-  fil_re = this_block.port(fil_re_port);
-  fil_re.setType(out_fil_data_type);
+    fil_re_port = sprintf('fil_re_str%d_wb%d',i,j);
+    this_block.addSimulinkOutport(fil_re_port);
+    fil_re = this_block.port(fil_re_port);
+    fil_re.setType(out_fil_data_type);
+  end
 end
 
-for i=0:dbl_wb_factor*dbl_nof_wb_streams-1
-  out_im_port = sprintf('out_im_%d',i);
-  this_block.addSimulinkOutport(out_im_port);
-  out_im = this_block.port(out_im_port);
-  out_im.setType(out_fft_data_type);
-  
-  out_re_port = sprintf('out_re_%d',i);
-  this_block.addSimulinkOutport(out_re_port);
-  out_re = this_block.port(out_re_port);
-  out_re.setType(out_fft_data_type);
+for i=0:dbl_nof_wb_streams-1
+  for j=0:dbl_wb_factor-1
+    out_im_port = sprintf('out_im_str%d_wb%d',i,j);
+    this_block.addSimulinkOutport(out_im_port);
+    out_im = this_block.port(out_im_port);
+    out_im.setType(out_fft_data_type);
+    
+    out_re_port = sprintf('out_re_str%d_wb%d',i,j);
+    this_block.addSimulinkOutport(out_re_port);
+    out_re = this_block.port(out_re_port);
+    out_re.setType(out_fft_data_type);
+  end
 end
 
   % -----------------------------
