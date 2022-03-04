@@ -1,6 +1,6 @@
 """
 This script is designed to generate one memory file per stage of the pipelined fft. The file stem is returned and the HDL will use the parameters g_stage,
-g_stage_offset and g_twiddle_offset to uniquely initialise each stages coefficients. The file stem returned should be placed in the rTwoSDFPkg for constant
+and g_wb_factor to uniquely initialise each stages coefficients. The file stem returned should be placed in the rTwoSDFPkg for constant
 c_twid_file_stem. 
 """
 import sys
@@ -34,7 +34,7 @@ def run(argv):
         verbose = False
         gen_files = True
     
-    usage_str = 'USAGE: sdf_fft_twid_create.py -o <output path> -g <gen files> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -V <verbos>\n'
+    usage_str = 'USAGE: sdf_fft_twid_create.py -o <output path> -g <gen files> -p <nof points> -w <wb factor> -c <coef width> -v <vendor - 0 Xil, 1 Alt> -V <verbose>\n'
 
     try:
         opts, _ = getopt.getopt(sys.argv[1:], 'ho:g:p:w:c:v:V:')

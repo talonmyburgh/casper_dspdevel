@@ -52,7 +52,8 @@ end
       error("Cannot have wideband factor <1"); 
  end
  nof_points = get_param(wb_pfb_blk_parent,'nof_points');
- dbl_nof_points = str2double(nof_points);
+ dbl_nof_points = 2^str2double(nof_points);
+ nof_points = num2str(dbl_nof_points);
  fil_i_d_w = get_param(wb_pfb_blk_parent,'fil_in_dat_w');
  in_fil_data_type = sprintf('Fix_%s_0', fil_i_d_w);
  fft_o_d_w = get_param(wb_pfb_blk_parent,'fft_out_dat_w');
