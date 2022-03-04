@@ -51,7 +51,8 @@ function casper_wb_fft_config(this_block)
        error("Cannot have wideband factor <1"); 
   end 
   nof_points = get_param(wb_fft_blk_parent,'nof_points');
-  dbl_nof_points = str2double(nof_points);
+  dbl_nof_points = 2^str2double(nof_points);
+  nof_points = num2str(dbl_nof_points);
   i_d_w = get_param(wb_fft_blk_parent,'in_dat_w');
   in_data_type = sprintf('Fix_%s_0', i_d_w);
   o_d_w = get_param(wb_fft_blk_parent,'out_dat_w');
