@@ -51,7 +51,7 @@ entity tb_fft_wide_unit is
     g_use_sinNoise_file  : boolean  := false;  
     g_use_impulse_file   : boolean  := false;
     g_use_2xreal_inputs  : boolean  := false;  -- Set to true for running the two-real input variants  
-    g_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 16, 18, 0, 18, 2, true, 56, 2) 
+    g_fft : t_fft := (true, false, false, 0, 4, 1024, 16, 18, 0, 18, 2, true, 56, 2) 
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
