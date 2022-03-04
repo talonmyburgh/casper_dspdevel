@@ -62,6 +62,25 @@ end entity fft_reorder_sepa_pipe;
 
 architecture rtl of fft_reorder_sepa_pipe is
 
+    -- we translate the generics to these constants 
+    -- as some are incompatible. We choose combinations
+    -- that give the correct output
+    constant c_bit_flip             : boolean := g_bit_flip;
+    constant c_fft_shift            : boolean := g_fft_shift;
+    constant c_dont_flip_channels   : boolean := g_dont_flip_channels;
+    constant c_separate             : boolean := g_separate;
+    constant c_in_place             : boolean := g_in_place;
+
+    -- 
+    function f_in_place(separate: boolean; nof_chan: natural; in_place: boolean)
+                        return boolean is
+    begin
+        if separate = true and nof_chan > 0 then
+            return false;        
+        else return in_place;
+        end if;
+    end function;
+
 	constant c_nof_channels : natural := 2**g_nof_chan;
 	constant c_dat_w        : natural := in_dat'length;
 	constant c_page_size    : natural := g_nof_points * c_nof_channels;
@@ -73,23 +92,23 @@ architecture rtl of fft_reorder_sepa_pipe is
     constant c_buf_latency : natural := 1;
 
     -- goodness VHDL is verbose
-    function number_pages(in_place_reorder: boolean)
+    function f_number_pages(in_place_reorder: boolean)
         return natural is
     begin
         if in_place_reorder = true then return 1;
         else return 2;
         end if;    
     end function;
-    constant c_nof_pages : natural := number_pages(g_in_place);
+    constant c_nof_pages : natural := f_number_pages(g_in_place);
   
-    function rd_start_page(in_place_reorder: boolean)
+    function f_rd_start_page(in_place_reorder: boolean)
         return natural is
     begin
         if in_place_reorder = true then return 0;
         else return 1;
         end if;    
     end function;
-    constant c_rd_start_page : natural := rd_start_page(g_in_place);
+    constant c_rd_start_page : natural := f_rd_start_page(g_in_place);
   
 	signal adr_points_cnt : std_logic_vector(c_adr_points_w - 1 downto 0);
 	signal adr_chan_cnt   : std_logic_vector(c_adr_chan_w - 1 downto 0);
@@ -98,7 +117,7 @@ architecture rtl of fft_reorder_sepa_pipe is
     -- buffer write addressing
     signal base_counter, out_counter        : std_logic_vector(c_adr_points_w downto 0);      -- counter which serves as a base
     signal linear_counter                   : std_logic; --when doing in place reorder every second spectrum 
-    signal up, down, down_d                 : std_logic; --housekeeping for in place buffer
+    signal down, down_d                     : std_logic; --housekeeping for in place buffer
     signal first_down, first_down_d         : std_logic; --first down address is special
     signal adr_up, adr_down                 : std_logic_vector(c_adr_points_w - 1 downto 0);  -- base for in place buffer
     -- we build up the write address depending on whether we are separating, reordering, shifting
@@ -186,11 +205,11 @@ begin
         );
                    
     -- if separating and/or reordering address alternates between
-    -- simple linear counter and bit reversed up/down counter    
+    -- simple linear counter and mangled counter    
     linear_counter <= base_counter(c_adr_points_w);
     
     down <= base_counter(0); -- are we using the down counter or up when separating
-    up <= not(down);
+
     -- delay down signal till separate unit as need it to choose data
     u_down_d : entity common_components_lib.common_pipeline_sl
     generic map(
@@ -230,11 +249,11 @@ begin
         
     adr_points_cnt <= base_counter(c_adr_points_w - 1 downto 0);    
     
-    gen_in_place_adr_sep: if g_in_place = true generate
-        gen_complex : if g_separate = false generate
+    gen_in_place_adr_sep: if c_in_place = true generate
+        gen_complex : if c_separate = false generate
             adr_sep <= adr_points_cnt;    
         end generate;
-        gen_two_real : if g_separate = true generate
+        gen_two_real : if c_separate = true generate
             adr_sep <= adr_down when down = '1' else
                         adr_up;
         end generate;
@@ -244,50 +263,50 @@ begin
         adr <= adr_points_cnt when linear_counter = '0' else
             adr_shift;        
     end generate;
-    gen_not_in_place_adr_sep : if g_in_place = false generate
+    gen_not_in_place_adr_sep : if c_in_place = false generate
         adr_sep <= adr_points_cnt;    
         adr <= adr_shift;
     end generate;
     
     -- if we are reordering the spectrum then bit reverse the separation address
-    gen_bit_flip_adr_reo : if g_bit_flip = true generate
+    gen_bit_flip_adr_reo : if c_bit_flip = true generate
         adr_reo <= flip(adr_sep);
     end generate;
-    gen_no_bit_flip_adr_reo : if g_bit_flip = false generate
+    gen_no_bit_flip_adr_reo : if c_bit_flip = false generate
         adr_reo <= adr_sep;
     end generate;
         
-    -- this seems to rotate the output spectrum by half
-    gen_shifts_adr_shift : if g_separate = false generate
-        gen_no_fft_shift_sac : if g_fft_shift = false generate
+    -- rotate the output spectrum by half
+    gen_shifts_adr_shift : if c_separate = false generate
+        gen_no_fft_shift_sac : if c_fft_shift = false generate
             adr_shift <= adr_reo;
         end generate;
-        gen_fft_shift_sac : if g_fft_shift = true generate
+        gen_fft_shift_sac : if c_fft_shift = true generate
             adr_shift <= fft_shift(adr_reo);
         end generate;
     end generate;
-    gen_no_shifts_adr_shift : if g_separate = true generate
+    gen_no_shifts_adr_shift : if c_separate = true generate
         adr_shift <= adr_reo;
     end generate;    
     
     -- final write address depends on whether we are outputting channels as they came in
     -- or separating them in time    
-    gen_bit_flip_spectrum_and_channels : if g_dont_flip_channels = false generate
+    gen_bit_flip_spectrum_and_channels : if c_dont_flip_channels = false generate
         buf_wr_adr <= adr_chan_cnt & adr;
     end generate;
-    gen_bit_flip_spectrum_only : if g_dont_flip_channels = true generate
+    gen_bit_flip_spectrum_only : if c_dont_flip_channels = true generate
         buf_wr_adr <= adr & adr_chan_cnt;
     end generate; 
     
     -- we never turn pages when doing in place
-    gen_in_place_buf_next_page : if g_in_place = true generate         
+    gen_in_place_buf_next_page : if c_in_place = true generate         
         buf_wr_next_page <= '0';
         buf_rd_next_page <= '0';
     end generate;
     
-    adr_tot_cnt <= adr_chan_cnt & adr_points_cnt;
+    adr_tot_cnt <= adr_points_cnt & adr_chan_cnt;
     next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' else '0';
-    gen_not_in_place_buf_next_page : if g_in_place = false generate
+    gen_not_in_place_buf_next_page : if c_in_place = false generate
         buf_wr_next_page <= next_page;
         buf_rd_next_page <= next_page;
     end generate;    
@@ -419,7 +438,7 @@ begin
 
     rd_en <= r.rd_en;
 
-    gen_separate : if g_separate = true generate
+    gen_separate : if c_separate = true generate
         -- The read address toggles between the upcounter and the downcounter.
         -- Modulo N addressing is done with the TO_UVEC function.
         rd_adr_up   <= TO_UVEC(r.count_up, c_adr_points_w + 1); -- eg.    0 .. 512
@@ -428,7 +447,7 @@ begin
                     TO_UVEC(r.count_chan, c_adr_chan_w) & rd_adr_down(c_adr_points_w - 1 DOWNTO 0);
         
         -- if not in place reorder take the input directly from output of buffer
-        gen_not_in_place_reorder : if g_in_place = false generate
+        gen_not_in_place_reorder : if c_in_place = false generate
             sep_in_dat <= buf_rd_dat;
             sep_in_val <= buf_rd_val;
         end generate;
@@ -436,7 +455,7 @@ begin
         -- if inplace reorder, if we read a 'down' address, it is offset by one value
         -- and the first 'down' value is also special, reads from 'up' addresses are
         -- not delayed though 
-        gen_in_place_reorder : if g_in_place = true generate
+        gen_in_place_reorder : if c_in_place = true generate
         
             -- When separating two real streams we need to combine the output data
             -- from the address counter going up, with the data from the down address counter
@@ -484,18 +503,19 @@ begin
     -- If the separate functionality is disabled the 
     -- read address is received from the address counter and
     -- the output signals are directly driven. 
-    gen_no_separate : if g_separate = false generate
+    gen_no_separate : if c_separate = false generate
         rd_adr  <= TO_UVEC(r.count_up, c_adr_tot_w);
         sep_out_dat_i <= buf_rd_dat;
         sep_out_val_i <= buf_rd_val;
     end generate;
 
     -- when doing things in place, read transaction is same as write
-    gen_in_place_rd_adr : if g_in_place = true generate
+    -- except for possibly channel order if reading channels out differently
+    gen_in_place_rd_adr : if c_in_place = true generate
         buf_rd_adr <= buf_wr_adr;
         buf_rd_en <= buf_wr_en;
     end generate;
-    gen_not_in_place_rd_adr : if g_in_place = false generate
+    gen_not_in_place_rd_adr : if c_in_place = false generate
         buf_rd_adr <= rd_adr;
         buf_rd_en <= rd_en;
     end generate;
@@ -515,11 +535,11 @@ begin
     count_out_en <= not(not_first_spectrum) and sep_out_val_i;        
 
     not_first_spectrum <= out_counter(c_adr_points_w);       
-    gen_in_place_reorder : if g_in_place = true generate
+    gen_in_place_reorder : if c_in_place = true generate
         out_val <= sep_out_val_i and not_first_spectrum;        
     end generate;
     
-    gen_not_in_place_reorder : if g_in_place = false generate
+    gen_not_in_place_reorder : if c_in_place = false generate
         out_val <= sep_out_val_i;        
     end generate;
     
