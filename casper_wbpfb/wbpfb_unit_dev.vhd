@@ -1,6 +1,327 @@
 --------------------------------------------------------------------------------------------------------------
---Modification of the wpfb_unit_dev module by Talon Myburgh
+--Modification of the wpfb_unit_dev module by Talon Myburgh.
+--This is the current PFB top module. It differs from the wbpfb_unit.vhd module by not using the 
+--wideband_fft control module.
 --------------------------------------------------------------------------------------------------------------
+-- Description:
+--
+-- This WPFB unit connects an incoming array of streaming interfaces to the
+-- wideband pft + fft.
+-- The output of the wideband fft is connected to a set of subband statistics
+-- units. The statistics can be read via the memory mapped interface.
+-- A control unit takes care of the correct composition of the control of the 
+-- output streams regarding sop, eop, sync, bsn, err.
+--
+-- The wpfb unit can handle a wideband factor >= 1 (g_wpfb.wb_factor) or
+-- a narrowband factor >= 1 (2**g_wpfb.nof_chan).
+-- . For wb_factor = 1 the wpfb_unit uses fft_r2_pipe
+-- . For wb_factor > 1 the wpfb_unit uses fft_r2_wide
+-- . For wb_factor >= 1 the wpfb_unit supports nof_chan >= 0, even though the
+--   concept of channels is typically not useful when wb_factor > 1.
+-- . The wpfb_unit does support use_reorder.
+-- . The wpfb_unit does support use_separate.
+-- . The wpfb_unit does support input flow control with invalid gaps in the
+--   input.
+--
+-- . g_coefs_file_prefix:
+--   The g_coefs_file_prefix points to the location where the files
+--   with the initial content for the coefficients memories are located and
+--   is described in fil_ppf_wide.vhd.
+--
+-- . fft_out_gain_w
+--   For two real input typically fft_out_gain_w = 1 is used to compensate for
+--   the divide by 2 in the separate function that is done because real input
+--   frequency bins have norm 0.5. For complex input typically fft_out_gain_w
+--   = 0, because the complex bins have norm 1.
+--
+-- . g_dont_flip_channels:
+--   True preserves channel interleaving, set by g_wpfb.nof_chan>0, of the FFT
+--   output when g_bit_flip=true to reorder the FFT output.
+--   The g_dont_flip_channels applies for both complex input and two_real
+--   input FFT. The g_dont_flip_channels is only implemented for the pipelined
+--   fft_r2_pipe, because for g_wpfb.wb_factor=1 using g_wpfb.nof_chan>0 makes
+--   sense, while for the fft_r2_wide with g_wpfb.wb_factor>1 using input
+--   multiplexing via g_wpfb.nof_chan>0 makes less sense.
+--
+-- The reordering to the fil_ppf_wide is done such that the FIR filter
+-- coefficients are reused. The same filter coefficients are used for all
+-- streams. The filter has real coefficients, because the filterbank
+-- channels are symmetrical in frequency. The real part and the imaginary
+-- part are filtered independently and also use the same real FIR
+-- coefficients.
+--
+-- Note that:
+-- . The same P of all streams are grouped the in filter and all P per
+--   stream are grouped in the FFT. Hence the WPFB input is grouped per
+--   P for all wideband streams to allow FIR coefficients reuse per P
+--   for all wideband streams. The WPFB output is grouped per wideband
+--   stream to have all P together.
+--
+-- . The wideband time index t is big-endian inside the prefilter and
+--   little-endian inside the FFT. 
+--   When g_big_endian_wb_in=true then the WPFB input must be in big-endian
+--   format, else in little-endian format.
+--   For little-endian time index t increments in the same direction as the
+--   wideband factor index P, so P = 0, 1, 2, 3 --> t0, t1, t2, t3.
+--   For big-endian the time index t increments in the opposite direction of
+--   the wideband factor index P, so P = 3, 2, 1, 0 --> t0, t1, t2, t3.
+--   The WPFB output is fixed little-endian, so with frequency bins in
+--   incrementing order. However the precise frequency bin order depends
+--   on the reorder generics.
+--
+-- When wb_factor = 4 and nof_wb_streams = 2 the mapping is as follows using 
+-- the array notation:
+--
+--   . I = array index
+--   . S = stream index of a wideband stream
+--   . P = wideband factor index
+--   . t = time index
+--
+--                    parallel                           serial   type
+--   in_sosi_arr      [nof_streams][wb_factor]           [t]      cint
+--                                               
+--   fil_in_arr       [wb_factor][nof_streams][complex]  [t]       int
+--   fil_out_arr      [wb_factor][nof_streams][complex]  [t]       int
+--                                               
+--   fil_sosi_arr     [nof_streams][wb_factor]           [t]      cint
+--   fft_in_re_arr    [nof_streams][wb_factor]           [t]       int
+--   fft_in_im_arr    [nof_streams][wb_factor]           [t]       int
+--   fft_out_re_arr   [nof_streams][wb_factor]           [bin]     int
+--   fft_out_im_arr   [nof_streams][wb_factor]           [bin]     int
+--   fft_out_sosi_arr [nof_streams][wb_factor]           [bin]    cint
+--   pfb_out_sosi_arr [nof_streams][wb_factor]           [bin]    cint with sync, BSN, sop, eop
+--   out_sosi_arr     [nof_streams][wb_factor]           [bin]    cint with sync, BSN, sop, eop
+-- 
+--   in_sosi_arr  | fil_in_arr  | fft_in_re_arr | fft_out_re_arr  
+--   fil_sosi_arr | fil_out_arr | fft_in_im_arr | fft_out_im_arr  
+--                |             |               | fft_out_sosi_arr
+--                |             |               | pfb_out_sosi_arr
+--                |             |               |     out_sosi_arr
+--                |             |               |
+--    I  S P t    |   I  P S    | I  S P t      | I  S P          
+--    7  1 3 0    |  15  3 1 IM | 7  1 3 3      | 7  1 3          
+--    6  1 2 1    |  14  3 1 RE | 6  1 2 2      | 6  1 2          
+--    5  1 1 2    |  13  3 0 IM | 5  1 1 1      | 5  1 1          
+--    4  1 0 3    |  12  3 0 RE | 4  1 0 0      | 4  1 0          
+--    3  0 3 0    |  11  2 1 IM | 3  0 3 3      | 3  0 3          
+--    2  0 2 1    |  10  2 1 RE | 2  0 2 2      | 2  0 2          
+--    1  0 1 2    |   9  2 0 IM | 1  0 1 1      | 1  0 1          
+--    0  0 0 3    |   8  2 0 RE | 0  0 0 0      | 0  0 0          
+--                |   7  1 1 IM |               |                 
+--           ^    |   6  1 1 RE |        ^      |                 
+--         big    |   5  1 0 IM |      little   |                 
+--         endian |   4  1 0 RE |      endian   |                 
+--                |   3  0 1 IM |               |                 
+--                |   2  0 1 RE |               |                 
+--                |   1  0 0 IM |               |                 
+--                |   0  0 0 RE |               |                 
+--
+-- The WPFB output are the frequency bins per transformed block:
+--   . subbands, in case ot two real input or
+--   . channels, in case of complex input
+--
+-- The order of the WPFB output depends on the g_fft fields:
+--   . wb_factor
+--   . use_reorder
+--   . use_fft_shift
+--   . use_separate
+-- 
+-- The frequency bin order at the output is obtained with reg_out_bin
+-- in the test bench tb_wpfb_unit_dev.vhd.
+--
+-- Output examples:
+--
+-- Frequency bins:
+--     fs = sample frequency
+--     Bb = fs/nof_points = bin bandwidth
+--
+--     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+--     ^                                           ^  ^  ^                                          ^
+--     <--------- negative bin frequencies ---------> 0 <---------- positive bin frequencies ------->
+--     -fs/2                                      -Bb 0 +Bb                                        +fs/2-Bb
+--
+-- I) Wideband wb_factor = 4
+-- 1) Two real inputs:
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order         . nof_streams   = 2            
+--     7  1 3    12 12 13 13 14 14 15 15     . wb_factor     = 4                 
+--     6  1 2     8  8  9  9 10 10 11 11     . nof_points    = 32               
+--     5  1 1     4  4  5  5  6  6  7  7     . use_reorder   = true            
+--     4  1 0     0  0  1  1  2  2  3  3     . use_fft_shift = false         
+--     3  0 3    12 12 13 13 14 14 15 15     . use_separate  = true           
+--     2  0 2     8  8  9  9 10 10 11 11       - input A via in_sosi_arr().re
+--     1  0 1     4  4  5  5  6  6  7  7       - input B via in_sosi_arr().im
+--     0  0 0     0  0  1  1  2  2  3  3
+--      input     A  B  A  B  A  B  A  B
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order    
+--     7  1 3    12 12 13 13 14 14 15 15 12 12 13 13 14 14 15 15
+--     6  1 2     8  8  9  9 10 10 11 11  8  8  9  9 10 10 11 11
+--     5  1 1     4  4  5  5  6  6  7  7  4  4  5  5  6  6  7  7
+--     4  1 0     0  0  1  1  2  2  3  3  0  0  1  1  2  2  3  3
+--     3  0 3    12 12 13 13 14 14 15 15 12 12 13 13 14 14 15 15
+--     2  0 2     8  8  9  9 10 10 11 11  8  8  9  9 10 10 11 11
+--     1  0 1     4  4  5  5  6  6  7  7  4  4  5  5  6  6  7  7
+--     0  0 0     0  0  1  1  2  2  3  3  0  0  1  1  2  2  3  3
+--      input     A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B
+--    channel     0....................0  1....................1
+--
+-- 2a) Complex input with fft_shift:
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order         . nof_streams   = 2                    
+--     7  1 3    24 25 26 27 28 29 30 31     . wb_factor     = 4                 
+--     6  1 2    16 17 18 19 20 21 22 23     . nof_points    = 32               
+--     5  1 1     8  9 10 11 12 13 14 15     . use_reorder   = true                         
+--     4  1 0     0  1  2  3  4  5  6  7     . use_fft_shift = true 
+--     3  0 3    24 25 26 27 28 29 30 31     . use_separate  = false                       
+--     2  0 2    16 17 18 19 20 21 22 23       - complex input via in_sosi_arr().re and im
+--     1  0 1     8  9 10 11 12 13 14 15
+--     0  0 0     0  1  2  3  4  5  6  7
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order    
+--     7  1 3    24 25 26 27 28 29 30 31 24 25 26 27 28 29 30 31
+--     6  1 2    16 17 18 19 20 21 22 23 16 17 18 19 20 21 22 23
+--     5  1 1     8  9 10 11 12 13 14 15  8  9 10 11 12 13 14 15 
+--     4  1 0     0  1  2  3  4  5  6  7  0  1  2  3  4  5  6  7
+--     3  0 3    24 25 26 27 28 29 30 31 24 25 26 27 28 29 30 31
+--     2  0 2    16 17 18 19 20 21 22 23 16 17 18 19 20 21 22 23
+--     1  0 1     8  9 10 11 12 13 14 15  8  9 10 11 12 13 14 15
+--     0  0 0     0  1  2  3  4  5  6  7  0  1  2  3  4  5  6  7
+--    channel     0....................0  1....................1
+--
+-- 2b) Complex input with reorder, but no fft_shift:
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order         . nof_streams   = 2                    
+--     7  1 3     8  9 10 11 12 13 14 15     . wb_factor     = 4                 
+--     6  1 2     0  1  2  3  4  5  6  7     . nof_points    = 32               
+--     5  1 1    24 25 26 27 28 29 30 31     . use_reorder   = true                         
+--     4  1 0    16 17 18 19 20 21 22 23     . use_fft_shift = false                      
+--     3  0 3     8  9 10 11 12 13 14 15     . use_separate  = false                       
+--     2  0 2     0  1  2  3  4  5  6  7       - complex input via in_sosi_arr().re and im
+--     1  0 1    24 25 26 27 28 29 30 31
+--     0  0 0    16 17 18 19 20 21 22 23
+-- 
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order
+--     7  1 3     8  9 10 11 12 13 14 15  8  9 10 11 12 13 14 15
+--     6  1 2     0  1  2  3  4  5  6  7  0  1  2  3  4  5  6  7
+--     5  1 1    24 25 26 27 28 29 30 31 24 25 26 27 28 29 30 31  
+--     4  1 0    16 17 18 19 20 21 22 23 16 17 18 19 20 21 22 23
+--     3  0 3     8  9 10 11 12 13 14 15  8  9 10 11 12 13 14 15 
+--     2  0 2     0  1  2  3  4  5  6  7  0  1  2  3  4  5  6  7
+--     1  0 1    24 25 26 27 28 29 30 31 24 25 26 27 28 29 30 31
+--     0  0 0    16 17 18 19 20 21 22 23 16 17 18 19 20 21 22 23
+--    channel     0....................0  1....................1
+--
+-- 2c) Complex input without reorder (so bit flipped):
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order         . nof_streams   = 2                
+--     7  1 3     8 12 10 14  9 13 11 15     . wb_factor     = 4                
+--     6  1 2    24 28 26 30 25 29 27 31     . nof_points    = 32               
+--     5  1 1     0  4  2  6  1  5  3  7     . use_reorder   = false                        
+--     4  1 0    16 20 18 22 17 21 19 23     . use_fft_shift = false                      
+--     3  0 3     8 12 10 14  9 13 11 15     . use_separate  = false                       
+--     2  0 2    24 28 26 30 25 29 27 31       - complex input via in_sosi_arr().re and im
+--     1  0 1     0  4  2  6  1  5  3  7
+--     0  0 0    16 20 18 22 17 21 19 23
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order    
+--     7  1 3     8  8 12 12 10 10 14 14  9  9 13 13 11 11 15 15
+--     6  1 2    24 24 28 28 26 26 30 30 25 25 29 29 27 27 31 31
+--     5  1 1     0  0  4  4  2  2  6  6  1  1  5  5  3  3  7  7  
+--     4  1 0    16 16 20 20 18 18 22 22 17 17 21 21 19 19 23 23
+--     3  0 3     8  8 12 12 10 10 14 14  9  9 13 13 11 11 15 15 
+--     2  0 2    24 24 28 28 26 26 30 30 25 25 29 29 27 27 31 31
+--     1  0 1     0  0  4  4  2  2  6  6  1  1  5  5  3  3  7  7
+--     0  0 0    16 16 20 20 18 18 22 22 17 17 21 21 19 19 23 23
+--    channel     0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+--
+-- II) Narrowband wb_factor = 1
+--
+-- 1) Two real inputs:
+-- 
+--   . nof_streams   = 2
+--   . nof_chan      = 0
+--   . wb_factor     = 1
+--   . nof_points    = 32
+--   . use_reorder   = true
+--   . use_fft_shift = false
+--   . use_separate  = true
+--     - input A via in_sosi_arr().re
+--     - input B via in_sosi_arr().im
+--
+--   out_sosi_arr:
+--     I  S P    bin frequency order
+--     1  1 0     0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15
+--     0  0 0     0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15
+--      input     A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order
+--     1  1 0     0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15  0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15
+--     0  0 0     0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15  0  0  1  1  2  2  3  3  4  4  5  5  6  6  7  7  8  8  9  9 10 10 11 11 12 12 13 13 14 14 15 15
+--      input     A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B  A  B
+--     channel:   0............................................................................................0  1............................................................................................1
+--
+-- 2) Complex input
+--   . nof_streams = 2
+--   . nof_chan = 0
+--   . wb_factor = 1
+--   . nof_points = 32
+--   . use_separate = false
+--     - complex input via in_sosi_arr().re and im
+
+-- 2a) Complex input with fft_shift (so use_reorder = true, use_fft_shift = true)
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order
+--     1  1 0     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+--     0  0 0     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order
+--     1  1 0     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+--     0  0 0     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+--     channel:   0............................................................................................0  1............................................................................................1
+--
+-- 2b) Complex input with reorder but no fft_shift (so use_reorder = true, use_fft_shift = false)
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order
+--     1  1 0    16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+--     0  0 0    16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order
+--     1  1 0    16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+--     0  0 0    16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15
+--     channel:   0............................................................................................0  1............................................................................................1
+--
+-- 2c) Complex input without reorder (so use_reorder = false, use_fft_shift = false)
+-- 
+--   out_sosi_arr:
+--     I  S P    bin frequency order
+--     1  1 0    16  0 24  8 20  4 28 12 18  2 26 10 22  6 30 14 17  1 25  9 21  5 29 13 19  3 27 11 23  7 31 15
+--     0  0 0    16  0 24  8 20  4 28 12 18  2 26 10 22  6 30 14 17  1 25  9 21  5 29 13 19  3 27 11 23  7 31 15
+--
+--   when nof_chan=1 then:
+--     I  S P    bin frequency order
+--     1  1 0    16 16  0  0 24 24  8  8 20 20  4  4 28 28 12 12 18 18  2  2 26 26 10 10 22 22  6  6 30 30 14 14 17 17  1  1 25 25  9  9 21 21  5  5 29 29 13 13 19 19  3  3 27 27 11 11 23 23  7  7 31 31 15 15
+--     0  0 0    16 16  0  0 24 24  8  8 20 20  4  4 28 28 12 12 18 18  2  2 26 26 10 10 22 22  6  6 30 30 14 14 17 17  1  1 25 25  9  9 21 21  5  5 29 29 13 13 19 19  3  3 27 27 11 11 23 23  7  7 31 31 15 15
+--     channel:   0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+--
+-- Remarks:
+-- . The unit can handle only one sync at a time. Therfor the
+--   sync interval should be larger than the total pipeline
+--   stages of the wideband fft.
+--
 
 library ieee, common_pkg_lib,r2sdf_fft_lib,casper_filter_lib,wb_fft_lib,casper_diagnostics_lib,casper_ram_lib;
 use IEEE.std_logic_1164.all;
@@ -66,7 +387,6 @@ architecture str of wbpfb_unit_dev is
                                              g_wpfb.use_separate,
                                              g_wpfb.nof_chan,
                                              g_wpfb.wb_factor,
-                                             0,
                                              g_wpfb.nof_points,
                                              g_wpfb.fft_in_dat_w,
                                              g_wpfb.fft_out_dat_w,

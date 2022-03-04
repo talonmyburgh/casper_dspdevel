@@ -51,14 +51,13 @@ entity tb_fft_wide_unit is
     g_use_sinNoise_file  : boolean  := false;  
     g_use_impulse_file   : boolean  := false;
     g_use_2xreal_inputs  : boolean  := false;  -- Set to true for running the two-real input variants  
-    g_fft : t_fft := (true, false, false, 0, 4, 0, 1024, 16, 18, 0, 18, 2, true, 56, 2) 
+    g_fft : t_fft := (true, false, false, 0, 4, 1024, 16, 18, 0, 18, 2, true, 56, 2) 
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
     --    use_separate   : boolean;  -- = false for complex input, true for two real inputs
     --    nof_chan       : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
     --    wb_factor      : natural;  -- = default 1, wideband factor
-    --    twiddle_offset : natural;  -- = default 0, twiddle offset for PFT sections in a wideband FFT
     --    nof_points     : natural;  -- = 1024, N point FFT
     --    in_dat_w       : natural;  -- = 8, number of input bits
     --    out_dat_w      : natural;  -- = 13, number of output bits: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  

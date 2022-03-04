@@ -12,7 +12,6 @@ entity wideband_fft_top is
 		use_separate   : boolean := c_fft_use_separate;       -- = false for complex input, true for two real inputs
 		nof_chan       : natural := c_fft_nof_chan;       -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
 		wb_factor      : natural := c_fft_wb_factor;       -- = default 1, wideband factor
-		twiddle_offset : natural := c_fft_twiddle_offset;       -- = default 0, twiddle offset for PFT sections in a wideband FFT
 		nof_points     : natural := c_fft_nof_points;       -- = 1024, N point FFT
 		in_dat_w       : natural := c_fft_in_dat_w;       -- = 8,  number of input bits
 		out_dat_w      : natural := c_fft_out_dat_w;       -- = 13, number of output bits
@@ -58,7 +57,7 @@ end entity wideband_fft_top;
 
 architecture RTL of wideband_fft_top is
         constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,
-        twiddle_offset,nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);
+        nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);
         signal in_fft_sosi_arr : t_fft_sosi_arr_in(wb_factor - 1 downto 0);
         signal out_fft_sosi_arr : t_fft_sosi_arr_out(wb_factor - 1 downto 0);
         constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;
