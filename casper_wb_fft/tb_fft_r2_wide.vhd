@@ -59,7 +59,7 @@ entity tb_fft_r2_wide is
   generic(
     -- DUT generics
     --g_fft : t_fft := ( true, false,  true, 0, 4, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2, false);         -- two real inputs A and B
     --g_fft : t_fft := ( true, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
     --g_fft : t_fft := (false, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
@@ -351,7 +351,15 @@ begin
       -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
       -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
       if g_fft.use_reorder=true then
-        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+        if g_fft.pipe_reo_in_place=true then
+          if g_fft.use_separate=true then
+            assert out_val_cnt = in_val_cnt-(g_fft.nof_points/2)                report "Unexpected number of valid output data (in place, real)" severity error;
+          else 
+            assert out_val_cnt = in_val_cnt-(2*c_nof_valid_per_block-1)                report "Unexpected number of valid output data (in place, complex)" severity error;
+          end if;
+        else            
+          assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data (double buffer)" severity error;
+        end if;
       else
         assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
       end if;
