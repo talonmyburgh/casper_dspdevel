@@ -38,10 +38,10 @@ END tb_tb_fft_r2_par;
 
 ARCHITECTURE tb OF tb_tb_fft_r2_par IS
   
-  CONSTANT c_fft_two_real          : t_fft := ( true, false,  true, 0, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_complex           : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_complex_fft_shift : t_fft := ( true,  true, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
-  CONSTANT c_fft_complex_flipped   : t_fft := (false, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2);
+  CONSTANT c_fft_two_real          : t_fft := ( true, false,  true, 0, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
+  CONSTANT c_fft_complex           : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
+  CONSTANT c_fft_complex_fft_shift : t_fft := ( true,  true, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
+  CONSTANT c_fft_complex_flipped   : t_fft := (false, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
 
   CONSTANT c_diff_margin    : natural := 2;
   
