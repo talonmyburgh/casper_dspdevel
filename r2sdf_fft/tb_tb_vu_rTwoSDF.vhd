@@ -19,6 +19,7 @@ entity tb_tb_vu_rTwoSDF is
         g_out_dat_w         : natural  := 14;   
         g_guard_w           : natural  := 2;      -- guard bits are used to avoid overflow in single FFT stage.
         g_diff_margin       : natural  := 2;
+		g_twid_file_stem    : string   := "UNUSED";
         g_file_loc_prefix   : string   := "../../../../../";
         runner_cfg : string
     );
@@ -43,7 +44,8 @@ BEGIN
             g_out_dat_w => g_out_dat_w,
             g_guard_w => g_guard_w,
             g_diff_margin => g_diff_margin,
-            g_file_loc_prefix => g_file_loc_prefix
+            g_file_loc_prefix => g_file_loc_prefix,
+			g_twid_file_stem => g_twid_file_stem
         )
 		PORT MAP(
 			o_rst => rst,

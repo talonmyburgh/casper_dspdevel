@@ -31,6 +31,8 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
     fft_out_dat_w     : natural;        -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13
     fft_out_gain_w    : natural;        -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
     stage_dat_w       : natural;        -- = 18, number of bits that are used inter-stage
+    twiddle_dat_w     : natural;        -- twiddle coefficient data width
+    max_addr_w        : natural;        -- address above which to store coefficients in BRAM/URAM
     guard_w           : natural;  -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
                                  --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
                                  --   12.3.2], therefore use input guard_w = 2.
@@ -52,8 +54,8 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
                               c_wbpfb_nof_wb_streams, c_fil_nof_taps, c_fil_backoff_w,
                               c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w,
                               c_fft_use_reorder, c_fft_use_fft_shift, c_fft_use_separate,
-                              c_fft_in_dat_w, c_fft_out_dat_w, c_fft_out_gain_w,
-                              c_fft_stage_dat_w, c_fft_guard_w, c_fft_guard_enable,
+                              c_fft_in_dat_w, c_fft_out_dat_w, c_fft_out_gain_w, c_fft_stage_dat_w,
+                              c_fft_twiddle_dat_w, c_max_addr_w, c_fft_guard_w, c_fft_guard_enable,
                               56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
 
 ----------------------------------------------------------------------------------------------------------

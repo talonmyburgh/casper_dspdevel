@@ -3,17 +3,15 @@ from os.path import join, abspath, split
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
-# script_dir = dirname(__file__)
 script_dir,_ = split(abspath(__file__))
-print(script_dir)
-
-
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
 xpm_source_file_base = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd"))
 xpm_source_file_sdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd"))
 xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd"))
+xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd"))
+xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd"))
 xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
 xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
 
@@ -38,6 +36,10 @@ ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
 ip_xpm_file_cr_cw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd"))
 ip_xpm_file_cr_cw.add_dependency_on(xpm_source_file_sdpram)
 ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd"))
+ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
+ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r_r.vhd"))
+ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
+ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r.vhd"))
 ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 
 # STRATIXIV RAM Library
@@ -92,7 +94,10 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_pkg.vh
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_component_pkg.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_ram_crw_crw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_ram_cr_cw.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_rom_r_r.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_rom_r.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_crw_crw.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_rom_r_r.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_rw_rw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_r_w.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_r_w.vhd"))
@@ -100,6 +105,10 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_crw_crw.vhd"))
 
 # RTWOSDF Library
+# Pathline for twid coefficients
+twid_path_stem = script_dir + '/data/twids/sdf_twiddle_coeffs'
+print(twid_path_stem)
+
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoBFStage.vhd"))
@@ -117,16 +126,16 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
     name = "u_act_impulse_16p_16i_16o",
-    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = False,g_in_en = 1,g_use_reorder = True,g_nof_points = 16,g_in_dat_w = 16,g_out_dat_w = 16,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_act_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 1,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = True,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 TB_GENERATED.add_config(
     name = "u_rnd_noise_1024p_8i_14o_flipped",
-    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_file_loc_prefix = script_dir + "/"))
+    generics=dict(g_use_uniNoise_file = True,g_in_en = 0,g_use_reorder = False,g_nof_points = 1024,g_in_dat_w = 8,g_out_dat_w = 14,g_guard_w = 2,g_diff_margin = 1, g_twid_file_stem = twid_path_stem, g_file_loc_prefix = script_dir + "/"))
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])

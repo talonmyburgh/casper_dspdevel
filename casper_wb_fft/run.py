@@ -33,6 +33,8 @@ lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.
 xpm_source_file_base = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd"))
 xpm_source_file_sdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd"))
 xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd"))
+xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd"))
+xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd"))
 xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
 xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
 
@@ -57,6 +59,8 @@ ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
 ip_xpm_file_cr_cw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd"))
 ip_xpm_file_cr_cw.add_dependency_on(xpm_source_file_sdpram)
 ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd"))
+ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
+ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r_r.vhd"))
 ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 
 # STRATIXIV RAM Library
@@ -123,8 +127,11 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_pkg.vh
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_component_pkg.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_ram_crw_crw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_ram_cr_cw.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_rom_r.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/tech_memory_rom_r_r.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_crw_crw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_rw_rw.vhd"))
+casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_rom_r_r.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_r_w.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_r_w.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_rw_rw.vhd"))
@@ -139,6 +146,8 @@ casper_sim_tools_lib =vu.add_library("casper_sim_tools_lib")
 casper_sim_tools_lib.add_source_file(join(script_dir,"../casper_sim_tools/common_wideband_data_scope.vhd"))
 
 # RTWOSDF Library
+# Pathline for twid coefficients
+twid_path_stem = abspath(script_dir + '/../r2sdf_fft/data/twids/sdf_twiddle_coeffs')
 r2sdf_fft_lib = vu.add_library("r2sdf_fft_lib")
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"../r2sdf_fft/rTwoBFStage.vhd"))
@@ -175,14 +184,16 @@ if args.par or args.pipe or run_all or args.wide:
         g_use_separate = True,
         g_nof_chan = 0,
         g_wb_factor = 1,
-        g_twiddle_offset = 0, 
+        g_twid_dat_w = 18,
+        g_max_addr_w = 8,
         g_nof_points = 128,
         g_in_dat_w = 8,
         g_out_dat_w = 16,
         g_out_gain_w = 0,
         g_stage_dat_w = 18,
         g_guard_w = 2,
-        g_guard_enable = True
+        g_guard_enable = True,
+        g_twid_file_stem = twid_path_stem
     )
     c_fft_complex = c_fft_two_real.copy()
     c_fft_complex.update({'g_nof_points':64})

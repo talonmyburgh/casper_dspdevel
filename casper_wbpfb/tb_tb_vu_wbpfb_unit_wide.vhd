@@ -29,6 +29,8 @@ entity tb_tb_vu_wbpfb_unit_wide is
         g_fft_out_dat_w         : natural   := c_fft_out_dat_w;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
         g_fft_out_gain_w        : natural   := c_fft_out_gain_w;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
         g_stage_dat_w           : natural   := c_fft_stage_dat_w;  -- = 18, data width used between the stages(= DSP multiplier-width)
+        g_twiddle_dat_w         : natural   := c_fft_twiddle_dat_w;
+        g_max_addr_w            : natural   := c_max_addr_w;
         g_guard_w               : natural   := c_fft_guard_w;  -- = 2,  Guard used to avoid overflow in FFT stage. 
         g_guard_enable          : boolean   := c_fft_guard_enable;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
         g_diff_margin           : integer   := 2;  -- maximum difference between HDL output and expected output (> 0 to allow minor rounding differences)
@@ -45,6 +47,7 @@ entity tb_tb_vu_wbpfb_unit_wide is
         g_use_variant           : STRING    := "4DSP";
         g_ovflw_behav           : STRING    := "WRAP";
         g_use_round             : STRING    := "TRUNCATE";
+        g_twid_file_stem        : string    := c_twid_file_stem;
         runner_cfg              : string    := runner_cfg_default 
     );
 end tb_tb_vu_wbpfb_unit_wide;
@@ -75,6 +78,8 @@ architecture tb of tb_tb_vu_wbpfb_unit_wide is
         fft_out_dat_w => g_fft_out_dat_w,
         fft_out_gain_w => g_fft_out_gain_w,
         stage_dat_w => g_stage_dat_w,
+        twiddle_dat_w  => g_twiddle_dat_w,
+        max_addr_w  => g_max_addr_w,
         guard_w => g_guard_w,
         guard_enable => g_guard_enable,
         stat_data_w => 56,
@@ -98,7 +103,8 @@ BEGIN
             g_data_file_c => g_data_file_c,
             g_data_file_c_nof_lines => g_data_file_c_nof_lines,
             g_data_file_nof_lines => g_data_file_nof_lines,
-            g_enable_in_val_gaps => g_enable_in_val_gaps
+            g_enable_in_val_gaps => g_enable_in_val_gaps,
+            g_twid_file_stem => g_twid_file_stem
         )
 		PORT MAP(
 			o_rst => rst,

@@ -70,17 +70,16 @@ use work.tb_fft_pkg.all;
 entity tb_fft_r2_par is
   generic(
     -- DUT generics
-    --g_fft : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 1, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    --g_fft : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
-    --g_fft : t_fft := (false, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
+    --g_fft : t_fft := ( true, false,  true, 0, 1, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 1, 32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2);         -- two real inputs A and B
+    --g_fft : t_fft := ( true, false, false, 0, 1,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
+    --g_fft : t_fft := (false, false, false, 0, 1,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
     --    use_separate   : boolean;  -- = false for complex input, true for two real inputs
     --    nof_chan       : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
     --    wb_factor      : natural;  -- = default 1, wideband factor
-    --    twiddle_offset : natural;  -- = default 0, twiddle offset for PFT sections in a wideband FFT
     --    nof_points     : natural;  -- = 1024, N point FFT
     --    in_dat_w       : natural;  -- = 8, number of input bits
     --    out_dat_w      : natural;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
@@ -114,6 +113,7 @@ entity tb_fft_r2_par is
     
     g_data_file_nof_lines   : natural := 160;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
+    g_twid_file_stem        : string := "UNUSED";
     g_use_variant           : string := "4DSP";
     g_ovflw_behav           : string := "WRAP";
     g_use_round             : string := "TRUNCATE"
@@ -322,7 +322,8 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_use_round => g_use_round,
+    g_twid_file_stem => g_twid_file_stem
   )
   port map(
     clk        => dut_clk,

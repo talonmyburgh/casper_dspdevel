@@ -1,27 +1,8 @@
---------------------------------------------------------------------------------
--- Author: Harm Jan Pepping : HJP at astron.nl: April 2012
---------------------------------------------------------------------------------
---
--- Copyright (C) 2012
--- ASTRON (Netherlands Institute for Radio Astronomy) <http://www.astron.nl/>
--- P.O.Box 2, 7990 AA Dwingeloo, The Netherlands
---
--- This program is free software: you can redistribute it and/or modify
--- it under the terms of the GNU General Public License as published by
--- the Free Software Foundation, either version 3 of the License, or
--- (at your option) any later version.
---
--- This program is distributed in the hope that it will be useful,
--- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--- GNU General Public License for more details.
---
--- You should have received a copy of the GNU General Public License
--- along with this program.  If not, see <http://www.gnu.org/licenses/>.
---
---------------------------------------------------------------------------------
--- Purpose: Wideband polyphase filterbank with subband statistics and streaming interfaces.
---
+--------------------------------------------------------------------------------------------------------------
+--Modification of the wpfb_unit_dev module by Talon Myburgh.
+--This is the current PFB top module. It differs from the wbpfb_unit.vhd module by not using the 
+--wideband_fft control module.
+--------------------------------------------------------------------------------------------------------------
 -- Description:
 --
 -- This WPFB unit connects an incoming array of streaming interfaces to the
@@ -367,7 +348,8 @@ entity wbpfb_unit_dev is
     g_ovflw_behav       : string  		    := "WRAP";        										--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
     g_use_round         : string  		    := "ROUND";        										--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
     g_fft_ram_primitive : string  		    := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-    g_fifo_primitive    : string  		    := "block"        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_fifo_primitive    : string  		    := "block";        										--! = "auto", "distributed", "block" or "ultra" for RAM architecture
+    g_twid_file_stem    : string          := c_twid_file_stem                   --! file stem for the twiddle coefficients                  
    );
   port (
     rst                	: in  std_logic := '0';
@@ -405,12 +387,13 @@ architecture str of wbpfb_unit_dev is
                                              g_wpfb.use_separate,
                                              g_wpfb.nof_chan,
                                              g_wpfb.wb_factor,
-                                             0,
                                              g_wpfb.nof_points,
                                              g_wpfb.fft_in_dat_w,
                                              g_wpfb.fft_out_dat_w,
                                              g_wpfb.fft_out_gain_w,
                                              g_wpfb.stage_dat_w,
+                                             g_wpfb.twiddle_dat_w,
+                                             g_wpfb.max_addr_w,
                                              g_wpfb.guard_w,
                                              g_wpfb.guard_enable,
                                              g_wpfb.stat_data_w,
@@ -545,7 +528,8 @@ begin
           g_ovflw_behav    => g_ovflw_behav,
           g_use_round      => g_use_round,
           g_ram_primitive  => g_fft_ram_primitive,
-          g_fifo_primitive => g_fifo_primitive
+          g_fifo_primitive => g_fifo_primitive,
+          g_twid_file_stem => g_twid_file_stem
         )
         port map(
           clk        => clk,
@@ -577,7 +561,8 @@ begin
           g_use_dsp            => g_use_dsp,
           g_ovflw_behav        => g_ovflw_behav,
           g_use_round          => g_use_round,
-          g_ram_primitive      => g_fft_ram_primitive
+          g_ram_primitive      => g_fft_ram_primitive,
+          g_twid_file_stem     => g_twid_file_stem
         )
         port map(
           clk       => clk,
