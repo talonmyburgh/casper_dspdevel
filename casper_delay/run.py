@@ -43,6 +43,8 @@ ip_stratix_file_crw_crw.add_dependency_on(altera_mf_source_file)
 common_components_lib = vu.add_library("common_components_lib")
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_delay.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_components_pkg.vhd"))
 
 # Create library 'casper_ram_lib'
 casper_ram_lib = vu.add_library("casper_ram_lib")
@@ -62,17 +64,25 @@ technology_lib.add_source_files(join(script_dir, "../technology/technology_selec
 casper_delay_lib = vu.add_library("casper_delay_lib")
 casper_delay_lib.add_source_files(join(script_dir, "./*.vhd"))
 
-TB_GENERATED = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
+DELAY_BRAM_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
+DELAY_BRAM_EN_PLUS_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_en_plus")
 
 # no maths done, so some random picks are fine
 delay_arr = [4, 10, 50]
-latencies = [1, 2]
+bram_latencies = [1, 2]
 dat_widths = [4, 18, 32]
+latencies = [2,8]
 
+for delay, latency, dat_w in product(delay_arr, bram_latencies, dat_widths):
+    db_config_name = "DELAY_BRAM: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    DELAY_BRAM_TB.add_config(
+        name = db_config_name,
+        generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
 for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
-    config_name = "delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
-    TB_GENERATED.add_config(
-        name = config_name,
+    db_en_plus_config_name = "DELAY_BRAM EN PLUS: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    DELAY_BRAM_EN_PLUS_TB.add_config(
+        name = db_en_plus_config_name,
         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
     )
 
