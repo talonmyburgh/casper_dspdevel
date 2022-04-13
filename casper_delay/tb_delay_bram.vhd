@@ -45,7 +45,8 @@ begin
 ---------------------------------------------------------------------
 delay_bram : ENTITY work.delay_bram
 generic map(
-    g_delay => g_delay
+    g_delay => g_delay,
+    g_ram_latency => g_latency
     )
     port map(
         clk => clk,
@@ -59,7 +60,8 @@ generic map(
 ---------------------------------------------------------------------
     async_delay_bram : ENTITY work.delay_bram_async
     generic map(
-        g_delay => g_delay
+        g_delay => g_delay,
+        g_ram_latency => g_latency
     )
     port map(
         clk => clk,
