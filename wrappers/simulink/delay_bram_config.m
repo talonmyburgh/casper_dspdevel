@@ -9,7 +9,7 @@ function delay_bram_config(this_block)
     end 
   end
 
-  filepath = fileparts(which('filterbank_top_config'));
+  filepath = fileparts(which('delay_bram_config'));
   this_block.setTopLevelLanguage('VHDL');
   delay_bram_blk = this_block.blockName;
   delay_bram_blk_parent = get_param(delay_bram_blk,'Parent');
@@ -49,8 +49,6 @@ function delay_bram_config(this_block)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-
-    uniqueInputRates = unique(this_block.getInputRates);
 
   % Generics
   this_block.addGeneric('g_delay','NATURAL',delay);
