@@ -1,4 +1,4 @@
--- A VHDL testbench for delaybram.vhd.
+-- A VHDL testbench for delay_bram_en_plus.vhd.
 -- @author: Mydon Solutions.
 
 LIBRARY IEEE, std, common_pkg_lib;
