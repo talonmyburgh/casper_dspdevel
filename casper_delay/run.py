@@ -2,6 +2,7 @@ from distutils.command.config import config
 from vunit import VUnit
 from os.path import dirname, join
 from itertools import product
+import numpy as np
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
@@ -22,6 +23,7 @@ altera_mf_source_file = lib_altera_mf.add_source_files(join(script_dir, "../inte
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
 casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/common_counter.vhd"))
+casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
 
 # Create library 'common_pkg_lib'
 common_pkg_lib = vu.add_library("common_pkg_lib")
@@ -38,6 +40,10 @@ ip_stratix_file_cr_cw = ip_stratixiv_ram_lib.add_source_file(join(script_dir, ".
 ip_stratix_file_crw_crw = ip_stratixiv_ram_lib.add_source_file(join(script_dir, "../ip_stratixiv/ram/ip_stratixiv_ram_crw_crw.vhd"))
 ip_stratix_file_cr_cw.add_dependency_on(altera_mf_source_file)
 ip_stratix_file_crw_crw.add_dependency_on(altera_mf_source_file)
+
+# CASPER adder library
+casper_adder_lib = vu.add_library("casper_adder_lib")
+casper_adder_lib.add_source_file(join(script_dir, "../casper_adder/common_add_sub.vhd"))
 
 # COMMON COMPONENTS Library 
 common_components_lib = vu.add_library("common_components_lib")
@@ -66,6 +72,7 @@ casper_delay_lib.add_source_files(join(script_dir, "./*.vhd"))
 
 DELAY_BRAM_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
 DELAY_BRAM_EN_PLUS_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_en_plus")
+DELAY_BRAM_PROG_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog")
 
 # no maths done, so some random picks are fine
 delay_arr = [4, 10, 50]
@@ -84,6 +91,12 @@ for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
     DELAY_BRAM_EN_PLUS_TB.add_config(
         name = db_en_plus_config_name,
         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
+for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
+    db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    DELAY_BRAM_PROG_TB.add_config(
+        name = db_prog_config_name,
+        generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
     )
 
 vu.set_compile_option("ghdl.a_flags", ["-Wno-hide", "-frelaxed","-fsynopsys","-fexplicit"])
