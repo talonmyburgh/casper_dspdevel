@@ -71,7 +71,7 @@ BEGIN
     WAIT for clk_period *4;
     delay <= TO_SVEC(c_delay_one, g_max_delay);
     ce <= '1';
-    WAIT for clk_period * c_delay_one;
+    WAIT for clk_period * (c_delay_one + g_ram_latency);
     WAIT UNTIL rising_edge(clk);
     v_test_pass := out_del_vec = in_del_vec;
     IF not v_test_pass THEN
@@ -81,7 +81,7 @@ BEGIN
     delay <= TO_SVEC(c_delay_two,g_max_delay);
     WAIT for clk_period;
     in_del_vec <= (others => '0');
-    WAIT for clk_period * c_delay_two;
+    WAIT for clk_period * (c_delay_two + g_ram_latency);
     WAIT UNTIL rising_edge(clk);
     v_test_pass := out_del_vec = in_del_vec;
     IF not v_test_pass THEN
