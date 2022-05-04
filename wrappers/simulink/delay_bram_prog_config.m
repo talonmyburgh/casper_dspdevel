@@ -1,34 +1,32 @@
 
 function delay_bram_prog_config(this_block)
 
+  filepath = fileparts(which('delay_bram_en_plus_config'));
   this_block.setTopLevelLanguage('VHDL');
   delay_bram_prog = this_block.blockName;
   delay_bram_prog_parent = get_param(delay_bram_prog,'Parent');
 
   this_block.setEntityName('delay_bram_prog');
-  max_delay = get_param(delay_bram_blk_en_plus_parent,'max_delay');
-  bram_primitive = get_param(delay_bram_blk_en_plus_parent,'bram_primitive');
-  ram_latency = get_param(delay_bram_blk_en_plus_parent,'ram_latency');
+  max_delay = get_param(delay_bram_prog_parent,'max_delay');
+  bram_primitive = get_param(delay_bram_prog_parent,'bram_primitive');
+  ram_latency = get_param(delay_bram_prog_parent,'ram_latency');
   
   % System Generator has to assume that your entity  has a combinational feed through; 
   %   if it  doesn't, then comment out the following line:
   this_block.tagAsCombinational;
 
   this_block.addSimulinkInport('din');
-  this_block.addSimulinkInport('delay');
+  din_port = this_block.port('din');
 
+  this_block.addSimulinkInport('delay');
+  delay_port = this_block.port('delay');
+  
   this_block.addSimulinkOutport('dout');
+  dout_port = this_block.port('dout');
 
   % -----------------------------
   if (this_block.inputTypesKnown)
-    % do input type checking, dynamic output type and generic setup in this code block.
-
-    % (!) Port 'din' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-    % (!) Port 'delay' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-  % (!) Port 'dout' appeared to have dynamic type in the HDL
-  % --- you must add an appropriate type setting for this port
+    dout_port.setWidth(din_port.width);
   end  % if(inputTypesKnown)
   % -----------------------------
 
@@ -40,31 +38,28 @@ function delay_bram_prog_config(this_block)
 
     uniqueInputRates = unique(this_block.getInputRates);
 
-  % (!) Custimize the following generic settings as appropriate. If any settings depend
-  %      on input types, make the settings in the "inputTypesKnown" code block.
-  %      The addGeneric function takes  3 parameters, generic name, type and constant value.
-  %      Supported types are boolean, real, integer and string.
-  this_block.addGeneric('g_max_delay','NATURAL','7');
-  this_block.addGeneric('g_ram_primitive','STRING','"block"');
-  this_block.addGeneric('g_ram_latency','NATURAL','2');
+  this_block.addGeneric('g_max_delay','NATURAL',max_delay);
+  this_block.addGeneric('g_ram_primitive','STRING',bram_primitive);
+  this_block.addGeneric('g_ram_latency','NATURAL',ram_latency);
 
-  % Add addtional source files as needed.
-  %  |-------------
-  %  | Add files in the order in which they should be compiled.
-  %  | If two files "a.vhd" and "b.vhd" contain the entities
-  %  | entity_a and entity_b, and entity_a contains a
-  %  | component of type entity_b, the correct sequence of
-  %  | addFile() calls would be:
-  %  |    this_block.addFile('b.vhd');
-  %  |    this_block.addFile('a.vhd');
-  %  |-------------
-
-  %    this_block.addFile('');
-  %    this_block.addFile('');
-  this_block.addFile('C:/Users/mybur/Work/CASPER/dspdevel_designs/casper_dspdevel/casper_delay/delay_bram_prog.vhd');
-
+  this_block.addFileToLibrary([filepath '/../../casper_delay/delay_bram_prog.vhd'],'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_components_pkg.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../technology/technology_select_pkg.vhd'],'technology_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_ram_cr_cw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_crw_crw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_rw_rw.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_r_w.vhd'],'casper_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'],'casper_counter_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd'],'ip_xpm_ram_lib');
+  this_block.addFileToLibrary([filepath '/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd'],'ip_xpm_ram_lib');
 return;
-
 
 % ------------------------------------------------------------
 
