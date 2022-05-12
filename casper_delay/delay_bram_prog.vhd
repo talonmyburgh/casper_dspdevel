@@ -65,18 +65,6 @@ s_count_rst <= '1' when signed(s_count_val) >= signed(s_difference) else '0';
 --------------------------------------------------------
 -- Counter
 --------------------------------------------------------
-  -- addr_cntr : ENTITY casper_counter_lib.common_counter
-  --   GENERIC MAP(
-  --     g_latency   => 1,
-  --     g_width     => 7
-  --   )
-  --   PORT MAP(
-  --     rst     => s_count_rst,
-  --     clk     => clk,
-  --     clken   => ce,
-  --     count   => s_count_val
-  --   );
-
   addr_cntr : ENTITY casper_counter_lib.free_run_up_counter
   GENERIC MAP (
       g_cnt_w => g_max_delay
