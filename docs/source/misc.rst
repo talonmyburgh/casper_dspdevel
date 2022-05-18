@@ -1,0 +1,72 @@
+##############
+Misc Library
+##############
+.. _misc:
+
+*******
+Purpose
+*******
+.. _misc_purpose:
+
+The misc library contains all casper_misc HDL modules wrapped for Simulink.
+These misc blocks are essential to the design of most DSP.
+
+=========================
+Real/Imaginary to Complex
+=========================
+An extension of the concatenation block that concatenates two equal width vectors to produce a single "complex" vector.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                    |
++================+=================+===========================+================================================================+
+| re_in          | std_logic_vector| equal to im_in'RANGE      | The input real signal                                          |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| im_in          | std_logic_vector| equal to re_in'RANGE      | The input imaginary signal                                     |  
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| c_out          | std_logic_vector| 2*width(re_in)            | The concatenation result                                       |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Asynchronous   | Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
+| operation      |         |        | port.                                                          |
++----------------+---------+--------+----------------------------------------------------------------+
+
+=========================
+Complex to Real/Imaginary
+=========================
+This block performs a slice of g_bit_width to split a complex vector to produce a real and imaginary vector of length
+g_bit_width. Note that the bit_width supplied need not be half of the complex vector length which will cause an overlapping
+of bits in the real and imaginary vectors.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                    |
++================+=================+===========================+================================================================+
+| c_in           | std_logic_vector| any                       | The input complex signal                                       |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| re_out         | std_logic_vector| g_bit_width               | A slice result from MSB downto MSB - g_bit_width               |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| re_out         | std_logic_vector| g_bit_width               | A slice result from MSB - g_bit_width -1 downto 0              |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Asynchronous   | Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
+| operation      |         |        | port.                                                          |
++----------------+---------+--------+----------------------------------------------------------------+
+| g_bit_width    | Natural | 8      | Specifies the size of the re_in/im_in slices.                  |
++----------------+---------+--------+----------------------------------------------------------------+
