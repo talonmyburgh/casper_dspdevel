@@ -38,24 +38,19 @@ end
 
   %Outputs
   this_block.addSimulinkOutport('c_out');
+  c_out_port = this_block.port('c_out');
 
   % -----------------------------
   if (this_block.inputTypesKnown)
     %Logic to act as the reinterpret block:
-    re_in_width = re_in_port.width;
-    im_in_width = im_in_port.width;
-    c_out_port = this_block.port('c_out');
-    c_out_port.setType(sprintf('Ufix_%d_0',(re_in_width + im_in_width)));
+    c_out_port.setWidth(re_in_port.width + im_in_port.width);
   end  % if(inputTypesKnown)
   % -----------------------------
 
-  % -----------------------------
    if (this_block.inputRatesKnown)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-
-    uniqueInputRates = unique(this_block.getInputRates);
   
   %Generics:
   this_block.addGeneric('g_async','BOOLEAN',bool2str(is_async));
