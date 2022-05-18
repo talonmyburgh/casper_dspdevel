@@ -10,7 +10,7 @@ ENTITY tb_ri_to_c is
         g_re_in_w : NATURAL := 4;
         g_im_in_w : NATURAL := 5;
         g_re_in_val : INTEGER := 12;
-        g_im_in_val : INTEGER := 3
+        g_im_in_val : INTEGER := -4
     );
     PORT(
 		o_rst		   : OUT STD_LOGIC;
@@ -46,18 +46,18 @@ begin
     p_stimuli : PROCESS
     VARIABLE v_test_msg : STRING(1 to o_test_msg'length) := (OTHERS => '.');
     VARIABLE v_test_pass : BOOLEAN := True;
-    VARIABLE v_cat_res : STD_LOGIC_VECTOR(s_c_out'RANGE) := (others => '0');
     BEGIN
-        wait until rising_edge(clk);
+        wait until falling_edge(clk);
         ce <= '1';
-        s_re_in <= std_logic_vector(to_unsigned(g_re_in_val,g_re_in_w));
-        s_im_in <= std_logic_vector(to_unsigned(g_im_in_val,g_im_in_w));
+        s_re_in <= std_logic_vector(unsigned(to_signed(g_re_in_val,g_re_in_w)));
+        s_im_in <= std_logic_vector(unsigned(to_signed(g_im_in_val,g_im_in_w)));
         if not g_async THEN
             WAIT for clk_period;
+            WAIT UNTIL rising_edge(clk);
         end if;
         v_test_pass := s_c_out = s_cat_res;
-        IF v_test_pass THEN
-           v_test_msg := pad("wrong RTL result, expected: " & to_hstring(v_cat_res) & " but got: " & to_hstring(s_c_out), o_test_msg'length, '.');
+        IF not v_test_pass THEN
+           v_test_msg := pad("wrong RTL result, expected: " & to_hstring(s_cat_res) & " but got: " & to_hstring(s_c_out), o_test_msg'length, '.');
            o_test_msg <= v_test_msg;
            report "Error: " & v_test_msg severity error;
         END IF;      
