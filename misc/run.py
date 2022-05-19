@@ -16,6 +16,7 @@ casper_lib_misc.add_source_files(join(script_dir, "./*.vhd"))
 
 RI_TO_C_TB = casper_lib_misc.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_lib_misc.test_bench("tb_tb_vu_c_to_ri")
+BIT_REVERSE = casper_lib_misc.test_bench("tb_tb_vu_bit_reverse")
 
 async_arr = [True, False]
 bit_w = [8,18]
@@ -33,6 +34,12 @@ for async_val, bit_w_val, input_v in product(async_arr, bit_w, input_val):
         name = c_to_ri_config_name,
         generics=dict(g_async = async_val, g_bit_width = bit_w_val, g_c_in_val = input_v)
     )
+    bit_reverse_config_name = "BIT_REVERSE: async=%r, num_bits=%d, input_val=%d" % (async_val, bit_w_val, input_v)
+    BIT_REVERSE.add_config(
+        name = bit_reverse_config_name,
+        generics=dict(g_async = async_val, g_num_bits = bit_w_val, g_in_val = input_v)
+    )
+    
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable"])
