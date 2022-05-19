@@ -326,6 +326,8 @@ PACKAGE common_pkg IS
 	FUNCTION func_slv_extract(use_a, use_b, use_c : BOOLEAN; a_w, b_w, c_w : NATURAL; vec : STD_LOGIC_VECTOR; sel : NATURAL) RETURN STD_LOGIC_VECTOR;
 	FUNCTION func_slv_extract(use_a, use_b : BOOLEAN; a_w, b_w : NATURAL; vec : STD_LOGIC_VECTOR; sel : NATURAL) RETURN STD_LOGIC_VECTOR;
 
+	FUNCTION func_slv_reverse(a : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR;
+
 	FUNCTION TO_UINT(vec : STD_LOGIC_VECTOR) RETURN NATURAL; -- beware: NATURAL'HIGH = 2**31-1, not 2*32-1, use TO_SINT to avoid warning
 	FUNCTION TO_SINT(vec : STD_LOGIC_VECTOR) RETURN INTEGER;
 
@@ -1773,6 +1775,16 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		RETURN func_slv_extract(use_a, use_b, FALSE, FALSE, FALSE, FALSE, FALSE, a_w, b_w, 0, 0, 0, 0, 0, vec, sel);
 	END func_slv_extract;
+
+	FUNCTION func_slv_reverse(a : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR IS
+		VARIABLE result: STD_LOGIC_VECTOR(a'RANGE);
+		ALIAS aa: STD_LOGIC_VECTOR(a'REVERSE_RANGE) is a;
+  	BEGIN
+		FOR i in aa'RANGE LOOP
+			result(i) := aa(i);
+		END LOOP;
+		RETURN result;
+	END;
 
 	FUNCTION TO_UINT(vec : STD_LOGIC_VECTOR) RETURN NATURAL IS
 	BEGIN
