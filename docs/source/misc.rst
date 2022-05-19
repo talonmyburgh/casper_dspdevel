@@ -11,6 +11,33 @@ Purpose
 The misc library contains all casper_misc HDL modules wrapped for Simulink.
 These misc blocks are essential to the design of most DSP.
 
+===========
+Bit Reverse
+===========
+Reverses the bit order of an unsigned input vector. Differs from the original CASPER block as it does
+not require the user to specify number of bits.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                    |
++================+=================+===========================+================================================================+
+| in_val         | std_logic_vector| any                       | The input vector to be reversed                                |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| out_val        | std_logic_vector| any                       | The reversed input vector                                      |  
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Asynchronous   | Boolean | False  | If checked, the block will act in a combinatorial way. If      |
+| operation      |         |        | unchecked, a registered way                                    |
++----------------+---------+--------+----------------------------------------------------------------+
+
 =========================
 Real/Imaginary to Complex
 =========================
@@ -35,8 +62,8 @@ Parameters
 +----------------+---------+--------+----------------------------------------------------------------+
 | Generic        | Type    | Value  | Description                                                    |
 +================+=========+========+================================================================+
-| Asynchronous   | Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
-| operation      |         |        | port.                                                          |
+| Asynchronous   | Boolean | False  | If checked, the block will act in a combinatorial way. If      |
+| operation      |         |        | unchecked, a registered way                                    |
 +----------------+---------+--------+----------------------------------------------------------------+
 
 =========================
@@ -65,8 +92,8 @@ Parameters
 +----------------+---------+--------+----------------------------------------------------------------+
 | Generic        | Type    | Value  | Description                                                    |
 +================+=========+========+================================================================+
-| Asynchronous   | Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
-| operation      |         |        | port.                                                          |
+| Asynchronous   | Boolean | False  | If checked, the block will act in a combinatorial way. If      |
+| operation      |         |        | unchecked, a registered way                                    |
 +----------------+---------+--------+----------------------------------------------------------------+
 | g_bit_width    | Natural | 8      | Specifies the size of the re_in/im_in slices.                  |
 +----------------+---------+--------+----------------------------------------------------------------+
