@@ -39,11 +39,14 @@ function c_to_ri_config(this_block)
     %Outputs
     this_block.addSimulinkOutport('re_out');
     re_out_port = this_block.port('re_out');
-    re_out_port.setType(sprintf('Fix_%s_%s',bit_width,bin_pt));
+    
     this_block.addSimulinkOutport('im_out');
     im_out_port = this_block.port('im_out');
-    im_out_port.setType(sprintf('Fix_%s_%s',bit_width,bin_pt));
-  
+    
+    if (this_block.inputTypesKnown)
+      re_out_port.setType(sprintf('Fix_%s_%s',bit_width,bin_pt));
+      im_out_port.setType(sprintf('Fix_%s_%s',bit_width,bin_pt));
+    end
     % -----------------------------
   
      if (this_block.inputRatesKnown)
@@ -56,7 +59,7 @@ function c_to_ri_config(this_block)
     this_block.addGeneric('g_bit_width','NATURAL',bit_width);
   
     %Add Files:
-    this_block.addFile([filepath '/../../misc/c_to_ri.vhd'],'misc_lib');
+    this_block.addFileToLibrary([filepath '/../../misc/c_to_ri.vhd'],'misc_lib');
   
   return;
   end
