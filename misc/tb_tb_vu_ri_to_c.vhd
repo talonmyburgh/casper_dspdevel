@@ -1,7 +1,6 @@
-LIBRARY IEEE, common_pkg_lib, vunit_lib;
+LIBRARY IEEE, vunit_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
-USE common_pkg_lib.common_pkg.ALL;
 context vunit_lib.vunit_context;
 
 ENTITY tb_tb_vu_ri_to_c IS
