@@ -56,8 +56,8 @@ end
   this_block.addGeneric('g_async','BOOLEAN',bool2str(is_async));
 
   %Add Files:
-  this_block.addFile([filepath '/../../misc/concat.vhd'],'misc_lib');
-  this_block.addFile([filepath '/../../misc/ri_to_c.vhd'],'misc_lib');
+  this_block.addFileToLibrary([filepath '/../../misc/concat.vhd'],'misc_lib');
+  this_block.addFileToLibrary([filepath '/../../misc/ri_to_c.vhd'],'misc_lib');
 
 return;
 end
