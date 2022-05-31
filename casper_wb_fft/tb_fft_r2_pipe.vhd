@@ -96,7 +96,7 @@ entity tb_fft_r2_pipe is
   GENERIC(
     -- DUT generics
     --g_fft : t_fft := ( true, false,  true, 0, 1, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 1, 32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 1, 32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2, false);         -- two real inputs A and B
     --g_fft : t_fft := ( true, false, false, 0, 1, 64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
     --g_fft : t_fft := (false, false, false, 0, 1, 64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
@@ -146,6 +146,7 @@ entity tb_fft_r2_pipe is
     g_data_file_nof_lines   : natural := 6400;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
     g_twid_file_stem        : string := "UNUSED";
+
     g_use_variant : STRING := "4DSP";
     g_ovflw_behav : STRING := "WRAP";
     g_use_round   : STRING := "TRUNCATE"
@@ -202,6 +203,10 @@ architecture tb of tb_fft_r2_pipe is
   signal input_data_b_arr       : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- one value per line (B via im input)
   signal input_data_c_arr       : t_integer_arr(0 to g_data_file_nof_lines*c_nof_complex-1) := (OTHERS=>0);  -- two values per line (re, im)
   
+  signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0); 
+  -- signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := "1111100";
+  --signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := "111100";
+
   signal ovflw                  : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := (others=>'0');
 
   signal expected_data_a_arr    : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- half spectrum, two values per line (re, im)
@@ -277,6 +282,9 @@ architecture tb of tb_fft_r2_pipe is
   signal diff_im_b_scope        : integer := 0;
   
 begin
+
+  shiftreg(1 downto 0) <= "00";
+  shiftreg(ceil_log2(g_fft.nof_points)-1 Downto 2) <= (others=>'1');
 
   clk <= (not clk) or tb_end after c_clk_period/2;
   rst <= '1', '0' after c_clk_period*7;
@@ -388,9 +396,17 @@ begin
     -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
     -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
     if g_fft.use_reorder=true then
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity failure;
+        if g_fft.pipe_reo_in_place=true then
+            if g_fft.use_separate=true then
+                assert out_val_cnt = in_val_cnt-(2*g_fft.nof_points-2)                report "Unexpected number of valid output data" severity error;
+            else 
+                assert out_val_cnt = in_val_cnt-(2*g_fft.nof_points-1)                report "Unexpected number of valid output data" severity error;
+            end if;
+        else
+            assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+        end if;
     else
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
+        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
     end if;
     wait;
   end process;

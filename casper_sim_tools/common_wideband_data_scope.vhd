@@ -57,7 +57,7 @@ ENTITY common_wideband_data_scope IS
     out_dat   : OUT STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
     out_int   : OUT INTEGER;
     out_val   : OUT STD_LOGIC
-  );
+  );  
 END common_wideband_data_scope;
 
 
