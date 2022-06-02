@@ -44,7 +44,7 @@ for bit_w_val, input_v in product(bit_w, input_val):
     edge_detect_config_name = "EDGE_DETECT: num_bits=%d, input_val=%d" % (bit_w_val, input_v)
     EDGE_DETECT.add_config(
         name = edge_detect_config_name,
-        generics=dict(g_dat_w = bit_w, g_dat_val = input_val)
+        generics=dict(g_dat_w = bit_w_val, g_dat_val = input_v)
     )
     
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed"])
