@@ -7,7 +7,7 @@ USE STD.TEXTIO.ALL;
 ENTITY tb_edge_detect is
     GENERIC(
         g_dat_w : NATURAL := 1;
-        g_dat_val : NATURAL := 1
+        g_dat_val : INTEGER := 1
     );
     PORT(
 		o_rst		   : OUT STD_LOGIC;

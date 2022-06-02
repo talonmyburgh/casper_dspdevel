@@ -6,7 +6,7 @@ context vunit_lib.vunit_context;
 ENTITY tb_tb_vu_edge_detect IS
 	GENERIC(
         g_dat_w : NATURAL;
-        g_dat_val : NATURAL;
+        g_dat_val : INTEGER;
 		runner_cfg : string
 	);
 END tb_tb_vu_edge_detect;
