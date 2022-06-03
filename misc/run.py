@@ -18,6 +18,7 @@ RI_TO_C_TB = casper_lib_misc.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_lib_misc.test_bench("tb_tb_vu_c_to_ri")
 BIT_REVERSE = casper_lib_misc.test_bench("tb_tb_vu_bit_reverse")
 EDGE_DETECT = casper_lib_misc.test_bench("tb_tb_vu_edge_detect")
+ARMED_TRIGGER = casper_lib_misc.test_bench("tb_tb_vu_armed_trigger")
 
 async_arr = [True, False]
 bit_w = [8,18]
@@ -46,6 +47,10 @@ for bit_w_val, input_v in product(bit_w, input_val):
         name = edge_detect_config_name,
         generics=dict(g_dat_w = bit_w_val, g_dat_val = input_v)
     )
+
+ARMED_TRIGGER.add_config(
+    name = "ARMED_TRIGGER"
+)
     
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed"])
