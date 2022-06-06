@@ -1,6 +1,7 @@
 from vunit import VUnit
 from os.path import dirname, join
 from itertools import product
+import random
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
@@ -19,6 +20,7 @@ C_TO_RI_TB = casper_lib_misc.test_bench("tb_tb_vu_c_to_ri")
 BIT_REVERSE = casper_lib_misc.test_bench("tb_tb_vu_bit_reverse")
 EDGE_DETECT = casper_lib_misc.test_bench("tb_tb_vu_edge_detect")
 ARMED_TRIGGER = casper_lib_misc.test_bench("tb_tb_vu_armed_trigger")
+PULSE_EXT = casper_lib_misc.test_bench("tb_tb_vu_pulse_ext")
 
 async_arr = [True, False]
 bit_w = [8,18]
@@ -46,6 +48,13 @@ for bit_w_val, input_v in product(bit_w, input_val):
     EDGE_DETECT.add_config(
         name = edge_detect_config_name,
         generics=dict(g_dat_w = bit_w_val, g_dat_val = input_v)
+    )
+
+for pulse_extension in [0, 1] + random.sample(range(2,20), 2):
+    pulse_ext_config_name = "PULSE_EXT: extension=%d" % (pulse_extension)
+    PULSE_EXT.add_config(
+        name = pulse_ext_config_name,
+        generics=dict(g_extension = pulse_extension)
     )
 
 ARMED_TRIGGER.add_config(
