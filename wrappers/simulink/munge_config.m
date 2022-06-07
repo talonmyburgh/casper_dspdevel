@@ -21,12 +21,25 @@ function munge_config(this_block)
   %Input signals
   this_block.addSimulinkInport('din');
   din_port = this_block.port('din');
-  din_port.setWidth(nof_divisions*division_w);
 
   %Output signals
   this_block.addSimulinkOutport('dout');
   dout_port = this_block.port('dout');
   dout_port.setWidth(nof_divisions*division_w);
+
+  % -----------------------------
+  if (this_block.inputTypesKnown)
+    % do input type checking, dynamic output type and generic setup in this code block.
+
+    if (din_port.width ~= nof_divisions*division_w);
+      this_block.setError(sprintf('Input data type for port "din" must have width=%d.', nof_divisions*division_w));
+    end
+
+    if (count(order, ',') ~= nof_divisions-1);
+      this_block.setError(sprintf('Order string should have %d comma-delimited values.', nof_divisions));
+    end
+  end  % if(inputTypesKnown)
+  % -----------------------------
 
   % -----------------------------
    if (this_block.inputRatesKnown)
