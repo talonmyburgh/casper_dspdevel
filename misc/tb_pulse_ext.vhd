@@ -7,7 +7,8 @@ USE common_pkg_lib.common_pkg.all;
 
 ENTITY tb_pulse_ext is
   GENERIC(
-    g_extension : NATURAL := 4
+    g_extension : NATURAL := 4;
+    g_rising_not_falling_edge_detect : BOOLEAN := TRUE
   );
   PORT(
     o_rst       : out std_logic;
@@ -23,7 +24,7 @@ ARCHITECTURE rtl of tb_pulse_ext is
 
   SIGNAL tb_end   : STD_LOGIC := '0';
   SIGNAL rst      : STD_LOGIC;
-  SIGNAL clk      : STD_LOGIC := '0';
+  SIGNAL clk      : STD_LOGIC := '1';
 
   SIGNAL s_pulse_in     : STD_LOGIC;
   SIGNAL s_pulse_out    : STD_LOGIC;
@@ -38,15 +39,36 @@ BEGIN
 
   p_stimuli : PROCESS
   BEGIN
-    s_pulse_in <= '1';
+  
+    -- setup and reset hold
+    s_pulse_in <= '0';
     s_pulse_exp <= '1';
     wait until rst = '0';
-    wait until rising_edge(clk);
-    wait for 3*clk_period;
-    s_pulse_in <= '0';
-    wait for g_extension*clk_period;
-    s_pulse_exp <= '0';
-    wait for 3*clk_period;
+    
+    for repeat in 0 to 1 loop
+      s_pulse_in <= '1';
+      s_pulse_exp <= '1';
+
+      -- o_pulse extended high for...
+      IF g_rising_not_falling_edge_detect then
+        wait for 1*clk_period;
+      else
+        wait for 3*clk_period;
+      end if;
+      s_pulse_in <= '0';
+
+      -- o_pulse goes low after...
+      IF g_rising_not_falling_edge_detect then
+        -- g_extension+1 clks after rising_edge
+        wait for g_extension*clk_period;
+      else
+        wait for g_extension*clk_period;
+      end if;
+      s_pulse_exp <= '0';
+
+      -- stability for...
+      wait for 10*clk_period;
+    end loop;
     tb_end <= '1';
     wait;
   END PROCESS;
@@ -66,7 +88,8 @@ BEGIN
 
   u_dut : ENTITY work.pulse_ext
     generic map (
-      g_extension => g_extension
+      g_extension => g_extension,
+      g_rising_not_falling_edge_detect => g_rising_not_falling_edge_detect
     )
     port map(
       clk => clk,
