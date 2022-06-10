@@ -27,12 +27,10 @@ BEGIN
     PROCESS (clk)
         VARIABLE cnt : INTEGER RANGE 0 TO c_max_count;
     BEGIN
-        IF (rising_edge(clk) and ce = '1') THEN
-            IF (reset = '1') THEN
-                cnt := 0;
-            ELSE
-                cnt := cnt + 1;
-            END IF;
+        IF (reset = '1') THEN
+            cnt := 0;
+        ELSIF (rising_edge(clk) and ce = '1') THEN
+            cnt := cnt + 1;
         END IF;
         s_count <= STD_LOGIC_VECTOR(TO_SIGNED(cnt, g_cnt_w));
     END PROCESS;
