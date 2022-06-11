@@ -11,6 +11,10 @@ script_dir = dirname(__file__)
 common_pkg_lib = vu.add_library("common_pkg_lib")
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 
+# Create library 'casper_counter_lib'
+casper_counter_lib = vu.add_library("casper_counter_lib")
+casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
+
 #MISC Library compile
 casper_lib_misc = vu.add_library("casper_misc_lib")
 casper_lib_misc.add_source_files(join(script_dir, "./*.vhd"))
@@ -50,7 +54,7 @@ for bit_w_val, input_v in product(bit_w, input_val):
         generics=dict(g_dat_w = bit_w_val, g_dat_val = input_v)
     )
 
-for pulse_extension in [0, 1] + random.sample(range(2,20), 2):
+for pulse_extension in [1] + random.sample(range(2,10), 1):
     pulse_ext_config_name = "PULSE_EXT: extension=%d" % (pulse_extension)
     PULSE_EXT.add_config(
         name = pulse_ext_config_name,

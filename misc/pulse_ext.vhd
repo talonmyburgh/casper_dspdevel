@@ -49,7 +49,7 @@ BEGIN
     )
     port map (
       clk => clk,
-      ce => s_counted,
+      ce => ce and s_counted,
 		  reset => s_count_rst(0),
       count => s_count
     );
