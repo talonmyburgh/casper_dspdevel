@@ -1,5 +1,6 @@
 -- A VHDL implementation of the CASPER delay_bram block.
--- @author: Mydon Solutions.
+-- @author: Ross Donnachie
+-- @company: Mydon Solutions
 
 LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.all;
