@@ -1,3 +1,6 @@
+-- @author: Ross Donnachie
+-- @company: Mydon Solutions
+
 library ieee, common_pkg_lib, vunit_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
