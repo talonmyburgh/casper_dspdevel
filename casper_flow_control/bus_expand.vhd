@@ -16,9 +16,6 @@ USE common_pkg_lib.common_pkg.all;
 USE work.bus_expand_pkg.all;
 
 ENTITY bus_expand is
-  generic (
-    g_divisions : NATURAL := 4
-  );
   port (
     clk   : in std_logic := '1';
     ce    : in std_logic := '1';
@@ -33,7 +30,7 @@ ARCHITECTURE rtl of bus_expand is
   CONSTANT c_bit_w : NATURAL := c_bus_expand_division_bit_width;
 begin
 
-  g_split : FOR I IN 0 to g_divisions-1 GENERATE
+  g_split : FOR I IN 0 to dout'length-1 GENERATE
   begin
     dout(dout'low + I) <= din(din'length-1-i*c_bit_w downto din'length-(i+1)*c_bit_w);
   end GENERATE;
