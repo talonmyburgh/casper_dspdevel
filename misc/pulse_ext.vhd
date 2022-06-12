@@ -56,7 +56,7 @@ BEGIN
   
   gen_rising_edge_out : IF g_rising_not_falling_edge_detect GENERATE
     -- when extending rising_edge, o_pulse is forced to be g_extension clks long after edge
-    s_counted <= '1' when s_count /= TO_UVEC(g_extension, c_counter_bit_w) else i_pulse;
+    s_counted <= '1' when s_count /= TO_UVEC(g_extension, c_counter_bit_w) else '0';
   END GENERATE;
   gen_falling_edge_out : IF not g_rising_not_falling_edge_detect GENERATE
     -- when extending falling_edge, o_pulse is extended to be higher for g_extension clks longer after edge
