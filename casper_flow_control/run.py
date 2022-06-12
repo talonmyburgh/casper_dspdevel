@@ -18,6 +18,7 @@ casper_flow_control_lib.add_source_files(join(script_dir, "./*.vhd"))
 
 TB_MUNGE = casper_flow_control_lib.test_bench("tb_tb_vu_munge")
 TB_BUS_EXPAND = casper_flow_control_lib.test_bench("tb_tb_vu_bus_expand")
+TB_BUS_CREATE = casper_flow_control_lib.test_bench("tb_tb_vu_bus_create")
 
 slice_bit_widths = [1, 4, 18]
 slice_counts = [1, 19]
@@ -43,6 +44,14 @@ for count in slice_counts:
     
     config_name = "expansion_count=%s" %(count)
     TB_BUS_EXPAND.add_config(
+        name = config_name,
+        generics=dict(
+            g_values = slice_values_encoded
+        )
+    )
+    
+    config_name = "concat_count=%s" %(count)
+    TB_BUS_CREATE.add_config(
         name = config_name,
         generics=dict(
             g_values = slice_values_encoded
