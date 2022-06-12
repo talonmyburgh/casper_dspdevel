@@ -24,7 +24,7 @@ ARCHITECTURE rtl of free_run_up_counter is
 
 BEGIN
 
-    PROCESS (clk)
+    PROCESS (clk, reset)
         VARIABLE cnt : INTEGER RANGE 0 TO c_max_count;
     BEGIN
         IF (reset = '1') THEN
