@@ -87,9 +87,6 @@ begin
 -- bus_expand module
 ---------------------------------------------------------------------
     u_bus_expand : entity work.bus_expand
-    generic map (
-        g_divisions => g_values'length
-    )
     port map (
         din => s_in,
         dout => s_out
