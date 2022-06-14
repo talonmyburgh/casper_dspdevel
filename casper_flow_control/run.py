@@ -1,7 +1,5 @@
-from distutils.command.config import config
 from vunit import VUnit
 from os.path import dirname, join
-from itertools import product
 import random
 
 # Create VUnit instance by parsing command line arguments
