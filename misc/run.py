@@ -16,15 +16,15 @@ casper_counter_lib = vu.add_library("casper_counter_lib")
 casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
 
 #MISC Library compile
-casper_lib_misc = vu.add_library("casper_misc_lib")
-casper_lib_misc.add_source_files(join(script_dir, "./*.vhd"))
+casper_misc_lib = vu.add_library("casper_misc_lib")
+casper_misc_lib.add_source_files(join(script_dir, "./*.vhd"))
 
-RI_TO_C_TB = casper_lib_misc.test_bench("tb_tb_vu_ri_to_c")
-C_TO_RI_TB = casper_lib_misc.test_bench("tb_tb_vu_c_to_ri")
-BIT_REVERSE = casper_lib_misc.test_bench("tb_tb_vu_bit_reverse")
-EDGE_DETECT = casper_lib_misc.test_bench("tb_tb_vu_edge_detect")
-ARMED_TRIGGER = casper_lib_misc.test_bench("tb_tb_vu_armed_trigger")
-PULSE_EXT = casper_lib_misc.test_bench("tb_tb_vu_pulse_ext")
+RI_TO_C_TB = casper_misc_lib.test_bench("tb_tb_vu_ri_to_c")
+C_TO_RI_TB = casper_misc_lib.test_bench("tb_tb_vu_c_to_ri")
+BIT_REVERSE = casper_misc_lib.test_bench("tb_tb_vu_bit_reverse")
+EDGE_DETECT = casper_misc_lib.test_bench("tb_tb_vu_edge_detect")
+ARMED_TRIGGER = casper_misc_lib.test_bench("tb_tb_vu_armed_trigger")
+PULSE_EXT = casper_misc_lib.test_bench("tb_tb_vu_pulse_ext")
 
 async_arr = [True, False]
 bit_w = [8,18]
