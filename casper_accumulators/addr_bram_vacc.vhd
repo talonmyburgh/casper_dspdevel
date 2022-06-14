@@ -30,6 +30,8 @@ architecture rtl of addr_bram_vacc is
     SIGNAL s_b : std_logic_vector(g_bit_w - 1 DOWNTO 0);
     SIGNAL s_delay_bram_in : std_logic_vector(g_bit_w - 1 DOWNTO 0);
     SIGNAL s_delay_bram_out : std_logic_vector(g_bit_w - 1 DOWNTO 0);
+    SIGNAL s_mux_out : std_logic_vector(g_bit_w - 1 DOWNTO 0);
+
 begin
 
 --------------------------------------------------------------
@@ -74,14 +76,30 @@ port map(
 --------------------------------------------------------------
 -- mux block
 --------------------------------------------------------------
-s_b <=  s_delay_bram_out when s_pulse_ext_out = '0' else
+s_mux_out <=  s_delay_bram_out when s_pulse_ext_out = '0' else
         (others=>'0') when  s_pulse_ext_out = '1' else
         (others=>'X');
+
+--------------------------------------------------------------
+-- delay mux output
+--------------------------------------------------------------
+delay_mux_out : entity common_components_lib.common_delay
+generic map(
+    g_dat_w => g_bit_w,
+    g_depth => 2
+)
+port map(
+    clk => clk,
+    in_val => '1',
+    in_dat => s_mux_out,
+    out_dat => s_b
+);
 
 --------------------------------------------------------------
 -- resize din signal
 --------------------------------------------------------------
 s_a <= RESIZE_SVEC(s_delay_din, g_bit_w);
+
 --------------------------------------------------------------
 -- adder block
 --------------------------------------------------------------
