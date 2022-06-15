@@ -76,7 +76,7 @@ BEGIN
     en <= '1';
     WAIT for clk_period * (c_delay_one + g_ram_latency);
     WAIT UNTIL rising_edge(clk);
-    v_test_pass := out_del_vec = in_del_vec;
+    v_test_pass := v_test_pass or (out_del_vec = in_del_vec);
     IF not v_test_pass THEN
         v_test_msg := pad("wrong RTL result for dout, expected: " & to_hstring(in_del_vec) & " but got: " & to_hstring(out_del_vec), o_test_msg'length, '.' );
         REPORT "ERROR: " & v_test_msg severity error;
@@ -86,7 +86,7 @@ BEGIN
     in_del_vec <= (others => '0');
     WAIT for clk_period * (c_delay_two + g_ram_latency);
     WAIT UNTIL rising_edge(clk);
-    v_test_pass := out_del_vec = in_del_vec;
+    v_test_pass := v_test_pass or (out_del_vec = in_del_vec);
     IF not v_test_pass THEN
         v_test_msg := pad("wrong RTL result for dout, expected: " & to_hstring(in_del_vec) & " but got: " & to_hstring(out_del_vec), o_test_msg'length, '.' );
         REPORT "ERROR: " & v_test_msg severity error;
