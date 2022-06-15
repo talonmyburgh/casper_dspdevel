@@ -87,28 +87,28 @@ TB_ADDR_BRAM_VACC = casper_accumulator_lib.test_bench("tb_tb_vu_addr_bram_vacc")
 bit_w = [8,18]
 ramp = np.arange(16)
 rampstr = ",".join(map(str, ramp))
-
 randnums= np.random.randint(-100,100,32)
 randstr =  ",".join(map(str, randnums))
-strvalues = [rampstr, randstr]
 
 for b_w in bit_w:
-    config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, strvalue=%s..." % (b_w,rampstr[0:8])
+    vector_len = ramp.size
+    config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,rampstr[0:8])
     TB_ADDR_BRAM_VACC.add_config(
         name=config_name,
         generics=dict(
             g_bit_w=b_w,
             g_values=rampstr,
-            g_vector_length=ramp.size
+            g_vector_length=vector_len
         )
     )
-    config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, strvalue=%s..." % (b_w,randstr[0:8])
+    vector_len = randnums.size
+    config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,randstr[0:8])
     TB_ADDR_BRAM_VACC.add_config(
         name=config_name,
         generics=dict(
             g_bit_w=b_w,
             g_values=randstr,
-            g_vector_length=randnums.size
+            g_vector_length=vector_len
         )
     )
 
