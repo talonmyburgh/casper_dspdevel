@@ -12,13 +12,13 @@ entity tb_addr_bram_vacc is
         g_vector_length : NATURAL := 8;
         g_bit_w_out     : NATURAL := 8;
         g_bit_w         : NATURAL := 8;
-        g_values        : t_natural_arr := (-1, 4, 10, -2, 3, 0, -15, 0)
+        g_values        : t_integer_arr := (-1, 4, 10, -2, 3, 0, -15, 0)
     );
     port (
         o_clk   : out std_logic;
         o_tb_end : out std_logic;
         o_test_msg : out STRING(1 to 80);
-        o_test_pass : out BOOLEAN  
+        o_test_pass : out BOOLEAN := True 
     );
 end entity tb_addr_bram_vacc;
 
@@ -57,7 +57,7 @@ begin
         FOR I in 0 to g_vector_length - 1 LOOP
             WAIT FOR clk_period;
             v_test_vector := TO_SVEC(g_values(g_values'LOW + I), g_bit_w);
-            v_test_pass := dout = v_test_vector;
+            v_test_pass := v_test_pass or (dout = v_test_vector);
             IF NOT v_test_pass THEN
                 v_test_msg := pad("1wrong RTL result for dout, expected: " & to_hstring(v_test_vector) & " but got: " & to_hstring(dout), o_test_msg'length, '.');
                 o_test_msg <= v_test_msg;
@@ -68,7 +68,7 @@ begin
         FOR I in 0 to g_vector_length - 1 LOOP
             WAIT FOR clk_period;
             v_test_vector := TO_SVEC(g_values(g_values'LOW + I)*7, g_bit_w);
-            v_test_pass := dout = v_test_vector;
+            v_test_pass := v_test_pass or (dout = v_test_vector);
             IF NOT v_test_pass THEN
                 v_test_msg := pad("2wrong RTL result for dout, expected: " & to_hstring(v_test_vector) & " but got: " & to_hstring(dout), o_test_msg'length, '.');
                 o_test_msg <= v_test_msg;
@@ -82,12 +82,15 @@ begin
         WAIT FOR clk_period*(g_vector_length+1);
         WAIT UNTIL rising_edge(clk);
         v_test_vector := TO_SVEC(g_values(g_values'LOW), g_bit_w);
-        v_test_pass := dout = v_test_vector;
+        v_test_pass := v_test_pass or (dout = v_test_vector);
         IF NOT v_test_pass THEN
             v_test_msg := pad("3wrong RTL result for dout, expected: " & to_hstring(v_test_vector) & " but got: " & to_hstring(dout), o_test_msg'length, '.');
             o_test_msg <= v_test_msg;
             report "Error: " & v_test_msg severity error;
         END IF;
+        o_test_msg <= v_test_msg;
+        o_test_pass <= v_test_pass;
+        tb_end <= '1';
     WAIT;
     
     END PROCESS;

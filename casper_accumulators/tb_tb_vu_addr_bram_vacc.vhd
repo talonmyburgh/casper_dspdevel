@@ -23,9 +23,9 @@ architecture tb of tb_tb_vu_addr_bram_vacc is
 	SIGNAL test_msg     : STRING(1 to 80);
 	SIGNAL test_pass	: BOOLEAN;
 
-	IMPURE FUNCTION decode(encoded_natural_vector : string) return t_natural_arr is
+	IMPURE FUNCTION decode(encoded_natural_vector : string) return t_integer_arr is
 		VARIABLE parts : lines_t := split(encoded_natural_vector, ",");
-		VARIABLE return_value : t_natural_arr(parts'range);
+		VARIABLE return_value : t_integer_arr(parts'range);
 	BEGIN
 		for i in parts'range loop
 			return_value(i) := natural'value(parts(i).all);
@@ -33,7 +33,7 @@ architecture tb of tb_tb_vu_addr_bram_vacc is
 		return return_value;
 	END;
 
-	CONSTANT c_values : t_natural_arr(g_vector_length-1 downto 0) := decode(g_values);
+	CONSTANT c_values : t_integer_arr := decode(g_values);
 BEGIN
 	tb_ut : ENTITY work.tb_addr_bram_vacc
         GENERIC MAP(
