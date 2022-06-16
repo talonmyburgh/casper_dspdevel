@@ -15,14 +15,14 @@ entity addr_bram_vacc is
         ce          : IN std_logic;
         new_acc     : IN std_logic;
         din         : IN std_logic_vector;
-        addr        : OUT std_logic_vector(ceil_log2(g_vector_length) - 1 DOWNTO 0);
-        we          : OUT std_logic;
-        dout        : OUT std_logic_vector(g_bit_w - 1 DOWNTO 0)
+        addr        : OUT std_logic_vector(ceil_log2(g_vector_length) - 1 DOWNTO 0) := (others=>'0');
+        we          : OUT std_logic := '0';
+        dout        : OUT std_logic_vector(g_bit_w - 1 DOWNTO 0) := (others=>'0')
     );
 END addr_bram_vacc;
 
 architecture rtl of addr_bram_vacc is
-    SIGNAL s_delay_new_acc : std_logic;
+    SIGNAL s_delay_new_acc : std_logic :='0';
     SIGNAL s_delay_din : std_logic_vector(din'RANGE);
     SIGNAL s_pulse_ext_out : std_logic;
     SIGNAL s_dout  : std_logic_vector(g_bit_w - 1 DOWNTO 0);
@@ -157,17 +157,17 @@ BEGIN
 END PROCESS;
 
 --------------------------------------------------------------
--- counter
+-- counter - need a synchronous reset, hence use common_counter
 --------------------------------------------------------------
-addr_counter : entity casper_counter_lib.free_run_up_counter
-generic map (
-    g_cnt_w => ceil_log2(g_vector_length)
-)
-port map (
-    clk => clk,
-    ce  => ce,
-    reset => s_delay_new_acc,
-    count => addr
-);
+addr_counter : entity casper_counter_lib.common_counter
+	GENERIC MAP(
+		g_width     => ceil_log2(g_vector_length)
+	)
+	PORT MAP(
+		clk     => clk,        --! Clock signal
+		clken   => ce,
+        cnt_clr => s_delay_new_acc,
+		count   => addr
+	);
 
 END rtl;
