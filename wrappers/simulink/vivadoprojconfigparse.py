@@ -3,7 +3,7 @@ import sys
 import glob
 
 # launch vivado in tcl mode and execute tcl script to write out hierarchy to txt file
-vivcommand = os.path.abspath('C:/Users/radonn/Xilinx/Vivado/2020.1/bin/vivado.bat') +' -mode batch -source getprojhierarchy.tcl -tclargs '+os.path.abspath(sys.argv[1])
+vivcommand = os.path.abspath('C:/Xilinx/Vivado/2020.1/bin/vivado.bat') +' -mode batch -source getprojhierarchy.tcl -tclargs '+os.path.abspath(sys.argv[1])
 os.system(vivcommand)
 
 # open hierarchy txt file
