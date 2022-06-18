@@ -12,7 +12,7 @@ function addr_bram_vacc_config(this_block)
   vector_length = get_param(addr_bram_vacc_blk_parent,'vector_length');
   vector_length_dbl = str2double(vector_length);
   addr_len = ceil(log2(vector_length_dbl));
-  is_signed = get_param(addr_bram_vacc_blk_parent,'output_sign')
+  is_signed = get_param(addr_bram_vacc_blk_parent,'output_sign');
   output_bit_w = get_param(addr_bram_vacc_blk_parent,'output_bit_w');
   output_bin_pt = get_param(addr_bram_vacc_blk_parent,'output_bin_pt');
 
