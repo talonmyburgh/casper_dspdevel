@@ -1,4 +1,4 @@
--- A VHDL implementation of the CASPER delay_bram block.
+-- A VHDL implementation of the CASPER munge block.
 -- @author: Ross Donnachie
 -- @company: Mydon Solutions
 
