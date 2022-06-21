@@ -1,4 +1,4 @@
-function vhdlfile = bus_create_arbitrary_code_gen(division_bit_widths)
+function vhdlfile = bus_create_arbitrary_code_gen(division_bit_widths, unique_prefix)
     %gather all the string arrays required to write full file:
     filepathscript = fileparts(which('bus_create_arbitrary_code_gen'));                 %get the filepath of this script (and thereby all scripts needed)
     %where the top vhdl file will be generated
@@ -7,7 +7,9 @@ function vhdlfile = bus_create_arbitrary_code_gen(division_bit_widths)
         mkdir(vhdlfilefolder);
     end
     %and what it will be named
-    vhdlfile = fullfile(vhdlfilefolder, [bdroot '_bus_create_arbitrary.vhd']);           %filename for vhd file
+    vhdlfile = fullfile(vhdlfilefolder, [bdroot '_' unique_prefix '_bus_create_arbitrary.vhd']);           %filename for vhd file
+
+    entityname = [unique_prefix '_bus_create_arbitrary'];
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%upperdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     upperlines = [
@@ -19,7 +21,7 @@ function vhdlfile = bus_create_arbitrary_code_gen(division_bit_widths)
     "LIBRARY IEEE;"
     "USE IEEE.std_logic_1164.all;"
     ""
-    "ENTITY bus_create_arbitrary is"
+    sprintf("ENTITY %s is", entityname)
     "port ("
     "    clk   : in std_logic := '1';"
     "    ce    : in std_logic := '1';"
@@ -32,7 +34,7 @@ function vhdlfile = bus_create_arbitrary_code_gen(division_bit_widths)
     ");"
     "end ENTITY;"
     ""
-    "ARCHITECTURE rtl of bus_create_arbitrary is"
+    sprintf("ARCHITECTURE rtl of %s is", entityname)
     "    alias a_data : STD_LOGIC_VECTOR (o_data'length-1 downto 0) is o_data;"
     ];
 
