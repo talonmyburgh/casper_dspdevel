@@ -1,3 +1,7 @@
+-- A VHDL implementation of the CASPER addr_bram_vacc.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+
 LIBRARY IEEE, common_pkg_lib, 
 casper_misc_lib, common_components_lib, casper_adder_lib,
 casper_delay_lib, casper_counter_lib;

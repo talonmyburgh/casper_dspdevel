@@ -1,5 +1,6 @@
 -- A VHDL testbench for addr_bram_vacc.vhd.
--- @author: Mydon Solutions.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 
 LIBRARY IEEE, std, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
