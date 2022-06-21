@@ -4,15 +4,16 @@ function bus_create_arbitrary_config(this_block)
   this_block.setTopLevelLanguage('VHDL');
 
   % this_block.tagAsCombinational;
-  this_block.setEntityName('bus_create_arbitrary');
   bus_create_blk = this_block.blockName;
   bus_create_blk_parent = get_param(bus_create_blk,'Parent');
+  bus_create_blk_parent_name = get_param(bus_create_blk_parent,'Name');
+  this_block.setEntityName([bus_create_blk_parent_name '_bus_create_arbitrary']);
   
   input_bit_widths = get_param(bus_create_blk_parent,'bit_widths');
   input_bit_widths = strrep(input_bit_widths, '"', '');
   input_bit_widths = str2double(regexp(input_bit_widths,'\d+','match'));
 
-  vhdlfile = bus_create_arbitrary_code_gen(input_bit_widths);
+  vhdlfile = bus_create_arbitrary_code_gen(input_bit_widths, bus_create_blk_parent_name);
 
   %Output signals
   this_block.addSimulinkOutport('o_data');
