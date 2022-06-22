@@ -44,7 +44,7 @@ function addr_bram_vacc_config(this_block)
   dout_port = this_block.port('dout');
   if is_signed
     dout_port.setType(sprintf('Fix_%s_%s',output_bit_w,output_bin_pt))
-  elseif is_signed
+  else
     dout_port.setType(sprintf('Ufix_%s_%s',output_bit_w,output_bin_pt))
   end
 
