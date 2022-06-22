@@ -5,6 +5,21 @@ function addr_bram_vacc_config(this_block)
   this_block.setEntityName('addr_bram_vacc');
   filepath = fileparts(which('addr_bram_vacc_config'));
 
+  function boolval =  checkbox2bool(bxval)
+    if strcmp(bxval, 'on')
+     boolval= true;
+    elseif strcmp(bxval, 'off')
+     boolval= false;
+    end 
+  end
+  function strboolval = bool2sign(bval)
+    if bval
+        strboolval = '"SIGNED"';
+    elseif ~bval
+        strboolval = '"UNSIGNED"';
+    end
+  end
+
   addr_bram_vacc_blk = this_block.blockName;
   addr_bram_vacc_blk_parent = get_param(addr_bram_vacc_blk,'Parent');
 
@@ -12,7 +27,7 @@ function addr_bram_vacc_config(this_block)
   vector_length = get_param(addr_bram_vacc_blk_parent,'vector_length');
   vector_length_dbl = str2double(vector_length);
   addr_len = ceil(log2(vector_length_dbl));
-  is_signed = get_param(addr_bram_vacc_blk_parent,'output_sign');
+  is_signed = checkbox2bool(get_param(addr_bram_vacc_blk_parent,'output_sign'));
   output_bit_w = get_param(addr_bram_vacc_blk_parent,'output_bit_w');
   output_bin_pt = get_param(addr_bram_vacc_blk_parent,'output_bin_pt');
 
@@ -54,9 +69,9 @@ function addr_bram_vacc_config(this_block)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-
+  is_signed_str = bool2sign(is_signed)
   this_block.addGeneric('g_vector_length','NATURAL',vector_length);
-  this_block.addGeneric('g_output_type','STRING',is_signed);
+  this_block.addGeneric('g_output_type','STRING',is_signed_str);
   this_block.addGeneric('g_bit_w','NATURAL',output_bit_w);
   
   this_block.addFileToLibrary([filepath '/../../casper_accumulators/addr_bram_vacc.vhd'],'xil_defaultlib');
