@@ -45,7 +45,7 @@ function dsp48e_bram_vacc_config(this_block)
   dout_port = this_block.port('dout');
   if is_signed
     dout_port.setType(sprintf('Fix_%s_%s',output_bit_w,output_bin_pt))
-  elseif is_signed
+  else
     dout_port.setType(sprintf('Ufix_%s_%s',output_bit_w,output_bin_pt))
   end
 
@@ -69,7 +69,7 @@ function dsp48e_bram_vacc_config(this_block)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-  is_signed_str = bool2sign(is_signed)
+  is_signed_str = bool2sign(is_signed);
   this_block.addGeneric('g_vector_length','NATURAL',vector_length);
   this_block.addGeneric('g_output_type','STRING',is_signed_str);
   this_block.addGeneric('g_bit_w','NATURAL',output_bit_w);
