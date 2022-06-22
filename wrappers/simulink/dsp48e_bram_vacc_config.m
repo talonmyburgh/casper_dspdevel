@@ -6,12 +6,27 @@ function dsp48e_bram_vacc_config(this_block)
   this_block.setEntityName('dsp48e_bram_vacc');
   filepath = fileparts(which('dsp48e_bram_vacc_config'));
 
+  function boolval =  checkbox2bool(bxval)
+    if strcmp(bxval, 'on')
+     boolval= true;
+    elseif strcmp(bxval, 'off')
+     boolval= false;
+    end 
+  end
+  function strboolval = bool2sign(bval)
+    if bval
+        strboolval = '"SIGNED"';
+    elseif ~bval
+        strboolval = '"UNSIGNED"';
+    end
+  end
+
   dsp48e_bram_vacc_blk = this_block.blockName;
   dsp48e_bram_vacc_blk_parent = get_param(dsp48e_bram_vacc_blk,'Parent');
 
   %Extract block parameters
   vector_length = get_param(dsp48e_bram_vacc_blk_parent,'vector_length');
-  is_signed = get_param(dsp48e_bram_vacc_blk_parent,'arith_type');
+  is_signed = checkbox2bool(get_param(dsp48e_bram_vacc_blk_parent,'arith_type'));
   output_bit_w = get_param(dsp48e_bram_vacc_blk_parent,'n_bits_out');
   output_bin_pt = get_param(dsp48e_bram_vacc_blk_parent,'bin_pt_out');
   dspversion = get_param(dsp48e_bram_vacc_blk_parent,'dsp_version');
@@ -28,9 +43,9 @@ function dsp48e_bram_vacc_config(this_block)
 
   this_block.addSimulinkOutport('dout');
   dout_port = this_block.port('dout');
-  if is_signed == '"SIGNED"'
+  if is_signed
     dout_port.setType(sprintf('Fix_%s_%s',output_bit_w,output_bin_pt))
-  elseif is_signed == '"UNSIGNED"'
+  elseif is_signed
     dout_port.setType(sprintf('Ufix_%s_%s',output_bit_w,output_bin_pt))
   end
 
@@ -54,9 +69,9 @@ function dsp48e_bram_vacc_config(this_block)
      setup_as_single_rate(this_block,'clk','ce')
    end  % if(inputRatesKnown)
   % -----------------------------
-
+  is_signed_str = bool2sign(is_signed)
   this_block.addGeneric('g_vector_length','NATURAL',vector_length);
-  this_block.addGeneric('g_output_type','STRING',is_signed);
+  this_block.addGeneric('g_output_type','STRING',is_signed_str);
   this_block.addGeneric('g_bit_w','NATURAL',output_bit_w);
   this_block.addGeneric('g_dsp48_version','NATURAL',dspversion);
 
