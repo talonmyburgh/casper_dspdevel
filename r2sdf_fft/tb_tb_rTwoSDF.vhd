@@ -33,30 +33,77 @@ use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
 use work.rTwoSDFPkg.all;
 
-
 entity tb_tb_rTwoSDF is
 end entity tb_tb_rTwoSDF;
 
 architecture tb of tb_tb_rTwoSDF is
 
-  signal tb_end             : std_logic := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
-  CONSTANT c_diff_margin    : natural := 1;
-  
+    signal tb_end          : std_logic := '0'; -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
+    CONSTANT c_diff_margin : natural   := 1;
+
 begin
 
---  -- generics for tb
---  g_use_uniNoise_file : boolean  := true;
---  g_in_en             : natural  := 0;     -- 1 = always active, others = random control
---  -- generics for rTwoSDF
---  g_use_reorder       : boolean  := true;
---  g_nof_points        : natural  := 1024;
---  g_in_dat_w          : natural  := 8;   
---  g_out_dat_w         : natural  := 14;   
---  g_guard_w           : natural  := 2      -- guard bits are used to avoid overflow in single FFT stage.   
+    --  -- generics for tb
+    --  g_use_uniNoise_file : boolean  := true;
+    --  g_in_en             : natural  := 0;     -- 1 = always active, others = random control
+    --  -- generics for rTwoSDF
+    --  g_use_reorder       : boolean  := true;
+    --  g_nof_points        : natural  := 1024;
+    --  g_in_dat_w          : natural  := 8;   
+    --  g_out_dat_w         : natural  := 14;   
+    --  g_guard_w           : natural  := 2      -- guard bits are used to avoid overflow in single FFT stage.   
 
-  u_act_impulse_16p_16i_16o          : entity work.tb_rTwoSDF generic map (false, 1,  true,   16, 16, 16, 2, c_diff_margin, c_twid_file_stem);
-  u_act_noise_1024p_8i_14o           : entity work.tb_rTwoSDF generic map (true,  1,  true, 1024,  8, 14, 2, c_diff_margin, c_twid_file_stem);
-  u_rnd_noise_1024p_8i_14o           : entity work.tb_rTwoSDF generic map (true,  0,  true, 1024,  8, 14, 2, c_diff_margin, c_twid_file_stem);
-  u_rnd_noise_1024p_8i_14o_flipped   : entity work.tb_rTwoSDF generic map (true,  0, false, 1024,  8, 14, 2, c_diff_margin, c_twid_file_stem);
-  
+    u_act_impulse_16p_16i_16o : entity work.tb_rTwoSDF
+        generic map(
+            g_use_uniNoise_file => false,
+            g_in_en             => 1,
+            g_use_reorder       => true,
+            g_nof_points        => 16,
+            g_in_dat_w          => 16,
+            g_out_dat_w         => 16,
+            g_guard_w           => 2,
+            g_diff_margin       => c_diff_margin,
+            g_file_loc_prefix   => "../../../../../",
+            g_twid_file_stem    => c_twid_file_stem
+        );
+    u_act_noise_1024p_8i_14o : entity work.tb_rTwoSDF
+        generic map(
+            g_use_uniNoise_file => true,
+            g_in_en             => 1,
+            g_use_reorder       => true,
+            g_nof_points        => 1024,
+            g_in_dat_w          => 8,
+            g_out_dat_w         => 14,
+            g_guard_w           => 2,
+            g_diff_margin       => c_diff_margin,
+            g_file_loc_prefix   => "../../../../../",
+            g_twid_file_stem    => c_twid_file_stem
+        );
+    u_rnd_noise_1024p_8i_14o : entity work.tb_rTwoSDF
+        generic map(
+            g_use_uniNoise_file => true,
+            g_in_en             => 1,
+            g_use_reorder       => true,
+            g_nof_points        => 1024,
+            g_in_dat_w          => 8,
+            g_out_dat_w         => 14,
+            g_guard_w           => 2,
+            g_diff_margin       => c_diff_margin,
+            g_file_loc_prefix   => "../../../../../",
+            g_twid_file_stem    => c_twid_file_stem
+        );
+    u_rnd_noise_1024p_8i_14o_flipped : entity work.tb_rTwoSDF
+        generic map(
+            g_use_uniNoise_file => true,
+            g_in_en             => 0,
+            g_use_reorder       => false,
+            g_nof_points        => 1024,
+            g_in_dat_w          => 8,
+            g_out_dat_w         => 14,
+            g_guard_w           => 2,
+            g_diff_margin       => c_diff_margin,
+            g_file_loc_prefix   => "../../../../../",
+            g_twid_file_stem    => c_twid_file_stem
+        );
+
 end tb;

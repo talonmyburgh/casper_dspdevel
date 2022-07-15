@@ -44,9 +44,7 @@ entity fft_r2_bf_par is
 		g_use_variant  	 : STRING     		:= "4DSP";
 		g_ovflw_behav  	 : string			:= "WRAP";
 		g_use_round	   	 : string			:= "ROUND";
-		g_use_dsp      	 : STRING         	:= "yes";
-		g_ram_primitive	 : STRING			:= "auto";
-		g_twid_file_stem : STRING			:= "UNUSED"
+		g_use_dsp      	 : STRING         	:= "yes"
 	);
 	port(
 		clk      : in  std_logic;

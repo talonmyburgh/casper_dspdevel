@@ -26,18 +26,18 @@
 -- > run -all
 -- Testbench is selftesting. 
 
-library IEEE, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_r2sdf_fft_lib, astron_ram_lib, astron_mm_lib, common_components_lib;
+library IEEE, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib, common_components_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.ALL;  
-use astron_mm_lib.tb_common_mem_pkg.ALL; 
+use casper_mm_lib.tb_common_mem_pkg.ALL; 
 use dp_pkg_lib.dp_stream_pkg.ALL;
-use astron_diagnostics_lib.diag_pkg.ALL;  
-use astron_r2sdf_fft_lib.twiddlesPkg.all;
-use astron_r2sdf_fft_lib.rTwoSDFPkg.all; 
+use casper_diagnostics_lib.diag_pkg.ALL;  
+use r2sdf_fft_lib.twiddlesPkg.all;
+use r2sdf_fft_lib.rTwoSDFPkg.all; 
 
 entity tb_fft_r2_bf_par is
   generic( 
@@ -57,7 +57,6 @@ architecture tb of tb_fft_r2_bf_par is
   constant c_in_dat_w              : natural := 16; 
   constant c_weight_w              : natural := 16;
   constant c_prod_w                : natural := c_in_dat_w+c_weight_w;
-  constant c_complex_prod_w        : natural := c_prod_w+1;
   constant c_bit_growth            : natural := 1;
   constant c_round_w               : natural := c_weight_w-c_bit_growth;   -- the weights are normalized
    
@@ -67,7 +66,6 @@ architecture tb of tb_fft_r2_bf_par is
   constant c_bg_addr_w             : natural := ceil_log2(c_bg_mem_size);
   constant c_nof_samples_in_packet : natural := c_nof_points;
   constant c_gap                   : natural := 0;    -- Gapsize is set to 0 in order to generate a continuous stream of packets. 
-  constant c_bst_skip_nof_sync     : natural := 3;
   constant c_nof_accum_per_sync    : natural := 10;
   constant c_bsn_init              : natural := 32; 
   constant c_bg_prefix             : string := "data/ramp";
@@ -80,13 +78,12 @@ architecture tb of tb_fft_r2_bf_par is
   signal reg_bg_ctrl_mosi : t_mem_mosi;  
   signal in_sosi_arr      : t_dp_sosi_arr(c_nof_streams-1 downto 0);
   signal in_siso_arr      : t_dp_siso_arr(c_nof_streams-1 downto 0);  
-  signal out_sosi         : t_dp_sosi;
-  signal in_dat           : std_logic_vector(2*c_in_dat_w-1 downto 0); 
   signal x_out_re         : std_logic_vector(c_in_dat_w-1 downto 0);
   signal x_out_im         : std_logic_vector(c_in_dat_w-1 downto 0);
   signal y_out_re         : std_logic_vector(c_in_dat_w-1 downto 0);
   signal y_out_im         : std_logic_vector(c_in_dat_w-1 downto 0);
-  signal out_val          : std_logic;   
+  signal out_val          : std_logic;
+  signal ovflw            : std_logic;
   
   signal ref_x_out_re_dly : std_logic_vector(c_in_dat_w-1 downto 0);
   signal ref_x_out_im_dly : std_logic_vector(c_in_dat_w-1 downto 0);
@@ -97,8 +94,6 @@ architecture tb of tb_fft_r2_bf_par is
   signal ref_y_out_im_dly : std_logic_vector(c_in_dat_w-1 downto 0);
   signal ref_y_out_re     : std_logic_vector(c_in_dat_w-1 downto 0);
   signal ref_y_out_im     : std_logic_vector(c_in_dat_w-1 downto 0);
-  signal ref_y_out_re_dif : std_logic_vector(c_in_dat_w-1 downto 0);
-  signal ref_y_out_im_dif : std_logic_vector(c_in_dat_w-1 downto 0);  
   signal ref_y_prod_re    : std_logic_vector(2*c_in_dat_w-1 downto 0);  
   signal ref_y_prod_im    : std_logic_vector(2*c_in_dat_w-1 downto 0);  
   
@@ -139,7 +134,7 @@ begin
     wait;    
   end process;
   
-  u_block_generator : entity astron_diagnostics_lib.mms_diag_block_gen 
+  u_block_generator : entity casper_diagnostics_lib.mms_diag_block_gen 
   generic map(    
     g_nof_streams        => c_nof_streams,
     g_buf_dat_w          => c_nof_complex*c_in_dat_w, 
@@ -177,10 +172,12 @@ begin
     y_in_re  => in_sosi_arr(1).re(c_in_dat_w-1 downto 0),
     y_in_im  => in_sosi_arr(1).im(c_in_dat_w-1 downto 0),
     in_val   => in_sosi_arr(0).valid,
+    scale    => '1',
     x_out_re => x_out_re,
     x_out_im => x_out_im,
     y_out_re => y_out_re,
     y_out_im => y_out_im,
+    ovflw    => ovflw,
     out_val  => out_val
   );
  

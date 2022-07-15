@@ -27,21 +27,21 @@
 --   > testbench is selftesting. The first four spectrums are verified. 
 --
 
-library ieee, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_r2sdf_fft_lib, astron_ram_lib, astron_mm_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use STD.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.all;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
+use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
-use astron_r2sdf_fft_lib.twiddlesPkg.all;
-use astron_r2sdf_fft_lib.rTwoSDFPkg.all;
+use r2sdf_fft_lib.twiddlesPkg.all;
+use r2sdf_fft_lib.rTwoSDFPkg.all;
 use work.tb_fft_pkg.all;
-use work.fft_pkg.all;
+use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity tb_fft_wide_unit is
   generic(
@@ -51,7 +51,7 @@ entity tb_fft_wide_unit is
     g_use_sinNoise_file  : boolean  := false;  
     g_use_impulse_file   : boolean  := false;
     g_use_2xreal_inputs  : boolean  := false;  -- Set to true for running the two-real input variants  
-    g_fft : t_fft := (true, false, false, 0, 4, 1024, 16, 18, 0, 18, 2, true, 56, 2) 
+    g_fft : t_fft := (true, false, false, 0, 4, 1024, 16, 18, 0, 18, 18, 10, 2, true, 56, 2) 
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
@@ -153,8 +153,8 @@ architecture tb of tb_fft_wide_unit is
 
   signal out_sync       : std_logic:= '0';
   signal out_val        : std_logic:= '0';
-  signal out_re_arr     : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
-  signal out_im_arr     : t_fft_slv_arr(g_fft.wb_factor-1 downto 0);
+  signal out_re_arr     : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
+  signal out_im_arr     : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
 
   signal in_file_data   : t_integer_matrix(0 to c_file_len-1, 1 to 2) := (others=>(others=>0));  -- [re, im]
   signal in_file_sync   : std_logic_vector(0 to c_file_len-1):= (others=>'0');
@@ -170,7 +170,7 @@ architecture tb of tb_fft_wide_unit is
   
   signal init_waveforms_done   : std_logic;
   
-  signal in_sosi_arr     : t_dp_sosi_arr(g_fft.wb_factor-1 downto 0);
+  signal in_sosi_arr     : t_fft_sosi_arr_in(g_fft.wb_factor-1 downto 0);
   signal in_siso_arr     : t_dp_siso_arr(g_fft.wb_factor-1 downto 0);
   
   type   t_dp_sosi_matrix  is array (integer range <>) of t_dp_sosi_arr(0 downto 0);
@@ -179,7 +179,7 @@ architecture tb of tb_fft_wide_unit is
   signal in_sosi_matrix  : t_dp_sosi_matrix(g_fft.wb_factor-1 downto 0);  
   signal in_siso_matrix  : t_dp_siso_matrix(g_fft.wb_factor-1 downto 0);  
   
-  signal result_sosi_arr : t_dp_sosi_arr(g_fft.wb_factor-1 downto 0);
+  signal result_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor-1 downto 0);
   
   signal ram_sst_mosi    : t_mem_mosi := c_mem_mosi_rst;
   signal ram_sst_miso    : t_mem_miso := c_mem_miso_rst; 
@@ -270,7 +270,7 @@ begin
   -- GENERATE BLOCK GENERATORS FOR STIMULI GENERATION
   ---------------------------------------------------------------  
   gen_block_gen : for I in 0 to g_fft.wb_factor-1 generate
-    u_block_generator : entity astron_diagnostics_lib.mms_diag_block_gen 
+    u_block_generator : entity casper_diagnostics_lib.mms_diag_block_gen 
     generic map(    
       g_nof_streams        => 1,
       g_buf_dat_w          => c_nof_complex*g_fft.in_dat_w, 
@@ -329,14 +329,12 @@ begin
     g_fft          => g_fft
   )
   port map (
-    dp_rst          => rst,
-    dp_clk          => clk,
-    mm_rst          => rst,
-    mm_clk          => clk,
-    ram_st_sst_mosi => ram_sst_mosi,
-    ram_st_sst_miso => ram_sst_miso, 
-    in_sosi_arr     => in_sosi_arr,     
-    out_sosi_arr    => result_sosi_arr
+    rst          => rst,
+    clk          => clk,
+    clken        => '1',
+    shiftreg     => (0=>'0', 1=>'0', others=>'1'),
+    in_fft_sosi_arr     => in_sosi_arr,     
+    out_fft_sosi_arr    => result_sosi_arr
   );  
   ---------------------------------------------------------------  
   -- REARRANGE THE OUTPUT-DATA FOR VERIFICATION
