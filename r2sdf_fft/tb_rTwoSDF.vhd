@@ -83,7 +83,7 @@ entity tb_rTwoSDF is
     g_out_dat_w         : natural  := 14;   
     g_guard_w           : natural  := 2;      -- guard bits are used to avoid overflow in single FFT stage.
     g_diff_margin       : natural  := 2;
-    g_file_loc_prefix   : string   := "../../../../../";
+    g_file_loc_prefix   : string   := "./";
     g_twid_file_stem    : string   := "UNUSED"
   );
   port(
@@ -141,6 +141,7 @@ architecture tb of tb_rTwoSDF is
   signal out_im         : std_logic_vector(g_out_dat_w-1 downto 0);
   signal out_sync       : std_logic:= '0';
   signal out_val        : std_logic:= '0';
+  signal s_ovflw          : std_logic_vector(c_nof_points_w-1 downto 0);
 
   signal in_file_data   : t_integer_matrix(0 to c_file_len-1, 1 to 2) := (others=>(others=>0));  -- [re, im]
   signal in_file_sync   : std_logic_vector(0 to c_file_len-1):= (others=>'0');
@@ -285,7 +286,7 @@ begin
     out_re    => out_re,
     out_im    => out_im,
     out_val   => out_val,
-    ovflw     => open
+    ovflw     => s_ovflw
   );   
 
   -- Read golden file with the expected DUT output

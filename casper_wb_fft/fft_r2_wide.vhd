@@ -80,7 +80,6 @@ entity fft_r2_wide is
 		g_ovflw_behav    : string  		  := "WRAP";        									--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round      : string  		  := "ROUND";        									--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 		g_ram_primitive  : string  		  := "auto";        									--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive : string  		  := "auto";        									--! = "auto", "distributed", "block" or "ultra" for RAM architecture
 		g_twid_file_stem : string		  := "UNUSED"											--! twid file stem location
 	);
 	port(
@@ -250,9 +249,7 @@ begin
 				g_use_variant  		=> g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
 				g_ovflw_behav  		=> g_ovflw_behav,
-				g_use_round    		=> g_use_round,
-				g_ram_primitive		=> g_ram_primitive,
-				g_twid_file_stem	=> g_twid_file_stem
+				g_use_round    		=> g_use_round
 			)
 			port map(
 				clk        			=> clk,
@@ -297,17 +294,17 @@ begin
 					g_twid_file_stem	=> g_twid_file_stem
 				)
 				port map(
-					clken   	=> clken,
-					clk     	=> clk,
-					rst     	=> rst,
-					in_re   	=> in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					in_im   	=> in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
-					shiftreg	=> shiftreg(c_nof_stages-1 DOWNTO c_nof_stages_par), -- Only c_nof_stages_pipe of shiftreg
-					in_val  	=> in_val,
-					out_re  	=> out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					out_im  	=> out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
-					ovflw		=> fft_pipe_ovflw_arr(I),
-					out_val 	=> int_val(I)
+                    clken       => clken,
+                    clk         => clk,
+                    rst         => rst,
+                    shiftreg    => shiftreg(c_nof_stages-1 DOWNTO c_nof_stages_par), -- Only c_nof_stages_pipe of shiftreg
+                    in_re       => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+                    in_im       => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
+                    in_val      => in_val,
+                    out_re      => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+                    out_im      => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
+                    ovflw        => fft_pipe_ovflw_arr(I),
+                    out_val     => int_val(I)
 				);
 		end generate;
 
@@ -335,11 +332,10 @@ begin
 			generic map(
 				g_fft      			=> c_fft_r2_par, -- generics for the FFT
 				g_pipeline 			=> g_fft_pipeline, -- pipeline generics for the parallel FFT
+				g_use_variant       => g_use_variant,
 				g_use_dsp	   		=> g_use_dsp,
 				g_ovflw_behav  		=> g_ovflw_behav,
-				g_use_round			=> g_use_round,
-				g_ram_primitive		=> g_ram_primitive,
-				g_twid_file_stem	=> g_twid_file_stem
+				g_use_round			=> g_use_round
 			)
 			port map(
 				clk        => clk,
@@ -402,10 +398,11 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     			  => clk,
-					in_dat  			  => sep_out_re_arr(I),
-					out_dat 			  => out_re_arr(I),
-					out_ovr 			  => open
+                    clk                   => clk,
+                    clken                 => clken,
+                    in_dat                => sep_out_re_arr(I),
+                    out_dat               => out_re_arr(I),
+                    out_ovr               => open
 				);
 
 			u_requantize_output_im : entity casper_requantize_lib.common_requantize
@@ -422,22 +419,28 @@ begin
 					g_out_dat_w           => g_fft.out_dat_w
 				)
 				port map(
-					clk     			  => clk,
-					in_dat  			  => sep_out_im_arr(I),
-					out_dat 			  => out_im_arr(I),
-					out_ovr 			  => open
+                    clk                   => clk,
+                    clken                 => clken,
+                    in_dat                => sep_out_im_arr(I),
+                    out_dat               => out_im_arr(I),
+                    out_ovr               => open
 				);
 		end generate;
 
 		u_out_val : entity common_components_lib.common_pipeline_sl
 			generic map(
-				g_pipeline 				  => c_pipeline_remove_lsb
+                g_pipeline                   => c_pipeline_remove_lsb,
+                g_reset_value                => 0,
+                g_out_invert                 => FALSE
 			)
 			port map(
-				rst     				  => rst,
-				clk     				  => clk,
-				in_dat  				  => sep_out_val,
-				out_dat 				  => out_val
+                rst                       => rst,
+                clk                       => clk,
+                clken                     => clken,
+                in_clr                    => '0',
+                in_en                     => '1',
+                in_dat                    => sep_out_val,
+                out_dat                   => out_val
 			);
 
 	end generate;

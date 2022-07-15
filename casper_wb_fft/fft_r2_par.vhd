@@ -47,9 +47,7 @@ entity fft_r2_par is
 		g_use_variant    : string  		  := "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
 		g_use_dsp        : string  		  := "yes";        			--! = "yes" or "no"
 		g_ovflw_behav    : string  		  := "WRAP";        		--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      : string  		  := "ROUND";        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_ram_primitive	 : string		  := "auto";				--! = "auto", "distributed", "ultra" or "block" 
-		g_twid_file_stem : string		  := "UNUSED"				--! path stem for twiddle factors
+		g_use_round      : string  		  := "ROUND"        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
 	);
 	port(
 		clk        : in  std_logic;											--! Clock
@@ -162,9 +160,6 @@ architecture str of fft_r2_par is
 	signal sub_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
 	signal int_val    : std_logic;
 	signal fft_val    : std_logic;
-	
-	signal shift_bool : boolean;
-
 begin
 
 	------------------------------------------------------------------------------
@@ -191,25 +186,23 @@ begin
 					g_use_variant		=> g_use_variant,
 					g_ovflw_behav   	=> g_ovflw_behav,
 					g_use_round			=> g_use_round,
-					g_use_dsp			=> g_use_dsp,
-					g_ram_primitive		=> g_ram_primitive,
-					g_twid_file_stem	=> g_twid_file_stem
+					g_use_dsp			=> g_use_dsp
 				)
 				port map(
-					clk      => clk,
-					rst      => rst,
-					x_in_re  => data_re(stage)(2 * element),
-					x_in_im  => data_im(stage)(2 * element),
-					y_in_re  => data_re(stage)(2 * element + 1),
-					y_in_im  => data_im(stage)(2 * element + 1),
-					scale	 => shiftreg(stage-1),				-- Scale or not at stage
-					in_val   => data_val(stage)(element),
-					x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-					x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
-					y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-					y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
-					ovflw	 => fft_par_bf_ovflw_arr(stage - 1)(element),				-- Record if overflow occured at stage
-					out_val  => data_val(stage - 1)(element)
+                    clk      => clk,
+                    rst      => rst,
+                    scale     => shiftreg(stage-1),                -- Scale or not at stage
+                    x_in_re  => data_re(stage)(2 * element),
+                    x_in_im  => data_im(stage)(2 * element),
+                    y_in_re  => data_re(stage)(2 * element + 1),
+                    y_in_im  => data_im(stage)(2 * element + 1),
+                    in_val   => data_val(stage)(element),
+                    x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+                    x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
+                    y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+                    y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
+                    ovflw     => fft_par_bf_ovflw_arr(stage - 1)(element),                -- Record if overflow occured at stage
+                    out_val  => data_val(stage - 1)(element)
 			);
 		end generate;
 		ovflw(stage - 1) <= '0' when is_all(fft_par_bf_ovflw_arr(stage - 1), '0') else '1';
