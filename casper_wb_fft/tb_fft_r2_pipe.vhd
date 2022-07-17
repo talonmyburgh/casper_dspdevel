@@ -95,25 +95,27 @@ use work.tb_fft_pkg.all;
 entity tb_fft_r2_pipe is
   GENERIC(
     -- DUT generics
-    --g_fft : t_fft := ( true, false,  true, 0, 1, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 1, 32, 8, 16, 0, c_dsp_mult_w,18,9, 2, true, 56, 2);         -- two real inputs A and B
-    --g_fft : t_fft := ( true, false, false, 0, 1, 64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
-    --g_fft : t_fft := (false, false, false, 0, 1, 64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
+    --g_fft : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+    g_fft : t_fft := ( true, false,  true, 0, 1, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2, false);         -- two real inputs A and B
+    --g_fft : t_fft := ( true, false, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
+    --g_fft : t_fft := (false, false, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
-    --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
-    --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
-    --    use_separate   : boolean;  -- = false for complex input, true for two real inputs
-    --    nof_chan       : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
-    --    wb_factor      : natural;  -- = default 1, wideband factor
-    --    nof_points     : natural;  -- = 1024, N point FFT
-    --    in_dat_w       : natural;  -- = 8, number of input bits
-    --    out_dat_w      : natural;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
-    --    out_gain_w     : natural;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
-    --    stage_dat_w    : natural;  -- = 18, data width used between the stages(= DSP multiplier-width)
-    --    guard_w        : natural;  -- = 2,  Guard used to avoid overflow in FFT stage. 
-    --    guard_enable   : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
-    --    stat_data_w    : positive; -- = 56 (= 18b+18b)+log2(781250)
-    --    stat_data_sz   : positive; -- = 2 (complex re and im)
+    --    use_reorder       : boolean;  -- = false for bit-reversed output, true for normal output
+    --    use_fft_shift     : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
+    --    use_separate      : boolean;  -- = false for complex input, true for two real inputs
+    --    pipe_reo_in_place : boolean;  -- = false for double buffer reorder, true for single
+    --    nof_chan          : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
+    --    wb_factor         : natural;  -- = default 1, wideband factor
+    --    twiddle_offset    : natural;  -- = default 0, twiddle offset for PFT sections in a wideband FFT
+    --    nof_points        : natural;  -- = 1024, N point FFT
+    --    in_dat_w          : natural;  -- = 8, number of input bits
+    --    out_dat_w         : natural;  -- = 13, number of output bits, bit growth: in_dat_w + natural((ceil_log2(nof_points))/2 + 2)  
+    --    out_gain_w        : natural;  -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
+    --    stage_dat_w       : natural;  -- = 18, data width used between the stages(= DSP multiplier-width)
+    --    guard_w           : natural;  -- = 2,  Guard used to avoid overflow in FFT stage. 
+    --    guard_enable      : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
+    --    stat_data_w       : positive; -- = 56 (= 18b+18b)+log2(781250)
+    --    stat_data_sz      : positive; -- = 2 (complex re and im)
     --  end record;
     --
     -- TB generics
@@ -278,6 +280,9 @@ architecture tb of tb_fft_r2_pipe is
   
 begin
 
+  shiftreg(1 downto 0) <= "00";
+  shiftreg(ceil_log2(g_fft.nof_points)-1 Downto 2) <= (others=>'1');
+
   clk <= (not clk) or tb_end after c_clk_period/2;
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
@@ -388,9 +393,17 @@ begin
     -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
     -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
     if g_fft.use_reorder=true then
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity failure;
+        if g_fft.pipe_reo_in_place=true then
+            if g_fft.use_separate=true then
+                assert out_val_cnt = in_val_cnt-(2*g_fft.nof_points-2)                report "Unexpected number of valid output data" severity error;
+            else 
+                assert out_val_cnt = in_val_cnt-(2*g_fft.nof_points-1)                report "Unexpected number of valid output data" severity error;
+            end if;
+        else
+            assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+        end if;
     else
-      assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
+        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
     end if;
     wait;
   end process;

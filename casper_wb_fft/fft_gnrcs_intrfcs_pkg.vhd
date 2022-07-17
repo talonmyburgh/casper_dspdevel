@@ -25,6 +25,7 @@ CONSTANT c_fft_guard_w              : natural := 2;       	-- = 2, guard used to
 CONSTANT c_fft_guard_enable   : boolean :=false;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
 --   doing the input guard and par fft section doing the output compensation)
+CONSTANT c_pipe_reo_in_place : boolean := false;
 
 CONSTANT c_dp_stream_bsn_w      : NATURAL := 64;  		-- 64 is sufficient to count blocks of data for years
 CONSTANT c_dp_stream_empty_w    : NATURAL := 16;  		--  8 is sufficient for max 256 symbols per data word, still use 16 bit to be able to count c_dp_stream_data_w in bits
@@ -47,11 +48,12 @@ max_addr_w	   : natural;		-- = 10, address width above which to store coeffients
 guard_w        : natural;       -- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
 --   12.3.2], therefore use input guard_w = 2.
-guard_enable   : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
+guard_enable        : boolean;       -- = true when input needs guarding, false when input requires no guarding but scaling must be
 --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
 --   doing the input guard and par fft section doing the output compensation)
-stat_data_w    : positive;      -- = 56
-stat_data_sz   : positive;      -- = 2
+stat_data_w         : positive;      -- = 56
+stat_data_sz        : positive;      -- = 2
+pipe_reo_in_place   : boolean;       -- = false for pipelined FFT reorder double buffer, true for single
 end record;
 
 constant c_fft : t_fft := (true, false, false, 0, c_fft_wb_factor, c_fft_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, c_fft_twiddle_dat_w, c_max_addr_w, 2, true, 56, 2);
@@ -128,6 +130,11 @@ end if;
 -- use_separate
 if g_fft.use_separate = true then
 assert g_fft.use_fft_shift = false report "fft_r2 : with use_separate there cannot be use_fft_shift for two real inputs" severity failure;
+end if;
+-- in_place
+if g_fft.pipe_reo_in_place = true then
+assert g_fft.nof_chan = 0 report "fft_r2 : can't use in place buffer with multiple channels in pipeline reorder" severity failure;
+assert g_fft.use_fft_shift = false report "fft_r2 : can't use in place buffer and use_fft_shift in pipeline reorder" severity failure; 
 end if;
 return true;
 end;
