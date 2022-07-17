@@ -96,7 +96,7 @@ function casper_wb_fft_config(this_block)
   end % if technology UniBoard
 
   %Update the vhdl top file with the required ports per wb_factor:
-  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),pipe_reo_in_place);
+  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
 
 %inport declarations
 this_block.addSimulinkInport('rst');

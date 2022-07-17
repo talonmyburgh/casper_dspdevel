@@ -1,4 +1,4 @@
-function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, pipe_reo_in_place)
+function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w)
 
     %Locate where this matlab script is
     filepathscript = fileparts(which('top_wb_fft_code_gen'));
