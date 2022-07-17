@@ -5,9 +5,9 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg IS
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT c_fft_in_dat_w       : natural := 8;       -- = 8,  number of input bits
-CONSTANT c_fft_out_dat_w      : natural := 16;      -- = 13, number of output bits
-CONSTANT c_fft_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT c_fft_in_dat_w       : natural := 8;
+CONSTANT c_fft_out_dat_w      : natural := 16;
+CONSTANT c_fft_stage_dat_w    : natural := 18;
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_fft_use_reorder          : boolean := false;     -- = false for bit-reversed output, true for normal output
@@ -56,7 +56,25 @@ stat_data_sz        : positive;      -- = 2
 pipe_reo_in_place   : boolean;       -- = false for pipelined FFT reorder double buffer, true for single
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, c_fft_wb_factor, c_fft_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, c_fft_twiddle_dat_w, c_max_addr_w, 2, true, 56, 2);
+constant c_fft : t_fft := (
+	use_reorder=>true, 
+	use_fft_shift=>false, 
+	use_separate=>false, 
+	nof_chan=>0, 
+	wb_factor=>c_fft_wb_factor, 
+	nof_points=>c_fft_nof_points, 
+	in_dat_w=>c_fft_in_dat_w, 
+	out_dat_w=>c_fft_out_dat_w, 
+	out_gain_w=>0, 
+	stage_dat_w=>c_dsp_mult_w, 
+	twiddle_dat_w=>c_fft_twiddle_dat_w, 
+	max_addr_w=>c_max_addr_w,
+	guard_w=>2,
+	guard_enable=>true,
+	stat_data_w=>56,
+	stat_data_sz=>2,
+	pipe_reo_in_place=>false
+	);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure

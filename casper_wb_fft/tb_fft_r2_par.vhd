@@ -71,7 +71,25 @@ entity tb_fft_r2_par is
   generic(
     -- DUT generics
     --g_fft : t_fft := ( true, false,  true, 0, 1, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 1, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2, false);         -- two real inputs A and B
+        g_fft : t_fft := (  -- two real inputs A and B
+        use_reorder=>  true, 
+        use_fft_shift=>false,  
+        use_separate=>true, 
+        nof_chan=>0, 
+        wb_factor=>1, 
+        nof_points=>0,  
+        in_dat_w=>8, 
+        out_dat_w=>16, 
+        out_gain_w=>0, 
+        stage_dat_w=>c_dsp_mult_w, 
+        twiddle_dat_w=>18, 
+        max_addr_w=>9, 
+        guard_w=>2, 
+        guard_enable=>true, 
+        stat_data_w=>56, 
+        stat_data_sz=>2, 
+        pipe_reo_in_place=>false
+      );
     --g_fft : t_fft := ( true, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
     --g_fft : t_fft := (false, false, false, 0, 1, 0,  64, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
