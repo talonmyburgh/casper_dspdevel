@@ -356,7 +356,6 @@ PACKAGE common_pkg IS
 	FUNCTION INCR_SVEC(vec : STD_LOGIC_VECTOR; dec : INTEGER) RETURN STD_LOGIC_VECTOR;
 	FUNCTION INCR_SVEC(vec : STD_LOGIC_VECTOR; dec : SIGNED) RETURN STD_LOGIC_VECTOR;
 	    
-    FUNCTION NEGATE_SVEC(vec :STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR;
 	-- Used in common_add_sub.vhd
 	FUNCTION ADD_SVEC(l_vec : STD_LOGIC_VECTOR; r_vec : STD_LOGIC_VECTOR; res_w : NATURAL) RETURN STD_LOGIC_VECTOR; -- l_vec + r_vec, treat slv operands as signed,   slv output width is res_w
 	FUNCTION SUB_SVEC(l_vec : STD_LOGIC_VECTOR; r_vec : STD_LOGIC_VECTOR; res_w : NATURAL) RETURN STD_LOGIC_VECTOR; -- l_vec - r_vec, treat slv operands as signed,   slv output width is res_w
@@ -1883,12 +1882,6 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		RETURN STD_LOGIC_VECTOR(SIGNED(vec) + dec);
 	END;
-	
-	FUNCTION NEGATE_SVEC(vec : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR IS
-	    VARIABLE t_vec : SIGNED := SIGNED(vec);
-	BEGIN
-	    RETURN STD_LOGIC_VECTOR(-t_vec);    
-    END;
 
 	FUNCTION ADD_SVEC(l_vec : STD_LOGIC_VECTOR; r_vec : STD_LOGIC_VECTOR; res_w : NATURAL) RETURN STD_LOGIC_VECTOR IS
 	BEGIN
