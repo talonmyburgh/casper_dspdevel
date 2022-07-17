@@ -53,7 +53,7 @@
 -- . Use separate dut_clk and tb_clk (both directly related to clk), to be
 --   able to disable the dut_clk during verification to significantly speed
 --   up the simulation.
-library ieee, common_pkg_lib, std, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib;
+library ieee, common_pkg_lib, r2sdf_fft_lib, casper_ram_lib, casper_mm_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -322,8 +322,7 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round,
-    g_twid_file_stem => g_twid_file_stem
+    g_use_round => g_use_round
   )
   port map(
     clk        => dut_clk,

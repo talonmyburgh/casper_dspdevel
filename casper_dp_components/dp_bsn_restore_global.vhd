@@ -20,7 +20,7 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib, dp_pkg_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, dp_pkg_lib, casper_pipeline_lib;
 USE IEEE.std_logic_1164.all;
 USE common_pkg_lib.common_pkg.ALL;
 USE dp_pkg_lib.dp_stream_pkg.ALL;
@@ -103,7 +103,7 @@ BEGIN
   snk_in_restored <= func_dp_stream_bsn_set(snk_in, bsn_restored);
   
   -- Add pipeline to ensure timing closure for the restored BSN summation
-  u_pipeline : ENTITY work.dp_pipeline
+  u_pipeline : ENTITY casper_pipeline_lib.dp_pipeline
   GENERIC MAP (
     g_pipeline => g_pipeline  -- 0 for wires, > 0 for registers
   )
