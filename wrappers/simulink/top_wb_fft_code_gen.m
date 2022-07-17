@@ -1,4 +1,4 @@
-function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w)
+function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, xtra_dat_sigs, in_dat_w, out_dat_w, stage_dat_w, pipe_reo_in_place)
 
     %Locate where this matlab script is
     filepathscript = fileparts(which('top_wb_fft_code_gen'));
@@ -22,7 +22,8 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
 		"use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output"
 		"use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
 		"use_separate   : boolean;  -- = false for complex input, true for two real inputs"
-		"wb_factor      : natural;  -- = default 1, wideband factor"
+		"alt_output     : boolean;" 
+        "wb_factor      : natural;  -- = default 1, wideband factor"
 		"nof_points     : natural;  -- = 1024, N point FFT"
 		"in_dat_w       : natural;  -- = 8,  number of input bits"
 		"out_dat_w      : natural;  -- = 13, number of output bits"
@@ -36,12 +37,12 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
 		"guard_enable   : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be"
         "                           --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
         "                           --   doing the input guard and par fft section doing the output compensation)"
+        "pipe_reo_in_place : boolean;"
         "use_variant    : string;   -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
         "use_dsp        : string;   -- = ""yes"" or ""no"""
         "ovflw_behav    : string;   -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
         "use_round      : string;   -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
-        "ram_primitive  : string;   -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-        "fifo_primitive : string    -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"                                        
+        "ram_primitive  : string   -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
 	");"
 	"port("
 		"clk            : in std_logic;"
@@ -78,6 +79,7 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "use_reorder    : boolean; -- = false for bit-reversed output, true for normal output"
         "use_fft_shift  : boolean; -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
         "use_separate   : boolean; -- = false for complex input, true for two real inputs"
+        "alt_output     : boolean;" 
         "wb_factor      : natural; -- = default 1, wideband factor"
         "nof_points     : natural; -- = 1024, N point FFT"
         "in_dat_w       : natural; -- = 8,  number of input bits"
@@ -92,12 +94,12 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "guard_enable   : boolean; -- = true when input needs guarding, false when input requires no guarding but scaling must be"
         "                          --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
         "                          --   doing the input guard and par fft section doing the output compensation)"
+        "pipe_reo_in_place : boolean;"
         "use_variant    : string;  -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
         "use_dsp        : string;  -- = ""yes"" or ""no"""
         "ovflw_behav    : string;  -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
         "use_round      : string;  -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
-        "ram_primitive  : string;  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-        "fifo_primitive : string  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"     
+        "ram_primitive  : string  -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
 	");"
 	"port("
 		"clk            : in std_logic;"
@@ -118,7 +120,7 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "end entity wideband_fft_top;"
         "architecture RTL of wideband_fft_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,0,wb_factor,nof_points,"
-        "in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);"
+        "in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2, pipe_reo_in_place);"
         "signal in_fft_sosi_arr : t_bb_sosi_arr_in(wb_factor - 1 downto 0);"
         "signal out_fft_sosi_arr : t_bb_sosi_arr_out(wb_factor - 1 downto 0);"
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
@@ -129,12 +131,12 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
         "g_fft_pipeline => c_fft_pipeline,"
+        "g_alt_output => alt_output,"
         "g_use_variant => use_variant,"
         "g_use_dsp   => use_dsp,"
         "g_ovflw_behav => ovflw_behav,"
         "g_use_round => use_round,"
-        "g_ram_primitive => ram_primitive,"
-        "g_fifo_primitive => fifo_primitive"
+        "g_ram_primitive => ram_primitive"
         ")"
         "port map ("
         "clken        => ce,"
@@ -170,7 +172,7 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "end entity wideband_fft_top;"
         "architecture RTL of wideband_fft_top is"
         "constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,0,wb_factor,nof_points,"
-        "in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);"
+        "in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2, pipe_reo_in_place);"
         "signal in_fft_sosi_arr : t_fft_sosi_arr_in(wb_factor - 1 downto 0);"
         "signal out_fft_sosi_arr : t_fft_sosi_arr_out(wb_factor - 1 downto 0);"
         "constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;"
@@ -181,12 +183,12 @@ function vhdlfile = top_wb_fft_code_gen(wb_factor,nof_points,twid_dat_w,vendor, 
         "g_fft          => cc_fft,"
         "g_pft_pipeline => c_pft_pipeline,"
         "g_fft_pipeline => c_fft_pipeline,"
+        "g_alt_output => alt_output,"
         "g_use_variant => use_variant,"
         "g_use_dsp   => use_dsp,"
         "g_ovflw_behav => ovflw_behav,"
         "g_use_round => use_round,"
-        "g_ram_primitive => ram_primitive,"
-        "g_fifo_primitive => fifo_primitive"
+        "g_ram_primitive => ram_primitive"
         ")"
         "port map ("
         "clken        => ce,"
@@ -301,7 +303,6 @@ function updatepkgs(filepathscript, vhdlfilefolder, in_dat_w, out_dat_w, stage_d
     lineone = sprintf(  "CONSTANT c_fft_in_dat_w       : natural := %d;    -- = 8,  number of input bits",in_dat_w);
     linetwo = sprintf(  "CONSTANT c_fft_out_dat_w      : natural := %d;    -- = 13, number of output bits",out_dat_w);
     linethree = sprintf("CONSTANT c_fft_stage_dat_w    : natural := %d;    -- = 18, data width used between the stages(= DSP multiplier-width)",stage_dat_w);
-
     fid = fopen(pkgsource,'r');
     if(fid == -1) 
         error("Cannot open vhdl file: %s",pkgsource); 

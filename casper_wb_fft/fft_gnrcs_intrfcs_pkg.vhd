@@ -73,7 +73,7 @@ constant c_fft : t_fft := (
 	guard_enable=>true,
 	stat_data_w=>56,
 	stat_data_sz=>2,
-	pipe_reo_in_place=>false
+	pipe_reo_in_place=>c_pipe_reo_in_place
 	);
 
 -- Check consistancy of the FFT parameters

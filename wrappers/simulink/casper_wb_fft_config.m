@@ -45,6 +45,8 @@ function casper_wb_fft_config(this_block)
   use_reorder = get_param(wb_fft_blk_parent,'use_reorder');
   use_fft_shift = get_param(wb_fft_blk_parent,'use_fft_shift');
   use_separate = get_param(wb_fft_blk_parent,'use_separate');
+  alt_output  = get_param(wb_fft_blk_parent,'alt_output');
+  alt_output = checkbox2bool(alt_output);
   wb_factor = get_param(wb_fft_blk_parent,'wb_factor');
   dbl_wb_factor = str2double(wb_factor);
   if dbl_wb_factor<1
@@ -66,15 +68,17 @@ function casper_wb_fft_config(this_block)
   guard_en = get_param(wb_fft_blk_parent,'guard_enable');
   variant = get_param(wb_fft_blk_parent,'use_variant');
   technology = get_param(wb_fft_blk_parent,'vendor_technology');
+  pipe_reo_in_place = get_param(wb_fft_blk_parent,'pipe_reo_in_place');
   use_dsp = get_param(wb_fft_blk_parent,'use_dsp');
   ovflw_behav = get_param(wb_fft_blk_parent,'ovflw_behav');
   use_round = get_param(wb_fft_blk_parent,'use_round');
   ram_primitive = get_param(wb_fft_blk_parent,'ram_primitive');
-  fifo_primitive = get_param(wb_fft_blk_parent,'fifo_primitive');
   xtra_dat_sigs = checkbox2bool(get_param(wb_fft_blk_parent,'xtra_dat_sigs'));
   use_reorder = checkbox2bool(use_reorder);
   use_fft_shift = checkbox2bool(use_fft_shift);
   use_separate = checkbox2bool(use_separate);
+  pipe_reo_in_place = checkbox2bool(pipe_reo_in_place);
+  pipe_reo_in_place = bool2str(pipe_reo_in_place);
   guard_en = checkbox2bool(guard_en);
   
   function stages = stagecalc(nof_points)
@@ -92,7 +96,7 @@ function casper_wb_fft_config(this_block)
   end % if technology UniBoard
 
   %Update the vhdl top file with the required ports per wb_factor:
-  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
+  vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w),pipe_reo_in_place);
 
 %inport declarations
 this_block.addSimulinkInport('rst');
@@ -221,6 +225,7 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('use_reorder','boolean',bool2str(use_reorder));
   this_block.addGeneric('use_fft_shift','boolean',bool2str(use_fft_shift));
   this_block.addGeneric('use_separate','boolean',bool2str(use_separate));
+  this_block.addGeneric('alt_output','boolean',bool2str(alt_output));
   this_block.addGeneric('wb_factor','natural',wb_factor);
   this_block.addGeneric('nof_points','natural',nof_points);
   this_block.addGeneric('in_dat_w','natural',i_d_w);
@@ -231,12 +236,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('max_addr_w','natural',max_addr_w);
   this_block.addGeneric('guard_w','natural',guard_w);
   this_block.addGeneric('guard_enable','boolean',bool2str(guard_en));
+  this_block.addGeneric('pipe_reo_in_place', 'boolean',pipe_reo_in_place)
   this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
   this_block.addGeneric('use_round','String',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
-  this_block.addGeneric('fifo_primitive','String',fifo_primitive);
   
 
   % Add addtional source files as needed.
