@@ -100,10 +100,10 @@ BEGIN
   
   -- Two real input data A and B
   u_act_two_real_chirp    : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_sinusoid_chirp, 25600, c_impulse_chirp, 25600, c_unused, 0, 25600, FALSE, c_twid_file_stem);
-  u_act_two_real_a0       : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_zero,           25600, c_impulse_chirp, 25600, c_unused, 0,  5120, FALSE, c_twid_file_stem);
-  u_act_two_real_b0       : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_sinusoid_chirp, 25600, c_zero,          25600, c_unused, 0,  5120, FALSE, c_twid_file_stem);
-  u_rnd_two_real_noise    : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_noise,           1280, c_dc_agwn,        1280, c_unused, 0,  1280, TRUE, c_twid_file_stem);
-  u_rnd_two_real_channels : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real_more_channels, c_diff_margin, c_noise,           1280, c_dc_agwn,        1280, c_unused, 0,  1280, TRUE, c_twid_file_stem);
+--  u_act_two_real_a0       : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_zero,           25600, c_impulse_chirp, 25600, c_unused, 0,  5120, FALSE, c_twid_file_stem);
+--  u_act_two_real_b0       : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_sinusoid_chirp, 25600, c_zero,          25600, c_unused, 0,  5120, FALSE, c_twid_file_stem);
+--  u_rnd_two_real_noise    : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real,               c_diff_margin, c_noise,           1280, c_dc_agwn,        1280, c_unused, 0,  1280, TRUE, c_twid_file_stem);
+--  u_rnd_two_real_channels : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_two_real_more_channels, c_diff_margin, c_noise,           1280, c_dc_agwn,        1280, c_unused, 0,  1280, TRUE, c_twid_file_stem);
   
   -- Complex input data
 --  u_act_complex_chirp              : ENTITY work.tb_fft_r2_pipe GENERIC MAP (c_fft_complex,                         c_diff_margin, c_unused, 0, c_unused, 0, c_phasor_chirp,  12800, 12800, FALSE, c_twid_file_stem);
