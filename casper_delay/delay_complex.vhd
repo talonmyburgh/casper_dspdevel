@@ -1,7 +1,6 @@
 -- A VHDL implementation of the CASPER delay_complex block.
 -- @company: Mydon Solutions.
 -- @author: Ross Donnachie.
--- TODO: add ability to implement counter using dsp48 blocks.
 
 LIBRARY IEEE, common_pkg_lib, casper_misc_lib;
 USE IEEE.std_logic_1164.all;
@@ -33,7 +32,7 @@ begin
 
   u_c_split : entity casper_misc_lib.c_to_ri
     generic map(
-        g_async => FALSE,
+        g_async => TRUE,
         g_bit_width => din'LENGTH/2
     )
     port map(
@@ -72,7 +71,7 @@ begin
 
   u_c_combine : entity casper_misc_lib.ri_to_c
     generic map(
-        g_async => FALSE
+        g_async => TRUE
     )
     port map(
         clk => clk,
