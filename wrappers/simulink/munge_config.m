@@ -49,8 +49,6 @@ function munge_config(this_block)
 
   this_block.addFileToLibrary(vhdl_file,'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_flow_control/munge.vhd'],'casper_flow_control_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_flow_control/tb_munge.vhd'],'casper_flow_control_lib');
 return;
 
 
