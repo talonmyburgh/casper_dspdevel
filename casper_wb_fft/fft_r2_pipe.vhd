@@ -154,25 +154,26 @@ begin
     gen_reorder_and_separate : if (g_fft.use_separate or g_fft.use_reorder) generate
         in_cplx <= data_im(0) & data_re(0);
 
-        u_reorder_sep : entity work.fft_reorder_sepa_pipe
-            generic map(
-                g_bit_flip           => g_fft.use_reorder,
-                g_fft_shift          => g_fft.use_fft_shift,
-                g_separate           => g_fft.use_separate,
-                g_dont_flip_channels => g_dont_flip_channels,
-                g_nof_points         => g_fft.nof_points,
-                g_nof_chan           => g_fft.nof_chan,
-                g_ram_primitive      => g_ram_primitive
-            )
-            port map(
-                clken   => clken,
-                clk     => clk,
-                rst     => rst,
-                in_dat  => in_cplx,
-                in_val  => data_val(0),
-                out_dat => out_cplx,
-                out_val => raw_out_val
-            );
+		u_reorder_sep : entity work.fft_reorder_sepa_pipe
+			generic map(
+				g_bit_flip           => g_fft.use_reorder,
+				g_fft_shift          => g_fft.use_fft_shift,
+				g_separate           => g_fft.use_separate,
+				g_dont_flip_channels => g_dont_flip_channels,
+				g_nof_points         => g_fft.nof_points,
+				g_nof_chan           => g_fft.nof_chan,
+				g_ram_primitive 	 => g_ram_primitive,
+				g_in_place           => g_fft.pipe_reo_in_place
+			)
+			port map(
+				clken   => clken,
+				clk     => clk,
+				rst     => rst,
+				in_dat  => in_cplx,
+				in_val  => data_val(0),
+				out_dat => out_cplx,
+				out_val => raw_out_val
+			);
 
         raw_out_re <= out_cplx(g_fft.stage_dat_w - 1 downto 0);
         raw_out_im <= out_cplx(2 * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w);

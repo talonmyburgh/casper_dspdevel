@@ -24,6 +24,7 @@ entity tb_tb_vu_fft_r2_pipe is
         g_max_addr_w            : natural;
         g_guard_w               : natural; -- = 2,  Guard used to avoid overflow in FFT stage. 
         g_guard_enable          : boolean; -- = true when input needs guarding, false when input requires no guarding but scaling must be skipped at the last stage(s) (used in wb fft)
+        g_pipe_reo_in_place     : boolean;
         g_diff_margin           : integer := 2; -- maximum difference between HDL output and expected output (> 0 to allow minor rounding differences)
         g_data_file_a           : string  := "data/run_pfft_m_sinusoid_chirp_8b_32points_16b.dat";
         g_data_file_a_nof_lines : natural := 6400;
@@ -49,7 +50,7 @@ architecture tb of tb_tb_vu_fft_r2_pipe is
     SIGNAL test_msg  : STRING(1 to 80);
     SIGNAL test_pass : BOOLEAN;
 
-    CONSTANT c_fft_vu : t_fft := (g_use_reorder, g_use_fft_shift, g_use_separate, g_nof_chan, g_wb_factor, g_nof_points, g_in_dat_w, g_out_dat_w, g_out_gain_w, g_stage_dat_w, g_twid_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2);
+    CONSTANT c_fft_vu : t_fft := (g_use_reorder, g_use_fft_shift, g_use_separate, g_nof_chan, g_wb_factor, g_nof_points, g_in_dat_w, g_out_dat_w, g_out_gain_w, g_stage_dat_w, g_twid_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2, g_pipe_reo_in_place);
 
 BEGIN
     tb_ut : ENTITY work.tb_fft_r2_pipe

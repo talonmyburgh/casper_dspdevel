@@ -57,10 +57,28 @@ use work.tb_fft_pkg.all;
 entity tb_fft_r2_wide is
   generic(
     -- DUT generics
-    --g_fft : t_fft := ( true, false,  true, 0, 4, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2);         -- two real inputs A and B
-    --g_fft : t_fft := ( true, false, false, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
-    --g_fft : t_fft := (false, false, false, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
+    --g_fft : t_fft := ( true, false,  true, 0, 4, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+        g_fft : t_fft := (  -- two real inputs A and B
+        use_reorder=>  true, 
+        use_fft_shift=>false,  
+        use_separate=>true, 
+        nof_chan=>0, 
+        wb_factor=>1, 
+        nof_points=>0,  
+        in_dat_w=>8, 
+        out_dat_w=>16, 
+        out_gain_w=>0, 
+        stage_dat_w=>c_dsp_mult_w, 
+        twiddle_dat_w=>18, 
+        max_addr_w=>9, 
+        guard_w=>2, 
+        guard_enable=>true, 
+        stat_data_w=>56, 
+        stat_data_sz=>2, 
+        pipe_reo_in_place=>false
+      );
+    --g_fft : t_fft := ( true, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
+    --g_fft : t_fft := (false, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
@@ -372,7 +390,15 @@ begin
       -- reorder buffer it outputs 1 sample more, because that is immediately available in a new block.
       -- Ensure g_data_file_nof_lines is multiple of g_fft.nof_points.
       if g_fft.use_reorder=true then
-        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data" severity error;
+        if g_fft.pipe_reo_in_place=true then
+          if g_fft.use_separate=true then
+            assert out_val_cnt = in_val_cnt-(g_fft.nof_points/2)                report "Unexpected number of valid output data (in place, real)" severity error;
+          else 
+            assert out_val_cnt = in_val_cnt-(2*c_nof_valid_per_block-1)                report "Unexpected number of valid output data (in place, complex)" severity error;
+          end if;
+        else            
+          assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data (double buffer)" severity error;
+        end if;
       else
         assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
       end if;
