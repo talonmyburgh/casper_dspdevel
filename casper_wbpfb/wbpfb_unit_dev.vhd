@@ -395,7 +395,8 @@ architecture str of wbpfb_unit_dev is
                                g_wpfb.guard_w,
                                g_wpfb.guard_enable,
                                g_wpfb.stat_data_w,
-                               g_wpfb.stat_data_sz);
+                               g_wpfb.stat_data_sz,
+                               g_wpfb.pipe_reo_in_place);
 
     signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fil_in_val  : std_logic;

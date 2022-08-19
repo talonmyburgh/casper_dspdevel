@@ -86,7 +86,7 @@ begin
     -- INPUT REGISTER FOR THE INPUT SIGNALS
     ---------------------------------------------------------------
     -- The complete set of input signals are registered.
-    comb : process(r, in_fft_sosi_arr)
+    comb : process(r, in_fft_sosi_arr, shiftreg)
         variable v : reg_type;
     begin
         v                 := r;

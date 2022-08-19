@@ -69,7 +69,6 @@ entity wbpfb_unit is
         g_ovflw_behav       : string  := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
         g_use_round         : string  := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
         g_fft_ram_primitive : string  := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-        g_fifo_primitive    : string  := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
         g_fil_ram_primitive : string  := "auto"
     );
     port(
@@ -110,7 +109,8 @@ architecture str of wbpfb_unit is
                                g_wpfb.guard_w,
                                g_wpfb.guard_enable,
                                g_wpfb.stat_data_w,
-                               g_wpfb.stat_data_sz);
+                               g_wpfb.stat_data_sz,
+                               g_wpfb.pipe_reo_in_place);
 
     signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); -- output of the filterbank is the fft input 
@@ -202,7 +202,7 @@ begin
     ---------------------------------------------------------------
     -- THE POLY PHASE FILTER
     ---------------------------------------------------------------
-    gen_prefilter : IF g_use_prefilter = TRUE generate
+    gen_prefilter : IF g_use_prefilter generate
         u_filter : entity casper_filter_lib.fil_ppf_wide
             generic map(
                 g_big_endian_wb_in  => g_big_endian_wb_in,
@@ -330,13 +330,7 @@ begin
     u_fft_control : entity wb_fft_lib.fft_wide_unit_control
         generic map(
             g_fft            => c_fft,
-            g_nof_ffts       => g_wpfb.nof_wb_streams,
-            g_use_variant    => g_use_variant,
-            g_use_dsp        => g_use_dsp,
-            g_ovflw_behav    => g_ovflw_behav,
-            g_use_round      => g_use_round,
-            g_ram_primitive  => g_fft_ram_primitive,
-            g_fifo_primitive => g_fifo_primitive
+            g_nof_ffts       => g_wpfb.nof_wb_streams
         )
         port map(
             rst          => rst,
