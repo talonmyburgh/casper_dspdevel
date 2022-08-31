@@ -57,7 +57,7 @@ end entity wideband_fft_top;
 
 architecture RTL of wideband_fft_top is
         constant cc_fft : t_fft := (use_reorder,use_fft_shift,use_separate,nof_chan,wb_factor,
-        nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2);
+        nof_points, in_dat_w,out_dat_w,out_gain_w,stage_dat_w,twiddle_dat_w,max_addr_w,guard_w,guard_enable, 56, 2, true);
         signal in_fft_sosi_arr : t_fft_sosi_arr_in(wb_factor - 1 downto 0);
         signal out_fft_sosi_arr : t_fft_sosi_arr_out(wb_factor - 1 downto 0);
         constant c_pft_pipeline : t_fft_pipeline := c_fft_pipeline;
