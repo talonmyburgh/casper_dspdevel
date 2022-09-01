@@ -330,8 +330,10 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     twid_filepath_stem = strtrim(cmdout);
     updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w,twid_filepath_stem);
 
-    %generate twiddlePkg for parallel twiddle factors:
-    par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    %generate twiddlePkg for parallel twiddle factors if wb_factor > 1:
+    if wb_factor > 1
+        par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    end
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
