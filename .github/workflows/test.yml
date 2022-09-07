@@ -194,12 +194,15 @@ jobs:
   accumulators:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: ghdl/vunit:llvm
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: true # needs.files_changed.outputs.accumulators == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: apt install git
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
@@ -337,12 +340,15 @@ jobs:
   delay:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: ghdl/vunit:llvm
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: true # needs.files_changed.outputs.delay == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: apt install git
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
         with:
