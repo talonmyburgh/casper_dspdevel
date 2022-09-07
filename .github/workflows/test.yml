@@ -201,6 +201,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - run: pip install numpy
       - id: casper_accumulators_test
         uses: VUnit/vunit_action@master
         with:
@@ -245,6 +249,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_adder_test
         uses: VUnit/vunit_action@master
         with:
@@ -289,6 +296,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_counter_test
         uses: VUnit/vunit_action@master
         with:
@@ -333,6 +343,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
+      - run: pip install numpy
       - id: casper_delay_test
         uses: VUnit/vunit_action@master
         with:
@@ -377,6 +391,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_filter_test
         uses: VUnit/vunit_action@master
         with:
@@ -421,6 +438,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_flow_control_test
         uses: VUnit/vunit_action@master
         with:
@@ -465,6 +485,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: misc_test
         uses: VUnit/vunit_action@master
         with:
@@ -509,6 +532,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_multiplexer_test
         uses: VUnit/vunit_action@master
         with:
@@ -553,6 +579,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_multiplier_test
         uses: VUnit/vunit_action@master
         with:
@@ -597,6 +626,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+          token: ${{ secrets.TOKEN }}
       - id: casper_fifo_test
         uses: VUnit/vunit_action@master
         with:
