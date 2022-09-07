@@ -9,6 +9,10 @@ IP Cores:
 .. toctree::
    :maxdepth: 5
 
+   accumulators
+   delay
+   flow_control
+   misc
    r2sdf_fft
    wideband_fft
    wideband_pfb
