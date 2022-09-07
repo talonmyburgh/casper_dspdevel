@@ -204,7 +204,7 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - run: pip install numpy
+      - run: pip3 install numpy
       - id: casper_accumulators_test
         uses: VUnit/vunit_action@master
         with:
@@ -346,7 +346,7 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - run: pip install numpy
+      - run: pip3 install numpy
       - id: casper_delay_test
         uses: VUnit/vunit_action@master
         with:
