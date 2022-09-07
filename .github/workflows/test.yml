@@ -194,6 +194,7 @@ jobs:
   accumulators:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm
     needs: [files_changed]
     if: true # needs.files_changed.outputs.accumulators == 'true'
 
@@ -204,15 +205,12 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - uses: actions/setup-python@v4
-        with:
-          cache: 'pip' # caching pip dependencies
-      - run: pip install numpy
+
+      - name: Install numpy
+        run: pip3 install numpy
+
       - id: casper_accumulators_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
+        run: python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
 
       - name: Note casper_accumulators_test Failure
         if: ${{ failure() }}
@@ -339,6 +337,7 @@ jobs:
   delay:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm
     needs: [files_changed]
     if: true # needs.files_changed.outputs.delay == 'true'
 
@@ -349,16 +348,12 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
-      - uses: actions/setup-python@v4
-        with:
-          cache: 'pip' # caching pip dependencies
-      - run: pip install numpy
+
+      - name: Install numpy
+        run: pip3 install numpy
 
       - id: casper_delay_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
+        run: python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
 
       - name: Note casper_delay_test Failure
         if: ${{ failure() }}
