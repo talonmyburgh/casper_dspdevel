@@ -398,7 +398,7 @@ jobs:
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/casper_filter_report.xml
+          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/casper_filter_report.xml --single --wide
 
       - name: Note casper_filter_test Failure
         if: ${{ failure() }}
