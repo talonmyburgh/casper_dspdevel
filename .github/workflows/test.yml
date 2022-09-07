@@ -204,11 +204,15 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          cache: 'pip' # caching pip dependencies
+      - run: pip install numpy
       - id: casper_accumulators_test
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: pip3 install numpy && python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
+          cmd: python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
 
       - name: Note casper_accumulators_test Failure
         if: ${{ failure() }}
@@ -345,11 +349,16 @@ jobs:
         with:
           submodules: 'true'
           token: ${{ secrets.TOKEN }}
+      - uses: actions/setup-python@v4
+        with:
+          cache: 'pip' # caching pip dependencies
+      - run: pip install numpy
+
       - id: casper_delay_test
         uses: VUnit/vunit_action@master
         with:
           image: ghdl/vunit:llvm
-          cmd: pip3 install numpy && python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
+          cmd: python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
 
       - name: Note casper_delay_test Failure
         if: ${{ failure() }}
