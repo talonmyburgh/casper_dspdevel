@@ -68,6 +68,11 @@ casper_ram_lib.add_source_files(join(script_dir, "../casper_ram/common_ram_r_w.v
 technology_lib = vu.add_library("technology_lib")
 technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg.vhd"))
 
+casper_misc_lib = vu.add_library("casper_misc_lib")
+casper_misc_lib.add_source_files(join(script_dir, "../misc/ri_to_c.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "../misc/c_to_ri.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "../misc/concat.vhd"))
+
 # Create library 'casper_delay_lib'
 casper_delay_lib = vu.add_library("casper_delay_lib")
 casper_delay_lib.add_source_files(join(script_dir, "./*.vhd"))
