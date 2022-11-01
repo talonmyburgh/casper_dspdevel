@@ -37,6 +37,7 @@ jobs:
       # Checks-out only the latest commit to assess which files changed
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           submodules: recursive
       - name: Assess accumulators files changes
         id: accumulators
