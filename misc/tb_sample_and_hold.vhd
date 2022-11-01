@@ -28,7 +28,7 @@ ARCHITECTURE rtl of tb_sample_and_hold is
     SIGNAL tb_end    : STD_LOGIC := '0';
     SIGNAL s_in_sig  : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
     SIGNAL s_out_sig : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
-    SIGNAL s_test    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
+    SIGNAL s_exp_sig : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0) := (OTHERS => 'U');
     SIGNAL s_sync    : STD_LOGIC := '0';
 
 begin
@@ -40,30 +40,47 @@ begin
 
     p_stimuli : PROCESS
         VARIABLE v_test_msg  : STRING(1 to o_test_msg'length) := (OTHERS => '.');
-        VARIABLE v_test_pass : BOOLEAN;
+        VARIABLE v_test_pass : BOOLEAN := TRUE;
     BEGIN
+        s_exp_sig <= (OTHERS => '0');
         WAIT FOR clk_period;
         WAIT UNTIL falling_edge(clk);
         ce          <= '1';
         WAIT FOR clk_period;
         s_in_sig    <= TO_SVEC(g_dat_val, g_dat_w);
-        s_test      <= TO_SVEC(g_dat_val, g_dat_w);
         WAIT UNTIL rising_edge(clk);
         s_sync      <= '1';
         WAIT FOR clk_period;
+
         s_sync      <= '0';
+        s_exp_sig   <= TO_SVEC(g_dat_val, g_dat_w);
+        s_in_sig    <= TO_SVEC(g_dat_val+1, g_dat_w);
         -- SIGNAL input should be held on output until period is over
         FOR I IN 0 TO g_period - 1 LOOP
-            v_test_pass := v_test_pass OR (s_test = s_out_sig);
-            IF NOT v_test_pass THEN
-                v_test_msg := pad("wrong RTL result for out_sig, expected: " & to_hstring(s_test) & " but got: " & to_hstring(s_out_sig), o_test_msg'length, '.');
-                o_test_msg <= v_test_msg;
-            END IF;
+            WAIT FOR clk_period;
         END LOOP;
-        o_test_pass <= v_test_pass;
+        
+        s_exp_sig   <= TO_SVEC(g_dat_val+1, g_dat_w);
+
+        WAIT FOR clk_period;
+
         WAIT for clk_period * 2;
         tb_end      <= '1';
         WAIT;
+    END PROCESS;
+
+    
+    p_verify : PROCESS(clk)
+        VARIABLE v_test_pass : BOOLEAN := TRUE;
+        VARIABLE v_test_msg  : STRING(1 to o_test_msg'length) := (OTHERS => '.');
+    BEGIN
+        v_test_pass := s_out_sig = s_exp_sig;
+        if not v_test_pass then
+            v_test_msg := pad("Sample and hold failed. Expected: " & to_hstring(s_exp_sig) & " but got: " & to_hstring(s_out_sig), o_test_msg'length, '.');
+            REPORT "Sample and hold failed. Expected: " & to_hstring(s_exp_sig) & " but got: " & to_hstring(s_out_sig) severity failure;
+        end if;
+        o_test_msg <= v_test_msg;
+        o_test_pass <= v_test_pass;
     END PROCESS;
 
     u_sample_hold : ENTITY work.sample_and_hold

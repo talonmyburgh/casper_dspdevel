@@ -24,13 +24,13 @@ ARCHITECTURE tb OF tb_tb_vu_sample_and_hold IS
 BEGIN
 	
 	tb_ut : ENTITY work.tb_sample_and_hold
-        GENERIC MAP(
-            g_period => g_period,
-            g_dat_w => g_dat_w,
-            g_dat_val => g_dat_val
-        )
+		GENERIC MAP(
+			g_period => g_period,
+			g_dat_w => g_dat_w,
+			g_dat_val => g_dat_val
+		)
 		PORT MAP(
-            o_rst => rst,
+			o_rst => rst,
 			o_clk => clk,
 			o_tb_end => tb_end,
 			o_test_msg => test_msg,
