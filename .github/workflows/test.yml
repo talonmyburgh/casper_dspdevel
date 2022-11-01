@@ -35,14 +35,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
-      - name: Update git ppa
-        run: |
-          sudo add-apt-repository ppa:git-core/ppa -y
-          sudo apt-get update
-          sudo apt-get install git -y
-      - name: Print git version
-        run: |
-          git --version
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
@@ -210,9 +202,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
 
       - name: Install numpy
@@ -260,7 +252,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_adder_test
         uses: VUnit/vunit_action@master
@@ -307,7 +299,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_counter_test
         uses: VUnit/vunit_action@master
@@ -353,9 +345,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
         with:
-          submodules: 'false'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
 
       - name: Install numpy
@@ -403,7 +395,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_filter_test
         uses: VUnit/vunit_action@master
@@ -450,7 +442,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_flow_control_test
         uses: VUnit/vunit_action@master
@@ -497,7 +489,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: misc_test
         uses: VUnit/vunit_action@master
@@ -544,7 +536,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_multiplexer_test
         uses: VUnit/vunit_action@master
@@ -591,7 +583,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_multiplier_test
         uses: VUnit/vunit_action@master
@@ -638,7 +630,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_fifo_test
         uses: VUnit/vunit_action@master
@@ -685,7 +677,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_ram_test
         uses: VUnit/vunit_action@master
@@ -732,7 +724,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: r2sdf_fft_test
         uses: VUnit/vunit_action@master
@@ -779,7 +771,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_pipe_fft_test
         uses: VUnit/vunit_action@master
@@ -826,7 +818,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_par_fft_test
         uses: VUnit/vunit_action@master
@@ -873,7 +865,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wide_fft_test
         uses: VUnit/vunit_action@master
@@ -920,7 +912,7 @@ jobs:
   #     # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
   #     - uses: actions/checkout@v2
   #       with:
-  #         submodules: 'true'
+  #         submodules: 'recursive'
   #         token: ${{ secrets.TOKEN }}
   #     - id: casper_all_fft_test
   #       uses: VUnit/vunit_action@master
@@ -966,7 +958,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_single_filter_test
         uses: VUnit/vunit_action@master
@@ -1012,7 +1004,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wide_filter_test
         uses: VUnit/vunit_action@master
@@ -1058,7 +1050,7 @@ jobs:
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wbpfb_test
         uses: VUnit/vunit_action@master
