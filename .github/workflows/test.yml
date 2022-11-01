@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.accumulators == 'true'
+    if: needs.files_changed.outputs.accumulators == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -351,7 +351,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.delay == 'true'
+    if: needs.files_changed.outputs.delay == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -405,7 +405,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.filter == 'true'
+    if: needs.files_changed.outputs.filter == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -455,7 +455,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.flow_control == 'true'
+    if: needs.files_changed.outputs.flow_control == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -505,7 +505,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.misc == 'true'
+    if: needs.files_changed.outputs.misc == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
