@@ -37,8 +37,12 @@ jobs:
       # Checks-out only the latest commit to assess which files changed
       - name: Update git ppa
         run: |
-          sudo add-apt-repository ppa:git-core/candidate
+          sudo add-apt-repository ppa:git-core/ppa -y
           sudo apt-get update
+          sudo apt-get install git -y
+      - name: Print git version
+        run: |
+          git --version
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
