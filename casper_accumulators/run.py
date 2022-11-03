@@ -79,7 +79,9 @@ casper_misc_lib.add_source_files(join(script_dir, "../misc/edge_detect.vhd"))
 
 # Accumulator Library
 casper_accumulator_lib = vu.add_library("casper_accumulator_lib")
-casper_accumulator_lib.add_source_files(join(script_dir, "./*.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./addr_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./tb_addr_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./tb_tb_addr_bram_vacc.vhd"))
 
 TB_ADDR_BRAM_VACC = casper_accumulator_lib.test_bench("tb_tb_vu_addr_bram_vacc")
 

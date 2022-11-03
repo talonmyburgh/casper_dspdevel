@@ -12,7 +12,6 @@ use UNISIM.vcomponents.all;
 entity dsp48e_bram_vacc is
     generic(
         g_vector_length : NATURAL := 16;
-        g_output_type   : STRING  := "SIGNED";
         g_dsp48_version : NATURAL := 1;
         g_bit_w         : NATURAL := 32
     );
@@ -29,7 +28,6 @@ END dsp48e_bram_vacc;
 architecture rtl of dsp48e_bram_vacc is
    CONSTANT c_concat_hi : std_logic_vector(4 DOWNTO 0) := TO_SVEC(3, 5);
 
-   SIGNAL s_delay_new_acc : std_logic :='0';
    SIGNAL s_resized_din : std_logic_vector(47 DOWNTO 0);
    SIGNAL s_not_new_acc : std_logic;
    SIGNAL s_pulse_ext_out : std_logic;
