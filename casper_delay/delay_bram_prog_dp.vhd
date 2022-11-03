@@ -26,7 +26,6 @@ end ENTITY;
 
 ARCHITECTURE rtl of delay_bram_prog_dp is
     CONSTANT c_dat_w       : NATURAL := din'LENGTH;
-    CONSTANT c_delay_w     : NATURAL := delay'LENGTH;
     CONSTANT c_cnt_max_val : NATURAL := 2**g_max_delay -1;
     CONSTANT c_mem_ram     : t_c_mem := (1, g_max_delay, c_dat_w, c_cnt_max_val, '0');
     
