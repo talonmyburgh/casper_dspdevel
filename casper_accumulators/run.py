@@ -1,6 +1,5 @@
 from vunit import VUnit
 from os.path import dirname, join
-from itertools import product
 import numpy as np
 
 # Create VUnit instance by parsing command line arguments
@@ -80,10 +79,14 @@ casper_misc_lib.add_source_files(join(script_dir, "../misc/edge_detect.vhd"))
 # Accumulator Library
 casper_accumulator_lib = vu.add_library("casper_accumulator_lib")
 casper_accumulator_lib.add_source_files(join(script_dir, "./addr_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./simple_bram_vacc.vhd"))
 casper_accumulator_lib.add_source_files(join(script_dir, "./tb_addr_bram_vacc.vhd"))
-casper_accumulator_lib.add_source_files(join(script_dir, "./tb_tb_addr_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./tb_simple_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./tb_tb_vu_addr_bram_vacc.vhd"))
+casper_accumulator_lib.add_source_files(join(script_dir, "./tb_tb_vu_simple_bram_vacc.vhd"))
 
 TB_ADDR_BRAM_VACC = casper_accumulator_lib.test_bench("tb_tb_vu_addr_bram_vacc")
+TB_SIMPLE_BRAM_VACC = casper_accumulator_lib.test_bench("tb_tb_vu_simple_bram_vacc")
 
 # Generics
 bit_w = [8,18]
@@ -95,6 +98,7 @@ randstr =  ",".join(map(str, randnums))
 for b_w in bit_w:
     vector_len = ramp.size
     config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,rampstr[0:8])
+    config_name_simple = "TB_SIMPLE_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,rampstr[0:8])
     TB_ADDR_BRAM_VACC.add_config(
         name=config_name,
         generics=dict(
@@ -103,10 +107,27 @@ for b_w in bit_w:
             g_vector_length=vector_len
         )
     )
+    TB_SIMPLE_BRAM_VACC.add_config(
+        name=config_name_simple,
+        generics=dict(
+            g_bit_w=b_w,
+            g_values=rampstr,
+            g_vector_length=vector_len
+        )
+    )
     vector_len = randnums.size
     config_name = "TB_ADDR_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,randstr[0:8])
+    config_name_simple = "TB_SIMPLE_BRAM_VACC: bit_w=%d, vec_len=%d, strvalue=%s..." % (b_w,vector_len,randstr[0:8])
     TB_ADDR_BRAM_VACC.add_config(
         name=config_name,
+        generics=dict(
+            g_bit_w=b_w,
+            g_values=randstr,
+            g_vector_length=vector_len
+        )
+    )
+    TB_SIMPLE_BRAM_VACC.add_config(
+        name=config_name_simple,
         generics=dict(
             g_bit_w=b_w,
             g_values=randstr,
