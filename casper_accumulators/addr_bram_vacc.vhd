@@ -29,7 +29,6 @@ architecture rtl of addr_bram_vacc is
     SIGNAL s_delay_new_acc : std_logic :='0';
     SIGNAL s_delay_din : std_logic_vector(din'RANGE);
     SIGNAL s_pulse_ext_out : std_logic;
-    SIGNAL s_dout  : std_logic_vector(g_bit_w - 1 DOWNTO 0);
     SIGNAL s_a : std_logic_vector(g_bit_w - 1 DOWNTO 0);
     SIGNAL s_b : std_logic_vector(g_bit_w - 1 DOWNTO 0);
     SIGNAL s_delay_bram_in : std_logic_vector(g_bit_w - 1 DOWNTO 0);
@@ -41,7 +40,7 @@ begin
 --------------------------------------------------------------
 -- delay new_acc signal
 --------------------------------------------------------------
-delay_new_acc : process(clk, ce) 
+delay_new_acc : process(clk) 
 BEGIN
     IF rising_edge(clk) AND ce = '1' THEN
         s_delay_new_acc <= new_acc;
@@ -143,7 +142,7 @@ port map (
 --------------------------------------------------------------
 -- delay s_delay_bram_out signal
 --------------------------------------------------------------
-delay_bram_out : process(clk, ce) 
+delay_bram_out : process(clk) 
 BEGIN
     IF rising_edge(clk) AND ce = '1' THEN
         dout <= s_delay_bram_out;
@@ -153,7 +152,7 @@ END PROCESS;
 --------------------------------------------------------------
 -- delay s_pulse_ext_out signal
 --------------------------------------------------------------
-delay_s_pulse_ext_out : process(clk, ce) 
+delay_s_pulse_ext_out : process(clk) 
 BEGIN
     IF rising_edge(clk) AND ce = '1' THEN
         we <= s_pulse_ext_out;
