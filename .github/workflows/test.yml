@@ -38,6 +38,14 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
+      - name: Assess accumulators files changes
+        id: accumulators
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_accumulators/.*\.vhd$
+            casper_accumulators/run.py
       - name: Assess adder files changes
         id: adder
         uses: tj-actions/changed-files@v1.2.0
@@ -52,6 +60,13 @@ jobs:
           files: |
             casper_counter/.*\.vhd$
             casper_counter/run.py
+      - name: Assess delay files changes
+        id: delay
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_delay/.*\.vhd$
+            casper_delay/run.py
       - name: Assess multiplexer files changes
         id: multiplexer
         uses: tj-actions/changed-files@v1.2.0
@@ -73,6 +88,27 @@ jobs:
           files: |
             casper_fifo/.*\.vhd$
             casper_fifo/run.py
+      - name: Assess filter files changes
+        id: filter
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_filter/.*\.vhd$
+            casper_filter/run.py
+      - name: Assess flow_control files changes
+        id: flow_control
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_flow_control/.*\.vhd$
+            casper_flow_control/run.py
+      - name: Assess misc files changes
+        id: misc
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            misc/.*\.vhd$
+            misc/run.py
       - name: Assess RAM files changes
         id: ram
         uses: tj-actions/changed-files@v1.2.0
@@ -156,21 +192,81 @@ jobs:
             casper_wbpfb/.*\.vhd$
             casper_wbpfb/run.py
 
+  accumulators:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.accumulators == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+
+      - name: Install numpy
+        run: pip3 install numpy
+
+      - id: casper_accumulators_test
+        run: python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
+
+      - name: Note casper_accumulators_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_accumulators
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_accumulators_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_accumulators_test Success
+        if: ${{ steps.casper_accumulators_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_accumulators
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_accumulators_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_accumulators_report
+          path: ./casper_accumulators/casper_accumulators_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
   adder:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.adder == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - id: casper_adder_test
-        uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_adder_test
+        run: python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
 
       - name: Note casper_adder_test Failure
         if: ${{ failure() }}
@@ -203,18 +299,24 @@ jobs:
   counter:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.counter == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - id: casper_counter_test
-        uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_counter_test
+        run: python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
       - name: Note casper_counter_test Failure
         if: ${{ failure() }}
@@ -243,22 +345,232 @@ jobs:
           name: casper_counter_report
           path: ./casper_counter/casper_counter_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  delay:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.delay == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+
+      - name: Install numpy
+        run: pip3 install numpy
+
+      - id: casper_delay_test
+        run: python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
+
+      - name: Note casper_delay_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_delay
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_delay_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_delay_test Success
+        if: ${{ steps.casper_delay_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_delay
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_delay_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_delay_report
+          path: ./casper_delay/casper_delay_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  filter:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.filter == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_filter_test
+        run: python3 casper_filter/run.py --xunit-xml ./casper_filter/casper_filter_report.xml --single --wide
+
+      - name: Note casper_filter_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_filter
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_filter_test Success
+        if: ${{ steps.casper_filter_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_filter
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_filter_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_filter_report
+          path: ./casper_filter/casper_filter_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  flow_control:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.flow_control == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_flow_control_test
+        run: python3 casper_flow_control/run.py --xunit-xml ./casper_flow_control/casper_flow_control_report.xml
+
+      - name: Note casper_flow_control_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_flow_control
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_flow_control_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_flow_control_test Success
+        if: ${{ steps.casper_flow_control_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_flow_control
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_flow_control_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_flow_control_report
+          path: ./casper_flow_control/casper_flow_control_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+
+  misc:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.misc == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: misc_test
+        run: python3 misc/run.py --xunit-xml ./misc/misc_report.xml
+
+      - name: Note misc_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: misc
+          message: failing
+          message-color: "C74D1F"
+          file-name: misc_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note misc_test Success
+        if: ${{ steps.misc_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: misc
+          message: passing
+          message-color: "4DC71F"
+          file-name: misc_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: misc_report
+          path: ./misc/misc_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
   multiplexer:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.multiplexer == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - id: casper_multiplexer_test
-        uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_multiplexer_test
+        run: python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
 
       - name: Note casper_multiplexer_test Failure
         if: ${{ failure() }}
@@ -291,18 +603,24 @@ jobs:
   multiplier:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.multiplier == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - id: casper_multiplier_test
-        uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_multiplier_test
+        run: python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
 
       - name: Note casper_multiplier_test Failure
         if: ${{ failure() }}
@@ -335,18 +653,24 @@ jobs:
   fifo:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.fifo == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - id: casper_fifo_test
-        uses: VUnit/vunit_action@master
         with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_fifo_test
+        run: python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
 
       - name: Note casper_fifo_test Failure
         if: ${{ failure() }}
@@ -379,21 +703,24 @@ jobs:
   ram:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.ram == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_ram_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+        run: python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
 
       - name: Note casper_ram_test Failure
         if: ${{ failure() }}
@@ -426,21 +753,24 @@ jobs:
   rtwosdf_fft:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.r2sdf_fft == 'true' 
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: r2sdf_fft_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
+        run: python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml
 
       - name: Note r2sdf_fft_test Failure
         if: ${{ failure() }}
@@ -473,21 +803,24 @@ jobs:
   pipe_fft:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.pipe_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_pipe_fft_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
+        run: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
 
       - name: Note casper_pipe_fft_test Failure
         if: ${{ failure() }}
@@ -520,21 +853,24 @@ jobs:
   par_fft:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.par_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_par_fft_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
+        run: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
 
       - name: Note casper_par_fft_test Failure
         if: ${{ failure() }}
@@ -567,21 +903,24 @@ jobs:
   wide_fft:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.wide_fft == 'true' || needs.files_changed.outputs.all_fft == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wide_fft_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
+        run: python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
 
       - name: Note casper_wide_fft_test Failure
         if: ${{ failure() }}
@@ -622,7 +961,7 @@ jobs:
   #     # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
   #     - uses: actions/checkout@v2
   #       with:
-  #         submodules: 'true'
+  #         submodules: 'recursive'
   #         token: ${{ secrets.TOKEN }}
   #     - id: casper_all_fft_test
   #       uses: VUnit/vunit_action@master
@@ -661,20 +1000,23 @@ jobs:
   single_filter:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.single_filter == 'true'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_single_filter_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml --single
+        run: python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml --single
 
       - name: Note casper_single_filter_test Failure
         if: ${{ failure() }}
@@ -707,20 +1049,23 @@ jobs:
   wide_filter:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.wide_filter == 'true'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wide_filter_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_filter/run.py --xunit-xml ./casper_filter/wide_filter_report.xml --wide
+        run: python3 casper_filter/run.py --xunit-xml ./casper_filter/wide_filter_report.xml --wide
 
       - name: Note casper_wide_filter_test Failure
         if: ${{ failure() }}
@@ -753,20 +1098,23 @@ jobs:
   wbpfb:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
     needs: [files_changed]
     if: needs.files_changed.outputs.wbpfb == 'true'
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
       - id: casper_wbpfb_test
-        uses: VUnit/vunit_action@master
-        with:
-          image: ghdl/vunit:llvm
-          cmd: python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
+        run: python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
 
       - name: Note casper_wbpfb_test Failure
         if: ${{ failure() }}

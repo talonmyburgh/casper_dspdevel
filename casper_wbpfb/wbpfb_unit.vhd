@@ -59,112 +59,109 @@ use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;
 use work.wbpfb_gnrcs_intrfcs_pkg.all;
 
 entity wbpfb_unit is
-  generic (
-    g_big_endian_wb_in  : boolean           := true;
-    g_wpfb              : t_wpfb            := c_wpfb;
-    g_use_prefilter     : boolean           := TRUE;
-    g_coefs_file_prefix : string            := c_coefs_file; -- File prefix for the coefficients files.
-    g_use_variant    	  : string  			    := "4DSP";        		--! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-		g_use_dsp        	  : string  			    := "yes";        		  --! = "yes" or "no"
-		g_ovflw_behav    	  : string  			    := "WRAP";        		--! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round      	  : string  			    := "ROUND";        		--! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-		g_fft_ram_primitive : string  			    := "auto";        		--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-		g_fifo_primitive 	  : string  			    := "auto";        		--! = "auto", "distributed", "block" or "ultra" for RAM architecture
-    g_fil_ram_primitive : string            := "auto"  
-   );
-  port (
-    rst                 : in  std_logic := '0';
-    clk                 : in  std_logic;
-    ce                  : in  std_logic;
-    shiftreg            : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
-    in_sosi_arr         : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-    ovflw               : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
-    out_sosi_arr        : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)
-  );
+    generic(
+        g_big_endian_wb_in  : boolean := true;
+        g_wpfb              : t_wpfb  := c_wpfb;
+        g_use_prefilter     : boolean := TRUE;
+        g_coefs_file_prefix : string  := c_coefs_file; -- File prefix for the coefficients files.
+        g_use_variant       : string  := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+        g_use_dsp           : string  := "yes"; --! = "yes" or "no"
+        g_ovflw_behav       : string  := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_use_round         : string  := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+        g_fft_ram_primitive : string  := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+        g_fil_ram_primitive : string  := "auto"
+    );
+    port(
+        rst          : in  std_logic := '0';
+        clk          : in  std_logic;
+        ce           : in  std_logic;
+        shiftreg     : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
+        in_sosi_arr  : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        ovflw        : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
+        out_sosi_arr : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)
+    );
 end entity wbpfb_unit;
 
 architecture str of wbpfb_unit is
 
-  constant c_nof_stats       : natural := 2**g_wpfb.nof_chan * g_wpfb.nof_points/g_wpfb.wb_factor;
+    constant c_fil_ppf : t_fil_ppf := (g_wpfb.wb_factor,
+                                       g_wpfb.nof_chan,
+                                       g_wpfb.nof_points,
+                                       g_wpfb.nof_taps,
+                                       c_nof_complex * g_wpfb.nof_wb_streams, -- Complex FFT always requires 2 filter streams: real and imaginary
+                                       g_wpfb.fil_backoff_w,
+                                       g_wpfb.fil_in_dat_w,
+                                       g_wpfb.fil_out_dat_w,
+                                       g_wpfb.coef_dat_w);
 
-  constant c_fil_ppf         : t_fil_ppf := (g_wpfb.wb_factor,
-                                             g_wpfb.nof_chan,
-                                             g_wpfb.nof_points,
-                                             g_wpfb.nof_taps,
-                                             c_nof_complex*g_wpfb.nof_wb_streams,  -- Complex FFT always requires 2 filter streams: real and imaginary
-                                             g_wpfb.fil_backoff_w,
-                                             g_wpfb.fil_in_dat_w,
-                                             g_wpfb.fil_out_dat_w,
-                                             g_wpfb.coef_dat_w);
+    constant c_fft : t_fft := (g_wpfb.use_reorder,
+                               g_wpfb.use_fft_shift,
+                               g_wpfb.use_separate,
+                               g_wpfb.nof_chan,
+                               g_wpfb.wb_factor,
+                               g_wpfb.nof_points,
+                               g_wpfb.fft_in_dat_w,
+                               g_wpfb.fft_out_dat_w,
+                               g_wpfb.fft_out_gain_w,
+                               g_wpfb.stage_dat_w,
+                               g_wpfb.twiddle_dat_w,
+                               g_wpfb.max_addr_w,
+                               g_wpfb.guard_w,
+                               g_wpfb.guard_enable,
+                               g_wpfb.stat_data_w,
+                               g_wpfb.stat_data_sz,
+                               g_wpfb.pipe_reo_in_place);
 
-  constant c_fft             : t_fft     := (g_wpfb.use_reorder,
-                                             g_wpfb.use_fft_shift,
-                                             g_wpfb.use_separate,
-                                             g_wpfb.nof_chan,
-                                             g_wpfb.wb_factor,
-                                             0,
-                                             g_wpfb.nof_points,
-                                             g_wpfb.fft_in_dat_w,
-                                             g_wpfb.fft_out_dat_w,
-                                             g_wpfb.fft_out_gain_w,
-                                             g_wpfb.stage_dat_w,
-                                             g_wpfb.guard_w,
-                                             g_wpfb.guard_enable,
-                                             g_wpfb.stat_data_w,
-                                             g_wpfb.stat_data_sz);
+    signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); -- output of the filterbank is the fft input 
+    signal fil_out_val : std_logic;
 
+    signal fft_in_re_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_im_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_val    : std_logic;
 
-      
-  signal fil_in_arr                 : t_fil_slv_arr_in(c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_out_arr                : t_fil_slv_arr_out(c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0); -- output of the filterbank is the fft input 
-  signal fil_out_val                : std_logic;
-      
-  signal fft_in_re_arr              : t_fft_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_in_im_arr              : t_fft_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_in_val                 : std_logic;
-  
-  signal fft_in_sosi                : t_fft_sosi_in;
-      
-  signal fft_out_re_arr_i           : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_out_im_arr_i           : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_out_re_arr             : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_out_im_arr             : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fft_out_val                : std_logic_vector(g_wpfb.nof_wb_streams-1 downto 0);
-      
-  signal fft_out_sosi_arr           : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others=>c_fft_sosi_rst_out);
+    signal fft_in_sosi : t_fft_sosi_in;
 
-  type reg_type is record
-    in_sosi_arr : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  end record;
+    signal fft_out_re_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_im_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_re_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_im_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_val      : std_logic_vector(g_wpfb.nof_wb_streams - 1 downto 0);
 
-  signal r, rin : reg_type;
+    signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
+
+    type reg_type is record
+        in_sosi_arr : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    end record;
+
+    signal r, rin : reg_type;
 
 begin
 
-  ---------------------------------------------------------------
-  -- CHECK IF PROVIDED GENERICS ARE ALLOWED.
-  ---------------------------------------------------------------
-  assert not(g_wpfb.nof_chan /= 0 and g_wpfb.wb_factor /= 1 and rising_edge(clk)) report "nof_chan must be 0 when wb_factor > 1" severity FAILURE;
+    ---------------------------------------------------------------
+    -- CHECK IF PROVIDED GENERICS ARE ALLOWED.
+    ---------------------------------------------------------------
+    assert not (g_wpfb.nof_chan /= 0 and g_wpfb.wb_factor /= 1 and rising_edge(clk)) report "nof_chan must be 0 when wb_factor > 1" severity FAILURE;
 
-  ---------------------------------------------------------------
-  -- INPUT REGISTER FOR THE SOSI ARRAY
-  ---------------------------------------------------------------
-  -- The complete input sosi arry is registered.
-  comb : process(r, in_sosi_arr)
-    variable v : reg_type;
-  begin
-    v             := r;
-    v.in_sosi_arr := in_sosi_arr;
-    rin           <= v;
-    fft_in_sosi   <= (in_sosi_arr(0).sync, in_sosi_arr(0).bsn, (others=>'0'), (others=>'0'), in_sosi_arr(0).valid, in_sosi_arr(0).sop, in_sosi_arr(0).eop, in_sosi_arr(0).empty,in_sosi_arr(0).channel,in_sosi_arr(0).err);
-  end process comb;
+    ---------------------------------------------------------------
+    -- INPUT REGISTER FOR THE SOSI ARRAY
+    ---------------------------------------------------------------
+    -- The complete input sosi arry is registered.
+    comb : process(r, in_sosi_arr)
+        variable v : reg_type;
+    begin
+        v             := r;
+        v.in_sosi_arr := in_sosi_arr;
+        rin           <= v;
+        fft_in_sosi   <= (in_sosi_arr(0).sync, in_sosi_arr(0).bsn, (others => '0'), (others => '0'), in_sosi_arr(0).valid, in_sosi_arr(0).sop, in_sosi_arr(0).eop, in_sosi_arr(0).empty, in_sosi_arr(0).channel, in_sosi_arr(0).err);
+    end process comb;
 
-  regs : process(clk)
-  begin
-    if rising_edge(clk) then
-      r <= rin;
-    end if;
-  end process;
+    regs : process(clk)
+    begin
+        if rising_edge(clk) then
+            r <= rin;
+        end if;
+    end process;
     ---------------------------------------------------------------
     -- PREPARE INPUT DATA FOR WIDEBAND POLY PHASE FILTER
     ---------------------------------------------------------------
@@ -195,47 +192,47 @@ begin
     --                   |    14      1 3 RE   |                   |
     --                   |    15      1 3 IM   |                   |
     --
-    gen_prep_filter_wb_factor: for I in 0 to g_wpfb.wb_factor-1   generate
-      gen_prep_filter_streams: for J in 0 to g_wpfb.nof_wb_streams-1 generate
-        fil_in_arr(2*J+I*g_wpfb.nof_wb_streams*c_nof_complex)   <= r.in_sosi_arr(I+J*g_wpfb.wb_factor).re(g_wpfb.fil_in_dat_w-1 downto 0);
-        fil_in_arr(2*J+I*g_wpfb.nof_wb_streams*c_nof_complex+1) <= r.in_sosi_arr(I+J*g_wpfb.wb_factor).im(g_wpfb.fil_in_dat_w-1 downto 0);
-      end generate;
+    gen_prep_filter_wb_factor : for I in 0 to g_wpfb.wb_factor - 1 generate
+        gen_prep_filter_streams : for J in 0 to g_wpfb.nof_wb_streams - 1 generate
+            fil_in_arr(2 * J + I * g_wpfb.nof_wb_streams * c_nof_complex)     <= r.in_sosi_arr(I + J * g_wpfb.wb_factor).re(g_wpfb.fil_in_dat_w - 1 downto 0);
+            fil_in_arr(2 * J + I * g_wpfb.nof_wb_streams * c_nof_complex + 1) <= r.in_sosi_arr(I + J * g_wpfb.wb_factor).im(g_wpfb.fil_in_dat_w - 1 downto 0);
+        end generate;
     end generate;
 
     ---------------------------------------------------------------
     -- THE POLY PHASE FILTER
     ---------------------------------------------------------------
-    gen_prefilter : IF g_use_prefilter = TRUE generate
-      u_filter : entity casper_filter_lib.fil_ppf_wide
-      generic map (
-        g_big_endian_wb_in  => g_big_endian_wb_in,
-        g_big_endian_wb_out => false,
-        g_fil_ppf           => c_fil_ppf,
-        g_fil_ppf_pipeline  => g_wpfb.fil_pipeline,
-        g_coefs_file_prefix => g_coefs_file_prefix,
-        g_ram_primitive     => g_fil_ram_primitive
-      )
-      port map (
-        clk                 => clk,
-        ce                  => ce,
-        rst                 => rst,
-        -- mm_clk         => mm_clk,
-        -- mm_rst         => mm_rst,
-        -- ram_coefs_mosi => ram_fil_coefs_mosi,
-        -- ram_coefs_miso => ram_fil_coefs_miso,
-        in_dat_arr          => fil_in_arr,
-        in_val              => r.in_sosi_arr(0).valid,
-        out_dat_arr         => fil_out_arr,
-        out_val             => fil_out_val
-      );
+    gen_prefilter : IF g_use_prefilter generate
+        u_filter : entity casper_filter_lib.fil_ppf_wide
+            generic map(
+                g_big_endian_wb_in  => g_big_endian_wb_in,
+                g_big_endian_wb_out => false,
+                g_fil_ppf           => c_fil_ppf,
+                g_fil_ppf_pipeline  => g_wpfb.fil_pipeline,
+                g_coefs_file_prefix => g_coefs_file_prefix,
+                g_ram_primitive     => g_fil_ram_primitive
+            )
+            port map(
+                clk         => clk,
+                ce          => ce,
+                rst         => rst,
+                -- mm_clk         => mm_clk,
+                -- mm_rst         => mm_rst,
+                -- ram_coefs_mosi => ram_fil_coefs_mosi,
+                -- ram_coefs_miso => ram_fil_coefs_miso,
+                in_dat_arr  => fil_in_arr,
+                in_val      => r.in_sosi_arr(0).valid,
+                out_dat_arr => fil_out_arr,
+                out_val     => fil_out_val
+            );
     end generate;
 
     -- Bypass filter
     gen_no_prefilter : if g_use_prefilter = FALSE generate
-      gen_no_prefilter_signalmap : for I in c_nof_complex*g_wpfb.nof_wb_streams*g_wpfb.wb_factor -1 downto 0 generate
-        fil_out_arr(I) <= RESIZE_SVEC(fil_in_arr(I),g_wpfb.fil_out_dat_w);
-      end generate;
-      fil_out_val <= r.in_sosi_arr(0).valid;
+        gen_no_prefilter_signalmap : for I in c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0 generate
+            fil_out_arr(I) <= RESIZE_SVEC(fil_in_arr(I), g_wpfb.fil_out_dat_w);
+        end generate;
+        fil_out_val <= r.in_sosi_arr(0).valid;
     end generate;
 
     fft_in_val <= fil_out_val;
@@ -243,80 +240,85 @@ begin
     ---------------------------------------------------------------
     -- THE WIDEBAND FFT
     ---------------------------------------------------------------
-    gen_wide_band_fft: if g_wpfb.wb_factor > 1  generate
-      ---------------------------------------------------------------
-      -- PREPARE INPUT DATA FOR WIDEBAND FFT
-      ---------------------------------------------------------------
-      -----------------------------------------------------------------------------------------------------
-      gen_prep_fft_streams: for I in 0 to g_wpfb.nof_wb_streams-1 generate
-        gen_prep_fft_wb_factor: for J in 0 to g_wpfb.wb_factor-1 generate
-          fft_in_re_arr(I*g_wpfb.wb_factor+J) <= fil_out_arr(J*c_nof_complex*g_wpfb.nof_wb_streams+I*c_nof_complex);
-          fft_in_im_arr(I*g_wpfb.wb_factor+J) <= fil_out_arr(J*c_nof_complex*g_wpfb.nof_wb_streams+I*c_nof_complex+1);
+    gen_wide_band_fft : if g_wpfb.wb_factor > 1 generate
+        ---------------------------------------------------------------
+        -- PREPARE INPUT DATA FOR WIDEBAND FFT
+        ---------------------------------------------------------------
+        -----------------------------------------------------------------------------------------------------
+        gen_prep_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
+            gen_prep_fft_wb_factor : for J in 0 to g_wpfb.wb_factor - 1 generate
+                fft_in_re_arr(I * g_wpfb.wb_factor + J) <= fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex);
+                fft_in_im_arr(I * g_wpfb.wb_factor + J) <= fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex + 1);
+            end generate;
         end generate;
-      end generate;
-      -----------------------------------------------------------------------------------------------------
-      gen_prep_wide_fft_streams: for I in 0 to g_wpfb.nof_wb_streams-1 generate
-        u_fft_wide : entity wb_fft_lib.fft_r2_wide
-        generic map(
-          g_fft             => c_fft,         -- generics for the WFFT
-          g_pft_pipeline    => g_wpfb.pft_pipeline,
-          g_fft_pipeline    => g_wpfb.fft_pipeline,
-          g_use_variant     => g_use_variant,
-          g_use_dsp         => g_use_dsp,
-          g_ovflw_behav     => g_ovflw_behav,
-          g_ram_primitive   => g_fft_ram_primitive,
-          g_fifo_primitive  => g_fifo_primitive
-        )
-        port map(
-          clk               => clk,
-          rst               => rst,
-          clken             => ce,
-          shiftreg          => shiftreg,
-          in_re_arr         => fft_in_re_arr((I+1)*g_wpfb.wb_factor-1 downto I*g_wpfb.wb_factor),
-          in_im_arr         => fft_in_im_arr((I+1)*g_wpfb.wb_factor-1 downto I*g_wpfb.wb_factor),
-          in_val            => fft_in_val,
-          out_re_arr        => fft_out_re_arr((I+1)*g_wpfb.wb_factor-1 downto I*g_wpfb.wb_factor),
-          out_im_arr        => fft_out_im_arr((I+1)*g_wpfb.wb_factor-1 downto I*g_wpfb.wb_factor),
-          ovflw             => ovflw,
-          out_val           => fft_out_val(I)
-        );
-      end generate;
+        -----------------------------------------------------------------------------------------------------
+        gen_prep_wide_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
+            u_fft_wide : entity wb_fft_lib.fft_r2_wide
+                generic map(
+                    g_fft            => c_fft, -- generics for the WFFT
+                    g_pft_pipeline   => g_wpfb.pft_pipeline,
+                    g_fft_pipeline   => g_wpfb.fft_pipeline,
+                    g_use_variant    => g_use_variant,
+                    g_use_dsp        => g_use_dsp,
+                    g_ovflw_behav    => g_ovflw_behav,
+                    g_ram_primitive  => g_fft_ram_primitive
+                )
+                port map(
+                    clk        => clk,
+                    rst        => rst,
+                    clken      => ce,
+                    shiftreg   => shiftreg,
+                    in_re_arr  => fft_in_re_arr((I + 1) * g_wpfb.wb_factor - 1 downto I * g_wpfb.wb_factor),
+                    in_im_arr  => fft_in_im_arr((I + 1) * g_wpfb.wb_factor - 1 downto I * g_wpfb.wb_factor),
+                    in_val     => fft_in_val,
+                    out_re_arr => fft_out_re_arr((I + 1) * g_wpfb.wb_factor - 1 downto I * g_wpfb.wb_factor),
+                    out_im_arr => fft_out_im_arr((I + 1) * g_wpfb.wb_factor - 1 downto I * g_wpfb.wb_factor),
+                    ovflw      => ovflw,
+                    out_val    => fft_out_val(I)
+                );
+        end generate;
     end generate;
 
-   ---------------------------------------------------------------
+    ---------------------------------------------------------------
     -- THE PIPELINED FFT
     ---------------------------------------------------------------
-    gen_pipeline_fft: if g_wpfb.wb_factor = 1  generate
-      ---------------------------------------------------------------
-      -- PREPARE INPUT DATA FOR WIDEBAND FFT
-      ---------------------------------------------------------------
-      gen_prep_fft_streams: for I in 0 to g_wpfb.nof_wb_streams-1 generate
-        fft_in_re_arr(I) <= fil_out_arr(I*c_nof_complex);
-        fft_in_im_arr(I) <= fil_out_arr(I*c_nof_complex+1);
-      end generate;
+    gen_pipeline_fft : if g_wpfb.wb_factor = 1 generate
+        ---------------------------------------------------------------
+        -- PREPARE INPUT DATA FOR WIDEBAND FFT
+        ---------------------------------------------------------------
+        gen_prep_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
+            fft_in_re_arr(I) <= fil_out_arr(I * c_nof_complex);
+            fft_in_im_arr(I) <= fil_out_arr(I * c_nof_complex + 1);
+        end generate;
 
-      gen_prep_pipe_fft_streams: for I in 0 to g_wpfb.nof_wb_streams-1 generate
-        u_fft_pipe : entity wb_fft_lib.fft_r2_pipe
-        generic map(
-          g_fft      => c_fft,
-          g_pipeline => g_wpfb.fft_pipeline
-        )
-        port map(
-          clk       => clk,
-          clken     => ce,
-          rst       => rst,
-          in_re     => fft_in_re_arr(I)(c_fft.in_dat_w-1 downto 0),
-          in_im     => fft_in_im_arr(I)(c_fft.in_dat_w-1 downto 0),
-          in_val    => fft_in_val,
-          shiftreg  => shiftreg,
-          out_re    => fft_out_re_arr_i(I)(c_fft.out_dat_w-1 downto 0),
-          out_im    => fft_out_im_arr_i(I)(c_fft.out_dat_w-1 downto 0),
-          ovflw     => ovflw,
-          out_val   => fft_out_val(I)
-        );
-        fft_out_re_arr(I) <= fft_out_re_arr_i(I);
-        fft_out_im_arr(I) <= fft_out_im_arr_i(I);
-      end generate;
+        gen_prep_pipe_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
+            u_fft_pipe : entity wb_fft_lib.fft_r2_pipe
+                generic map(
+                    g_fft      => c_fft,
+                    g_pipeline => g_wpfb.fft_pipeline,
+                    g_dont_flip_channels => false,
+                    g_wb_inst => 1,
+                    g_use_variant => g_use_variant,
+                    g_use_dsp => g_use_dsp,
+                    g_ovflw_behav => g_ovflw_behav,
+                    g_use_round => g_use_round
+                )
+                port map(
+                    clk      => clk,
+                    clken    => ce,
+                    rst      => rst,
+                    in_re    => fft_in_re_arr(I)(c_fft.in_dat_w - 1 downto 0),
+                    in_im    => fft_in_im_arr(I)(c_fft.in_dat_w - 1 downto 0),
+                    in_val   => fft_in_val,
+                    shiftreg => shiftreg,
+                    out_re   => fft_out_re_arr_i(I)(c_fft.out_dat_w - 1 downto 0),
+                    out_im   => fft_out_im_arr_i(I)(c_fft.out_dat_w - 1 downto 0),
+                    ovflw    => ovflw,
+                    out_val  => fft_out_val(I)
+                );
+            fft_out_re_arr(I) <= fft_out_re_arr_i(I);
+            fft_out_im_arr(I) <= fft_out_im_arr_i(I);
+        end generate;
     end generate;
 
     ---------------------------------------------------------------
@@ -324,34 +326,27 @@ begin
     ---------------------------------------------------------------
     -- The fft control unit composes the output array in the dp-
     -- streaming format.
-    
-    
-    u_fft_control : entity wb_fft_lib.fft_wide_unit_control
-    generic map (
-      g_fft              => c_fft,
-      g_nof_ffts         => g_wpfb.nof_wb_streams,
-      g_use_variant      => g_use_variant,
-      g_use_dsp          => g_use_dsp,
-      g_ovflw_behav      => g_ovflw_behav,
-      g_use_round        => g_use_round,
-      g_ram_primitive    => g_fft_ram_primitive,
-      g_fifo_primitive   => g_fifo_primitive  
-    )
-    port map(
-      rst                => rst,
-      clk                => clk,
-      in_re_arr          => fft_out_re_arr,
-      in_im_arr          => fft_out_im_arr,
-      in_val             => fft_out_val(0),
-      ctrl_sosi          => fft_in_sosi,
-      out_sosi_arr       => fft_out_sosi_arr
-    );
 
-  -- Connect to the outside world
-  gen_output_streams: for I in 0 to g_wpfb.nof_wb_streams-1 generate
-    gen_output_wb_factor : for J in 0 to g_wpfb.wb_factor-1 generate
-      out_sosi_arr(I*g_wpfb.wb_factor+J) <= fft_out_sosi_arr(I*g_wpfb.wb_factor+J);
+    u_fft_control : entity wb_fft_lib.fft_wide_unit_control
+        generic map(
+            g_fft            => c_fft,
+            g_nof_ffts       => g_wpfb.nof_wb_streams
+        )
+        port map(
+            rst          => rst,
+            clk          => clk,
+            in_re_arr    => fft_out_re_arr,
+            in_im_arr    => fft_out_im_arr,
+            in_val       => fft_out_val(0),
+            ctrl_sosi    => fft_in_sosi,
+            out_sosi_arr => fft_out_sosi_arr
+        );
+
+    -- Connect to the outside world
+    gen_output_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
+        gen_output_wb_factor : for J in 0 to g_wpfb.wb_factor - 1 generate
+            out_sosi_arr(I * g_wpfb.wb_factor + J) <= fft_out_sosi_arr(I * g_wpfb.wb_factor + J);
+        end generate;
     end generate;
-  end generate;
 
 end str;

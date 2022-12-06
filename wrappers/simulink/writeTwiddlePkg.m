@@ -31,7 +31,7 @@ function writeTwiddlePkg(w_re,w_im,wMap,destfolder)
   %write vhdl pkg containing the twiddles
   %--header--
   if ispc
-    [fid,errmsg]= fopen(fullfile(destfolder, './twiddlesPkg.vhd'),'w');
+    [fid,~]= fopen(fullfile(destfolder, './twiddlesPkg.vhd'),'w');
   else
     fid= fopen(fullfile(destfolder, './twiddlesPkg.vhd'),'w');
   end
@@ -77,47 +77,66 @@ function writeTwiddlePkg(w_re,w_im,wMap,destfolder)
   
   %--twiddles---
   if WRITE_RAW_TWIDDLES
-    
-    fprintf(fid,...
-      strcat('   constant wRe: wRowTyp := \n','  ( \n'));
-    for index= 1: (Np/2)-1
-      fprintf(fid,'      ');
-      fprintf(fid,strcat('b"',w_re(index,:),'",'));
-      fprintf(fid,'\n');
+    if (size(w_re, 1) == 1)
+        fprintf(fid,...
+            strcat('   constant wRe: wRowTyp := \n','  ( \n'));
+        fprintf(fid,'      ');
+        fprintf(fid,strcat('1=>','b"',w_re(1,:),'"'));
+        fprintf(fid,'\n\t ); \n\n');
+        fprintf(fid,...
+            strcat('   constant wIm: wRowTyp := \n','  ( \n'));
+        fprintf(fid,'      ');
+        fprintf(fid,strcat('1=>','b"',w_im(1,:),'"'));
+        fprintf(fid,'\n\t ); \n\n');
+    else
+        fprintf(fid,...
+            strcat('   constant wRe: wRowTyp := \n','  ( \n'));
+        for index= 1: (Np/2)-1
+            fprintf(fid,'      ');
+            fprintf(fid,strcat('b"',w_re(index,:),'",'));
+            fprintf(fid,'\n');
+        end
+        fprintf(fid,strcat('    b"',w_re(Np/2,:),'"\n\t ); \n\n'));
+        
+        fprintf(fid,...
+            strcat('   constant wIm: wRowTyp := \n','  ( \n'));
+        for index= 1: (Np/2)-1
+            fprintf(fid,'      ');
+            fprintf(fid,strcat('b"',w_im(index,:),'",'));
+            fprintf(fid,'\n');
+        end
+        fprintf(fid,strcat('    b"',w_im(Np/2,:),'"\n\t ); \n\n'));
     end
-    fprintf(fid,strcat('    b"',w_re(Np/2,:),'"\n\t ); \n\n'));
-    
-    fprintf(fid,...
-      strcat('   constant wIm: wRowTyp := \n','  ( \n'));
-    for index= 1: (Np/2)-1
-      fprintf(fid,'      ');
-      fprintf(fid,strcat('b"',w_im(index,:),'",'));
-      fprintf(fid,'\n');
-    end
-    fprintf(fid,strcat('    b"',w_im(Np/2,:),'"\n\t ); \n\n'));
   end
   %------------
   
   %--twiddle map---
   if WRITE_TWIDDLE_MATRIX
-    fprintf(fid,...
-      strcat('   constant wMap: wMapTyp := \n','  ( \n') );
-    for ii= 1: size(wMap,1)
-      fprintf(fid,'       (');
-      for jj= 1:size(wMap,2)
-        if jj==size(wMap,2)
-          fprintf(fid,strcat(int2str(wMap(ii,jj)),''));
-        else
-          fprintf(fid,strcat(int2str(wMap(ii,jj)),','));
-        end
-      end
-      if ii==size(wMap,1)
-        fprintf(fid,')\n');
-      else
-        fprintf(fid,'),\n');
-      end
-    end    
-    fprintf(fid,'   ); \n\n');
+    if (size(w_re, 1) == 1)
+        fprintf(fid,...
+          strcat('   constant wMap: wMapTyp := \n','  ( \n') );
+        fprintf(fid, '0 => (1 => 1)\n');
+        fprintf(fid, ');\n');
+    else
+        fprintf(fid,...
+          strcat('   constant wMap: wMapTyp := \n','  ( \n') );
+        for ii= 1: size(wMap,1)
+          fprintf(fid,'       (');
+          for jj= 1:size(wMap,2)
+            if jj==size(wMap,2)
+              fprintf(fid,strcat(int2str(wMap(ii,jj)),''));
+            else
+              fprintf(fid,strcat(int2str(wMap(ii,jj)),','));
+            end
+          end
+          if ii==size(wMap,1)
+            fprintf(fid,')\n');
+          else
+            fprintf(fid,'),\n');
+          end
+        end    
+        fprintf(fid,'   ); \n\n');
+     end
   end
   %-----------------
   

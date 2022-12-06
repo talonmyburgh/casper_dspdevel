@@ -44,9 +44,6 @@ entity tb_tb_vu_wbpfb_unit_wide is
         g_data_file_c_nof_lines : natural   := 320;
         g_data_file_nof_lines   : natural   := 6400;
         g_enable_in_val_gaps    : boolean   := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
-        g_use_variant           : STRING    := "4DSP";
-        g_ovflw_behav           : STRING    := "WRAP";
-        g_use_round             : STRING    := "TRUNCATE";
         g_twid_file_stem        : string    := c_twid_file_stem;
         runner_cfg              : string    := runner_cfg_default 
     );
@@ -82,6 +79,7 @@ architecture tb of tb_tb_vu_wbpfb_unit_wide is
         max_addr_w  => g_max_addr_w,
         guard_w => g_guard_w,
         guard_enable => g_guard_enable,
+        pipe_reo_in_place => FALSE,
         stat_data_w => 56,
         stat_data_sz => 2,
         nof_blk_per_sync => c_nof_blk_per_sync,

@@ -38,6 +38,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_reorder       : boolean          := false;   -- = false for bit-reversed output, true for normal output"
     "    g_use_fft_shift     : boolean          := false;   -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
     "    g_use_separate      : boolean          := false;   -- = false for complex input, true for two real inputs"
+    "    g_alt_output        : boolean;"
     "    g_fft_in_dat_w      : natural          := 16;      -- = 16, number of input bits"
     "    g_fft_out_dat_w     : natural          := 16;      -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13"
     "    g_fft_out_gain_w    : natural          := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
@@ -50,6 +51,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_guard_enable      : boolean          := true;    -- = true when input needs guarding, false when input requires no guarding but scaling must be"
     "                                                    --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
     "                                                    --   doing the input guard and par fft section doing the output compensation)"
+    "    g_pipe_reo_in_place   : boolean;"
     "    g_dont_flip_channels: boolean          := false; -- True preserves channel interleaving for pipelined FFT"
     "    g_use_prefilter     : boolean          := TRUE;"
     "    g_coefs_file_prefix : string           := c_coefs_file; -- File prefix for the coefficients files."
@@ -58,8 +60,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
     "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
-    "    g_fft_ram_primitive : string  		     := ""block"";      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-    "    g_fifo_primitive    : string  		     := ""block""       -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
+    "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
     "("
@@ -121,6 +122,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_reorder       : boolean          := false;   -- = false for bit-reversed output, true for normal output"
     "    g_use_fft_shift     : boolean          := false;   -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input"
     "    g_use_separate      : boolean          := false;   -- = false for complex input, true for two real inputs"
+    "    g_alt_output        : boolean;"
     "    g_fft_in_dat_w      : natural          := 16;      -- = 16, number of input bits"
     "    g_fft_out_dat_w     : natural          := 16;      -- = 16, number of output bits >= (fil_in_dat_w=8) + log2(nof_points=1024)/2 = 13"
     "    g_fft_out_gain_w    : natural          := 0;       -- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w"
@@ -133,6 +135,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_guard_enable      : boolean          := true;    -- = true when input needs guarding, false when input requires no guarding but scaling must be"
     "                                                    --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section"
     "                                                    --   doing the input guard and par fft section doing the output compensation)"
+    "    g_pipe_reo_in_place   : boolean;"
     "    g_dont_flip_channels: boolean          := false; -- True preserves channel interleaving for pipelined FFT"
     "    g_use_prefilter     : boolean          := TRUE;"
     "    g_coefs_file_prefix : string           := c_coefs_file; -- File prefix for the coefficients files."
@@ -141,8 +144,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
     "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
-    "    g_fft_ram_primitive : string  		     := ""block"";      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
-    "    g_fifo_primitive    : string  		     := ""block""       -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
+    "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
     "("
@@ -167,7 +169,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
         "architecture RTL of wbpfb_unit_top is"
         "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
-                                 "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
+                                 "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
@@ -179,13 +181,13 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_dont_flip_channels => g_dont_flip_channels,"
     "   g_use_prefilter      => g_use_prefilter,"
     "   g_coefs_file_prefix  => g_coefs_file_prefix,"
+    "   g_alt_output         => g_alt_output,"
     "   g_fil_ram_primitive  => g_fil_ram_primitive,"
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
     "   g_use_round          => g_use_round,"
-    "   g_fft_ram_primitive  => g_fft_ram_primitive,"
-    "   g_fifo_primitive     => g_fifo_primitive"
+    "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
     "   rst                  => rst,"
@@ -234,7 +236,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "architecture RTL of wbpfb_unit_top is"
     "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
-                             "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
+                             "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
     "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
@@ -246,13 +248,13 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_dont_flip_channels => g_dont_flip_channels,"
     "   g_use_prefilter      => g_use_prefilter,"
     "   g_coefs_file_prefix  => g_coefs_file_prefix,"
+    "   g_alt_output         => g_alt_output,"
     "   g_fil_ram_primitive  => g_fil_ram_primitive,"
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
     "   g_use_round          => g_use_round,"
-    "   g_fft_ram_primitive  => g_fft_ram_primitive,"
-    "   g_fifo_primitive     => g_fifo_primitive"
+    "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
     "   rst                  => rst,"
@@ -328,8 +330,10 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     twid_filepath_stem = strtrim(cmdout);
     updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w,twid_filepath_stem);
 
-    %generate twiddlePkg for parallel twiddle factors:
-    par_twiddle_pkg_gen(nof_points, twid_dat_w, vhdlfilefolder);
+    %generate twiddlePkg for parallel twiddle factors if wb_factor > 1:
+    if wb_factor > 1
+        par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    end
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)

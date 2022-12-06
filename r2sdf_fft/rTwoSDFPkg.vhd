@@ -3,7 +3,7 @@ use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 
 package rTwoSDFPkg is
-	constant c_twid_file_stem : string := "/home/andrew/casper/casper_dspdevel/r2sdf_fft/data/twids/sdf_twiddle_coeffs";
+	constant c_twid_file_stem : string := "../../../../../../r2sdf_fft/data/twids/sdf_twiddle_coeffs";
 
 	-- Internal pipeline latencies and Z^(-1) pipeline settings for a stage in the rTwoSDF FFT
 	-- Also used for other preallele and wideband FFT implementations (fft_lib)

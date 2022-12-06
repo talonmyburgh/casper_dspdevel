@@ -57,11 +57,28 @@ use work.tb_fft_pkg.all;
 entity tb_fft_r2_wide is
   generic(
     -- DUT generics
-    --g_fft : t_fft := ( true, false,  true, 0, 4, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
-    g_fft : t_fft := ( true, false,  true, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);         -- two real inputs A and B
-    --g_fft : t_fft := ( true, false, false, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
-    --g_fft : t_fft := (false, false, false, 0, 4,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
-
+    --g_fft : t_fft := ( true, false,  true, 0, 4, 0, 128, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- two real inputs A and B
+        g_fft : t_fft := (  -- two real inputs A and B
+        use_reorder=>  true, 
+        use_fft_shift=>false,  
+        use_separate=>true, 
+        nof_chan=>0, 
+        wb_factor=>1, 
+        nof_points=>0,  
+        in_dat_w=>8, 
+        out_dat_w=>16, 
+        out_gain_w=>0, 
+        stage_dat_w=>c_dsp_mult_w, 
+        twiddle_dat_w=>18, 
+        max_addr_w=>9, 
+        guard_w=>2, 
+        guard_enable=>true, 
+        stat_data_w=>56, 
+        stat_data_sz=>2, 
+        pipe_reo_in_place=>false
+      );
+    --g_fft : t_fft := ( true, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input reordered
+    --g_fft : t_fft := (false, false, false, 0, 4, 0,  32, 8, 16, 0, c_dsp_mult_w, 2, true, 56, 2);         -- complex input flipped
     --  type t_rtwo_fft is record
     --    use_reorder    : boolean;  -- = false for bit-reversed output, true for normal output
     --    use_fft_shift  : boolean;  -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
@@ -120,9 +137,11 @@ entity tb_fft_r2_wide is
     g_data_file_nof_lines   : natural := 6400;    -- actual number of lines with input data to simulate from the data files, must be <= g_data_file_*_nof_lines
     g_enable_in_val_gaps    : boolean := TRUE;   -- when false then in_val flow control active continuously, else with random inactive gaps
     g_twid_file_stem        : string := "UNUSED";
+    g_alt_output  : BOOLEAN := FALSE;
     g_use_variant : STRING := "4DSP";
     g_ovflw_behav : STRING := "WRAP";
     g_use_round   : STRING := "TRUNCATE"
+    
   );
   PORT
   (
@@ -329,6 +348,7 @@ begin
   u_dut : entity work.fft_r2_wide
   generic map(
     g_fft            => g_fft,
+    g_alt_output     => g_alt_output,
     g_use_variant    => g_use_variant,
     g_ovflw_behav    => g_ovflw_behav,
     g_use_round      => g_use_round,
@@ -360,10 +380,10 @@ begin
   begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
-    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity failure;
+    assert in_val_cnt > 0 report "Test did not run, no valid input data"  severity error;
     if g_fft.wb_factor=g_fft.nof_points then
       -- Parallel FFT 
-      assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity failure;
+      assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity error;
     else
       -- Wideband FFT 
       -- The PFFT has a memory of 1 block, independent of use_reorder and use_separate, but without the
@@ -380,7 +400,7 @@ begin
           assert out_val_cnt = in_val_cnt-c_nof_valid_per_block                report "Unexpected number of valid output data (double buffer)" severity error;
         end if;
       else
-        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity failure;
+        assert out_val_cnt = in_val_cnt-c_nof_valid_per_block+c_nof_channels report "Unexpected number of valid output data" severity error;
       end if;
     end if;
     wait;
@@ -438,22 +458,22 @@ begin
           v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
         end if;
       else
@@ -475,18 +495,6 @@ begin
     o_test_pass <= v_test_pass;
     o_test_msg <= v_test_msg;
   end process;
-
-  -- -- p_verify_output
-  -- gen_verify_two_real : if not c_in_complex generate
-  --   assert diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin report "Output data A real error" severity failure;
-  --   assert diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin report "Output data A imag error" severity failure;
-  --   assert diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin report "Output data B real error" severity failure;
-  --   assert diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin report "Output data B imag error" severity failure;
-  -- end generate;
-  -- gen_verify_complex : if c_in_complex generate
-  --   assert diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin report "Output data C real error" severity failure;
-  --   assert diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin report "Output data C imag error" severity failure;
-  -- end generate;
 
   ---------------------------------------------------------------
   -- READ EXPECTED OUTPUT DATA FROM FILE

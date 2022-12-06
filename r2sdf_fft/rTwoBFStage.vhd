@@ -119,7 +119,7 @@ begin
 			out_d  => bf_im
 		);
 	
-	registered_ovflw : process (clk, ovflw_det)
+	registered_ovflw : process (clk)
 	begin
 		if rising_edge(clk) then
 			ovflw <= (ovflw_det(0) or ovflw_det(1));
@@ -143,10 +143,10 @@ begin
 			g_depth => c_feedback_zdly * (2**g_nof_chan) - c_bf_zdly
 		)
 		port map(
-			clk     => clk,
-			in_dat  => bf_complex,
-			in_val  => bf_val,
-			out_dat => bf_complex_dly
+            clk     => clk,
+            in_val  => bf_val,
+            in_dat  => bf_complex,
+            out_dat => bf_complex_dly
 		);
 
 	-- compensate for feedback fifo
@@ -155,12 +155,12 @@ begin
 			g_depth => c_feedback_zdly * (2**g_nof_chan)
 		)
 		port map(
-			clk     => clk,
-			rst     => rst,
-			in_clr  => '0',
-			in_val  => bf_val,
-			in_bit  => bf_sel,
-			out_bit => stage_sel
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => bf_sel,
+            in_val  => bf_val,
+            out_bit => stage_sel
 		);
 
 	-- compensate for feedback fifo
@@ -169,12 +169,12 @@ begin
 			g_depth => c_feedback_zdly * (2**g_nof_chan)
 		)
 		port map(
-			clk     => clk,
-			rst     => rst,
-			in_clr  => '0',
-			in_val  => bf_val,
-			in_bit  => bf_val,
-			out_bit => bf_val_dly
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => bf_val,
+            in_val  => bf_val,
+            out_bit => bf_val_dly
 		);
 
 	-- after the z^(-1) stage delay the bf_val_dly goes high and remains high and acts as an enable for in_val to out_val

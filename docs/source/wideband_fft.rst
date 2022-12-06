@@ -1,12 +1,14 @@
+.. _WB FFT:
+
 ############
 Wideband FFT
 ############
-.. _wb_fft:
+
+.. _WB Purpose:
 
 *******
 Purpose
 *******
-.. _wb_purpose:
 
 This FFT was originally sourced from ASTRON via OpenCores. It performs an N-Point Wideband FFT on data that is partly applied in serial and partly applied in
 parallel. This FFT specifically suits applications where the sample clock is higher than the DSP processing clock. For each output stream a subband statistic
@@ -20,10 +22,11 @@ optional and can be removed to only use the sync signal.
 This unit only handles one sync at a time. Therefore the sync interval should be larger than the total
 pipeline stages of the wideband FFT.
 
+.. _WB Module:
+
 ***************
 Module Overview
 ***************
-.. _wb_module:
 
 An overview of the fft_wide unit is shown in Figure 1. The fft_wide unit calculates a N-point FFT and has P
 number of input streams. Data of each input is offered to a M-point pipelined FFT, where M=N/P. The output
@@ -36,10 +39,11 @@ The rTwoSDF pipelined FFT (see :ref:`r2sdf_fft`) design is used as building bloc
   :scale: 65 %
   :alt: Simulink wideband FFT in base configuration. 
 
+.. _WB Firm Interface:
+
 ******************
 Firmware Interface
 ******************
-.. _wb_firm_interface:
 
 =============
 Clock Domains
@@ -167,10 +171,11 @@ The reorder memory in the pipeline FFT, parallel FFT and in the
 fft_sepa_wide could make reuse of a reorder component from the reorder
 library instead of using a dedicated local solution (TODO).
 
+.. _WB FFT Params:
+
 ==========
 Parameters
 ==========
-.. _wb_fft_params:
 
 Both the wideband and pipelined FFT's offer a set of parameters for control over the
 FFT's characteristics, data handling and implementation on the FPGA. These are tabulated below.
@@ -202,45 +207,45 @@ FFT parameters
 | factor         |         |        | number of parallel pipelined FFTs.                             |
 +----------------+---------+--------+----------------------------------------------------------------+
 | Number of      | Natural | 1024   | The number of points of the FFT.                               |
-| points         |         |        | The number of points is :math:`2^{nof\_points}`.                                                               |
+| points         |         |        | The number of points is :math:`2^{nof\_points}`.               |
 +----------------+---------+--------+----------------------------------------------------------------+
 | Extra control  | Boolean | false  | Checking this box enables the usage of addition signals. See   |
-| signals        |         |        | :ref:`_wb_arch` for detail on these ports.                     |
+| signals        |         |        | `WB Arch`_ for detail on these ports.                          |
 +----------------+---------+--------+----------------------------------------------------------------+
 
 ---------------
 Data parameters
 ---------------
 
-+----------------+---------+--------+----------------------------------------------------------------+
-| Generic        | Type    | Value  | Description                                                    |
-+================+=========+========+================================================================+
-| Input data     | Natural | 8      | Width in bits of the input data. This value specifies the      |
-| width          |         |        | width of both the real and the imaginary part.                 |
-+----------------+---------+--------+----------------------------------------------------------------+
-| out_dat_w      | Natural | 14     | The bitwidth of the real and imaginary part of the output of   |
-|                |         |        | the FFT. The relation with the in_dat_w is as follows:         |
-|                |         |        | :math:`out\_dat\_w=in\_dat\_w+(\log2(nof\_N))/{2+1}`.          |
-+----------------+---------+--------+----------------------------------------------------------------+
-| stage_dat_w    | Natural | 18     | The bitwidth of the data that is used between the stages       |
-|                |         |        | (=DSP multiplier-width).                                       |
-+----------------+---------+--------+----------------------------------------------------------------+
-| guard_w        | Natural | 2      | Number of bits that function as guard bits. The guard bits are |
-|                |         |        | required to avoid overflow in the first two stages of the FFT. |
-+----------------+---------+--------+----------------------------------------------------------------+
-| guard_enable   | Boolean | true   | When set to ‘true’ the input is guarded during the input resize|
-|                |         |        | function, when set to ‘false’ the input is not guarded, but the|
-|                |         |        | scaling is not skipped on the last stages of the FFT (based on |
-|                |         |        | the value of guard_w).                                         |
-+----------------+---------+--------+----------------------------------------------------------------+
-| Rounding       | String  | "ROUND"| Gives control over the removal of the least significant bits   |
-| behaviour      |         |        | when requantising. See :ref:`_wb_quant` for further detail.    |
-|                |         |        | Options are "ROUND" or "TRUNCATE".                             |
-+----------------+---------+--------+----------------------------------------------------------------+ 
-| Overflow       | String  | "WRAP" | Gives control over the removal of the most significant bits    |
-| behaviour      |         |        | when requantising. See :ref:`_wb_quant` for further detail.    |
-|                |         |        | Options are "WRAP" and "SATURATE".                             |
-+----------------+---------+--------+----------------------------------------------------------------+
++----------------+---------+---------+----------------------------------------------------------------+
+| Generic        | Type    | Value   | Description                                                    |
++================+=========+=========+================================================================+
+| Input data     | Natural | 8       | Width in bits of the input data. This value specifies the      |
+| width          |         |         | width of both the real and the imaginary part.                 |
++----------------+---------+---------+----------------------------------------------------------------+
+| out_dat_w      | Natural | 14      | The bitwidth of the real and imaginary part of the output of   |
+|                |         |         | the FFT. The relation with the in_dat_w is as follows:         |
+|                |         |         | :math:`out\_dat\_w=in\_dat\_w+(\log2(nof\_N))/{2+1}`.          |
++----------------+---------+---------+----------------------------------------------------------------+
+| stage_dat_w    | Natural | 18      | The bitwidth of the data that is used between the stages       |
+|                |         |         | (=DSP multiplier-width).                                       |
++----------------+---------+---------+----------------------------------------------------------------+
+| guard_w        | Natural | 2       | Number of bits that function as guard bits. The guard bits are |
+|                |         |         | required to avoid overflow in the first two stages of the FFT. |
++----------------+---------+---------+----------------------------------------------------------------+
+| guard_enable   | Boolean | true    | When set to ‘true’ the input is guarded during the input resize|
+|                |         |         | function, when set to ‘false’ the input is not guarded, but the|
+|                |         |         | scaling is not skipped on the last stages of the FFT (based on |
+|                |         |         | the value of guard_w).                                         |
++----------------+---------+---------+----------------------------------------------------------------+
+| Rounding       | String  | "ROUND" | Gives control over the removal of the least significant bits   |
+| behaviour      |         |         | when requantising. See `WB Quant`_ for further detail.         |
+|                |         |         | Options are "ROUND" or "TRUNCATE".                             |
++----------------+---------+---------+----------------------------------------------------------------+ 
+| Overflow       | String  | "WRAP"  | Gives control over the removal of the most significant bits    |
+| behaviour      |         |         | when requantising. See `WB Quant`_ for further detail.         |
+|                |         |         | Options are "WRAP" and "SATURATE".                             |
++----------------+---------+---------+----------------------------------------------------------------+
 
 --------------------
 Synth/Imp Parameters
@@ -269,10 +274,11 @@ Synth/Imp Parameters
 |                |         |        | "ultra" and "block".                                           |
 +----------------+---------+--------+----------------------------------------------------------------+
 
+.. _WB Arch:
+
 *******************
 Module Architecture
 *******************
-.. _wb_arch:
 
 Several subdesigns were defined in order to create the eventual wideband decimation in frequency (DIF) FFT. These sub-designs are:
 
@@ -317,10 +323,11 @@ The wideband variant of the FFT is partly pipelined and partly composed in paral
 
   
 
+.. _WB Quant:
+
 ============
 Quantisation
 ============
-.. _wb_quant:
 
 Requantisation is required for every butterfly in the FFT. With the FFT being a DIF FFT, the butterfly operation is shown in Figure 7 and it's algorithmic operation is detailed below:
 
@@ -352,7 +359,7 @@ The shift operation acts on value :math:`A` as:
 .. math::
    A' = round(A >> 1, "Rounding behaviour")
 
-where :math:`round()` is a function that rounds the value :math:`A` according to the "Rounding behaviour" specified see :ref:`_wb_fft_params`.
+where :math:`round()` is a function that rounds the value :math:`A` according to the "Rounding behaviour" specified see `WB FFT Params`_.
 
 Overflow is detected in a stage by inspecting the sign of the input to the adder and sign of the output. This check differs depending on whether a subtraction or addition is being performed.
 The following VHDL snippets make this check (TODO):

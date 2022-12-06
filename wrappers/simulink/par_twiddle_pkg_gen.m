@@ -48,7 +48,7 @@ function par_twiddle_pkg_gen(Np, Nb, destfolder)
   %'obtain twiddle map'
   wMap=getTwiddleMap(N)+1;   % for R2SDF
 
-  %'writing vhdl file'  
+  %'writing vhdl file'
   writeTwiddlePkg(wRe, wIm, wMap, destfolder);  % write weights and index into VHDL
 end
 

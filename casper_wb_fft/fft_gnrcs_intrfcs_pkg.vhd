@@ -17,7 +17,7 @@ CONSTANT c_fft_wb_factor      		: natural := 1;   		-- = default 1, wideband fac
 CONSTANT c_fft_nof_points     		: natural := 1024;    	-- = 1024, N point FFT",nof_points);
 CONSTANT c_fft_nof_chan             : natural := 0;       	-- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
 CONSTANT c_fft_twiddle_dat_w  		: natural := 18;	    -- = 18, coefficient data width
-CONSTANT c_max_addr_w				   : natural := 8;			-- = 10, address width above which to store coeffients in bram/ultra 
+CONSTANT c_max_addr_w				: natural := 8;			-- = 10, address width above which to store coeffients in bram/ultra 
 CONSTANT c_fft_out_gain_w           : natural := 0;       	-- = 0, output gain factor applied after the last stage output, before requantization to out_dat_w
 CONSTANT c_fft_guard_w              : natural := 2;       	-- = 2, guard used to avoid overflow in first FFT stage, compensated in last guard_w nof FFT stages. 
 --   on average the gain per stage is 2 so guard_w = 1, but the gain can be 1+sqrt(2) [Lyons section
@@ -56,7 +56,25 @@ stat_data_sz        : positive;      -- = 2
 pipe_reo_in_place   : boolean;       -- = false for pipelined FFT reorder double buffer, true for single
 end record;
 
-constant c_fft : t_fft := (true, false, false, 0, c_fft_wb_factor, c_fft_nof_points, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, c_fft_twiddle_dat_w, 9, 2, true, 56, 2, false);
+constant c_fft : t_fft := (
+	use_reorder=>true, 
+	use_fft_shift=>false, 
+	use_separate=>false, 
+	nof_chan=>0, 
+	wb_factor=>c_fft_wb_factor, 
+	nof_points=>c_fft_nof_points, 
+	in_dat_w=>c_fft_in_dat_w, 
+	out_dat_w=>c_fft_out_dat_w, 
+	out_gain_w=>0, 
+	stage_dat_w=>c_dsp_mult_w, 
+	twiddle_dat_w=>c_fft_twiddle_dat_w, 
+	max_addr_w=>c_max_addr_w,
+	guard_w=>2,
+	guard_enable=>true,
+	stat_data_w=>56,
+	stat_data_sz=>2,
+	pipe_reo_in_place=>c_pipe_reo_in_place
+	);
 
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure

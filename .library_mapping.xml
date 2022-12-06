@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.sigasi.hdt.shared.librarymapping.model:LibraryMappings xmlns:com.sigasi.hdt.shared.librarymapping.model="com.sigasi.hdt.vhdl.scoping.librarymapping" Version="2">
+  <Mappings Location="casper_accumulators" Library="casper_accumulator_lib"/>
+  <Mappings Location="casper_adder" Library="casper_adder_lib"/>
+  <Mappings Location="casper_counter" Library="casper_counter_lib"/>
+  <Mappings Location="casper_delay" Library="casper_delay_lib"/>
+  <Mappings Location="casper_diagnostics" Library="casper_diagnostics_lib"/>
+  <Mappings Location="casper_fifo" Library="casper_fifo_lib"/>
+  <Mappings Location="casper_filter" Library="casper_filter_lib"/>
+  <Mappings Location="casper_flow_control" Library="casper_flow_control_lib"/>
+  <Mappings Location="misc" Library="casper_misc_lib"/>
+  <Mappings Location="casper_mm" Library="casper_mm_lib"/>
+  <Mappings Location="casper_multiplexer" Library="casper_multiplexer_lib"/>
+  <Mappings Location="casper_multiplier" Library="casper_multiplier_lib"/>
+  <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
+  <Mappings Location="casper_ram" Library="casper_ram_lib"/>
+  <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
+  <Mappings Location="casper_sim_tools" Library="casper_sim_tools_lib"/>
+  <Mappings Location="casper_statistics" Library="casper_statistics_lib"/>
+  <Mappings Location="common_components" Library="common_components_lib"/>
+  <Mappings Location="common_pkg" Library="common_pkg_lib"/>
+  <Mappings Location="casper_dp_components" Library="dp_components_lib"/>
+  <Mappings Location="casper_dp_pkg" Library="dp_pkg_lib"/>
+  <Mappings Location="Common Libraries/IEEE" Library="ieee"/>
+  <Mappings Location="Common Libraries/IEEE Synopsys" Library="ieee"/>
+  <Mappings Location="ip_xpm/fifo" Library="ip_xpm_fifo_lib"/>
+  <Mappings Location="ip_xpm/mult" Library="ip_xpm_mult_lib"/>
+  <Mappings Location="ip_xpm/ram" Library="ip_xpm_ram_lib"/>
+  <Mappings Location="Common Libraries" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unisim/primitive" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unisim/retarget" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unisim/retarget_VCOMP.vhd" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unisim/secureip" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unisim/unisim_retarget_VCOMP.vhd" Library="not mapped"/>
+  <Mappings Location="r2sdf_fft" Library="r2sdf_fft_lib"/>
+  <Mappings Location="Common Libraries/STD" Library="std"/>
+  <Mappings Location="technology" Library="technology_lib"/>
+  <Mappings Location="Common Libraries/unisim" Library="unisim"/>
+  <Mappings Location="Common Libraries/vunit_lib" Library="vunit_lib"/>
+  <Mappings Location="casper_wb_fft" Library="wb_fft_lib"/>
+  <Mappings Location="" Library="work"/>
+  <Mappings Location="casper_wbpfb" Library="wpfb_lib"/>
+  <Mappings Location="Common Libraries/xpm/xpm_VCOMP.vhd" Library="xpm"/>
+</com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>
