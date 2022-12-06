@@ -193,6 +193,7 @@ if args.par or args.pipe or run_all or args.wide:
         g_stage_dat_w = 18,
         g_guard_w = 2,
         g_guard_enable = True,
+        g_pipe_reo_in_place = False,
         g_twid_file_stem = twid_path_stem
     )
     c_fft_complex = c_fft_two_real.copy()
@@ -347,6 +348,15 @@ if args.pipe or run_all:
     'g_data_file_nof_lines':1280,
     'g_enable_in_val_gaps':False})
 
+    c_rnd_two_real_noise_ip = c_rnd_two_real_noise.copy()
+    c_rnd_two_real_noise_ip.update({'g_pipe_reo_in_place':True})
+
+    c_act_complex_flipped_ip = c_act_complex_flipped.copy()
+    c_act_complex_flipped_ip.update({'g_pipe_reo_in_place':True}) 
+
+    c_fft_complex_flipped_more_channels_ip = c_fft_complex_flipped_more_channels.copy()
+    c_fft_complex_flipped_more_channels.update({'g_pipe_reo_in_place':True}) 
+
     # PIPELINE TB CONFIGURATIONS
     PIPE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_pipe")
     PIPE_TB_GENERATED.add_config(
@@ -361,6 +371,9 @@ if args.pipe or run_all:
     PIPE_TB_GENERATED.add_config(
         name = "u_rnd_two_real_noise",
         generics=c_rnd_two_real_noise)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_rnd_two_real_noise_ip",
+        generics=c_rnd_two_real_noise_ip)
     PIPE_TB_GENERATED.add_config(
         name = "u_rnd_two_real_channels",
         generics=c_rnd_two_real_channels)
@@ -379,6 +392,9 @@ if args.pipe or run_all:
     PIPE_TB_GENERATED.add_config(
         name = "u_pipe_act_complex_flipped",
         generics=c_act_complex_flipped)
+    PIPE_TB_GENERATED.add_config(
+        name = "u_pipe_act_complex_flipped_ip",
+        generics=c_act_complex_flipped_ip)
     PIPE_TB_GENERATED.add_config(
         name = "u_pipe_act_complex_flipped_channels",
         generics=c_act_complex_flipped_channels)
@@ -429,6 +445,8 @@ if args.wide or run_all:
     #EXTRA WIDE CONSTANTS
     c_act_wb4_two_real_chirp = c_act_two_real_chirp.copy()
     c_act_wb4_two_real_chirp.update({'g_wb_factor':4})
+    c_act_wb4_two_real_chirp_ip = c_act_wb4_two_real_chirp.copy()
+    c_act_wb4_two_real_chirp_ip.update({'g_pipe_reo_in_place':True})
     c_act_wb4_two_real_a0 = c_act_two_real_a0.copy()
     c_act_wb4_two_real_a0.update({'g_wb_factor':4})
     c_act_wb4_two_real_b0 = c_act_two_real_b0.copy()
@@ -442,19 +460,30 @@ if args.wide or run_all:
     c_act_wb4_complex_fft_shift.update({'g_wb_factor':4})
     c_act_wb4_complex_flipped = c_act_complex_flipped.copy()
     c_act_wb4_complex_flipped.update({'g_wb_factor':4})
+    c_act_wb4_complex_flipped_ip = c_act_wb4_complex_flipped.copy()
+    c_act_wb4_complex_flipped_ip.update({'g_pipe_reo_in_place':True})
     c_act_wb4_complex_chirp = c_act_complex_chirp.copy()
     c_act_wb4_complex_chirp.update({'g_wb_factor':4})
     c_rnd_wb4_complex_noise = c_rnd_complex_noise.copy()
     c_rnd_wb4_complex_noise.update({'g_wb_factor':4})
+    c_rnd_wb4_complex_noise_ip = c_rnd_wb4_complex_noise.copy()
+    c_rnd_wb4_complex_noise_ip.update({'g_pipe_reo_in_place':True})
     c_act_wb64_complex_noise = c_rnd_complex_noise.copy()
     c_act_wb64_complex_noise.update({'g_wb_factor':64})
     c_act_wb1_complex_noise = c_rnd_complex_noise.copy()
     c_act_wb1_complex_noise.update({'g_wb_factor':1})
+    c_act_wb1_complex_noise_ip = c_act_wb1_complex_noise.copy()
+    c_act_wb1_complex_noise_ip.update({'g_pipe_reo_in_place':True})
 
     WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
     WIDE_TB_GENERATED.add_config(
         name = "u_wide_act_two_real_chirp",
         generics=c_act_wb4_two_real_chirp
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_two_real_chirp_ip",
+        generics=c_act_wb4_two_real_chirp_ip
     )
     WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
     WIDE_TB_GENERATED.add_config(
@@ -488,13 +517,27 @@ if args.wide or run_all:
     )
     WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
     WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_complex_flipped_ip",
+        generics=c_act_wb4_complex_flipped_ip
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
         name = "u_wide_rnd_complex_noise",
         generics=c_rnd_wb4_complex_noise
+    )
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_rnd_complex_noise_ip",
+        generics=c_rnd_wb4_complex_noise_ip
     )
     WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
     WIDE_TB_GENERATED.add_config(
         name = "u_wide_act_wb1_complex_noise",
         generics=c_act_wb1_complex_noise
+    )
+    WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
+    WIDE_TB_GENERATED.add_config(
+        name = "u_wide_act_wb1_complex_noise_ip",
+        generics=c_act_wb1_complex_noise_ip
     )
     WIDE_TB_GENERATED = wb_fft_lib.test_bench("tb_tb_vu_fft_r2_wide")
     WIDE_TB_GENERATED.add_config(

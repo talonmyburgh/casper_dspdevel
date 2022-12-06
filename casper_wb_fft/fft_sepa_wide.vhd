@@ -46,6 +46,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_sepa_wide is
 	generic(
 		g_fft 			: t_fft  := c_fft;          -- generics for the FFT
+		g_alt_output    : boolean := FALSE;
 		g_ram_primitive : string := "auto"
 	);
 	port(
@@ -203,14 +204,17 @@ begin
 			);
 
 		u_separate : entity work.fft_sepa
+		    generic map(
+		        g_alt_output => g_alt_output
+		    )
 			port map(
-				clken   => clken,
-				clk     => clk,
-				rst     => rst,
-				in_dat  => zip_out_dat_arr(I),
-				in_val  => zip_out_val(I),
-				out_dat => sep_out_dat_arr(I),
-				out_val => sep_out_val_vec(I)
+                clk     => clk,
+                clken   => clken,
+                rst     => rst,
+                in_dat  => zip_out_dat_arr(I),
+                in_val  => zip_out_val(I),
+                out_dat => sep_out_dat_arr(I),
+                out_val => sep_out_val_vec(I)
 			);
 	end generate;
 

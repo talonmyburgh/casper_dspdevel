@@ -73,16 +73,16 @@
 --   > observe the *_scope as radix decimal, format analogue format signals
 --     in the Wave window
 --
-library ieee, common_pkg_lib, dp_pkg_lib, astron_diagnostics_lib, astron_ram_lib, astron_mm_lib, astron_sim_tools_lib;
+library ieee, common_pkg_lib, dp_pkg_lib, casper_diagnostics_lib, casper_ram_lib, casper_mm_lib, casper_sim_tools_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use std.textio.all;
 use common_pkg_lib.common_pkg.all;
-use astron_ram_lib.common_ram_pkg.ALL;
+use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use astron_mm_lib.tb_common_mem_pkg.ALL;
+use casper_mm_lib.tb_common_mem_pkg.ALL;
 use dp_pkg_lib.dp_stream_pkg.ALL;
 use work.fil_pkg.all;
 
@@ -155,7 +155,6 @@ architecture tb of tb_fil_ppf_wide_file_data is
   -- Data file access
   constant c_nof_lines_pfir_coefs  : natural := c_nof_coefs;
   constant c_nof_lines_wg_dat      : natural := g_data_file_nof_lines;
-  constant c_nof_lines_pfir_dat    : natural := c_nof_lines_wg_dat;
   constant c_nof_lines_header      : natural := 4;
   constant c_nof_lines_header_wg   : natural := c_nof_lines_header + c_nof_lines_pfir_coefs;
   constant c_nof_lines_header_pfir : natural := c_nof_lines_header + c_nof_lines_pfir_coefs + c_nof_lines_wg_dat;
@@ -176,7 +175,7 @@ architecture tb of tb_fil_ppf_wide_file_data is
   signal input_data        : std_logic_vector(g_fil_ppf.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal input_data_scope  : integer;
 
-  signal in_dat_arr        : t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
+  signal in_dat_arr        : t_fil_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
   signal in_val            : std_logic;
   signal in_val_cnt        : natural := 0;
   signal in_sub_val        : std_logic;
@@ -189,7 +188,7 @@ architecture tb of tb_fil_ppf_wide_file_data is
   signal diff_data_scope   : integer;
   signal output_data_scope : integer;
   signal output_data       : std_logic_vector(g_fil_ppf.wb_factor*c_out_dat_w-1 DOWNTO 0);
-  signal out_dat_arr       : t_fil_slv_arr(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
+  signal out_dat_arr       : t_fil_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
   signal out_val           : std_logic;
   signal out_val_cnt       : natural := 0;
   signal out_sub_val       : std_logic;
@@ -253,7 +252,7 @@ begin
               in_dat_arr(vP*g_fil_ppf.nof_streams + S) <= (OTHERS=>'0');
             else
               -- stream 0 and if present the other streams >= 2 carry the same input reference data to verify the filter function
-              in_dat_arr(vP*g_fil_ppf.nof_streams + S) <= TO_SVEC(input_data_arr(I*g_fil_ppf.wb_factor + P), c_fil_slv_w);
+              in_dat_arr(vP*g_fil_ppf.nof_streams + S) <= TO_SVEC(input_data_arr(I*g_fil_ppf.wb_factor + P), c_fil_in_dat_w);
             end if;
             in_val <= '1';
           end loop;
@@ -288,12 +287,9 @@ begin
     g_coefs_file_prefix => c_coefs_mif_file_prefix
   )
   port map (
-    dp_clk         => clk,
-    dp_rst         => rst,
-    mm_clk         => clk,
-    mm_rst         => rst,
-    ram_coefs_mosi => c_mem_mosi_rst,
-    ram_coefs_miso => OPEN,
+    clk         => clk,
+    ce          => '1',
+    rst         => rst,
     in_dat_arr     => in_dat_arr,
     in_val         => in_val,
     out_dat_arr    => out_dat_arr,
@@ -357,7 +353,7 @@ begin
     if rising_edge(clk) then
       if out_val='1' then
         for P in 0 to g_fil_ppf.wb_factor-1 loop  -- parallel
-          if g_big_endian_wb_out=true then
+          if g_big_endian_wb_out then
             vP := g_fil_ppf.wb_factor-1-P;        -- time to wideband big endian
           else
             vP := P;                              -- time to wideband little endian
@@ -409,7 +405,7 @@ begin
     variable vP : natural;
   begin
     for P in 0 to g_fil_ppf.wb_factor-1 loop
-      if g_big_endian_wb_out=true then
+      if g_big_endian_wb_out then
         vP := g_fil_ppf.wb_factor-1-P;
       else
         vP := P;
@@ -418,7 +414,7 @@ begin
     end loop;
   end process;
 
-  u_input_data_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_input_data_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fil_ppf.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -438,7 +434,7 @@ begin
     out_int   => input_data_scope
   );
 
-  u_exp_data_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_exp_data_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fil_ppf.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -458,7 +454,7 @@ begin
     out_int   => exp_data_scope
   );
 
-  u_output_data_scope : entity astron_sim_tools_lib.common_wideband_data_scope
+  u_output_data_scope : entity casper_sim_tools_lib.common_wideband_data_scope
   generic map (
     g_sim                 => TRUE,
     g_wideband_factor     => g_fil_ppf.wb_factor,  -- Wideband rate factor = 4 for dp_clk processing frequency is 200 MHz frequency and SCLK sample frequency Fs is 800 MHz
@@ -483,7 +479,7 @@ begin
   -- Equivalent to p_verify_output, but using the sclk scope data
   p_verify_data_scope : process(sclk)
   begin
-    if rising_edge(clk) then
+    if rising_edge(sclk) then
       assert diff_data_scope <=  c_diff_margin and
              diff_data_scope >= -c_diff_margin report "Output data scope error" severity error;
     end if;

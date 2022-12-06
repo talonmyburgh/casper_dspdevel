@@ -39,6 +39,7 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
     guard_enable      : boolean;  -- = true when input needs guarding, false when input requires no guarding but scaling must be
                                  --   skipped at the last stage(s) compensate for input guard (used in wb fft with pipe fft section
                                  --   doing the input guard and par fft section doing the output compensation)
+    pipe_reo_in_place : boolean; -- = false for pipelined FFT reorder double buffer, true for single
     -- Statistics information
     stat_data_w       : positive;           -- = 56
     stat_data_sz      : positive;           -- = 2
@@ -56,7 +57,7 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
                               c_fft_use_reorder, c_fft_use_fft_shift, c_fft_use_separate,
                               c_fft_in_dat_w, c_fft_out_dat_w, c_fft_out_gain_w, c_fft_stage_dat_w,
                               c_fft_twiddle_dat_w, c_max_addr_w, c_fft_guard_w, c_fft_guard_enable,
-                              56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                              c_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
 
 ----------------------------------------------------------------------------------------------------------
 -- SOSI/SISO Arrays

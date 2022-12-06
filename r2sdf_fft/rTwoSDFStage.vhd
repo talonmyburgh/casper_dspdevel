@@ -130,17 +130,17 @@ begin
 			g_bf_out_d_zdly => g_pipeline.bf_out_d_zdly
 		)
 		port map(
-			clk     => clk,
-			rst     => rst,
-			in_re   => in_re,
-			in_im   => in_im,
-			in_sel  => in_sel,
-			in_val  => in_val,
-			out_re  => bf_re,
-			out_im  => bf_im,
-			ovflw	=> ovflw,
-			out_sel => bf_sel,
-			out_val => bf_val
+            clk     => clk,
+            rst     => rst,
+            in_re   => in_re,
+            in_im   => in_im,
+            in_val  => in_val,
+            in_sel  => in_sel,
+            out_re  => bf_re,
+            out_im  => bf_im,
+            ovflw    => ovflw,
+            out_val => bf_val,
+            out_sel => bf_sel
 		);
 	------------------------------------------------------------------------------
 	-- get twiddles
@@ -169,10 +169,10 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
-			g_use_variant	=> g_use_variant,
-			g_stage   	 	=> g_stage,
-			g_use_dsp 	 	=> g_use_dsp,
-			g_lat     	 	=> g_pipeline.mul_lat
+            g_use_dsp          => g_use_dsp,
+            g_use_variant    => g_use_variant,
+            g_stage            => g_stage,
+            g_lat              => g_pipeline.mul_lat
 		)
 		port map(
 			clk       => clk,

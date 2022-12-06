@@ -56,194 +56,240 @@ use IEEE.numeric_std.ALL;
 use common_pkg_lib.common_pkg.ALL;
 
 entity fft_sepa is
-	port(
-		clk     : in  std_logic;
-		clken   : in  std_logic;
-		rst     : in  std_logic;
-		in_dat  : in  std_logic_vector;
-		in_val  : in  std_logic;
-		out_dat : out std_logic_vector;
-		out_val : out std_logic
-	);
+    generic(
+        g_alt_output : boolean := FALSE
+    );
+    port(
+        clk     : in  std_logic;
+        clken   : in  std_logic;
+        rst     : in  std_logic;
+        in_dat  : in  std_logic_vector;
+        in_val  : in  std_logic;
+        out_dat : out std_logic_vector;
+        out_val : out std_logic
+    );
 end entity fft_sepa;
 
 architecture rtl of fft_sepa is
 
-	constant c_sepa_round : boolean := true; -- must be true, because separate should round the 1 bit growth
+    constant c_sepa_round : boolean := true; -- must be true, because separate should round the 1 bit growth
 
-	constant c_data_w   : natural := in_dat'length / c_nof_complex;
-	constant c_c_data_w : natural := c_nof_complex * c_data_w;
-	constant c_pipeline : natural := 3;
+    constant c_data_w   : natural := in_dat'length / c_nof_complex;
+    constant c_c_data_w : natural := c_nof_complex * c_data_w;
+    constant c_pipeline : natural := 3;
 
-	type reg_type is record
-		switch    : std_logic;          -- Register used to toggle between A & B definitionn
-		val_dly   : std_logic_vector(c_pipeline - 1 downto 0); -- Register that delays the incoming valid signal
-		xn_m_reg  : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(N-m) value for one cycle
-		xm_reg    : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(m) value for one cycle
-		add_reg_a : std_logic_vector(c_data_w - 1 downto 0); -- Input register A for the adder
-		add_reg_b : std_logic_vector(c_data_w - 1 downto 0); -- Input register B for the adder
-		sub_reg_a : std_logic_vector(c_data_w - 1 downto 0); -- Input register A for the subtractor
-		sub_reg_b : std_logic_vector(c_data_w - 1 downto 0); -- Input register B for the subtractor
-		out_dat   : std_logic_vector(c_c_data_w - 1 downto 0); -- Registered output value
-		out_val   : std_logic;          -- Registered data valid signal  
-	end record;
+    type reg_type is record
+        switch      : std_logic;        -- Register used to toggle between A & B definitionn
+        val_dly     : std_logic_vector(c_pipeline - 1 downto 0); -- Register that delays the incoming valid signal
+        xn_m_reg    : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(N-m) value for one cycle
+        xm_reg      : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(m) value for one cycle
+        add_1_reg_a : std_logic_vector(c_data_w - 1 downto 0); -- Input register A for the adder
+        add_1_reg_b : std_logic_vector(c_data_w - 1 downto 0); -- Input register B for the adder
+        add_2_reg_a : std_logic_vector(c_data_w - 1 downto 0); -- Input register A for the subtractor
+        add_2_reg_b : std_logic_vector(c_data_w - 1 downto 0); -- Input register B for the subtractor
+        adder_1_dir : std_logic;        -- Direction for the adder block
+        adder_2_dir : std_logic;        -- Direction for the adder block
+        out_dat     : std_logic_vector(c_c_data_w - 1 downto 0); -- Registered output value
+        out_val     : std_logic;        -- Registered data valid signal  
+    end record;
 
-	signal r, rin     : reg_type;
-	signal sub_result : std_logic_vector(c_data_w downto 0); -- Result of the subtractor   
-	signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder   
+    signal r, rin     : reg_type;
+    signal sub_result : std_logic_vector(c_data_w downto 0); -- Result of the subtractor   
+    signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder   
 
-	signal sub_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the subtractor   
-	signal add_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the adder
+    signal sub_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the subtractor   
+    signal add_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the adder
 
 begin
 
-	---------------------------------------------------------------
-	-- ADDER AND SUBTRACTOR
-	---------------------------------------------------------------
-	adder : entity casper_adder_lib.common_add_sub
-		generic map(
-			g_direction       => "ADD",
-			g_representation  => "SIGNED",
-			g_pipeline_input  => 0,
-			g_pipeline_output => 1,
-			g_in_dat_w        => c_data_w,
-			g_out_dat_w       => c_data_w + 1
-		)
-		port map(
-			clken  => clken,
-			clk    => clk,
-			in_a   => r.add_reg_a,
-			in_b   => r.add_reg_b,
-			result => add_result
-		);
+    ---------------------------------------------------------------
+    -- ADDER AND SUBTRACTOR
+    ---------------------------------------------------------------
+    adder_1 : entity casper_adder_lib.common_add_sub
+        generic map(
+            g_direction       => "BOTH",
+            g_representation  => "SIGNED",
+            g_pipeline_input  => 0,
+            g_pipeline_output => 1,
+            g_in_dat_w        => c_data_w,
+            g_out_dat_w       => c_data_w + 1
+        )
+        port map(
+            clk     => clk,
+            clken   => clken,
+            sel_add => r.adder_1_dir,
+            in_a    => r.add_1_reg_a,
+            in_b    => r.add_1_reg_b,
+            result  => add_result
+        );
 
-	subtractor : entity casper_adder_lib.common_add_sub
-		generic map(
-			g_direction       => "SUB",
-			g_representation  => "SIGNED",
-			g_pipeline_input  => 0,
-			g_pipeline_output => 1,
-			g_in_dat_w        => c_data_w,
-			g_out_dat_w       => c_data_w + 1
-		)
-		port map(
-			clken  => clken,
-			clk    => clk,
-			in_a   => r.sub_reg_a,
-			in_b   => r.sub_reg_b,
-			result => sub_result
-		);
+    adder_2 : entity casper_adder_lib.common_add_sub
+        generic map(
+            g_direction       => "BOTH",
+            g_representation  => "SIGNED",
+            g_pipeline_input  => 0,
+            g_pipeline_output => 1,
+            g_in_dat_w        => c_data_w,
+            g_out_dat_w       => c_data_w + 1
+        )
+        port map(
+            clk     => clk,
+            clken   => clken,
+            sel_add => r.adder_2_dir,
+            in_a    => r.add_2_reg_a,
+            in_b    => r.add_2_reg_b,
+            result  => sub_result
+        );
 
-	gen_sepa_truncate : IF c_sepa_round = FALSE GENERATE
-		-- truncate the one LSbit
-		add_result_q <= add_result(c_data_w downto 1);
-		sub_result_q <= sub_result(c_data_w downto 1);
-	end generate;
+    gen_sepa_truncate : IF c_sepa_round = FALSE GENERATE
+        -- truncate the one LSbit
+        add_result_q <= add_result(c_data_w downto 1);
+        sub_result_q <= sub_result(c_data_w downto 1);
+    end generate;
 
-	gen_sepa_round : IF c_sepa_round = TRUE GENERATE
-		-- round the one LSbit
-		round_add : ENTITY casper_requantize_lib.common_round
-			GENERIC MAP(
-				g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-				g_round           => TRUE, -- when TRUE round the input, else truncate the input
-				g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
-				g_pipeline_input  => 0, -- >= 0
-				g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
-				g_in_dat_w        => c_data_w + 1,
-				g_out_dat_w       => c_data_w
-			)
-			PORT MAP(
-				clken   => clken,
-				clk     => clk,
-				in_dat  => add_result,
-				out_dat => add_result_q
-			);
+    gen_sepa_round : IF c_sepa_round GENERATE
+        -- round the one LSbit
+        round_add : ENTITY casper_requantize_lib.common_round
+            GENERIC MAP(
+                g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+                g_round           => TRUE, -- when TRUE round the input, else truncate the input
+                g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+                g_pipeline_input  => 0, -- >= 0
+                g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
+                g_in_dat_w        => c_data_w + 1,
+                g_out_dat_w       => c_data_w
+            )
+            PORT MAP(
+                clk     => clk,
+                clken   => clken,
+                in_dat  => add_result,
+                out_dat => add_result_q
+            );
 
-		round_sub : ENTITY casper_requantize_lib.common_round
-			GENERIC MAP(
-				g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-				g_round           => TRUE, -- when TRUE round the input, else truncate the input
-				g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
-				g_pipeline_input  => 0, -- >= 0
-				g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
-				g_in_dat_w        => c_data_w + 1,
-				g_out_dat_w       => c_data_w
-			)
-			PORT MAP(
-				clken   => clken,
-				clk     => clk,
-				in_dat  => sub_result,
-				out_dat => sub_result_q
-			);
-	end generate;
+        round_sub : ENTITY casper_requantize_lib.common_round
+            GENERIC MAP(
+                g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+                g_round           => TRUE, -- when TRUE round the input, else truncate the input
+                g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
+                g_pipeline_input  => 0, -- >= 0
+                g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
+                g_in_dat_w        => c_data_w + 1,
+                g_out_dat_w       => c_data_w
+            )
+            PORT MAP(
+                clk     => clk,
+                clken   => clken,
+                in_dat  => sub_result,
+                out_dat => sub_result_q
+            );
+    end generate;
 
-	---------------------------------------------------------------
-	-- CONTROL PROCESS
-	---------------------------------------------------------------
-	comb : process(r, rst, in_val, in_dat, add_result_q, sub_result_q)
-		variable v : reg_type;
-	begin
-		v := r;
+    ---------------------------------------------------------------
+    -- CONTROL PROCESS
+    ---------------------------------------------------------------
+    comb : process(r, rst, in_val, in_dat, add_result_q, sub_result_q)
+        variable v : reg_type;
+    begin
+        v := r;
 
-		-- Shift register for the valid signal
-		v.val_dly(c_pipeline - 1 downto 1) := v.val_dly(c_pipeline - 2 downto 0);
-		v.val_dly(0)                       := in_val;
+        -- Shift register for the valid signal
+        v.val_dly(c_pipeline - 1 downto 1) := v.val_dly(c_pipeline - 2 downto 0);
+        v.val_dly(0)                       := in_val;
 
-		-- Composition of the output registers:
-		v.out_dat := sub_result_q & add_result_q;
-		v.out_val := r.val_dly(c_pipeline - 1);
+        -- Composition of the output registers:
+        v.out_dat := sub_result_q & add_result_q;
+        v.out_val := r.val_dly(c_pipeline - 1);
 
-		-- Compose the inputs for the adder and subtractor
-		-- for both A and B 
-		if in_val = '1' or r.val_dly(0) = '1' then
-			if r.switch = '0' then
-				v.xm_reg    := in_dat;
-				v.add_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- Xm   imag
-				v.add_reg_b := r.xn_m_reg(c_c_data_w - 1 downto c_data_w); -- Xn-m imag
-				v.sub_reg_a := r.xn_m_reg(c_data_w - 1 downto 0); -- Xn-m real
-				v.sub_reg_b := r.xm_reg(c_data_w - 1 downto 0); -- Xm   real
-			else
-				v.xn_m_reg  := in_dat;
-				v.add_reg_a := r.xm_reg(c_data_w - 1 downto 0); -- Xm   real 
-				v.add_reg_b := in_dat(c_data_w - 1 downto 0); -- Xn-m real
-				v.sub_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- Xm   imag
-				v.sub_reg_b := in_dat(c_c_data_w - 1 downto c_data_w); -- Xn-m imag
-			end if;
-		end if;
+        if g_alt_output = FALSE then
+            -- Compose the inputs for the adder and subtractor
+            -- for both A and B 
+            if in_val = '1' or r.val_dly(0) = '1' then
+                --set adder directions - fixed in this case:
+                v.adder_1_dir := '1';
+                v.adder_2_dir := '0';
+                if r.switch = '0' then
+                    -- output B_real = X.imag(m) + X.imag(N-m), B_imag = X.real(N-m) - X.real(m)
+                    v.xm_reg      := in_dat;
+                    v.add_1_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(m)
+                    v.add_1_reg_b := r.xn_m_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(N-m)
+                    v.add_2_reg_a := r.xn_m_reg(c_data_w - 1 downto 0); -- X.real(N-m)
+                    v.add_2_reg_b := r.xm_reg(c_data_w - 1 downto 0); -- X.real(m)
+                else
+                    -- output A_real = X.real(m) + X.real(N-m), A_imag = X.imag(m)- X.imag(N-m)
+                    v.xn_m_reg    := in_dat;
+                    v.add_1_reg_a := r.xm_reg(c_data_w - 1 downto 0); -- X.real(m) 
+                    v.add_1_reg_b := in_dat(c_data_w - 1 downto 0); -- X.real(N-m)
+                    v.add_2_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(m)
+                    v.add_2_reg_b := in_dat(c_c_data_w - 1 downto c_data_w); -- X.imag(N-m)
+                end if;
+            end if;
+        else
+            --Compose the inputs for the adder and subtractor
+            --When switch = '0' output A real and B real.
+            --When switch = '1' output A imag and B imag.
+            if in_val = '1' or r.val_dly(0) = '1' then
+                if r.switch = '0' then
+                    -- output B_real = X.imag(m) + X.imag(N-m), A_real = X.real(m) + X.real(N-m)
+                    v.xm_reg      := in_dat;
+                    v.add_1_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(m)
+                    v.add_1_reg_b := r.xn_m_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(N-m)
+                    v.add_2_reg_a := r.xm_reg(c_data_w - 1 downto 0); -- X.real(m)
+                    v.add_2_reg_b := r.xn_m_reg(c_data_w - 1 downto 0); -- X.real(N-m)
 
-		if in_val = '1' then
-			v.switch := not r.switch;
-		end if;
+                    --set adder directions - both adding:
+                    v.adder_1_dir := '1';
+                    v.adder_2_dir := '1';
+                else
+                    -- output B_imag = X.real(N-m) - X.real(m), A_imag = X.imag(m) - X.imag(N-m)
+                    v.xn_m_reg    := in_dat;
+                    v.add_1_reg_a := in_dat(c_data_w - 1 downto 0); -- X.real(N-m)
+                    v.add_1_reg_b := r.xm_reg(c_data_w - 1 downto 0); -- X.real(m)
+                    v.add_2_reg_a := r.xm_reg(c_c_data_w - 1 downto c_data_w); -- X.imag(m)
+                    v.add_2_reg_b := in_dat(c_c_data_w - 1 downto c_data_w); -- X.imag(N-m)
 
-		if (rst = '1') then
-			v.switch    := '0';
-			v.val_dly   := (others => '0');
-			v.xn_m_reg  := (others => '0');
-			v.xm_reg    := (others => '0');
-			v.add_reg_a := (others => '0');
-			v.add_reg_b := (others => '0');
-			v.sub_reg_a := (others => '0');
-			v.sub_reg_b := (others => '0');
-			v.out_dat   := (others => '0');
-			v.out_val   := '0';
-		end if;
+                    --set adder directions - both subtracting:
+                    v.adder_1_dir := '0';
+                    v.adder_2_dir := '0';
+                end if;
+            end if;
 
-		rin <= v;
+        end if;
 
-	end process comb;
+        if in_val = '1' then
+            v.switch := not r.switch;
+        end if;
 
-	regs : process(clk)
-	begin
-		if rising_edge(clk) then
-			r <= rin;
-		end if;
-	end process;
+        if (rst = '1') then
+            v.switch      := '0';
+            v.val_dly     := (others => '0');
+            v.xn_m_reg    := (others => '0');
+            v.xm_reg      := (others => '0');
+            v.add_1_reg_a := (others => '0');
+            v.add_1_reg_b := (others => '0');
+            v.adder_1_dir := '0';
+            v.adder_2_dir := '0';
+            v.add_2_reg_a := (others => '0');
+            v.add_2_reg_b := (others => '0');
+            v.out_dat     := (others => '0');
+            v.out_val     := '0';
+        end if;
 
-	---------------------------------------------------------------
-	-- OUTPUT STAGE
-	---------------------------------------------------------------
-	out_dat <= r.out_dat;
-	out_val <= r.out_val;
+        rin <= v;
+
+    end process comb;
+
+    regs : process(clk)
+    begin
+        if rising_edge(clk) then
+            r <= rin;
+        end if;
+    end process;
+
+    ---------------------------------------------------------------
+    -- OUTPUT STAGE
+    ---------------------------------------------------------------
+    out_dat <= r.out_dat;
+    out_val <= r.out_val;
 
 end rtl;
 

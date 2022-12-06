@@ -35,11 +35,12 @@ architecture rtl of rTwoWeights is
 	signal im_addr : std_logic_vector(in_wAdr'length downto 0);
 
 
-    begin
+begin
 		--Real address addresses all odd indices, Imag all even. This also gives address widths g_stage which is the size of the bram.
 		re_addr <= in_wAdr & '0';
 		im_addr <= in_wAdr & '1';
 
+--        assert FALSE REPORT "Using twiddle file: " & c_twid_file severity error;
         -- Instantiate a BRAM for the coefficients
 		coef_mem : entity casper_ram_lib.common_rom_r_r
 			generic map(

@@ -160,16 +160,16 @@ begin
 				g_pipeline       => pipeline
 			)
 			port map(
-				clk     => clk,
-				rst     => rst,
-				scale   => shiftreg(stage-1), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
-				in_re   => data_re(stage),
-				in_im   => data_im(stage),
-				in_val  => data_val(stage),
-				out_re  => data_re(stage - 1),
-				out_im  => data_im(stage - 1),
-				ovflw	=> ovflw(stage-1),
-				out_val => data_val(stage - 1)
+                clk     => clk,
+                rst     => rst,
+                in_re   => data_re(stage),
+                in_im   => data_im(stage),
+                scale   => shiftreg(stage-1), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
+                in_val  => data_val(stage),
+                out_re  => data_re(stage - 1),
+                out_im  => data_im(stage - 1),
+                ovflw    => ovflw(stage-1),
+                out_val => data_val(stage - 1)
 			);
 	end generate;
 
