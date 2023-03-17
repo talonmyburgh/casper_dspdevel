@@ -1,4 +1,6 @@
 image: gitlabvunit
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
 
 stages:          # List of stages for jobs, and their order of execution
   - test
@@ -8,8 +10,6 @@ casper_accumulators_test:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd /builds/ngvlabackend/casper_dspdevel/
-    - git submodule init
-    - git submodule update
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
 
