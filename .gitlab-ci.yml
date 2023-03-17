@@ -29,5 +29,122 @@ counter:   # This job runs in the test stage.
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
+delay:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_delay/run.py --xunit-xml ./casper_delay/casper_delay_report.xml
 
+filter:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./casper_filter/casper_filter_report.xml --single --wide
 
+flow_control:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_flow_control/run.py --xunit-xml ./casper_flow_control/casper_flow_control_report.xml
+
+misc:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 misc/run.py --xunit-xml ./misc/misc_report.xml
+
+multiplexer:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_multiplexer/run.py --xunit-xml ./casper_multiplexer/casper_multiplexer_report.xml
+
+multiplier:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+
+fifo:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_fifo/run.py --xunit-xml ./casper_fifo/casper_fifo_report.xml
+
+ram:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_ram/run.py --xunit-xml ./casper_ram/casper_ram_report.xml
+
+rtwosdf_fft:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml  
+
+pipe_fft:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
+
+par_fft:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
+
+wide_fft:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
+
+single_filter:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml --single   
+
+wide_filter:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./casper_filter/wide_filter_report.xml --wide  
+
+wbpfb:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
