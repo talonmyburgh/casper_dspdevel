@@ -13,7 +13,21 @@ casper_accumulators_test:   # This job runs in the test stage.
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
 
+casper_adders_test:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
 
+counter:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd /builds/ngvlabackend/casper_dspdevel/
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_counter/run.py --xunit-xml ./casper_counter/casper_counter_report.xml
 
 
 
