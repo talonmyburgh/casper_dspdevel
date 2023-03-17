@@ -13,7 +13,13 @@ casper_accumulators_test:   # This job runs in the test stage.
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
-
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_accumulators/casper_accumulators_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_accumulators/casper_accumulators_report.xml
+      
 casper_adders_test:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
