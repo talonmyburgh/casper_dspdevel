@@ -1,4 +1,4 @@
-image: gitlabvunit
+image: gitlabvunit:latest
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
