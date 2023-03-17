@@ -32,6 +32,6 @@ PACKAGE technology_select_pkg IS
   CONSTANT c_tech_stratixiv          : INTEGER := 0;   -- e.g. used on UniBoard1
   CONSTANT c_tech_xpm                : INTEGER := 1;   -- e.g. used for Xilinx in Casper
 
-  CONSTANT c_tech_select_default : INTEGER := c_tech_stratixiv;
-  --CONSTANT c_tech_select_default : INTEGER := c_tech_xpm;
+  --CONSTANT c_tech_select_default : INTEGER := c_tech_stratixiv;
+  CONSTANT c_tech_select_default : INTEGER := c_tech_xpm;
 END technology_select_pkg;
