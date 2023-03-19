@@ -262,6 +262,7 @@ wbpfb:   # This job runs in the test stage.
 QuestaSimVunit:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
+  needs: []
   script:
     - echo Attempting to start Vunit Tests in Questa
     - cd $GIT_CLONE_PATH
