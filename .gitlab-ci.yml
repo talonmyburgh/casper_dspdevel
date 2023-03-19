@@ -302,7 +302,7 @@ AllowQuesta:
   tags:
     - questa
   script :
-    - Echo Starting Questa Simulations!
+    - echo Starting Questa Simulations!
   when: manual
 
 Questa_casper_accumulators:   # This job runs in the test stage.
