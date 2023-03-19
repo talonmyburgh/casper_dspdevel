@@ -295,7 +295,7 @@ wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
 
-QuestaSimVunit:   # This job runs in the test stage.
+Questa_casper_accumulators:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
   needs: []
@@ -307,23 +307,6 @@ QuestaSimVunit:   # This job runs in the test stage.
     - mkdir -p reports
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./reports/casper_accumulators_report.xml
-    - /usr/bin/python3 casper_adder/run.py --xunit-xml ./reports/casper_adder_report.xml
-    - /usr/bin/python3 casper_counter/run.py --xunit-xml ./reports/casper_counter_report.xml
-    - /usr/bin/python3 casper_delay/run.py --xunit-xml ./reports/casper_delay_report.xml
-    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/casper_filter_report.xml --single --wide
-    - /usr/bin/python3 casper_flow_control/run.py --xunit-xml ./reports/casper_flow_control_report.xml
-    - /usr/bin/python3 misc/run.py --xunit-xml ./reports/misc_report.xml
-    - /usr/bin/python3 casper_multiplexer/run.py --xunit-xml ./reports/casper_multiplexer_report.xml
-    - /usr/bin/python3 casper_multiplier/run.py --xunit-xml ./reports/casper_multiplier_report.xml
-    - /usr/bin/python3 casper_fifo/run.py --xunit-xml ./reports/casper_fifo_report.xml
-    - /usr/bin/python3 casper_ram/run.py --xunit-xml ./reports/casper_ram_report.xml
-    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./reports/r2sdf_fft_report.xml 
-    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/pipe_fft_report.xml --pipe
-    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/par_fft_report.xml --par
-    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/wide_fft_report.xml --wide
-    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/single_filter_report.xml --single 
-    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/wide_filter_report.xml --wide
-    - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./reports/wbpfb_report.xml
   when: manual
   artifacts:
     when: always
@@ -332,4 +315,326 @@ QuestaSimVunit:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/reports/*.xml
 
-      
+Questa_casper_adder:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators] # when accumulators starts runs the rest of the sims
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_adder/run.py --xunit-xml ./reports/casper_adder_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_counter:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_counter/run.py --xunit-xml ./reports/casper_counter_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_delay:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_delay/run.py --xunit-xml ./reports/casper_delay_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_filter:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/casper_filter_report.xml --single --wide
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_flow_control:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_flow_control/run.py --xunit-xml ./reports/casper_flow_control_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_misc:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 misc/run.py --xunit-xml ./reports/misc_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_multiplexer:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_multiplexer/run.py --xunit-xml ./reports/casper_multiplexer_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_multiplier:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_multiplier/run.py --xunit-xml ./reports/casper_multiplier_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_fifo:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_fifo/run.py --xunit-xml ./reports/casper_fifo_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_ram:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_ram/run.py --xunit-xml ./reports/casper_ram_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_r2sdf_fft:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./reports/r2sdf_fft_report.xml 
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_wb_fft_pipe:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/pipe_fft_report.xml --pipe
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_wb_fft_par:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/par_fft_report.xml --par
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_wb_fft_wide:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./reports/wide_fft_report.xml --wide
+
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_filter_single:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/single_filter_report.xml --single 
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_filter_wide:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_filter/run.py --xunit-xml ./reports/wide_filter_report.xml --wide
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
+
+Questa_casper_wbpfb:   # This job runs in the test stage.
+  stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
+  image: questasim:2023.1
+  needs: [Questa_casper_accumulators]
+  tags: 
+    - questa
+  script:
+    - echo Attempting to start Vunit Tests in Questa
+    - cd $GIT_CLONE_PATH
+    - mkdir -p reports
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./reports/wbpfb_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/reports/*.xml
+    reports:
+      junit: $GIT_CLONE_PATH/reports/*.xml
