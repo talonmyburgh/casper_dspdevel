@@ -295,10 +295,20 @@ wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
 
+RunQuesta:
+  stage: QuestaSim
+  image : questasim:2023.1
+  needs: []
+  tags:
+    - questa
+  script :
+    - Echo Starting Questa Simulations!
+  when: manual
+
 Questa_casper_accumulators:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: []
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -307,7 +317,6 @@ Questa_casper_accumulators:   # This job runs in the test stage.
     - mkdir -p reports
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./reports/casper_accumulators_report.xml
-  when: manual
   artifacts:
     when: always
     paths:
@@ -318,7 +327,7 @@ Questa_casper_accumulators:   # This job runs in the test stage.
 Questa_casper_adder:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators] # when accumulators starts runs the rest of the sims
+  needs: [RunQuesta] # when accumulators starts runs the rest of the sims
   tags: 
     - questa
   script:
@@ -337,7 +346,7 @@ Questa_casper_adder:   # This job runs in the test stage.
 Questa_casper_counter:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -356,7 +365,7 @@ Questa_casper_counter:   # This job runs in the test stage.
 Questa_casper_delay:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -375,7 +384,7 @@ Questa_casper_delay:   # This job runs in the test stage.
 Questa_casper_filter:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -394,7 +403,7 @@ Questa_casper_filter:   # This job runs in the test stage.
 Questa_casper_flow_control:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -413,7 +422,7 @@ Questa_casper_flow_control:   # This job runs in the test stage.
 Questa_casper_misc:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -432,7 +441,7 @@ Questa_casper_misc:   # This job runs in the test stage.
 Questa_casper_multiplexer:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -451,7 +460,7 @@ Questa_casper_multiplexer:   # This job runs in the test stage.
 Questa_casper_multiplier:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -470,7 +479,7 @@ Questa_casper_multiplier:   # This job runs in the test stage.
 Questa_casper_fifo:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -489,7 +498,7 @@ Questa_casper_fifo:   # This job runs in the test stage.
 Questa_casper_ram:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -508,7 +517,7 @@ Questa_casper_ram:   # This job runs in the test stage.
 Questa_r2sdf_fft:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -527,7 +536,7 @@ Questa_r2sdf_fft:   # This job runs in the test stage.
 Questa_casper_wb_fft_pipe:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -546,7 +555,7 @@ Questa_casper_wb_fft_pipe:   # This job runs in the test stage.
 Questa_casper_wb_fft_par:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -565,7 +574,7 @@ Questa_casper_wb_fft_par:   # This job runs in the test stage.
 Questa_casper_wb_fft_wide:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -585,7 +594,7 @@ Questa_casper_wb_fft_wide:   # This job runs in the test stage.
 Questa_casper_filter_single:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -604,7 +613,7 @@ Questa_casper_filter_single:   # This job runs in the test stage.
 Questa_casper_filter_wide:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
@@ -623,7 +632,7 @@ Questa_casper_filter_wide:   # This job runs in the test stage.
 Questa_casper_wbpfb:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
-  needs: [Questa_casper_accumulators]
+  needs: [RunQuesta]
   tags: 
     - questa
   script:
