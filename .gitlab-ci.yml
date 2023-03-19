@@ -8,7 +8,8 @@ stages:          # List of stages for jobs, and their order of execution
   - QuestaSim
 casper_accumulators_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -23,7 +24,8 @@ casper_accumulators_test:   # This job runs in the test stage.
       
 casper_adders_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -38,7 +40,8 @@ casper_adders_test:   # This job runs in the test stage.
 
 counter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -53,7 +56,8 @@ counter:   # This job runs in the test stage.
 
 delay:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -68,7 +72,8 @@ delay:   # This job runs in the test stage.
 
 filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -83,7 +88,8 @@ filter:   # This job runs in the test stage.
 
 flow_control:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -98,7 +104,8 @@ flow_control:   # This job runs in the test stage.
 
 misc:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -113,7 +120,8 @@ misc:   # This job runs in the test stage.
 
 multiplexer:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -128,7 +136,8 @@ multiplexer:   # This job runs in the test stage.
 
 multiplier:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -143,7 +152,8 @@ multiplier:   # This job runs in the test stage.
 
 fifo:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -158,7 +168,8 @@ fifo:   # This job runs in the test stage.
 
 ram:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -173,7 +184,8 @@ ram:   # This job runs in the test stage.
 
 rtwosdf_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -188,7 +200,8 @@ rtwosdf_fft:   # This job runs in the test stage.
 
 pipe_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -203,7 +216,8 @@ pipe_fft:   # This job runs in the test stage.
 
 par_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -218,7 +232,8 @@ par_fft:   # This job runs in the test stage.
 
 wide_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -234,7 +249,8 @@ wide_fft:   # This job runs in the test stage.
 
 single_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -249,7 +265,8 @@ single_filter:   # This job runs in the test stage.
 
 wide_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -264,7 +281,8 @@ wide_filter:   # This job runs in the test stage.
 
 wbpfb:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
-  tags: ghdl
+  tags: 
+    - ghdl
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -281,7 +299,8 @@ QuestaSimVunit:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
   image: questasim:2023.1
   needs: []
-  tags: questa
+  tags: 
+    - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
     - cd $GIT_CLONE_PATH
