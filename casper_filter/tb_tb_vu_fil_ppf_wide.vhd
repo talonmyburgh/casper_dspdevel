@@ -10,8 +10,8 @@ context vunit_lib.vunit_context;
 
 entity tb_tb_vu_fil_ppf_wide is
     GENERIC(
-        g_big_endian_wb_in      : boolean;
-        g_big_endian_wb_out     : boolean;
+        g_big_endian_wb_in      : boolean := true; -- These should be overriden when actually using wideband, but in single mode they aren't set by the python
+        g_big_endian_wb_out     : boolean := true; 
         g_wb_factor             : natural;  -- = default 1, wideband factor
         g_nof_chan              : natural;  -- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan         
         g_nof_bands             : natural;  -- = 1024, N point FFT
