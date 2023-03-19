@@ -5,9 +5,9 @@ context vunit_lib.vunit_context;
 
 ENTITY tb_tb_vu_sample_and_hold IS
 	GENERIC(
-        g_period : NATURAL;
-        g_dat_w : NATURAL;
-        g_dat_val : INTEGER;
+        g_period : NATURAL := 1;
+        g_dat_w : NATURAL := 8;
+        g_dat_val : INTEGER := 1;
 		runner_cfg : string
 	);
 END tb_tb_vu_sample_and_hold;
