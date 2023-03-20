@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sigasi_dspdevel</name>
+	<name>casper_dspdevel</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -326,6 +326,11 @@
 			<name>Common Libraries/vunit_lib/vunit_run_context.vhd</name>
 			<type>1</type>
 			<locationURI>VUNIT/vhdl/vunit_run_context.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/xpm/xpm_VCOMP.vhd</name>
+			<type>1</type>
+			<location>/export/data_1/Xilinx/Vivado/2022.2/data/ip/xpm/xpm_VCOMP.vhd</location>
 		</link>
 	</linkedResources>
 </projectDescription>
