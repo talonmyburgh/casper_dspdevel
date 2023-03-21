@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <com.sigasi.hdt.shared.librarymapping.model:LibraryMappings xmlns:com.sigasi.hdt.shared.librarymapping.model="com.sigasi.hdt.vhdl.scoping.librarymapping" Version="2">
+  <Mappings Location="intel/altera_mf/altera_mf.vhd" Library="altera_mf"/>
+  <Mappings Location="intel/altera_mf/altera_mf_components.vhd" Library="altera_mf"/>
   <Mappings Location="casper_accumulators" Library="casper_accumulator_lib"/>
   <Mappings Location="casper_adder" Library="casper_adder_lib"/>
   <Mappings Location="casper_counter" Library="casper_counter_lib"/>
@@ -23,15 +25,32 @@
   <Mappings Location="casper_dp_pkg" Library="dp_pkg_lib"/>
   <Mappings Location="Common Libraries/IEEE" Library="ieee"/>
   <Mappings Location="Common Libraries/IEEE Synopsys" Library="ieee"/>
+  <Mappings Location="ip_stratixiv/fifo" Library="ip_stratixiv_fifo_lib"/>
+  <Mappings Location="ip_stratixiv/mult" Library="ip_stratixiv_mult_lib"/>
+  <Mappings Location="ip_stratixiv/ram" Library="ip_stratixiv_ram_lib"/>
   <Mappings Location="ip_xpm/fifo" Library="ip_xpm_fifo_lib"/>
   <Mappings Location="ip_xpm/mult" Library="ip_xpm_mult_lib"/>
   <Mappings Location="ip_xpm/ram" Library="ip_xpm_ram_lib"/>
+  <Mappings Location="intel/altera_mf/lpm_pack.vhd" Library="lpm"/>
   <Mappings Location="Common Libraries" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/primitive" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/retarget" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/retarget_VCOMP.vhd" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/secureip" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/unisim_retarget_VCOMP.vhd" Library="not mapped"/>
+  <Mappings Location="casper_accumulators/dsp48e_bram_vacc.vhd" Library="not mapped"/>
+  <Mappings Location="casper_accumulators/tb_dsp48e_bram_vacc.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_fft_wide_unit.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_mmf_fft_r2.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_mmf_fft_r2_par.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_mmf_fft_r2_pipe.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_mmf_fft_wide_unit.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_tb_fft_r2_par.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_tb_fft_r2_pipe.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wb_fft/tb_tb_fft_r2_wide.vhd" Library="not mapped"/>
+  <Mappings Location="casper_wbpfb/tb_tb_wbpfb_unit_wide.vhd" Library="not mapped"/>
+  <Mappings Location="technology/technology_select_pkg_casperunb1.vhd" Library="not mapped"/>
+  <Mappings Location="technology/technology_select_pkg_casperxpm.vhd" Library="not mapped"/>
   <Mappings Location="r2sdf_fft" Library="r2sdf_fft_lib"/>
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="technology" Library="technology_lib"/>
