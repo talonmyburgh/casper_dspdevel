@@ -47,6 +47,7 @@ entity fft_r2_par is
         g_use_variant : string         := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp     : string         := "yes"; --! = "yes" or "no"
         g_ovflw_behav : string         := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_use_mult_round : string      := "TRUNCATE";
         g_use_round   : string         := "ROUND" --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
     );
     port(
@@ -182,10 +183,12 @@ begin
                 generic map(
                     g_stage       => stage,
                     g_element     => element,
+                    g_twiddle_width => c_fft.twiddle_dat_w,
                     g_pipeline    => g_pipeline,
                     g_use_variant => g_use_variant,
                     g_ovflw_behav => g_ovflw_behav,
                     g_use_round   => g_use_round,
+                    g_use_mult_round => g_use_mult_round,
                     g_use_dsp     => g_use_dsp
                 )
                 port map(

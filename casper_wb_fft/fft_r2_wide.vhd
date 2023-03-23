@@ -80,6 +80,7 @@ entity fft_r2_wide is
         g_use_dsp        : string         := "yes"; --! = "yes" or "no"
         g_ovflw_behav    : string         := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
         g_use_round      : string         := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+        g_use_mult_round : string         := "TRUNCATE";
         g_ram_primitive  : string         := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
         g_twid_file_stem : string         := "UNUSED" --! twid file stem location
     );
@@ -209,6 +210,7 @@ begin
                 g_use_dsp        => g_use_dsp,
                 g_ovflw_behav    => g_ovflw_behav,
                 g_use_round      => g_use_round,
+                g_use_mult_round => g_use_mult_round,
                 g_ram_primitive  => g_ram_primitive,
                 g_twid_file_stem => g_twid_file_stem
             )
@@ -335,6 +337,7 @@ begin
                 g_use_variant => g_use_variant,
                 g_use_dsp     => g_use_dsp,
                 g_ovflw_behav => g_ovflw_behav,
+                g_use_mult_round=>g_use_mult_round,
                 g_use_round   => g_use_round
             )
             port map(
