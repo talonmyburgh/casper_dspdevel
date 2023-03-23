@@ -94,8 +94,8 @@ architecture str of fft_r2_bf_par is
 	signal bf_dif_complex     : std_logic_vector(c_nof_complex * c_out_dat_w - 1 downto 0);
 	signal bf_dif_complex_dly : std_logic_vector(bf_dif_complex'range);
 
-	signal weight_re   			: signed(g_twiddle_width-1 downto 0);
-	signal weight_im   			: signed(g_twiddle_width-1 downto 0);
+	signal weight_re   			: std_logic_vector(g_twiddle_width-1 downto 0);
+	signal weight_im   			: std_logic_vector(g_twiddle_width-1 downto 0);
 
 	signal mul_out_re   : std_logic_vector(y_out_re'range);
 	signal mul_out_im   : std_logic_vector(y_out_im'range);
@@ -252,8 +252,8 @@ begin
 		port map(
 			clk       	 	=> clk,
 			rst       	 	=> rst,
-			weight_re 	 	=> std_logic_vector(weight_re),
-			weight_im 	 	=> std_logic_vector(weight_im),
+			weight_re 	 	=> weight_re,
+			weight_im 	 	=> weight_im,
 			in_re     	 	=> dif_out_re,
 			in_im     	 	=> dif_out_im,
 			in_val    	 	=> mul_in_val,
@@ -267,8 +267,8 @@ begin
 	-- fetch twiddle coefficient values
 	------------------------------------------------------------------------------
 
-	weight_re <= gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,true);
-	weight_im <= gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,false);
+	weight_re <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,true));
+	weight_im <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,false));
 
 	--print_str("Parallel: [stage = " & integer'image(g_stage) & " [element = " & integer'image(g_element) & "] " & "[index = " & integer'image(wMap(g_element, g_stage)) & "] ");
 
