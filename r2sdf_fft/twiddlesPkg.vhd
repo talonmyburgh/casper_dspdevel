@@ -69,6 +69,8 @@ type twiddle_signed_array is array(natural range <>)      of signed;
   -- Twiddles need two generation mechanisms.  The ROM (or Memory) generation is needed for Pipelined stages
   -- Constants needs to be generated for Parallel mode
   --
+  	function min_one(n:integer) return integer;
+
   function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed;
   function gen_twiddle_factor_rom(wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean) return twiddle_signed_array;
   --function gen_terminal_idxA(fftsize: integer; butterflyidx: integer; num_data_buses : integer) return integer;
@@ -76,6 +78,15 @@ type twiddle_signed_array is array(natural range <>)      of signed;
  end package twiddlesPkg; 
 
 package body twiddlesPkg is
+	function min_one(n:integer) return integer is
+	begin
+		if n<1 then
+			return 1;
+		else
+			return n;
+		end if;
+	end function min_one;
+
   function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed is
   -- When g_gen_real = true, returns the real component (eg uses cos)
   -- when g_gen_real = false, returns the imag component (eg uses sin)
@@ -100,11 +111,11 @@ package body twiddlesPkg is
     -- In python we'd want
     -- coeff_indices = np.arange(wb_instance%2**stage, 2**stage, wb_factor)
     -- idx = coeff_indices(k)
-    fftsize   := 2**stage; 
+    fftsize   := (2**stage)*wb_factor; 
     startidx  := wb_instance mod fftsize;
-    idx       := startidx + k*wb_factor;  -- Note this is just a no-op effectively (k gets passed through) when wb_factor is 1 since startidx=0 in that case too.
+    idx       := (startidx + k*wb_factor);  -- Note this is just a no-op effectively (k gets passed through) when wb_factor is 1 since startidx=0 in that case too.
     assert idx<fftsize report "gen_twiddle_factor: Calculated idx exceed idx size, possible problem in gen_twiddle_factor_rom" severity failure;
-    assert twiddle_width<50 report "gen_twiddle_factor: Large Twiddle Widths may have precision problems do to double floating point" severity failure;
+    assert twiddle_width<50 report "gen_twiddle_factor: Large Twiddle Widths may have precision problems due to double floating point" severity failure;
     if gen_real then
       if do_ifft then
         --ifft real
@@ -134,18 +145,24 @@ package body twiddlesPkg is
     -- This function won't work correctly if skip_i
     -- This allows seperate roms to be generated for seperate parallel paths.
     -- Note we only generate one component since it's common to use an address offset to get the Imaginary part.
-    variable twiddle_rom  : twiddle_signed_array((2**(stage-1)/wb_factor)-1 downto 0)((2*twiddle_width)-1 downto 0);
+    variable twiddle_rom  : twiddle_signed_array(min_one(2**(stage-1))-1 downto 0)((2*twiddle_width)-1 downto 0);
     variable tempI        : signed(twiddle_width-1 downto 0);
     variable tempQ        : signed(twiddle_width-1 downto 0);
   begin
-    assert wb_instance<wb_factor report "gen_twiddle_factor_rom: WB Instance can't be higher than wb factor!" severity failure;
-    
-    for k in 0 to ((2**(stage-1)/wb_factor)-1) loop
-      tempI := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,true);
-      tempQ := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,false);
-      twiddle_rom(k)    := tempQ & tempI;
+    if (2**(stage-1))=0 then -- If we get called in a case that doesn't need a rom, return a constant
+      tempI := to_signed((2**(twiddle_width-1))-1,twiddle_width);
+      tempQ := to_signed(0,twiddle_width);
+      twiddle_rom(0) := tempQ & tempI;
+    else
+      assert wb_instance<wb_factor report "gen_twiddle_factor_rom: WB Instance can't be higher than wb factor!" severity failure;
+      
+      for k in 0 to ((2**(stage-1))-1) loop
+        tempI := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,true);
+        tempQ := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,false);
+        twiddle_rom(k)    := tempQ & tempI;
 
-    end loop;
+      end loop;
+    end if;
     return twiddle_rom;
   end function gen_twiddle_factor_rom;
 

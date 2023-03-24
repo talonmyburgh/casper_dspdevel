@@ -15,7 +15,7 @@ entity rTwoWeights is
 		g_twid_file_stem  : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
 		g_ram_primitive   : string  := "block";	-- BRAM primitive for Weights 
 		g_do_ifft		  : boolean := false;
-		g_use_inferred_ram: boolean := true;
+		g_use_inferred_ram: boolean := false;
 		g_ram			  : t_c_mem := c_mem_ram -- RAM parameters
 	);
 	port(
@@ -34,17 +34,20 @@ architecture rTwoWeights_rtl of rTwoWeights is
 	-- g_wb_inst : 0 -> wb_factor - 1
 	constant c_twid_file 	: string := (g_twid_file_stem	& "_" & integer'image(g_wb_inst) & "wbinst_" & (integer'image(g_stage + true_log2(g_wb_factor) - 1))  & "stg"  & sel_a_b(c_tech_select_default = c_tech_xpm, ".mem", ".mif")); 
 
-	signal add_reg_mux		: unsigned(in_wAdr'length-1 downto 0);
-	signal addr_reg			: unsigned(in_wAdr'length-1 downto 0);
+	signal add_reg_mux		: unsigned(min_one(in_wAdr'length)-1 downto 0);
+	signal addr_reg			: unsigned(min_one(in_wAdr'length)-1 downto 0);
 	constant c_latency 		: natural := g_ram.latency;
-	signal rom              : twiddle_signed_array(((2**(g_stage-1))/g_wb_factor)-1 downto 0)((2*weight_re'length)-1 downto 0) := gen_twiddle_factor_rom(g_wb_inst,g_stage,g_wb_factor, weight_re'length,g_do_ifft);
 	signal rom_data			: signed((2*weight_re'length)-1 downto 0);
-	attribute rom_style : string;
 
-	attribute rom_style of rom : signal is g_ram_primitive;
 	signal re_addr			: std_logic_vector(in_wAdr'length downto 0);
 	signal im_addr			: std_logic_vector(in_wAdr'length downto 0);
+	attribute rom_style : string;
 
+	
+	signal rom              : twiddle_signed_array(min_one(2**(g_stage-1))-1 downto 0)((2*weight_re'length)-1 downto 0) := gen_twiddle_factor_rom(g_wb_inst,g_stage,g_wb_factor, weight_re'length,g_do_ifft); -- @suppress "signal rom is never written"
+	attribute rom_style of rom : signal is g_ram_primitive;
+	signal weight_re_irom			: std_logic_vector(weight_re'length-1 downto 0);
+	signal weight_im_irom			: std_logic_vector(weight_im'length-1 downto 0);
 begin
 
 	assert c_latency>0 and c_latency<3 report "rTwoWeights: unsupported latency" severity failure;
@@ -78,24 +81,33 @@ begin
 				rd_val_a => open,
 				rd_val_b => open
 			);
+	end generate use_tech_rom;
+	use_infer_rom: if (g_use_inferred_ram) generate
+		noaddress : if in_wAdr'length=0 generate
+			weight_re_irom <= std_logic_vector(to_signed((2**(weight_re'length-1))-1,weight_re'length)); --send max positive value
+			weight_im_irom <= std_logic_vector(to_signed(0,weight_re'length));
+		end generate noaddress;
 
-	else generate
-		-- We just use a wider RAM now, rather than use dual-port.
-		-- For most common Coefficient sizes Xilinx and Intel will automatically do the right thing
-		-- Wider memories are usually not a problem
-		-- Note Ultraram might not efficiently be used unless we futz with sharing roms.
+		rom_infer : if in_wAdr'length>0 generate
+			-- We just use a wider RAM now, rather than use dual-port.
+			-- For most common Coefficient sizes Xilinx and Intel will automatically do the right thing
+			-- Wider memories are usually not a problem
+			-- Note Ultraram might not efficiently be used unless we futz with sharing roms.
 
-		add_reg_mux	<= addr_reg when c_latency=2 else unsigned(in_wAdr);
-		twiddle_rom_proc : process (clk)
-		begin
-			if clk'event and clk='1' then
-				addr_reg	<= unsigned(in_wAdr);
-				rom_data	<= rom(to_integer(add_reg_mux));
-			end if;
-		end process twiddle_rom_proc;
+			add_reg_mux	<= addr_reg when c_latency=2 else unsigned(in_wAdr);
+			twiddle_rom_proc : process (clk)
+			begin
+				if clk'event and clk='1' then
+					addr_reg	<= unsigned(in_wAdr);
+					rom_data	<= rom(to_integer(add_reg_mux));
+				end if;
+			end process twiddle_rom_proc;
 
-		weight_re <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
-		weight_im <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
-	end generate;
+			weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
+			weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
+		end generate rom_infer;
+		weight_re <= weight_re_irom;
+		weight_im <= weight_im_irom;
+	end generate use_infer_rom;
 
 end rTwoWeights_rtl;
