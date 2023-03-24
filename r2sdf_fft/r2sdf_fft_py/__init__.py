@@ -183,15 +183,18 @@ def main():
     plt.ion()
     plt.figure(0)
     plt.plot(np.real(data))
+    plt.title("Input Data (time domain)")
     plt.show
     data = roundsat(data,1,17,0,1,1,1)
     pfft_data = pfft(data,int(np.log2(fftsize)),g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_bit_rev_input,g_do_bit_rev_output)
     plt.figure(1)
     plt.plot(20*np.log10(np.fft.fftshift(np.abs(pfft_data))))
+    plt.title("FFT model")
     plt.show
 
     plt.figure(2)
     plt.plot(20*np.log10(np.fft.fftshift(np.abs(np.fft.fft(data)))))
+    plt.title("Python FFT")
     plt.show
 
 
