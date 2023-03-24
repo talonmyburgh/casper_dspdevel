@@ -122,6 +122,12 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoOrder.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
+r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_twiddlepkg.vhd"))
+
+# Setup the Twiddle Testbench by calling it's python function
+from r2sdf_fft_py import tb_twiddle_package_setup
+tb_twiddle_package_setup(r2sdf_fft_lib)
+
 
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
