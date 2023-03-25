@@ -1,4 +1,4 @@
-library ieee, common_pkg_lib, vunit_lib, r2sdf_fft_lib;
+library ieee, vunit_lib, r2sdf_fft_lib;
 use ieee.std_logic_1164.all; 
 use ieee.numeric_std.all; 
 use ieee.math_real.all;
