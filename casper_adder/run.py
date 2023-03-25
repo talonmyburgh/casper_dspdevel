@@ -13,7 +13,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
         in_dat_w : int {1,5}
         out_dat_w : int {in_dat_w,in_dat_w+1}
     """
-
+    testnum = 1;
     for d, a_s, i_pipe, o_pipe, i_d_w in product(direc,add_sub,inp_pipeline,out_pipeline,in_dat_w):
         ab_value_ranges = [(0,0,0,0)] # default, exhaustive
         if i_d_w > 14:
@@ -30,24 +30,27 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
 
         for a_v_min, a_v_max, b_v_min, b_v_max in ab_value_ranges:
             non_exhaustive_value_range = any([lim != 0 for lim in [a_v_min, a_v_max, b_v_min, b_v_max]])
-            value_range_string = ", a_val = [%d, %d] , b_val = [%d, %d]" % (
+            value_range_string = ", a_val = [%d,%d] , b_val = [%d,%d]" % (
                 a_v_min if a_v_min != 0 else -(2**(i_d_w-1)),
                 a_v_max if a_v_max != 0 else (2**(i_d_w-1))-1,
                 b_v_min if b_v_min != 0 else -(2**(i_d_w-1)),
                 b_v_max if b_v_max != 0 else (2**(i_d_w-1))-1 
             )
-
-            config_name1 = "direc = %s, add_sub = %s, i_pipe = %i, o_pipe = %i, in_dat_w = %i, out_dat_w = %i" % (d, a_s, i_pipe, o_pipe, i_d_w, i_d_w)
-            if non_exhaustive_value_range:
-                config_name1 += value_range_string
+            config_name1 = "TestA%d"%(testnum)
+            #testnum = testnum + 1
+            #config_name1 = "direc = %s, add_sub = %s, i_pipe = %i, o_pipe = %i, in_dat_w = %i, out_dat_w = %i" % (d, a_s, i_pipe, o_pipe, i_d_w, i_d_w)
+            #if non_exhaustive_value_range:
+            #    config_name1 += value_range_string
             obj.add_config(
                 name = config_name1,
                 generics=dict(g_direction=d,g_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w,
                                 g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
-            config_name2 = "direc = %s, add_sub = %s, i_pipe = %i, o_pipe = %i, in_dat_w = %i, out_dat_w = %i" % (d, a_s, i_pipe, o_pipe, i_d_w, i_d_w+1)
-            if non_exhaustive_value_range:
-                config_name2 += value_range_string
+            #config_name2 = "direc = %s, add_sub = %s, i_pipe = %i, o_pipe = %i, in_dat_w = %i, out_dat_w = %i" % (d, a_s, i_pipe, o_pipe, i_d_w, i_d_w+1)
+            #if non_exhaustive_value_range:
+            #    config_name2 += value_range_string
+            config_name2 = "TestB%d"%(testnum)
+            testnum = testnum + 1
             obj.add_config(
                 name = config_name2,
                 generics=dict(g_direction=d,g_sel_add=a_s,g_pipeline_in=i_pipe, g_pipeline_out=o_pipe, g_in_dat_w=i_d_w,g_out_dat_w=i_d_w+1,
