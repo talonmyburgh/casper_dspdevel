@@ -100,9 +100,12 @@ latencies = [2,8]
 #         name = db_en_plus_config_name,
 #         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
 #     )
+testnum = 1
 for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
     # db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    #db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_prog_dp_config_name = "Testnum%d"%(testnum)
+    testnum = testnum + 1
     # DELAY_BRAM_PROG_TB.add_config(
     #     name = db_prog_config_name,
     #     generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)

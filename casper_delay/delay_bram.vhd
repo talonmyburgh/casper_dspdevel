@@ -120,6 +120,9 @@ ARCHITECTURE rtl of delay_bram_async is
   CONSTANT c_mem_ram : t_c_mem := (g_ram_latency, c_cntr_width, c_dat_w, g_delay, 'X');
   CONSTANT c_max_cnt : NATURAL := g_delay - g_ram_latency - 1;
 
+  -- GHDL is picky about unconstrained Std_logic_vectors by defining a zero constant we resolve a GHDL error about unconstrained std_logic_vector and others below.
+  CONSTANT c_zero_din : STD_LOGIC_VECTOR(din'RANGE) := (others => '0');
+
   SIGNAL s_count_val : STD_LOGIC_VECTOR(c_cntr_width - 1 DOWNTO 0) := (others=>'0');
   SIGNAL s_ram_out   : STD_LOGIC_VECTOR(din'RANGE);
 
@@ -181,6 +184,8 @@ begin
   --     end if;
   --   end if;
   -- end PROCESS;
-  dout <= s_ram_out when en = '1' else (others => '0');
+  
+  --GHDL does not like unconstrained arrays and using others.  Work around using a constant
+  dout <= s_ram_out when en = '1' else (c_zero_din);
 
 end ARCHITECTURE;

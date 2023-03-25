@@ -71,6 +71,7 @@ entity rTwoSDF is
 		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
 		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_use_mult_round: string  := "TRUNCATE";		--! Rounding behaviour "ROUND" or "TRUNCATE"
 		g_twid_dat_w	: natural := 18;
 		g_max_addr_w	: natural := 9;
 		g_twid_file_stem: string  := c_twid_file_stem;
@@ -155,6 +156,7 @@ begin
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
 				g_use_round		 => g_use_round, 
+				g_use_mult_round => g_use_mult_round,
 				g_ram_primitive	 => g_ram_primitive,
 				g_twid_file_stem => g_twid_file_stem,
 				g_pipeline       => pipeline

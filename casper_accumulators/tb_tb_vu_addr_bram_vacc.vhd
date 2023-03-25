@@ -28,7 +28,7 @@ architecture tb of tb_tb_vu_addr_bram_vacc is
 		VARIABLE return_value : t_integer_arr(parts'range);
 	BEGIN
 		for i in parts'range loop
-			return_value(i) := natural'value(parts(i).all);
+			return_value(i) := integer'value(parts(i).all);
 		end loop;
 		return return_value;
 	END;
