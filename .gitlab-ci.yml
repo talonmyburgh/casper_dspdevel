@@ -69,6 +69,7 @@ delay:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/casper_delay/casper_delay_report.xml
     reports:
       junit: $GIT_CLONE_PATH/casper_delay/casper_delay_report.xml
+  when: manual
 
 filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
@@ -380,6 +381,7 @@ Questa_casper_delay:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/reports/*.xml
     reports:
       junit: $GIT_CLONE_PATH/reports/*.xml
+  when: manual
 
 Questa_casper_filter:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.

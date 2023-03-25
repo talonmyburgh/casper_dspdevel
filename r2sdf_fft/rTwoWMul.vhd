@@ -27,6 +27,7 @@ entity rTwoWMul is
 	generic(
 		g_use_dsp    : STRING  := "yes";
 		g_use_variant    : STRING  := "4DSP";
+		g_use_truncate : boolean := true;
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
 	);
@@ -51,7 +52,7 @@ architecture str of rTwoWMul is
 	-- Apertif and using the WG at various frequencies at subband or between subbands it appears that
 	-- using truncate or sround does not make a noticable difference in the SST. Still choose to use
 	-- signed rounding to preserve zero DC.
-	constant c_use_truncate : boolean := true; --false;
+	constant c_use_truncate : boolean := g_use_truncate; --false;
 
 	-- Derive the common_complex_mult g_pipeline_* values from g_lat. The sum c_total_lat = g_lat, so that g_lat defines
 	-- the total latency from in_* to out_*.

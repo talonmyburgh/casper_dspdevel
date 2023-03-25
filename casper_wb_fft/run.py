@@ -551,4 +551,5 @@ if args.wide or run_all:
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable"])
+vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()

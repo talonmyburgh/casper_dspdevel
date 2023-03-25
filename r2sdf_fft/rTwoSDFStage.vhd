@@ -37,6 +37,7 @@ entity rTwoSDFStage is
 		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
+		g_use_mult_round : string         := "TRUNCATE";		--! Rounding behaviour "ROUND" or "TRUNCATE"
 		g_ram_primitive  : string		  := "block";			--! BRAM primitive for the Weights
 		g_twid_file_stem : string  		  := "UNUSED";			--! Path stem for the twiddle coefficient files
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
@@ -61,8 +62,9 @@ architecture str of rTwoSDFStage is
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
+	constant c_round	 	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_mult_trunc	: boolean := sel_a_b(g_use_mult_round ="ROUND", FALSE, TRUE);
+	constant c_clip		 	: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	constant c_coefs_file_stem : string := g_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
@@ -170,7 +172,8 @@ begin
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
             g_use_dsp          => g_use_dsp,
-            g_use_variant    => g_use_variant,
+            g_use_variant      => g_use_variant,
+			g_use_truncate     => c_mult_trunc,
             g_stage            => g_stage,
             g_lat              => g_pipeline.mul_lat
 		)
