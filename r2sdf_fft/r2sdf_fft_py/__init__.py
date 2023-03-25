@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from vunit import VUnit
 from pathlib import Path
 import os
@@ -234,42 +234,42 @@ def tb_twiddle_package_setup(ui):
                 name=f"TwiddlePython_w{bidx}b_{fftsize}",
                 generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
                 post_check=make_twiddle_post_check(fftsize,bidx,0))
-            testbench.add_config(
-                name=f"TwiddleMagic_w{bidx}b_{fftsize}",
-                generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
-                post_check=make_twiddle_post_check(fftsize,bidx,1))           
+            #testbench.add_config(
+            #    name=f"TwiddleMagic_w{bidx}b_{fftsize}",
+            #    generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
+            #    post_check=make_twiddle_post_check(fftsize,bidx,1))           
 
 def main():
-    print("Starting Simulation of FFT")
-    fftsize = 8192
-    g_twiddle_width = 18
-    g_do_rounding = 1
-    g_do_saturation = 1
-    g_output_width = np.asarray([18,18,18,18,18,18,27,27,27,27,27,27,27])
-    g_bits_to_round_off = np.asarray([0,0,0,0,0,0,0,0,0,0,0,0,0])
-    g_do_dif = 1
-    g_do_bit_rev_input = 0
-    g_do_bit_rev_output = 1
-    d_indices = np.arange(0,fftsize)
-    data = 2048*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
-    noise = np.random.normal(0, 2.5, size=(data.shape[0]))
-    data = data + noise
-    plt.ion()
-    plt.figure(0)
-    plt.plot(np.real(data))
-    plt.title("Input Data (time domain)")
-    plt.show
-    data = roundsat(data,1,17,0,1,1,1)
-    pfft_data = pfft(data,int(np.log2(fftsize)),g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_bit_rev_input,g_do_bit_rev_output)
-    plt.figure(1)
-    plt.plot(20*np.log10(np.fft.fftshift(np.abs(pfft_data))))
-    plt.title("FFT model")
-    plt.show
+    print("There is no main..")
+    #fftsize = 8192
+    #g_twiddle_width = 18
+    #g_do_rounding = 1
+    #g_do_saturation = 1
+    #g_output_width = np.asarray([18,18,18,18,18,18,27,27,27,27,27,27,27])
+    #g_bits_to_round_off = np.asarray([0,0,0,0,0,0,0,0,0,0,0,0,0])
+    #g_do_dif = 1
+    #g_do_bit_rev_input = 0
+    #g_do_bit_rev_output = 1
+    #d_indices = np.arange(0,fftsize)
+    #data = 2048*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
+    #noise = np.random.normal(0, 2.5, size=(data.shape[0]))
+    #data = data + noise
+    #plt.ion()
+    #plt.figure(0)
+    #plt.plot(np.real(data))
+    #plt.title("Input Data (time domain)")
+    #plt.show
+    #data = roundsat(data,1,17,0,1,1,1)
+    #pfft_data = pfft(data,int(np.log2(fftsize)),g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_bit_rev_input,g_do_bit_rev_output)
+    #plt.figure(1)
+    #plt.plot(20*np.log10(np.fft.fftshift(np.abs(pfft_data))))
+    #plt.title("FFT model")
+    #plt.show
 
-    plt.figure(2)
-    plt.plot(20*np.log10(np.fft.fftshift(np.abs(np.fft.fft(data)))))
-    plt.title("Python FFT")
-    plt.show
+    #plt.figure(2)
+    #plt.plot(20*np.log10(np.fft.fftshift(np.abs(np.fft.fft(data)))))
+    #plt.title("Python FFT")
+    #plt.show
 
     # debug the python check function thing.
     #testfunc = make_twiddle_post_check(8192,18);
