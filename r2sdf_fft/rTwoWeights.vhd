@@ -9,14 +9,14 @@ use r2sdf_fft_lib.twiddlesPkg.all;
 
 entity rTwoWeights is
 	generic(
-		g_stage           : natural := 4; -- The stage number of the pft
-		g_wb_factor	      : natural := 1; -- The wideband factor of the wideband FFT
-		g_wb_inst		  : natural := 1; -- WB instance index
-		g_twid_file_stem  : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
-		g_ram_primitive   : string  := "block";	-- BRAM primitive for Weights 
-		g_do_ifft		  : boolean := false;
-		g_use_inferred_ram: boolean := false;
-		g_ram			  : t_c_mem := c_mem_ram -- RAM parameters
+		g_stage                     : natural := 4; -- The stage number of the pft
+		g_wb_factor	            : natural := 1; -- The wideband factor of the wideband FFT
+		g_wb_inst		    : natural := 1; -- WB instance index
+		g_twid_file_stem            : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
+		g_ram_primitive             : string  := "block";	-- BRAM primitive for Weights 
+		g_do_ifft		    : boolean := false;
+		g_use_inferred_ram          : boolean := true;
+		g_ram			    : t_c_mem := c_mem_ram -- RAM parameters
 	);
 	port(
 		clk       : in  std_logic;
