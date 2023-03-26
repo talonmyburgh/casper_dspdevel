@@ -84,8 +84,22 @@ begin
 	end generate use_tech_rom;
 	use_infer_rom: if (g_use_inferred_ram) generate
 		noaddress : if in_wAdr'length=0 generate
-			weight_re_irom <= std_logic_vector(to_signed((2**(weight_re'length-1))-1,weight_re'length)); --send max positive value
-			weight_im_irom <= std_logic_vector(to_signed(0,weight_re'length));
+			-- When this happens we have null array addresses
+			-- But we still need to use the twiddle rom to properly calculate the I/Q
+			-- Twiddles, which are constants, but not "zero" 0.
+			-- However we can't use any of the address fields without it probably breaking
+
+			--add_reg_mux	<= addr_reg when c_latency=2 else unsigned(in_wAdr);
+			twiddle_rom_proc : process (clk)
+			begin
+				if clk'event and clk='1' then
+					--addr_reg	<= unsigned(in_wAdr);
+					rom_data	<= rom(0); -- What we want should be in address 0.
+				end if;
+			end process twiddle_rom_proc;
+
+			weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
+			weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
 		end generate noaddress;
 
 		rom_infer : if in_wAdr'length>0 generate
@@ -93,6 +107,7 @@ begin
 			-- For most common Coefficient sizes Xilinx and Intel will automatically do the right thing
 			-- Wider memories are usually not a problem
 			-- Note Ultraram might not efficiently be used unless we futz with sharing roms.
+			-- Ultraram can't be initialized in Ultrascale+ anyway apparently.
 
 			add_reg_mux	<= addr_reg when c_latency=2 else unsigned(in_wAdr);
 			twiddle_rom_proc : process (clk)
