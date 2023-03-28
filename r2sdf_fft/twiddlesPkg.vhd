@@ -33,45 +33,14 @@ use ieee.fixed_pkg.all;
  constant copyRightNotice: string := "Copyright 2023 , NRAO. All rights reserved."; 
 
 type twiddle_signed_array is array(natural range <>)      of signed;
---   subtype wTyp is std_logic_vector(17 downto 0); 
---   type wRowTyp is array( 1 to		8192 ) of wTyp; 
---   type wMapTyp is array( integer range 0 to	8191, integer range 	14	downto 1) of natural; 
 
-
-
-
-
-
---   constant wRe: wRowTyp := 
---  ( 
---      b"011111111111111111",
---
---    b"100000000000000000"
---	 ); 
-
---   constant wIm: wRowTyp := 
---  ( 
---      b"000000000000000000",
---      b"111111111111001101",
---      b"111111111110011010",
---    b"111111111111001101"
---	 ); 
-
---   constant wMap: wMapTyp := 
---  ( 
---       (1,1,1,1,1,1,1,1,1,1,1,1,1,1),
---       (2,3,5,9,17,33,65,129,257,513,1025,2049,4097,1),
-
---       (8191,8189,8185,8177,8161,8129,8065,7937,7681,7169,6145,4097,1,1),
---       (8192,8191,8189,8185,8177,8161,8129,8065,7937,7681,7169,6145,4097,1)
---   ); 
 
   -- Twiddles need two generation mechanisms.  The ROM (or Memory) generation is needed for Pipelined stages
   -- Constants needs to be generated for Parallel mode
   --
   	function min_one(n:integer) return integer;
 
-  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return REAL;
+  function gen_twiddle_factor_real(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return REAL;
   function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed;
 
   function gen_twiddle_factor_rom(wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean) return twiddle_signed_array;
@@ -89,7 +58,7 @@ package body twiddlesPkg is
 		end if;
 	end function min_one;
 
-  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return real is
+  function gen_twiddle_factor_real(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return real is
   -- When g_gen_real = true, returns the real component (eg uses cos)
   -- when g_gen_real = false, returns the imag component (eg uses sin)
   -- When g_do_ifft = false:
@@ -157,7 +126,7 @@ package body twiddlesPkg is
   variable twiddle_signed : signed(twiddle_width-1 downto 0);
   variable twiddle_factor : real;
   begin
-    twiddle_factor := gen_twiddle_factor(k,wb_instance, stage,wb_factor,twiddle_width,do_ifft,gen_real);
+    twiddle_factor := gen_twiddle_factor_real(k,wb_instance, stage,wb_factor,twiddle_width,do_ifft,gen_real);
 
     twiddle_sfixed := to_sfixed(twiddle_factor,twiddle_sfixed);
     twiddle_signed := signed(to_slv(twiddle_sfixed));
