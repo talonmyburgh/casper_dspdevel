@@ -105,7 +105,7 @@ package body twiddlesPkg is
       end if;
     end if;
     return twiddle_factor;
-  end function gen_twiddle_factor;
+  end function gen_twiddle_factor_real;
 
 
   function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed is
