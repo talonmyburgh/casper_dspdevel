@@ -166,14 +166,14 @@ BEGIN
       report "FFTsize = " & integer'image(fftsize) & " Twiddle Width = " & integer'image(g_twiddle_width) severity note;
       for k in 0 to fftsize-1 loop
           twidI           := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,false,true);
-          twidIR          := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,false,true);
+          twidIR          := gen_twiddle_factor_real(k,0,stageidx,1,g_twiddle_width,false,true);
           temp_number     := to_integer(twidI);
           write(line_var,temp_number);
           writeline(text_file,line_var);
           write(line_var,twidIR);
           writeline(textR_file,line_var);
           twidQ           := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,false,false);
-          twidQR          := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,false,false);
+          twidQR          := gen_twiddle_factor_real(k,0,stageidx,1,g_twiddle_width,false,false);
           temp_number     := to_integer(twidQ);
           write(line_var,temp_number);
           writeline(text_file,line_var);
