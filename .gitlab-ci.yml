@@ -190,6 +190,7 @@ rtwosdf_fft:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml  
   artifacts:
@@ -206,6 +207,7 @@ pipe_fft:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/pipe_fft_report.xml --pipe
   artifacts:
@@ -222,6 +224,7 @@ par_fft:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/par_fft_report.xml --par
   artifacts:
@@ -238,6 +241,7 @@ wide_fft:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_wb_fft/run.py --xunit-xml ./casper_wb_fft/wide_fft_report.xml --wide
   artifacts:
@@ -255,6 +259,7 @@ single_filter:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_filter/run.py --xunit-xml ./casper_filter/single_filter_report.xml --single   
   artifacts:
@@ -271,6 +276,7 @@ wide_filter:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_filter/run.py --xunit-xml ./casper_filter/wide_filter_report.xml --wide  
   artifacts:
@@ -287,6 +293,7 @@ wbpfb:   # This job runs in the test stage.
   script:
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
+    - export VUNIT_GHDL_PATH="/usr/local/bin/ghdl --max-stack-alloc=1024"
     - echo Starting Vunit in python3
     - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
   artifacts:
