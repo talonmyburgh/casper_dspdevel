@@ -151,6 +151,7 @@ TB_GENERATED.add_config(
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 #vu.set_sim_option("ghdl.elab_e", True)
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
+vu.set_sim_option("ghdl.sim_flags",["--max-stack-alloc=4096"])
 # Don't optimize in Modelsim/Questa GUI mode
 vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()
