@@ -71,7 +71,9 @@ type twiddle_signed_array is array(natural range <>)      of signed;
   --
   	function min_one(n:integer) return integer;
 
+  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return REAL;
   function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed;
+
   function gen_twiddle_factor_rom(wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean) return twiddle_signed_array;
   --function gen_terminal_idxA(fftsize: integer; butterflyidx: integer; num_data_buses : integer) return integer;
   --function gen_terminal_idxB(fftsize: integer; butterflyidx: integer; num_data_buses : integer) return integer;
@@ -87,7 +89,7 @@ package body twiddlesPkg is
 		end if;
 	end function min_one;
 
-  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed is
+  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return real is
   -- When g_gen_real = true, returns the real component (eg uses cos)
   -- when g_gen_real = false, returns the imag component (eg uses sin)
   -- When g_do_ifft = false:
@@ -101,8 +103,8 @@ package body twiddlesPkg is
 
   -- The Indexing used here to generate twiddles is based on the processing order and division of data
   -- when processing wide-band (parallel) data.
-  variable twiddle_sfixed : sfixed(0 downto (0-(twiddle_width-1)));  --S0.17 for G_twiddle_width=18
-  variable twiddle_signed : signed(twiddle_width-1 downto 0);
+  --variable twiddle_sfixed : sfixed(0 downto (0-(twiddle_width-1)));  --S0.17 for G_twiddle_width=18
+  --variable twiddle_signed : signed(twiddle_width-1 downto 0);
   variable twiddle_factor : real;
   variable startidx       : integer;
   variable fftsize        : integer;
@@ -133,6 +135,30 @@ package body twiddlesPkg is
         twiddle_factor := sin(-1.0*MATH_PI*real(idx)/real(fftsize));
       end if;
     end if;
+    return twiddle_factor;
+  end function gen_twiddle_factor;
+
+
+  function gen_twiddle_factor(k: integer; wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean; constant gen_real : boolean) return signed is
+  -- When g_gen_real = true, returns the real component (eg uses cos)
+  -- when g_gen_real = false, returns the imag component (eg uses sin)
+  -- When g_do_ifft = false:
+  --    Output will be twiddle factor = e^((-2*pi*j*k)/fftsize)
+  -- When g_do_ifft = true
+  --    Output will be twiddle factor = e^((2*pi*j*k)/fftsize)  [basically just the conjugation of the other case]
+  -- 
+  -- K = Index into ROM (when this is used in ROM mode)
+  -- wb_instance = Wide Band Instance Number
+  -- Stage = Stage of the FFT
+
+  -- The Indexing used here to generate twiddles is based on the processing order and division of data
+  -- when processing wide-band (parallel) data.
+  variable twiddle_sfixed : sfixed(0 downto (0-(twiddle_width-1)));  --S0.17 for G_twiddle_width=18
+  variable twiddle_signed : signed(twiddle_width-1 downto 0);
+  variable twiddle_factor : real;
+  begin
+    twiddle_factor := gen_twiddle_factor(k,wb_instance, stage,wb_factor,twiddle_width,do_ifft,gen_real);
+
     twiddle_sfixed := to_sfixed(twiddle_factor,twiddle_sfixed);
     twiddle_signed := signed(to_slv(twiddle_sfixed));
     return twiddle_signed;
