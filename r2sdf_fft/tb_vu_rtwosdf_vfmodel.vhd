@@ -48,10 +48,10 @@ signal endsim               : std_logic := '0';
 shared variable rv          : RandomPType;
 signal data_cnt             : integer := 0;
 signal words_expected_sig   : integer := 1000;
-type t_data_arr is array (g_fftsize_log2 downto 0) of std_logic_vector(g_stage_dat_w - 1 downto 0);
-signal stage_data_re        : t_data_arr;
-signal stage_data_im        : t_data_arr;
-signal stage_data_val       : std_logic_vector(g_fftsize_log2 downto 0);
+--type t_data_arr is array (g_fftsize_log2 downto 0) of std_logic_vector(g_stage_dat_w - 1 downto 0);
+--signal stage_data_re        : t_data_arr;
+--signal stage_data_im        : t_data_arr;
+--signal stage_data_val       : std_logic_vector(g_fftsize_log2 downto 0);
 --alias stage_data_re is <<signal rTwoSDF_inst.data_re: t_data_arr>>;
 --alias stage_data_im is <<signal rTwoSDF_inst.data_im: t_data_arr>>;
 BEGIN
@@ -304,35 +304,35 @@ BEGIN
     wait;
   end process o_data_proc;
 
-stage_data_re <= <<signal rTwoSDF_inst.data_re: t_data_arr>>;
-stage_data_im <= <<signal rTwoSDF_inst.data_im: t_data_arr>>;
-stage_data_val <= <<signal rTwoSDF_inst.data_val: std_logic_vector>>;   
-  debug_data_save : for n in 0 to g_fftsize_log2 generate
-    stage_data_proc : process
-    variable line_var           : line;
-    file output_file            : text;
-    variable temp_number        : integer;
-    variable data_cntV          : integer;
-    begin
-      data_cntV         := 0; -- Reset our Data counter
-      wait until rising_edge(clk) and rst='0';
-      file_open(output_file,output_path & "/" & "stage_data" & integer'image(n) & ".txt",WRITE_MODE);
-      loop
-        exit when endsim='1';
-        wait until falling_edge(clk) and stage_data_val(n)='1'; -- read data on falling clocks to avoid delta issues.
-        temp_number     := to_integer(signed(stage_data_re(n)));
-        write(line_var,temp_number);
-        writeline(output_file,line_var);
-        temp_number     := to_integer(signed(stage_data_im(n)));
-        write(line_var,temp_number);
-        writeline(output_file,line_var);
-        data_cntV        := data_cntV + 1;
-        exit when data_cntV>=words_expected_sig;
-      end loop;
-      file_close(output_file);
-      wait;
-    end process stage_data_proc;
-  end generate debug_data_save;
+--stage_data_re <= <<signal rTwoSDF_inst.data_re: t_data_arr>>;
+--stage_data_im <= <<signal rTwoSDF_inst.data_im: t_data_arr>>;
+--stage_data_val <= <<signal rTwoSDF_inst.data_val: std_logic_vector>>;   
+--  debug_data_save : for n in 0 to g_fftsize_log2 generate
+--    stage_data_proc : process
+--    variable line_var           : line;
+--    file output_file            : text;
+--    variable temp_number        : integer;
+--    variable data_cntV          : integer;
+--    begin
+--      data_cntV         := 0; -- Reset our Data counter
+--      wait until rising_edge(clk) and rst='0';
+--      file_open(output_file,output_path & "/" & "stage_data" & integer'image(n) & ".txt",WRITE_MODE);
+--      loop
+--        exit when endsim='1';
+--        wait until falling_edge(clk) and stage_data_val(n)='1'; -- read data on falling clocks to avoid delta issues.
+--        temp_number     := to_integer(signed(stage_data_re(n)));
+--        write(line_var,temp_number);
+--        writeline(output_file,line_var);
+--        temp_number     := to_integer(signed(stage_data_im(n)));
+--        write(line_var,temp_number);
+--        writeline(output_file,line_var);
+--        data_cntV        := data_cntV + 1;
+--        exit when data_cntV>=words_expected_sig;
+--      end loop;
+--      file_close(output_file);
+--      wait;
+--    end process stage_data_proc;
+--  end generate debug_data_save;
 
   error_proc : process
   begin

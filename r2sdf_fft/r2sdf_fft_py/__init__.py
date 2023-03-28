@@ -300,12 +300,12 @@ def make_fft_postcheck(g_use_reorder,g_in_dat_w,g_out_dat_w,g_stage_dat_w,g_guar
             return False
         
         # Read the stage data files (if they exist)
-        stage_data = np.zeros((input_cdata.size,g_fftsize_log2+1),dtype=np.complex128)
-        for stageidx in range(0,g_fftsize_log2+1):
-            stage_file = Path(output_path) / f"stage_data{stageidx}.txt"
-            data = np.loadtxt(stage_file,dtype="int32")
-            stage_cdata = data[0:data.size:2]+1j*data[1:data.size:2]
-            stage_data[:,stageidx] = stage_cdata
+        #stage_data = np.zeros((input_cdata.size,g_fftsize_log2+1),dtype=np.complex128)
+        #for stageidx in range(0,g_fftsize_log2+1):
+            #stage_file = Path(output_path) / f"stage_data{stageidx}.txt"
+            #data = np.loadtxt(stage_file,dtype="int32")
+            #stage_cdata = data[0:data.size:2]+1j*data[1:data.size:2]
+            #stage_data[:,stageidx] = stage_cdata
         
 
         output_file = Path(output_path) / f"output_data.txt"
