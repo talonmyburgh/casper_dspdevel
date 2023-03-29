@@ -130,13 +130,15 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoOrder.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_twiddlepkg.vhd"))
-r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_rtwosdf_vfmodel.vhd"))
+
+
 # Setup the Twiddle Testbench by calling it's python function
 if args.twid:
+    r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_twiddlepkg.vhd"))
     from r2sdf_fft_py import tb_twiddle_package_setup
     tb_twiddle_package_setup(r2sdf_fft_lib)
 if args.bitaccurate:
+    r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_rtwosdf_vfmodel.vhd"))
     from r2sdf_fft_py import tb_vu_trwosdf_vfmodel_setup
     tb_vu_trwosdf_vfmodel_setup(r2sdf_fft_lib)
 
