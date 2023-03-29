@@ -6,6 +6,11 @@ vu = VUnit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 vu.add_random()
 
+cli = VUnitCLI()
+cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle Tests')
+cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
+args = cli.parse_args()
+
 script_dir,_ = split(abspath(__file__))
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -128,10 +133,12 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_twiddlepkg.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_rtwosdf_vfmodel.vhd"))
 # Setup the Twiddle Testbench by calling it's python function
-from r2sdf_fft_py import tb_twiddle_package_setup
-tb_twiddle_package_setup(r2sdf_fft_lib)
-from r2sdf_fft_py import tb_vu_trwosdf_vfmodel_setup
-tb_vu_trwosdf_vfmodel_setup(r2sdf_fft_lib)
+if args.twid:
+    from r2sdf_fft_py import tb_twiddle_package_setup
+    tb_twiddle_package_setup(r2sdf_fft_lib)
+if args.bitaccurate
+    from r2sdf_fft_py import tb_vu_trwosdf_vfmodel_setup
+    tb_vu_trwosdf_vfmodel_setup(r2sdf_fft_lib)
 
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
