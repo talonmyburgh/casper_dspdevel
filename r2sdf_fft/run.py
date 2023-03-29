@@ -136,7 +136,7 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_rtwosdf_vfmodel.vhd"))
 if args.twid:
     from r2sdf_fft_py import tb_twiddle_package_setup
     tb_twiddle_package_setup(r2sdf_fft_lib)
-if args.bitaccurate
+if args.bitaccurate:
     from r2sdf_fft_py import tb_vu_trwosdf_vfmodel_setup
     tb_vu_trwosdf_vfmodel_setup(r2sdf_fft_lib)
 
