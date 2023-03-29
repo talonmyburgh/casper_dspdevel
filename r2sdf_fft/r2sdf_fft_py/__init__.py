@@ -234,8 +234,8 @@ def make_twiddle_post_check(fftsize, g_twiddle_width,use_vhdl_magic_file):
 def tb_twiddle_package_setup(ui):
    
     testbench=ui.test_bench("tb_vu_twiddlepkg")
-    for fftsizelog2 in range(1,17): # this was originally 1,21 and passed on March 24, 2023, but changet o 1,17 to save simulation time but still cover common FFTsizes
-        for bidx in range(12,20): #this was originally 12,26, but to save time was converted to 12,20 
+    for fftsizelog2 in range(1,16): # this was originally 1,21 and passed on March 24, 2023, but reduced to make execution faster
+        for bidx in range(16,19): #this was originally 12,26, but to save time was converted to16:19
             fftsize=2**fftsizelog2
             testbench.add_config(
                 name=f"TwiddlePython_w{bidx}b_{fftsize}",
