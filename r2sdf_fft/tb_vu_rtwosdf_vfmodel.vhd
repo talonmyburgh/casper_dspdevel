@@ -258,7 +258,7 @@ BEGIN
     check(num_words_to_read=0,"tb_vu_rtwosdf_vfmodel: Unexpected amount of data in input data");
     
     --Synthetically generate 8 Additional frames to dump the pipeline
-    for n in 1 to (8*c_fftsize) loop
+    for n in 1 to (3*c_fftsize) loop
       in_val      <= '1';
       in_re       <= std_logic_vector(to_signed(0,g_in_dat_w));
       in_im       <= std_logic_vector(to_signed(0,g_in_dat_w));

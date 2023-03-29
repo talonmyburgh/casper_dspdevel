@@ -391,7 +391,7 @@ def tb_vu_trwosdf_vfmodel_setup(ui):
             scale_sched = scale_sched + 2**stage
     
 
-    d_indices = np.arange(0,4*(2**fftsize_log2))
+    d_indices = np.arange(0,2*(2**fftsize_log2))
     # Generate a full scale cw with 12-bits
     data = 2047*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
     noise = np.random.normal(0, 5.5, size=(data.shape[0]))

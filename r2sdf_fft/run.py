@@ -2,14 +2,16 @@ from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv(compile_builtins=False)
-vu.add_vhdl_builtins()
-vu.add_random()
+
 
 cli = VUnitCLI()
 cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle Tests')
 cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
 args = cli.parse_args()
+vu = VUnit.from_args(args = args,compile_builtins=False)
+#vu = VUnit.from_argv(argv = args,compile_builtins=False)
+vu.add_vhdl_builtins()
+vu.add_random()
 
 script_dir,_ = split(abspath(__file__))
 # XPM Library compile
