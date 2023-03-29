@@ -1,4 +1,4 @@
-from vunit import VUnit
+from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
 
 # Create VUnit instance by parsing command line arguments
