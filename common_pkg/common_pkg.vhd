@@ -2160,9 +2160,9 @@ PACKAGE BODY common_pkg IS
 	  if clip then
 	    output_data_fixed := resize(arg=>input_data_fixed,size_res=>output_data_fixed,overflow_style=>fixed_saturate,round_style=>fixed_round);
 	  else
-      output_data_fixed := resize(arg=>input_data_fixed,size_res=>output_data_fixed,overflow_style=>fixed_wrap,round_style=>fixed_round);
-    end if;	   
-		RETURN to_slv(output_data_fixed);
+        output_data_fixed := resize(arg=>input_data_fixed,size_res=>output_data_fixed,overflow_style=>fixed_wrap,round_style=>fixed_round);
+      end if;	   
+	  RETURN to_slv(output_data_fixed);
 	END;
 
 	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR IS

@@ -199,6 +199,23 @@ rtwosdf_fft:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/r2sdf_fft/r2sdf_fft_report.xml
 
+rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
+  stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  tags: 
+    - ghdl
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./r2sdf_fft/r2sdf_fft_report.xml --twid --bitaccurate  
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/r2sdf_fft/r2sdf_fft_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/r2sdf_fft/r2sdf_fft_report.xml
+  when: manual
+
 pipe_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
   tags: 
@@ -214,6 +231,7 @@ pipe_fft:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/casper_wb_fft/pipe_fft_report.xml
     reports:
       junit: $GIT_CLONE_PATH/casper_wb_fft/pipe_fft_report.xml
+  
 
 par_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
@@ -527,7 +545,7 @@ Questa_r2sdf_fft:   # This job runs in the test stage.
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
-    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./reports/r2sdf_fft_report.xml 
+    - /usr/bin/python3 r2sdf_fft/run.py --xunit-xml ./reports/r2sdf_fft_report.xml --twid --bitaccurate
   artifacts:
     when: always
     paths:

@@ -51,6 +51,7 @@
   <Mappings Location="casper_wbpfb/tb_tb_wbpfb_unit_wide.vhd" Library="not mapped"/>
   <Mappings Location="technology/technology_select_pkg_casperunb1.vhd" Library="not mapped"/>
   <Mappings Location="technology/technology_select_pkg_casperxpm.vhd" Library="not mapped"/>
+  <Mappings Location="Common Libraries/osvvm" Library="osvvm"/>
   <Mappings Location="r2sdf_fft" Library="r2sdf_fft_lib"/>
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="technology" Library="technology_lib"/>

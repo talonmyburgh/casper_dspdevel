@@ -2,10 +2,11 @@
 .settings/
 
 # Compiled source #
-*/.project
+#*/.project
 */vunit_out
 vunit_out
 */*.xml
 .vscode
 build/*
 __pycache__
+twiddlepkg*.txt
