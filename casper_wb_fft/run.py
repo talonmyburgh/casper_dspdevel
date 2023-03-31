@@ -1,8 +1,8 @@
 from vunit import VUnit, VUnitCLI
-from os.path import join, abspath, split
+from os.path import join, abspath, split,realpath,dirname
 from importlib.machinery import SourceFileLoader
 # load the r2sdf fix point accurate model from r2sdf module.
-r2sdf_fft_py = SourceFileLoader("r2sdf_fft_py","../r2sdf_fft/r2sdf_fft_py/__init__.py").load_module()
+r2sdf_fft_py = SourceFileLoader("r2sdf_fft_py",f"{realpath(dirname(__file__))}/../r2sdf_fft/r2sdf_fft_py/__init__.py").load_module()
 import numpy as np
 
 def tb_vu_wb_fft_vfmodel_setup(ui):
