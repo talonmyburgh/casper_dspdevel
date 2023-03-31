@@ -153,8 +153,8 @@ architecture tb of tb_fft_wide_unit is
 
   signal out_sync       : std_logic:= '0';
   signal out_val        : std_logic:= '0';
-  signal out_re_arr     : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
-  signal out_im_arr     : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
+  signal out_re_arr     : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.out_dat_w-1 downto 0);
+  signal out_im_arr     : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.out_dat_w-1 downto 0);
 
   signal in_file_data   : t_integer_matrix(0 to c_file_len-1, 1 to 2) := (others=>(others=>0));  -- [re, im]
   signal in_file_sync   : std_logic_vector(0 to c_file_len-1):= (others=>'0');

@@ -53,12 +53,12 @@ entity fft_r2_par is
     port(
         clk        : in  std_logic;     --! Clock
         rst        : in  std_logic := '0'; --! Reset
-        in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Input real data (nof_points wide)
-        in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Input imag data (nof_points wide)
+        in_re_arr  : in  t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Input real data (nof_points wide)
+        in_im_arr  : in  t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Input imag data (nof_points wide)
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long shiftreg
         in_val     : in  std_logic := '1'; --! In data valid
-        out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Output real data (nof_points wide)
-        out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Output imag data (nof_points wide)
+        out_re_arr : out t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Output real data (nof_points wide)
+        out_im_arr : out t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Output imag data (nof_points wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long ovflw register
         out_val    : out std_logic      --! Out data valid
     );

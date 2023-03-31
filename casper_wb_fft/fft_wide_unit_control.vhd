@@ -50,10 +50,10 @@ entity fft_wide_unit_control is
     port(
         rst          : in  std_logic := '0';
         clk          : in  std_logic;
-        in_re_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
-        in_im_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+        in_re_arr    : in  t_slv_array(g_nof_ffts * g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
+        in_im_arr    : in  t_slv_array(g_nof_ffts * g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
         in_val       : in  std_logic;
-        ctrl_sosi    : in  t_fft_sosi_in; -- Inputrecord for tapping off the sync, bsn and err.              
+        ctrl_sosi    : in  t_fft_sosi_in(re(g_fft.in_dat_w-1 downto 0),im(g_fft.in_dat_w-1 downto 0)); -- Inputrecord for tapping off the sync, bsn and err.              
         out_sosi_arr : out t_fft_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
     );
 end fft_wide_unit_control;
@@ -64,8 +64,8 @@ architecture rtl of fft_wide_unit_control is
     constant c_pipe_ctrl       : natural := c_pipe_data - 1; -- Delay depth for the control signals
     constant c_packet_size     : natural := (2 ** g_fft.nof_chan) * g_fft.nof_points / g_fft.wb_factor; -- Definition of the packet size
     constant c_ctrl_fifo_depth : natural := 16; -- Depth of the bsn and err fifo.  
-
-    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+    subtype t_fft_slv_arr_outl is t_slv_array(g_nof_ffts * g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
+    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_outl(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
 
     type state_type is (s_idle, s_run, s_hold);
 

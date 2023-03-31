@@ -63,11 +63,11 @@ end entity fft_wide_unit;
 
 architecture str of fft_wide_unit is
 
-    signal fft_in_re_arr : t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);
-    signal fft_in_im_arr : t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0);
+    signal fft_in_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0);
+    signal fft_in_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0);
 
-    signal fft_out_re_arr : t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
-    signal fft_out_im_arr : t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0);
+    signal fft_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
+    signal fft_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
     signal fft_out_val    : std_logic;
 
     signal fft_out_fft_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor - 1 downto 0);

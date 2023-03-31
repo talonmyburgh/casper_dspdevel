@@ -1,5 +1,79 @@
 from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
+from importlib.machinery import SourceFileLoader
+# load the r2sdf fix point accurate model from r2sdf module.
+r2sdf_fft_py = SourceFileLoader("r2sdf_fft_py","../r2sdf_fft/r2sdf_fft_py/__init__.py").load_module()
+import numpy as np
+
+def tb_vu_wb_fft_vfmodel_setup(ui):
+   
+    testbench=ui.test_bench("tb_vu_wb_fft_vfmodel")
+    use_reorder = False
+    in_dat_w = 18
+    out_dat_w = 18
+    stage_dat_w = 18
+    guard_w = 0
+    twiddle_width = 18
+    fftsize_log2 = 13
+    
+    do_rounding = 1
+    do_saturation = 1
+    enable_pattern = 2 #every other clock
+    # Decode some of those for VHDL
+    if do_rounding==1:
+        use_round = "ROUND"
+        use_mult_round = "ROUND"
+    if do_saturation==1:
+        ovflw_behav = "SATURATE"
+
+    scale_sched = 0
+    for stage in range(0,fftsize_log2):
+        if (stage % 2)==1:
+            scale_sched = scale_sched + 2**stage
+        # scale at Stage 0
+        if stage==0:
+            scale_sched = scale_sched + 2**stage
+        if stage==2:
+            scale_sched = scale_sched + 2**stage
+    
+
+    d_indices = np.arange(0,2*(2**fftsize_log2))
+    # Generate a full scale cw with 12-bits
+    data = 2047*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
+    #noise = np.random.normal(0, 5.5, size=(data.shape[0]))
+    #data = data + noise
+    data = r2sdf_fft_py.roundsat(data,1,in_dat_w,0,1,1,1)
+
+    enable_pattern = 0
+    testbench.add_config(
+        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTWIDE_E0_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 1
+    testbench.add_config(
+        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTWIDE_Erandom_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 2
+    testbench.add_config(
+        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTWIDE_E10Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 3
+    testbench.add_config(
+        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTWIDE_E100Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+        
+
+
+            #    name=f"TwiddleMagic_w{bidx}b_{fftsize}",
+            #    generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
+            #    post_check=make_twiddle_post_check(fftsize,bidx,1))    
 
 # Function for package mangling.
 def manglePkg(file_name, line_number, new_line):
@@ -19,13 +93,16 @@ script_dir,_ = split(abspath(__file__))
 cli.parser.add_argument('--par',action = 'store_true',help = 'Run the parallel FFT tests')
 cli.parser.add_argument('--pipe',action = 'store_true', help = 'Run the pipeline FFT tests')
 cli.parser.add_argument('--wide',action = 'store_true', help = 'Run the wide FFT tests')
+cli.parser.add_argument('--bitaccurate',action = 'store_true', help = 'Run the bitaccurate FFT tests')
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_args(args = args)
+vu = VUnit.from_args(args = args,compile_builtins=False)
 
 # If none of the flags are specified, run all tests.
-run_all = not(args.par or args.pipe or args.wide)
+run_all = not(args.par or args.pipe or args.wide or args.bitaccurate)
+vu.add_vhdl_builtins()
+vu.add_random()
 
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -544,6 +621,13 @@ if args.wide or run_all:
         name = "u_wide_act_wb64_complex_noise",
         generics=c_act_wb64_complex_noise
     )
+
+
+if args.bitaccurate or run_all:
+    wb_fft_lib.add_source_file(join(script_dir,"fft_sepa_wide.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"fft_r2_wide.vhd"))
+    wb_fft_lib.add_source_file(join(script_dir,"tb_vu_wb_fft_vfmodel.vhd"))
+    tb_vu_wb_fft_vfmodel_setup(wb_fft_lib)
 
 ##########################################################################################
 

@@ -89,11 +89,11 @@ entity fft_r2_wide is
         clk        : in  std_logic;     --! Clock
         rst        : in  std_logic := '0'; --! Reset
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
-        in_re_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0); --! Input real data (wb_factor wide)
-        in_im_arr  : in  t_fft_slv_arr_in(g_fft.wb_factor - 1 downto 0); --! Input imag data (wb_factor wide)
+        in_re_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
+        in_im_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
         in_val     : in  std_logic := '1'; --! In data valid
-        out_re_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0); --! Output real data (wb_factor wide)
-        out_im_arr : out t_fft_slv_arr_out(g_fft.wb_factor - 1 downto 0); --! Output imag data (wb_factor wide)
+        out_re_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
+        out_im_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Overflow register
         out_val    : out std_logic      --! Out data valid
     );
@@ -171,30 +171,30 @@ architecture rtl of fft_r2_wide is
     signal fft_pipe_ovflw_arr    : t_fft_slv_arr_ovflw;
     signal fft_pipe_ovflw_wb_arr : t_fft_slv_arr_ovflw_wb;
 
-    signal in_fft_pipe_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal in_fft_pipe_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal in_fft_pipe_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal in_fft_pipe_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 
-    signal out_fft_pipe_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal out_fft_pipe_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal out_fft_pipe_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal out_fft_pipe_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 
-    signal in_fft_par_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal in_fft_par_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal in_fft_par_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal in_fft_par_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 
     signal fft_pipe_out_re : std_logic_vector(g_fft.out_dat_w - 1 downto 0);
     signal fft_pipe_out_im : std_logic_vector(g_fft.out_dat_w - 1 downto 0);
 
-    signal fft_out_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal fft_out_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal fft_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal fft_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
     signal fft_out_val    : std_logic;
 
-    signal sep_out_re_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal sep_out_im_arr : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal sep_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal sep_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
     signal sep_out_val    : std_logic;
 
-    signal par_stg_fft_re_in  : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal par_stg_fft_im_in  : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal par_stg_fft_re_out : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-    signal par_stg_fft_im_out : t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+    signal par_stg_fft_re_in  : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal par_stg_fft_im_in  : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal par_stg_fft_re_out : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal par_stg_fft_im_out : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 
     signal int_val : std_logic_vector(g_fft.wb_factor - 1 downto 0);
 
@@ -251,6 +251,7 @@ begin
                 g_use_variant => g_use_variant,
                 g_use_dsp     => g_use_dsp,
                 g_ovflw_behav => g_ovflw_behav,
+                g_use_mult_round => g_use_mult_round,
                 g_use_round   => g_use_round
             )
             port map(
@@ -292,6 +293,7 @@ begin
                     g_use_dsp        => g_use_dsp,
                     g_ovflw_behav    => g_ovflw_behav,
                     g_use_round      => g_use_round,
+                    g_use_mult_round => g_use_mult_round,
                     g_ram_primitive  => g_ram_primitive,
                     g_twid_file_stem => g_twid_file_stem
                 )

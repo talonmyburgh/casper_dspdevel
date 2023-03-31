@@ -123,6 +123,11 @@ PACKAGE common_pkg IS
 	TYPE t_slv_256_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(255 DOWNTO 0);
 	TYPE t_slv_512_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(511 DOWNTO 0);
 	TYPE t_slv_1024_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(1023 DOWNTO 0);
+	type t_unsigned_array is array(natural range <>)    of unsigned;
+	type t_slv_array is array(natural range <>)         of std_logic_vector;
+	type t_signed_array is array(natural range <>)      of signed;
+
+
 
 	CONSTANT c_boolean_arr     : t_boolean_arr     := (TRUE, FALSE); -- array all possible values that can be iterated over
 	CONSTANT c_nat_boolean_arr : t_nat_boolean_arr := (TRUE, FALSE); -- array all possible values that can be iterated over
