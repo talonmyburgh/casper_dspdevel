@@ -93,7 +93,6 @@ ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/*.vhd")
 # STRATIXIV Multiplier library
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
 ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
-casper_multiplier_lib.add_source_file(script_dir + "../casper_multiplier/tech_agilex_versal_cmult.vhd")
 
 inp_pipeline_values = 1
 product_pipeline_values = 0
