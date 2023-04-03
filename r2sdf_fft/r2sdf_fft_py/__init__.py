@@ -26,7 +26,7 @@ import numpy as np
 from vunit import VUnit
 from pathlib import Path
 import os
-from scipy import io
+#from scipy import io
 
 def roundsat(data,signednum,integer_bits,fractional_bits,g_do_rounding,g_do_saturation,print_saturation):
     if (integer_bits+fractional_bits)==0:
@@ -368,7 +368,7 @@ def make_fft_postcheck(g_use_reorder,g_in_dat_w,g_out_dat_w,g_stage_dat_w,g_guar
         matdict['vhdl_cdata'] = vhdl_cdata
         #matdict['stage_data'] = stage_data
         matdict['input_cdata'] = input_cdata
-        io.savemat(file_path, matdict)
+        #io.savemat(file_path, matdict)
 
 
         if np.array_equal(expected_cdata[:,0],vhdl_cdata):
