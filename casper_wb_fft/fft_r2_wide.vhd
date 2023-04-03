@@ -115,7 +115,7 @@ architecture rtl of fft_r2_wide is
         variable v_return     : t_fft_arr(input.wb_factor - 1 downto 0) := (others => input); -- Variable that holds the return values
     begin
         for I in 0 to input.wb_factor - 1 loop
-            v_return(I).use_reorder   := input.use_reorder; -- Pass on use_reorder
+            v_return(I).use_reorder   := false; -- Reorder should only happen on the parallel FFT when using both like this.
             v_return(I).use_fft_shift := false; -- FFT shift function is forced to false
             v_return(I).use_separate  := false; -- Separate function is forced to false. 
             v_return(I).nof_points    := v_nof_points; -- Set the nof points 

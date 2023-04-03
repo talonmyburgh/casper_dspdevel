@@ -76,7 +76,7 @@ BEGIN
 			);
 	end generate;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default=c_test_agilex  GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_fifo_dc
 			GENERIC MAP(g_dat_w, g_nof_words)
 			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);

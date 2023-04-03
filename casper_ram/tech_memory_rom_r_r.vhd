@@ -75,8 +75,10 @@ BEGIN
 			q_a         => q_a,
 			q_b         => q_b
 		);
+	else generate
+		assert FALSE report "No rom Generated" severity failure;
 	END GENERATE;
-
+    
 	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE
 	--		u0 : ip_stratixiv_rom_cr_cr
 	--			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)

@@ -324,7 +324,7 @@ begin
   begin
     for J in 0 to g_fil_ppf.nof_taps-1 loop
       -- Read coeffs per tap from MEMORY file
-      if c_tech_select_default = c_tech_stratixiv then
+      if c_tech_select_default = c_tech_stratixiv or c_tech_select_default=c_test_agilex  then
         proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(J) & ".mif", memory_coefs_arr);
       elsif c_tech_select_default = c_tech_xpm then
         proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(J) & ".mem", memory_coefs_arr);
