@@ -85,6 +85,11 @@ architecture str of rTwoSDFStage is
 	signal bf_sel : std_logic;
 	signal bf_val : std_logic;
 
+	signal bf_re_tomult  : std_logic_vector(in_re'range);
+	signal bf_im_tomult  : std_logic_vector(in_im'range);
+	signal bf_sel_tomult : std_logic;
+	signal bf_val_tomult : std_logic;
+
 	signal weight_addr : std_logic_vector(g_stage - 1 downto 1);
 
 	signal weight_re   : std_logic_vector(g_twid_dat_w -1 downto 0);
@@ -165,6 +170,19 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
+		-- When the Twiddle memory is delay 2 (which it should be for timing) we need to delay every thing else.
+		tgen_comb : if c_ram.latency<=1 generate
+			bf_re_tomult <= bf_re;
+			bf_im_tomult <= bf_im;
+			bf_val_tomult<= bf_val;
+			bf_sel_tomult<= bf_sel;
+		end generate;
+		tgen_reg : if c_ram.latency=2 generate
+			bf_re_tomult <= bf_re when rising_edge(clk);
+			bf_im_tomult <= bf_im when rising_edge(clk);
+			bf_val_tomult<= bf_val when rising_edge(clk);
+			bf_sel_tomult<= bf_sel when rising_edge(clk);
+		end generate;
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
@@ -182,10 +200,10 @@ begin
 			rst       => rst,
 			weight_re => weight_re,
 			weight_im => weight_im,
-			in_re     => bf_re,
-			in_im     => bf_im,
-			in_val    => bf_val,
-			in_sel    => bf_sel,
+			in_re     => bf_re_tomult,
+			in_im     => bf_im_tomult,
+			in_val    => bf_val_tomult,
+			in_sel    => bf_sel_tomult,
 			out_re    => mul_out_re,
 			out_im    => mul_out_im,
 			out_val   => mul_out_val

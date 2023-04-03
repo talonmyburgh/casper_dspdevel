@@ -1,9 +1,9 @@
-library ieee, common_pkg_lib;
+library ieee, common_pkg_lib,technology_lib;
 USE ieee.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
 USE common_pkg_lib.common_str_pkg.ALL;
-
+USE technology_lib.technology_select_pkg.ALL;
 entity ip_cmult_rtl_3dsp is
 	GENERIC(
 		g_use_dsp          : STRING   := "YES"; --! Implement multiplications in DSP48 or not
@@ -80,7 +80,7 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	--	attribute use_dsp of k3 : signal is "yes";
 
 begin
-
+assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel, but it is not ideal" severity warning;
 	------------------------------------------------------------------------------
 	-- Registers
 	------------------------------------------------------------------------------

@@ -18,8 +18,10 @@
 --
 -------------------------------------------------------------------------------
 
-LIBRARY IEEE, common_pkg_lib, common_components_lib, technology_lib;
+LIBRARY IEEE, common_pkg_lib, common_components_lib, technology_lib,casper_multiplier_lib;
 USE IEEE.std_logic_1164.ALL;
+use ieee.numeric_std.all;
+
 USE common_pkg_lib.common_pkg.ALL;
 USE work.tech_mult_component_pkg.all;
 USE technology_lib.technology_select_pkg.ALL;
@@ -72,10 +74,22 @@ ARCHITECTURE str of tech_complex_mult is
   SIGNAL bi        : STD_LOGIC_VECTOR(c_dsp_dat_w-1 DOWNTO 0);
   SIGNAL mult_re   : STD_LOGIC_VECTOR(c_dsp_prod_w-1 DOWNTO 0);
   SIGNAL mult_im   : STD_LOGIC_VECTOR(c_dsp_prod_w-1 DOWNTO 0);
+  signal result_reTemp : signed(g_in_a_w+g_in_b_w downto 0);
+  signal result_imTemp : signed(g_in_a_w+g_in_b_w downto 0);
+
+  FUNCTION RESIZE_NUM(s : SIGNED; w : positive) RETURN SIGNED IS
+  BEGIN
+    -- extend sign bit or keep LS part
+    IF w>s'LENGTH THEN
+      RETURN RESIZE(s, w);                    -- extend sign bit
+    ELSE
+      RETURN SIGNED(RESIZE(UNSIGNED(s), w));  -- keep LSbits (= vec[w-1:0])
+    END IF;
+  END function RESIZE_NUM;
 
 begin
 
-	gen_ip_xpm_rtl_4dsp : IF c_tech_select_default = c_tech_xpm AND g_use_variant = "4DSP" GENERATE  -- Xilinx
+	gen_ip_xpm_rtl_4dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "4DSP" GENERATE  -- Xilinx or agilex
 		u1 : ip_cmult_rtl_4dsp
 			generic map(
 				g_use_dsp          => g_use_dsp,
@@ -101,7 +115,7 @@ begin
 			);
 	end generate;
 
-	gen_ip_xpm_rtl_3dsp : IF c_tech_select_default = c_tech_xpm AND g_use_variant = "3DSP" GENERATE  -- Xilinx
+	gen_ip_xpm_rtl_3dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
 		u1 : ip_cmult_rtl_3dsp
 			generic map(
 				g_use_dsp          => g_use_dsp,
@@ -152,7 +166,7 @@ begin
     result_im <= RESIZE_SVEC(mult_im, g_out_p_w);
   END GENERATE;
 
-  gen_ip_stratixiv_rtl_4dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "4DSP" AND g_use_ip = FALSE GENERATE
+  gen_ip_stratixiv_rtl_4dsp : IF (c_tech_select_default = c_tech_stratixiv AND g_use_variant = "4DSP" AND g_use_ip = FALSE) GENERATE
     u0 : ip_stratixiv_complex_mult_rtl
     GENERIC MAP(
       g_in_a_w           => g_in_a_w,
@@ -177,11 +191,43 @@ begin
       );
   END GENERATE;
 
-  gen_ip_stratixiv_rtl_3dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "3DSP" GENERATE
+  gen_ip_stratixiv_rtl_3dsp : IF (c_tech_select_default = c_tech_stratixiv  or c_tech_select_default = c_test_agilex) AND g_use_variant = "3DSP" GENERATE
      -- Cannot simply instantiate the RTL of ip_cmult_rtl_3dsp here, because that is kept in ip_xpm_mult_lib
      -- for c_tech_xpm, which is not available for c_tech_stratixiv. A way is to copy this RTL file also to
      -- the ip_stratixiv_mult_lib, but for now only give a FAILURE on 3DSP.
      ASSERT FALSE REPORT "g_use_variant = 3DSP is not supported for yet for gen_ip_stratixiv_rtl_3dsp" SEVERITY FAILURE;
   END GENERATE;
+  
+  gen_ip_agilex_rtl : if c_tech_select_default = c_test_agilex generate
+  
+
+  begin
+	tech_agilex_versal_cmult_inst : entity casper_multiplier_lib.tech_agilex_versal_cmult
+		generic map(
+			g_is_xilinx         => false,
+			g_inputA_width      => g_in_a_w,
+			g_inputB_width      => g_in_b_w,
+			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output,
+			g_pipe_width        => 1
+		)
+		port map(
+			i_clk        => clk,
+			i_dataA_real => signed(in_ar),
+			i_dataA_imag => signed(in_ai),
+			i_dataB_real => signed(in_br),
+			i_dataB_imag => signed(in_bi),
+			i_data_valid => '1',
+			i_pipe       => "0",
+			o_data_real  => result_reTemp,
+			o_data_imag  => result_imTemp,
+			o_data_valid => open,
+			o_pipe       => open
+		);
+		result_re <= std_logic_vector(RESIZE_NUM(result_reTemp, g_out_p_w));	
+		result_im <= std_logic_vector(RESIZE_NUM(result_imTemp, g_out_p_w));	 
+  end generate;
+
+
 
 end str;
+

@@ -10,8 +10,8 @@ package rTwoSDFPkg is
 	type t_fft_pipeline is record
 		-- generics for rTwoSDFStage
 		stage_lat     : natural;        -- = 1
-		weight_lat    : natural;        -- = 1
-		mul_lat       : natural;        -- = 3+1
+		weight_lat    : natural;        -- = 2 -- this was changed from 1 to 2 for better timing on Ultrascale / Versal
+		mul_lat       : natural;        -- = 5 -- This was changed from (3+1) to 5 for better timing on Ultrascale/Versal
 		-- generics for rTwoBFStage
 		bf_lat        : natural;        -- = 1
 		-- generics for rTwoBF
@@ -19,7 +19,7 @@ package rTwoSDFPkg is
 		bf_in_a_zdly  : natural;        -- = 0
 		bf_out_d_zdly : natural;        -- = 0
 	end record;
-	constant c_fft_pipeline : t_fft_pipeline := (1, 1, 4, 1, 1, 0, 0);
+	constant c_fft_pipeline : t_fft_pipeline := (1, 2, 5, 1, 1, 0, 0);
 
 end package rTwoSDFPkg;
 

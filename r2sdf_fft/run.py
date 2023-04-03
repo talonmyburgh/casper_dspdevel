@@ -84,6 +84,7 @@ casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_co
 # CASPER MUlTIPLIER Library
 casper_multiplier_lib = vu.add_library("casper_multiplier_lib")
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_mult_component.vhd"))
+casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_agilex_versal_cmult.vhd"))
 tech_complex_mult = casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_complex_mult.vhd"))
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/common_complex_mult.vhd"))
 tech_complex_mult.add_dependency_on(ip_cmult_3dsp)
