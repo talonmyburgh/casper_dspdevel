@@ -80,7 +80,7 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	--	attribute use_dsp of k3 : signal is "yes";
 
 begin
-assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel, but it is not ideal" severity warning;
+assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel and versal, it is not ideal" severity warning;
 	------------------------------------------------------------------------------
 	-- Registers
 	------------------------------------------------------------------------------

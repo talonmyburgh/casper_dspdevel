@@ -53,7 +53,7 @@ ARCHITECTURE str OF tech_memory_ram_cr_cw IS
 
 BEGIN
 
-	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
+	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE  -- Xilinx
 		u1 : ip_xpm_ram_cr_cw
 			generic map(
 				g_adr_w         => g_adr_w,
@@ -76,7 +76,7 @@ BEGIN
 			);
 	END GENERATE;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_test_agilex GENERATE  -- Intel Altera on UniBoard1
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_ram_cr_cw
 			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
 			PORT MAP(data, rdaddress, rdclock, rdclocken, wraddress, wrclock, wrclocken, wren, q);

@@ -78,7 +78,7 @@ ARCHITECTURE str OF common_complex_mult IS
 	CONSTANT c_pipeline : NATURAL := g_pipeline_input + g_pipeline_product + g_pipeline_adder + g_pipeline_output;
 
 	-- MegaWizard IP ip_stratixiv_complex_mult was generated with latency c_dsp_latency = 3
-	CONSTANT c_dsp_latency : NATURAL := sel_a_b(c_tech_select_default = c_test_agilex,4,3); -- the agilex model is 4 clocks internally so deal with that here.
+	CONSTANT c_dsp_latency : NATURAL := sel_a_b((c_tech_select_default = c_tech_agilex or c_tech_select_default=c_tech_versal),4,3); -- the agilex model is 4 clocks internally so deal with that here.
 
 	-- Extra output pipelining is only needed when c_pipeline > c_dsp_latency
 	CONSTANT c_pipeline_output : NATURAL := sel_a_b(c_pipeline > c_dsp_latency, c_pipeline - c_dsp_latency, 0);

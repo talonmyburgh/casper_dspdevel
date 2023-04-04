@@ -191,20 +191,49 @@ begin
       );
   END GENERATE;
 
-  gen_ip_stratixiv_rtl_3dsp : IF (c_tech_select_default = c_tech_stratixiv  or c_tech_select_default = c_test_agilex) AND g_use_variant = "3DSP" GENERATE
+  gen_ip_stratixiv_rtl_3dsp : IF (c_tech_select_default = c_tech_stratixiv  or c_tech_select_default = c_tech_agilex) AND g_use_variant = "3DSP" GENERATE
      -- Cannot simply instantiate the RTL of ip_cmult_rtl_3dsp here, because that is kept in ip_xpm_mult_lib
      -- for c_tech_xpm, which is not available for c_tech_stratixiv. A way is to copy this RTL file also to
      -- the ip_stratixiv_mult_lib, but for now only give a FAILURE on 3DSP.
      ASSERT FALSE REPORT "g_use_variant = 3DSP is not supported for yet for gen_ip_stratixiv_rtl_3dsp" SEVERITY FAILURE;
   END GENERATE;
   
-  gen_ip_agilex_rtl : if c_tech_select_default = c_test_agilex generate
+  gen_ip_agilex_rtl : if c_tech_select_default = c_tech_agilex generate
   
 
   begin
 	tech_agilex_versal_cmult_inst : entity casper_multiplier_lib.tech_agilex_versal_cmult
 		generic map(
 			g_is_xilinx         => false,
+			g_inputA_width      => g_in_a_w,
+			g_inputB_width      => g_in_b_w,
+			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output,
+			g_pipe_width        => 1
+		)
+		port map(
+			i_clk        => clk,
+			i_dataA_real => signed(in_ar),
+			i_dataA_imag => signed(in_ai),
+			i_dataB_real => signed(in_br),
+			i_dataB_imag => signed(in_bi),
+			i_data_valid => '1',
+			i_pipe       => "0",
+			o_data_real  => result_reTemp,
+			o_data_imag  => result_imTemp,
+			o_data_valid => open,
+			o_pipe       => open
+		);
+		result_re <= std_logic_vector(RESIZE_NUM(result_reTemp, g_out_p_w));	
+		result_im <= std_logic_vector(RESIZE_NUM(result_imTemp, g_out_p_w));	 
+  end generate;
+
+  gen_ip_versal_rtl : if c_tech_select_default = c_tech_versal generate
+  
+
+  begin
+	tech_agilex_versal_cmult_inst : entity casper_multiplier_lib.tech_agilex_versal_cmult
+		generic map(
+			g_is_xilinx         => True,
 			g_inputA_width      => g_in_a_w,
 			g_inputB_width      => g_in_b_w,
 			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output,

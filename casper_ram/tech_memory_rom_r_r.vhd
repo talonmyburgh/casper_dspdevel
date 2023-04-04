@@ -56,7 +56,7 @@ ARCHITECTURE str OF tech_memory_rom_r_r IS
 
 BEGIN
 
-	gen_ip_xilinx : IF c_tech_select_default = c_tech_xpm GENERATE
+	gen_ip_xilinx : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE
 		u1 : ip_xpm_rom_r_r
 		GENERIC MAP (
 			g_adr_a_w         => g_adr_a_w,

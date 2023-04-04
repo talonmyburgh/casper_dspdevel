@@ -147,7 +147,7 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	SIGNAL sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
 
 BEGIN
-	assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel, but it is not ideal" severity warning;
+	assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel and versal, it is not ideal" severity warning;
 	------------------------------------------------------------------------------
 	-- Registers
 	------------------------------------------------------------------------------

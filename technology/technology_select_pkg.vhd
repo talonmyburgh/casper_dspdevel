@@ -31,7 +31,9 @@ PACKAGE technology_select_pkg IS
   -- Technology identifiers
   CONSTANT c_tech_stratixiv          : INTEGER := 0;   -- e.g. used on UniBoard1
   CONSTANT c_tech_xpm                : INTEGER := 1;   -- e.g. used for Xilinx in Casper
-  CONSTANT c_test_agilex             : INTEGER := 2;   -- For use with Intel AgileX
+  CONSTANT c_tech_agilex             : INTEGER := 2;   -- For use with Intel AgileX
+  constant c_tech_versal             : INTEGER := 3;   -- For use with Xilinx Versal
+
   --CONSTANT c_tech_select_default : INTEGER := c_tech_stratixiv;
   CONSTANT c_tech_select_default : INTEGER := c_tech_xpm;
 END technology_select_pkg;

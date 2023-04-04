@@ -37,7 +37,7 @@ ARCHITECTURE str of tech_mult is
 	SIGNAL result_undelayed : STD_LOGIC_VECTOR(g_in_b_w + g_in_a_w - 1 DOWNTO 0);
 
 begin
-	gen_ip_xpm_rtl : IF c_tech_select_default <= c_test_agilex GENERATE  -- Xilinx, Stratix or AgileX
+	gen_ip_xpm_rtl : IF c_tech_select_default <= c_tech_versal GENERATE  -- Xilinx, Stratix or AgileX or versal
 		u_ip_mult_infer : ip_mult_infer
 			generic map(
 				g_use_dsp          => g_use_dsp,
