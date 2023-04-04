@@ -21,11 +21,11 @@
 --! @brief RTL Complex Multiplier using 4 mults and 2 adds -> 4 dsp48 chips
 
 --! Library IEEE
-LIBRARY IEEE, common_pkg_lib;
+LIBRARY IEEE, common_pkg_lib,technology_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;
-
+USE technology_lib.technology_select_pkg.ALL;
 --! Function: Signed complex multiply
 --!   p = a * b       when g_conjugate_b = FALSE
 --!     = (ar + j ai) * (br + j bi)
@@ -147,7 +147,7 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	SIGNAL sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
 
 BEGIN
-
+	assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel and versal, it is not ideal" severity warning;
 	------------------------------------------------------------------------------
 	-- Registers
 	------------------------------------------------------------------------------

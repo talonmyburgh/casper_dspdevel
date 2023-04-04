@@ -56,7 +56,7 @@ ARCHITECTURE str OF tech_memory_rom_r_r IS
 
 BEGIN
 
-	gen_ip_xilinx : IF c_tech_select_default = c_tech_xpm GENERATE
+	gen_ip_xilinx : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE
 		u1 : ip_xpm_rom_r_r
 		GENERIC MAP (
 			g_adr_a_w         => g_adr_a_w,
@@ -75,8 +75,10 @@ BEGIN
 			q_a         => q_a,
 			q_b         => q_b
 		);
+	else generate
+		assert FALSE report "No rom Generated" severity failure;
 	END GENERATE;
-
+    
 	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE
 	--		u0 : ip_stratixiv_rom_cr_cr
 	--			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)

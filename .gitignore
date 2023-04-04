@@ -10,3 +10,6 @@ vunit_out
 build/*
 __pycache__
 twiddlepkg*.txt
+vivado*.log
+vivado*.jou
+vivado*.str

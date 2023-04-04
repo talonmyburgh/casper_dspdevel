@@ -1,3 +1,26 @@
+#------------------------------------- 
+#-- Fixed point model of the FFT + testbench generation
+#-- Able to be imported as a module in other designs.
+#-------------------------------------
+#--Author	: M. Schiller (NRAO)
+#--Date    : 23-March-2023
+#
+#--------------------------------------------------------------------------------
+#-- Copyright NRAO March 23, 2023
+#--------------------------------------------------------------------------------
+#-- License
+#-- Licensed under the Apache License, Version 2.0 (the "License");
+#-- you may not use this file except in compliance with the License.
+#-- You may obtain a copy of the License at
+#-- 
+#--     http://www.apache.org/licenses/LICENSE-2.0
+#-- 
+#-- Unless required by applicable law or agreed to in writing, software
+#-- distributed under the License is distributed on an "AS IS" BASIS,
+#-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#-- See the License for the specific language governing permissions and
+#-- limitations under the License.
+#--
 import numpy as np
 #import matplotlib.pyplot as plt
 from vunit import VUnit
@@ -338,13 +361,13 @@ def make_fft_postcheck(g_use_reorder,g_in_dat_w,g_out_dat_w,g_stage_dat_w,g_guar
         
         expected_cdata,stagedebug=pfft(input_cdata,g_fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,1,0,do_output_bit_rev)
 
-        #file_path = Path(output_path) / f"matdata_debug.mat"
-        #matdict = {}
-        #matdict['expected_cdata'] = expected_cdata
-        #matdict['stagedebug'] = stagedebug
-        #matdict['vhdl_cdata'] = vhdl_cdata
+        file_path = Path(output_path) / f"matdata_debug.mat"
+        matdict = {}
+        matdict['expected_cdata'] = expected_cdata
+        matdict['stagedebug'] = stagedebug
+        matdict['vhdl_cdata'] = vhdl_cdata
         #matdict['stage_data'] = stage_data
-        #matdict['input_cdata'] = input_cdata
+        matdict['input_cdata'] = input_cdata
         #io.savemat(file_path, matdict)
 
 
@@ -462,8 +485,8 @@ def main():
     #plt.show
 
     # debug the python check function thing.
-    testfunc = make_fft_postcheck(True,18,18,18,0,18,13,1,1,2735)
-    testfunc("/export/home/creon/mschiller_ngvla_project/casper_dspdevel/r2sdf_fft/vunit_out/test_output/r2sdf_fft_lib.tb_vu_trwosdf_vfmodel.FFTR2SDF_s13_reorderTrue_din18_dout18_stagew18_guardw0_doround1_dosaturation1_scale2735_aaafd13ba5b88b5fe244b522b98c37de917678fb")
+    #testfunc = make_fft_postcheck(True,18,18,18,0,18,13,1,1,2735)
+    #testfunc("/export/home/creon/mschiller_ngvla_project/casper_dspdevel/r2sdf_fft/vunit_out/test_output/r2sdf_fft_lib.tb_vu_trwosdf_vfmodel.FFTR2SDF_s13_reorderTrue_din18_dout18_stagew18_guardw0_doround1_dosaturation1_scale2735_aaafd13ba5b88b5fe244b522b98c37de917678fb")
 
 
 if __name__=="__main__":

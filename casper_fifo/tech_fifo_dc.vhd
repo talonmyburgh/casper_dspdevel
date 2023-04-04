@@ -54,7 +54,7 @@ ARCHITECTURE str OF tech_fifo_dc IS
 
 BEGIN
 
-	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
+	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE  -- Xilinx
 		u1 : ip_xilinx_fifo_dc
 			generic map(
 				g_dat_w          => g_dat_w,
@@ -76,7 +76,7 @@ BEGIN
 			);
 	end generate;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default=c_tech_agilex  GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_fifo_dc
 			GENERIC MAP(g_dat_w, g_nof_words)
 			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);

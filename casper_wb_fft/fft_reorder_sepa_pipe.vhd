@@ -486,8 +486,11 @@ begin
     -- the output signals are directly driven. 
     gen_no_separate : if g_separate = false generate
         rd_adr  <= TO_UVEC(r.count_up, c_adr_tot_w);
-        sep_out_dat_i <= buf_rd_dat;
-        sep_out_val_i <= buf_rd_val;
+
+        -- Taking data directly from Block ram is not advisable add a pipeline stage here to improve place and route timing into the pipeline sum block will improve performance.
+        
+        sep_out_dat_i <= buf_rd_dat; -- when rising_edge(clk);
+        sep_out_val_i <= buf_rd_val; -- when rising_edge(clk);
     end generate;
 
     -- when doing things in place, read transaction is same as write
