@@ -15,8 +15,8 @@ def manglePkg(file_name, line_number, new_line):
 # test_to_run = sys.argv[1]
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
-
+vu = VUnit.from_argv(compile_builtins=False)
+vu.add_vhdl_builtins()
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
@@ -357,5 +357,6 @@ TB_GENERATED.add_config(
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable","--max-stack-alloc=4096"])
+vu.set_sim_option("disable_ieee_warnings",True)
 vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()
