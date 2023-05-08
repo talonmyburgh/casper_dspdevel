@@ -33,7 +33,7 @@ PACKAGE technology_select_pkg IS
   CONSTANT c_tech_xpm                : INTEGER := 1;   -- e.g. used for Xilinx in Casper
   CONSTANT c_tech_agilex             : INTEGER := 2;   -- For use with Intel AgileX
   constant c_tech_versal             : INTEGER := 3;   -- For use with Xilinx Versal
-
+  
   --CONSTANT c_tech_select_default : INTEGER := c_tech_stratixiv;
-  CONSTANT c_tech_select_default : INTEGER := c_tech_xpm;
+  CONSTANT c_tech_select_default : INTEGER := c_tech_versal;
 END technology_select_pkg;

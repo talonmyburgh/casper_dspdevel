@@ -116,16 +116,16 @@ architecture str of wbpfb_unit is
     signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); -- output of the filterbank is the fft input 
     signal fil_out_val : std_logic;
 
-    signal fft_in_re_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_in_im_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_re_arr : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_in_dat_w-1 downto 0);
+    signal fft_in_im_arr : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_in_dat_w-1 downto 0);
     signal fft_in_val    : std_logic;
 
     signal fft_in_sosi : t_fft_sosi_in;
 
-    signal fft_out_re_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_im_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_re_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_im_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_re_arr_i : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_im_arr_i : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_re_arr   : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_im_arr   : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
     signal fft_out_val      : std_logic_vector(g_wpfb.nof_wb_streams - 1 downto 0);
 
     signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);

@@ -47,17 +47,18 @@ entity fft_r2_par is
         g_use_variant : string         := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp     : string         := "yes"; --! = "yes" or "no"
         g_ovflw_behav : string         := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_use_mult_round : string      := "TRUNCATE";
         g_use_round   : string         := "ROUND" --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
     );
     port(
         clk        : in  std_logic;     --! Clock
         rst        : in  std_logic := '0'; --! Reset
-        in_re_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Input real data (nof_points wide)
-        in_im_arr  : in  t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Input imag data (nof_points wide)
+        in_re_arr  : in  t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Input real data (nof_points wide)
+        in_im_arr  : in  t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Input imag data (nof_points wide)
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long shiftreg
         in_val     : in  std_logic := '1'; --! In data valid
-        out_re_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Output real data (nof_points wide)
-        out_im_arr : out t_fft_slv_arr_stg(g_fft.nof_points - 1 downto 0); --! Output imag data (nof_points wide)
+        out_re_arr : out t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Output real data (nof_points wide)
+        out_im_arr : out t_slv_array(g_fft.nof_points - 1 downto 0)(g_fft.stage_dat_w-1 downto 0); --! Output imag data (nof_points wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long ovflw register
         out_val    : out std_logic      --! Out data valid
     );
@@ -182,10 +183,12 @@ begin
                 generic map(
                     g_stage       => stage,
                     g_element     => element,
+                    g_twiddle_width => c_fft.twiddle_dat_w,
                     g_pipeline    => g_pipeline,
                     g_use_variant => g_use_variant,
                     g_ovflw_behav => g_ovflw_behav,
                     g_use_round   => g_use_round,
+                    g_use_mult_round => g_use_mult_round,
                     g_use_dsp     => g_use_dsp
                 )
                 port map(

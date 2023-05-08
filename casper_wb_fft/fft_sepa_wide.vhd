@@ -53,11 +53,11 @@ entity fft_sepa_wide is
 		clken      : in  std_logic;
 		clk        : in  std_logic;
 		rst        : in  std_logic := '0';
-		in_re_arr  : in  t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-		in_im_arr  : in  t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+		in_re_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+		in_im_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 		in_val     : in  std_logic := '1';
-		out_re_arr : out t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
-		out_im_arr : out t_fft_slv_arr_stg(g_fft.wb_factor - 1 downto 0);
+		out_re_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+		out_im_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
 		out_val    : out std_logic
 	);
 

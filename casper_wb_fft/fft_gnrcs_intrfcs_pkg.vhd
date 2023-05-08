@@ -5,9 +5,9 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg IS
 --UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-CONSTANT c_fft_in_dat_w       : natural := 8;       -- = 8,  number of input bits
-CONSTANT c_fft_out_dat_w      : natural := 16;      -- = 13, number of output bits
-CONSTANT c_fft_stage_dat_w    : natural := 18;      -- = 18, data width used between the stages(= DSP multiplier-width)
+CONSTANT c_fft_in_dat_w       : natural := 8;
+CONSTANT c_fft_out_dat_w      : natural := 16;
+CONSTANT c_fft_stage_dat_w    : natural := 18;
 
 --UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 CONSTANT c_fft_use_reorder          : boolean := false;     -- = false for bit-reversed output, true for normal output
@@ -79,16 +79,16 @@ constant c_fft : t_fft := (
 -- Check consistancy of the FFT parameters
 function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return value is void, because always true or abort due to failure
 
-type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_stage_dat_w-1 DOWNTO 0);
-type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_out_dat_w-1 DOWNTO 0);
+--type t_fft_slv_arr_in IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);
+--type t_fft_slv_arr_stg IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_stage_dat_w-1 DOWNTO 0);
+--type t_fft_slv_arr_out IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(c_fft_out_dat_w-1 DOWNTO 0);
 
 --t_dp_sosi record
 TYPE t_fft_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
-re       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
-im       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
+re       : STD_LOGIC_VECTOR; --(c_fft_in_dat_w-1 DOWNTO 0);             -- data
+im       : STD_LOGIC_VECTOR; --(c_fft_in_dat_w-1 DOWNTO 0);             -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -97,7 +97,7 @@ channel  : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);  -- info at sop
 err      : STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);    -- info at eop (name field 'err' to avoid the 'error' keyword)
 END RECORD;
 
-CONSTANT c_fft_sosi_rst_in : t_fft_sosi_in := ('0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
+--CONSTANT c_fft_sosi_rst_in : t_fft_sosi_in := ('0', (OTHERS=>'0'), std_logic_vector(to_unsigned(0,c_fft_sosi_rst_in.re'length)), std_logic_vector(to_unsigned(0,c_fft_sosi_rst_in.im'length)), '0', '0', '0', (OTHERS=>'0'), (OTHERS=>'0'), (OTHERS=>'0'));
 
 --t_dp_sosi record
 TYPE t_fft_sosi_out IS RECORD  -- Source Out or Sink In
@@ -119,8 +119,8 @@ TYPE t_fft_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_fft_sosi_in;
 TYPE t_fft_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_fft_sosi_out;
 
 -- short hand to create an svec from integer of bit width in_dat_w
-function to_fft_in_svec(n : integer) return std_logic_vector;
-function to_fft_stg_svec(n : integer) return std_logic_vector;
+function to_fft_in_svec(n : integer; width:integer) return std_logic_vector;
+function to_fft_stg_svec(n : integer; width:integer) return std_logic_vector;
 
 -- FFT shift swaps right and left half of bin axis to shift zero-frequency component to center of spectrum
 function fft_shift(bin : std_logic_vector) return std_logic_vector;
@@ -146,31 +146,32 @@ assert g_fft.use_separate = false report "fft_r2 : without use_reorder there can
 assert g_fft.use_fft_shift = false report "fft_r2 : without use_reorder there cannot be use_fft_shift for complex input" severity failure;
 end if;
 -- use_separate
-if g_fft.use_separate = true then
+if g_fft.use_separate then
 assert g_fft.use_fft_shift = false report "fft_r2 : with use_separate there cannot be use_fft_shift for two real inputs" severity failure;
 end if;
 -- in_place
-if g_fft.pipe_reo_in_place = true then
+if g_fft.pipe_reo_in_place then
 assert g_fft.nof_chan = 0 report "fft_r2 : can't use in place buffer with multiple channels in pipeline reorder" severity failure;
 assert g_fft.use_fft_shift = false report "fft_r2 : can't use in place buffer and use_fft_shift in pipeline reorder" severity failure; 
 end if;
 return true;
 end;
 
-function to_fft_in_svec(n : integer) return std_logic_vector is
+function to_fft_in_svec(n : integer; width:integer) return std_logic_vector is
 begin
-	return RESIZE_SVEC(TO_SVEC(n, c_fft_in_dat_w), c_fft_in_dat_w);
+	return RESIZE_SVEC(TO_SVEC(n, width), width);
 end;
 
-function to_fft_stg_svec(n : integer) return std_logic_vector is
+function to_fft_stg_svec(n : integer; width:integer) return std_logic_vector is
 begin
-	return RESIZE_SVEC(TO_SVEC(n, c_fft_stage_dat_w), c_fft_stage_dat_w);
+	return RESIZE_SVEC(TO_SVEC(n, width), width);
 end;
 
 function fft_shift(bin : std_logic_vector) return std_logic_vector is
 constant c_w   : natural                            := bin'length;
 variable v_bin : std_logic_vector(c_w - 1 downto 0) := bin;
 begin
+v_bin := bin;
 return not v_bin(c_w - 1) & v_bin(c_w - 2 downto 0); -- invert MSbit for fft_shift
 end;
 

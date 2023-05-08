@@ -220,8 +220,8 @@ architecture tb of tb_fft_r2_wide is
   signal t_blk                  : integer := 0;  -- block time counter
 
   -- Input
-  signal in_re_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
-  signal in_im_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
+  signal in_re_arr              : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.in_dat_w-1 downto 0);
+  signal in_im_arr              : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.in_dat_w-1 downto 0);
   signal in_re_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_im_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_val                 : std_logic:= '0';
@@ -234,8 +234,8 @@ architecture tb of tb_fft_r2_wide is
   signal in_val_scope           : std_logic:= '0';
 
   -- Output
-  signal out_re_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
+  signal out_re_arr             : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.out_dat_w-1 downto 0);
+  signal out_im_arr             : t_slv_array(g_fft.wb_factor-1 downto 0)(g_fft.out_dat_w-1 downto 0);
   signal out_re_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_im_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_val                : std_logic:= '0';  -- for parallel output
@@ -318,11 +318,11 @@ begin
     for J in 0 to g_data_file_nof_lines/g_fft.wb_factor-1 loop  -- serial
       for I in 0 to g_fft.wb_factor-1 loop  -- parallel
         if c_in_complex then
-          in_re_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)));
-          in_im_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1));
+          in_re_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)),c_in_dat_w);
+          in_im_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1),c_in_dat_w);
         else
-          in_re_arr(I) <= to_fft_in_svec(input_data_a_arr(J*g_fft.wb_factor+I));
-          in_im_arr(I) <= to_fft_in_svec(input_data_b_arr(J*g_fft.wb_factor+I));
+          in_re_arr(I) <= to_fft_in_svec(input_data_a_arr(J*g_fft.wb_factor+I),c_in_dat_w);
+          in_im_arr(I) <= to_fft_in_svec(input_data_b_arr(J*g_fft.wb_factor+I),c_in_dat_w);
         end if;
       end loop;
       in_val <= '1';

@@ -37,6 +37,7 @@ entity rTwoSDFStage is
 		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
 		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
 		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
+		g_use_mult_round : string         := "TRUNCATE";		--! Rounding behaviour "ROUND" or "TRUNCATE"
 		g_ram_primitive  : string		  := "block";			--! BRAM primitive for the Weights
 		g_twid_file_stem : string  		  := "UNUSED";			--! Path stem for the twiddle coefficient files
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
@@ -61,8 +62,9 @@ architecture str of rTwoSDFStage is
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
+	constant c_round	 	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
+	constant c_mult_trunc	: boolean := sel_a_b(g_use_mult_round ="ROUND", FALSE, TRUE);
+	constant c_clip		 	: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	constant c_coefs_file_stem : string := g_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
@@ -82,6 +84,11 @@ architecture str of rTwoSDFStage is
 	signal bf_im  : std_logic_vector(in_im'range);
 	signal bf_sel : std_logic;
 	signal bf_val : std_logic;
+
+	signal bf_re_tomult  : std_logic_vector(in_re'range);
+	signal bf_im_tomult  : std_logic_vector(in_im'range);
+	signal bf_sel_tomult : std_logic;
+	signal bf_val_tomult : std_logic;
 
 	signal weight_addr : std_logic_vector(g_stage - 1 downto 1);
 
@@ -163,6 +170,19 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
+		-- When the Twiddle memory is delay 2 (which it should be for timing) we need to delay every thing else.
+		tgen_comb : if c_ram.latency<=1 generate
+			bf_re_tomult <= bf_re;
+			bf_im_tomult <= bf_im;
+			bf_val_tomult<= bf_val;
+			bf_sel_tomult<= bf_sel;
+		end generate;
+		tgen_reg : if c_ram.latency=2 generate
+			bf_re_tomult <= bf_re when rising_edge(clk);
+			bf_im_tomult <= bf_im when rising_edge(clk);
+			bf_val_tomult<= bf_val when rising_edge(clk);
+			bf_sel_tomult<= bf_sel when rising_edge(clk);
+		end generate;
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
@@ -170,7 +190,8 @@ begin
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
             g_use_dsp          => g_use_dsp,
-            g_use_variant    => g_use_variant,
+            g_use_variant      => g_use_variant,
+			g_use_truncate     => c_mult_trunc,
             g_stage            => g_stage,
             g_lat              => g_pipeline.mul_lat
 		)
@@ -179,10 +200,10 @@ begin
 			rst       => rst,
 			weight_re => weight_re,
 			weight_im => weight_im,
-			in_re     => bf_re,
-			in_im     => bf_im,
-			in_val    => bf_val,
-			in_sel    => bf_sel,
+			in_re     => bf_re_tomult,
+			in_im     => bf_im_tomult,
+			in_val    => bf_val_tomult,
+			in_sel    => bf_sel_tomult,
 			out_re    => mul_out_re,
 			out_im    => mul_out_im,
 			out_val   => mul_out_val
