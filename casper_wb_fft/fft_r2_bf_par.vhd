@@ -105,7 +105,8 @@ architecture str of fft_r2_bf_par is
 	signal mul_in_val   : std_logic;
 
 	signal ovflw_det	: std_logic_vector(1 DOWNTO 0); -- record overflow in any of the requantizings
-
+    attribute keep_hierarchy : string;
+    attribute keep_hierarchy of str : architecture is "yes";
 begin
 
 	------------------------------------------------------------------------------

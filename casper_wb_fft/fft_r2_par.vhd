@@ -161,6 +161,9 @@ architecture str of fft_r2_par is
     signal sub_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
     signal int_val    : std_logic;
     signal fft_val    : std_logic;
+    attribute keep_hierarchy : string; -- don't optimize across units, to allow for faster speed
+    attribute keep_hierarchy of str : architecture is "yes";
+
 begin
 
     ------------------------------------------------------------------------------
