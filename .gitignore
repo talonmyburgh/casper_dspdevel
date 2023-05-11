@@ -13,3 +13,5 @@ twiddlepkg*.txt
 vivado*.log
 vivado*.jou
 vivado*.str
+*vrs_config*
+*proj.runs*
