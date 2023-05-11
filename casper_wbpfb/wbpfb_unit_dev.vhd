@@ -397,10 +397,14 @@ architecture str of wbpfb_unit_dev is
                                g_wpfb.stat_data_w,
                                g_wpfb.stat_data_sz,
                                g_wpfb.pipe_reo_in_place);
+-- Parameters for the (wideband) poly phase filter. 
 
-    signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+
+
+
+    signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
     signal fil_in_val  : std_logic;
-    signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => (others => '0'));
+    signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fil_out_dat_w-1 downto 0) := (others => (others => '0'));
     signal fil_out_val : std_logic;
 
     signal fft_in_re_arr : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_in_dat_w-1 downto 0);
@@ -465,8 +469,10 @@ begin
     -- Wire fil_out_arr --> fft_in_re_arr, fft_in_im_arr
     wire_fft_in_streams : for S in 0 to g_wpfb.nof_wb_streams - 1 generate
         wire_fft_in_wideband : for P in 0 to g_wpfb.wb_factor - 1 generate
-            fft_in_re_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex);
-            fft_in_im_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex + 1);
+            assert g_wpfb.fft_in_dat_w=g_wpfb.fil_out_dat_w report "wbpfb: Taking highest bits from filter because FFT is different size than Filter output, no rounding is implemented." severity warning;
+            assert g_wpfb.fft_in_dat_w<=g_wpfb.fil_out_dat_w report "wbpfb: FFT input must be smaller or equal to FILter output" severity failure;
+            fft_in_re_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w);
+            fft_in_im_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex + 1)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w);
         end generate;
     end generate;
 

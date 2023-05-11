@@ -65,7 +65,7 @@ architecture rtl of fft_wide_unit_control is
     constant c_packet_size     : natural := (2 ** g_fft.nof_chan) * g_fft.nof_points / g_fft.wb_factor; -- Definition of the packet size
     constant c_ctrl_fifo_depth : natural := 16; -- Depth of the bsn and err fifo.  
     subtype t_fft_slv_arr_outl is t_slv_array(g_nof_ffts * g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
-    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_outl(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_outl;
 
     type state_type is (s_idle, s_run, s_hold);
 

@@ -74,7 +74,7 @@ architecture str of fft_wide_unit is
     signal fft_shiftreg         : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
 
     type reg_type is record
-        in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0);
+        in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0)(re(g_fft.in_dat_w-1 downto 0),im(g_fft.in_dat_w-1 downto 0));
         shiftreg        : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
     end record;
 
