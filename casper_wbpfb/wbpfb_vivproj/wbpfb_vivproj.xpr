@@ -487,13 +487,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_wide.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
@@ -553,6 +546,13 @@
       <File Path="$PPRDIR/../../casper_wb_fft/fft_r2_wide.vhd">
         <FileInfo SFType="VHDL2008">
           <Attr Name="Library" Val="wb_fft_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_filter/fil_ppf_wide.vhd">
+        <FileInfo SFType="VHDL2008">
+          <Attr Name="Library" Val="casper_filter_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
