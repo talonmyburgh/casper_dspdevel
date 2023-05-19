@@ -254,8 +254,8 @@ architecture tb of tb_wbpfb_unit_wide is
   signal exp_output_data_c_im_arr : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- full spectrum, im  
 
   -- Input
-  signal in_re_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal in_im_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal in_re_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
+  signal in_im_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
   signal in_re_data             : std_logic_vector(g_wpfb.wb_factor*c_in_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal in_im_data             : std_logic_vector(g_wpfb.wb_factor*c_in_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal in_val                 : std_logic:= '0';
@@ -268,8 +268,8 @@ architecture tb of tb_wbpfb_unit_wide is
   
   signal in_sosi_val            : t_fil_sosi_in;
   signal ref_sosi_ctrl          : t_fil_sosi_in;
-  signal ref_re_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal ref_im_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal ref_re_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
+  signal ref_im_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
 
   signal shiftreg               : std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (0=>'0', 1=>'0', others=>'1');
 
@@ -287,8 +287,8 @@ architecture tb of tb_wbpfb_unit_wide is
 
   -- Filter output
   signal fil_sosi_arr           : t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_re_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_im_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_re_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_out_dat_w-1 downto 0);
+  signal fil_im_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0)(g_wpfb.fil_out_dat_w-1 downto 0);
   signal fil_re_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_im_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_val                : std_logic:= '0';  -- for parallel output
