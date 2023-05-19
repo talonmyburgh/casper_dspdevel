@@ -16,7 +16,7 @@ def manglePkg(file_name, line_number, new_line):
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
-#vu.add_vhdl_builtins()
+vu.add_vhdl_builtins()
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
