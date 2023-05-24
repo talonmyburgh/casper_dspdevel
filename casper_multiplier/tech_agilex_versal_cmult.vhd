@@ -119,7 +119,8 @@ versal_generate_notm_gen : if g_is_xilinx  generate
   -- This code was based on a vivado 2022.2 Language Template.
   constant c_versal_max_width : integer := 18;
   constant c_versal_pipe_delay: integer := 4;
-  signal pipe_d               : t_slv_array(c_versal_pipe_delay-1 downto 0)(g_pipe_width downto 0);
+  type t_pipe_slv is array (c_versal_pipe_delay-1 downto 0) of std_logic_vector(g_pipe_width downto 0);
+  signal pipe_d               : t_pipe_slv;
   signal  ar                  : signed(c_versal_max_width-1 downto 0); 
   signal  ai                  : signed(c_versal_max_width-1 downto 0); 
   signal  br                  : signed(c_versal_max_width-1 downto 0); 
@@ -218,15 +219,18 @@ end generate versal_generate_notm_gen;
 agilex_generate_notm_gen : if g_is_xilinx=false generate
   constant c_agilex_max_width : integer := 18;
   constant c_agilex_pipe_delay: integer := 4;
-  signal pipe_d               : t_slv_array(c_agilex_pipe_delay-1 downto 0)(g_pipe_width downto 0);
-  signal ar_d_dsp0            : t_signed_array(2 downto 0)(c_agilex_max_width downto 0); -- The A input on AgileX can be 19 bits,
-  signal ai_d_dsp0            : t_signed_array(2 downto 0)(c_agilex_max_width downto 0); 
-  signal br_d_dsp0            : t_signed_array(2 downto 0)(c_agilex_max_width-1 downto 0); -- The B input can not exceed 18 bits on AgileX
-  signal bi_d_dsp0            : t_signed_array(2 downto 0)(c_agilex_max_width-1 downto 0); 
-  signal ar_d_dsp1            : t_signed_array(2 downto 0)(c_agilex_max_width downto 0); -- The A input on AgileX can be 19 bits,
-  signal ai_d_dsp1            : t_signed_array(2 downto 0)(c_agilex_max_width downto 0); 
-  signal br_d_dsp1            : t_signed_array(2 downto 0)(c_agilex_max_width-1 downto 0); -- The B input can not exceed 18 bits on AgileX
-  signal bi_d_dsp1            : t_signed_array(2 downto 0)(c_agilex_max_width-1 downto 0);   
+  type t_pipe_slv is array (c_agilex_pipe_delay-1 downto 0) of std_logic_vector(g_pipe_width downto 0);
+  type t_data_sa_wp1 is array (2 downto 0) of signed(c_agilex_max_width downto 0);
+  type t_data_sa is array (2 downto 0) of signed(c_agilex_max_width-1 downto 0);
+  signal pipe_d               : t_pipe_slv;
+  signal ar_d_dsp0            : t_data_sa_wp1; -- The A input on AgileX can be 19 bits,
+  signal ai_d_dsp0            : t_data_sa_wp1; 
+  signal br_d_dsp0            : t_data_sa; -- The B input can not exceed 18 bits on AgileX
+  signal bi_d_dsp0            : t_data_sa; 
+  signal ar_d_dsp1            : t_data_sa_wp1; -- The A input on AgileX can be 19 bits,
+  signal ai_d_dsp1            : t_data_sa_wp1; 
+  signal br_d_dsp1            : t_data_sa; -- The B input can not exceed 18 bits on AgileX
+  signal bi_d_dsp1            : t_data_sa;   
   signal multI1               : signed(c_agilex_max_width+c_agilex_max_width downto 0);
   signal multI2               : signed(c_agilex_max_width+c_agilex_max_width downto 0);
   signal multQ1               : signed(c_agilex_max_width+c_agilex_max_width downto 0);

@@ -87,8 +87,8 @@ function fft_r2_parameter_asserts(g_fft : t_fft) return boolean; -- the return v
 TYPE t_fft_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
-re       : STD_LOGIC_VECTOR; --(c_fft_in_dat_w-1 DOWNTO 0);             -- data
-im       : STD_LOGIC_VECTOR; --(c_fft_in_dat_w-1 DOWNTO 0);             -- data
+re       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
+im       : STD_LOGIC_VECTOR(c_fft_in_dat_w-1 DOWNTO 0);             -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl

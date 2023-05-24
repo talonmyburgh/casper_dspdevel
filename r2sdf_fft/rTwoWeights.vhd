@@ -42,9 +42,36 @@ architecture rTwoWeights_rtl of rTwoWeights is
 	signal re_addr			: std_logic_vector(in_wAdr'length downto 0);
 	signal im_addr			: std_logic_vector(in_wAdr'length downto 0);
 	attribute rom_style : string;
+	type twiddle_signed_array is array(natural range <>)      of signed((2*weight_re'length)-1 downto 0);
+	function gen_twiddle_factor_rom(wb_instance : integer; stage: integer; wb_factor : integer; constant twiddle_width : integer; constant do_ifft : boolean) return twiddle_signed_array is
+	    -- I and Q are packed into the twiddle rom.  Q is the upper word and I is the lower word.   Therefore the final rom
+		-- will be rom <= Q & I.
+		-- The Skip Interval allows the twiddle factors to be divided up into multiple roms, since the fft_sp operates on parallel data
+		-- This function won't work correctly if skip_i
+		-- This allows seperate roms to be generated for seperate parallel paths.
+		-- Note we only generate one component since it's common to use an address offset to get the Imaginary part.
+		variable twiddle_rom  : twiddle_signed_array(min_one(2**(stage-1))-1 downto 0);
+		variable tempI        : signed(twiddle_width-1 downto 0);
+		variable tempQ        : signed(twiddle_width-1 downto 0);
+		begin
+			if (2**(stage-1))=0 then -- If we get called in a case that doesn't need a rom, return a constant
+			tempI := to_signed((2**(twiddle_width-1))-1,twiddle_width);
+			tempQ := to_signed(0,twiddle_width);
+			twiddle_rom(0) := tempQ & tempI;
+			else
+			assert wb_instance<wb_factor report "gen_twiddle_factor_rom: WB Instance can't be higher than wb factor!" severity failure;
+			
+			for k in 0 to ((2**(stage-1))-1) loop
+				tempI := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,true);
+				tempQ := gen_twiddle_factor(k,wb_instance,(stage-1),wb_factor,twiddle_width,do_ifft,false);
+				twiddle_rom(k)    := tempQ & tempI;
 
-	
-	signal rom              : twiddle_signed_array(min_one(2**(g_stage-1))-1 downto 0)((2*weight_re'length)-1 downto 0) := gen_twiddle_factor_rom(g_wb_inst,g_stage,g_wb_factor, weight_re'length,g_do_ifft); -- @suppress "signal rom is never written"
+			end loop;
+			end if;
+			return twiddle_rom;
+		end function gen_twiddle_factor_rom;
+
+	signal rom              : twiddle_signed_array(min_one(2**(g_stage-1))-1 downto 0) := gen_twiddle_factor_rom(g_wb_inst,g_stage,g_wb_factor, weight_re'length,g_do_ifft); -- @suppress "signal rom is never written"
 	attribute rom_style of rom : signal is g_ram_primitive;
 	signal weight_re_irom			: std_logic_vector(weight_re'length-1 downto 0);
 	signal weight_im_irom			: std_logic_vector(weight_im'length-1 downto 0);

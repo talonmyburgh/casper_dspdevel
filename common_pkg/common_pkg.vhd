@@ -32,8 +32,8 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE IEEE.MATH_REAL.ALL;
-use ieee.fixed_float_types.all;
-use ieee.fixed_pkg.all;
+use work.fixed_float_types.all;
+use work.fixed_pkg.all;
 
 PACKAGE common_pkg IS
 
@@ -118,14 +118,16 @@ PACKAGE common_pkg IS
 	TYPE t_slv_32_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	TYPE t_slv_44_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(43 DOWNTO 0);
 	TYPE t_slv_48_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(47 DOWNTO 0);
+	TYPE t_signed_48_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(47 DOWNTO 0);
 	TYPE t_slv_64_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(63 DOWNTO 0);
+	TYPE t_signed_96_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(95 DOWNTO 0);
 	TYPE t_slv_128_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(127 DOWNTO 0);
 	TYPE t_slv_256_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(255 DOWNTO 0);
 	TYPE t_slv_512_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(511 DOWNTO 0);
 	TYPE t_slv_1024_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(1023 DOWNTO 0);
-	type t_unsigned_array is array(natural range <>)    of unsigned;
-	type t_slv_array is array(natural range <>)         of std_logic_vector;
-	type t_signed_array is array(natural range <>)      of signed;
+	--type t_unsigned_array is array(natural range <>)    of unsigned;
+	--type t_slv_array is array(natural range <>)         of std_logic_vector;
+	--type t_signed_array is array(natural range <>)      of signed;
 
 
 

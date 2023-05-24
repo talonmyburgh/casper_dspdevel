@@ -15,3 +15,5 @@ vivado*.jou
 vivado*.str
 *vrs_config*
 *proj.runs*
+*.cache/
+*proj*.sim/

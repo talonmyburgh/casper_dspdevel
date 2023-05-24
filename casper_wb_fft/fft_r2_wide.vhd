@@ -89,11 +89,11 @@ entity fft_r2_wide is
         clk        : in  std_logic;     --! Clock
         rst        : in  std_logic := '0'; --! Reset
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
-        in_re_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
-        in_im_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
+        in_re_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
+        in_im_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
         in_val     : in  std_logic := '1'; --! In data valid
-        out_re_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
-        out_im_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
+        out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
+        out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Overflow register
         out_val    : out std_logic      --! Out data valid
     );
@@ -170,31 +170,33 @@ architecture rtl of fft_r2_wide is
     type t_fft_slv_arr_ovflw_wb IS ARRAY (c_nof_stages_pipe - 1 DOWNTO 0) OF STD_LOGIC_VECTOR(g_fft.wb_factor - 1 downto 0);
     signal fft_pipe_ovflw_arr    : t_fft_slv_arr_ovflw;
     signal fft_pipe_ovflw_wb_arr : t_fft_slv_arr_ovflw_wb;
+    type t_stage_data_width is array (g_fft.wb_factor - 1 downto 0) of std_logic_vector(g_fft.stage_dat_w-1 downto 0);
+    signal in_fft_pipe_re_arr : t_stage_data_width;
+    signal in_fft_pipe_im_arr : t_stage_data_width;
 
-    signal in_fft_pipe_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal in_fft_pipe_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal out_fft_pipe_re_arr : t_stage_data_width;
+    signal out_fft_pipe_im_arr : t_stage_data_width;
 
-    signal out_fft_pipe_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal out_fft_pipe_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-
-    signal in_fft_par_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal in_fft_par_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal in_fft_par_re_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal in_fft_par_im_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
 
     signal fft_pipe_out_re : std_logic_vector(g_fft.out_dat_w - 1 downto 0);
     signal fft_pipe_out_im : std_logic_vector(g_fft.out_dat_w - 1 downto 0);
 
-    signal fft_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal fft_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal fft_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+    signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
 
-    signal sep_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal sep_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal in_fft_sepa_re_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal in_fft_sepa_im_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal sep_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+    signal sep_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_val    : std_logic;
 
-    signal par_stg_fft_re_in  : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal par_stg_fft_im_in  : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal par_stg_fft_re_out : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-    signal par_stg_fft_im_out : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+    signal par_stg_fft_re_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal par_stg_fft_im_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal par_stg_fft_re_out : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+    signal par_stg_fft_im_out : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
 
     signal int_val : std_logic_vector(g_fft.wb_factor - 1 downto 0);
 
@@ -228,8 +230,8 @@ begin
                 out_val  => out_val
             );
 
-        out_re_arr(0) <= fft_pipe_out_re;
-        out_im_arr(0) <= fft_pipe_out_im;
+        out_re_arr(0) <= RESIZE_SVEC(fft_pipe_out_re,64);
+        out_im_arr(0) <= RESIZE_SVEC(fft_pipe_out_im,64);
     end generate;
 
     -- Default to fft_r2_par when g_fft.wb_factor=g_fft.nof_points
@@ -326,8 +328,9 @@ begin
 
         -- Create input for parallel FFT
         gen_inputs_for_par : for I in g_fft.wb_factor - 1 downto 0 generate
-            in_fft_par_re_arr(I) <= out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0);
-            in_fft_par_im_arr(I) <= out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0);
+        
+            in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
+            in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
         end generate;
 
         -- The g_fft.wb_factor outputs of the pipelined fft's are offered
@@ -359,6 +362,10 @@ begin
         -- OPTIONAL: SEPARATION STAGE
         ---------------------------------------------------------------
         -- When the separate functionality is required:
+       gen_inputs_for_sep : for I in g_fft.wb_factor - 1 downto 0 generate
+            in_fft_sepa_re_arr(I) <= fft_out_re_arr(I)(43 downto 0);
+            in_fft_sepa_im_arr(I) <= fft_out_re_arr(I)(43 downto 0);
+        end generate;
         gen_separate : if g_fft.use_separate generate
             u_separator : entity work.fft_sepa_wide
                 generic map(
@@ -370,8 +377,8 @@ begin
                     clken      => clken,
                     clk        => clk,
                     rst        => rst,
-                    in_re_arr  => fft_out_re_arr,
-                    in_im_arr  => fft_out_im_arr,
+                    in_re_arr  => in_fft_sepa_re_arr,
+                    in_im_arr  => in_fft_sepa_im_arr,
                     in_val     => fft_out_val,
                     out_re_arr => sep_out_re_arr,
                     out_im_arr => sep_out_im_arr,

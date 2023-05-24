@@ -53,11 +53,12 @@ entity fft_sepa_wide is
 		clken      : in  std_logic;
 		clk        : in  std_logic;
 		rst        : in  std_logic := '0';
-		in_re_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-		in_im_arr  : in  t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+		-- The Generic in g_fft is controlling for input/output width, as long as the stage_dat_w is less than 44, this is a work around for bad VHDL2008 support in xsim
+		in_re_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0); 
+		in_im_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
 		in_val     : in  std_logic := '1';
-		out_re_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
-		out_im_arr : out t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.stage_dat_w-1 downto 0);
+		out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
+		out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
 		out_val    : out std_logic
 	);
 
@@ -327,8 +328,8 @@ begin
 
 	-- Split the concatenated array into a real and imaginary array for the output
 	gen_output_arrays : for I in g_fft.wb_factor - 1 downto 0 generate
-		out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), g_fft.stage_dat_w);
-		out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), g_fft.stage_dat_w);
+		out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), 64); --g_fft.stage_dat_w);
+		out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), 64); --g_fft.stage_dat_w);
 	end generate;
 
 end rtl;
