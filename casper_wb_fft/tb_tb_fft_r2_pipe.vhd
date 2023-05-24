@@ -38,18 +38,18 @@ END tb_tb_fft_r2_pipe;
 
 ARCHITECTURE tb OF tb_tb_fft_r2_pipe IS
   
- CONSTANT c_fft_two_real                            : t_fft := ( true, false,  true, 0, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_two_real_ip                         : t_fft := ( true, false,  true, 0, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, true);
- CONSTANT c_fft_two_real_more_channels              : t_fft := ( true, false,  true, 1, 1, 0, 128, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex                             : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_ip                          : t_fft := ( true, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, true);
- CONSTANT c_fft_complex_more_channels               : t_fft := ( true, false, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_fft_shift                   : t_fft := ( true,  true, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_fft_shift_more_channels     : t_fft := ( true,  true, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_flipped                     : t_fft := (false, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_flipped_ip                  : t_fft := (false, false, false, 0, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, true);
- CONSTANT c_fft_complex_flipped_more_channels       : t_fft := (false, false, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, false);
- CONSTANT c_fft_complex_flipped_more_channels_ip    : t_fft := (false, false, false, 1, 1, 0,  64, c_in_dat_w, c_out_dat_w, 0, c_dsp_mult_w, 2, true, 56, 2, true);
+ CONSTANT c_fft_two_real                            : t_fft := ( true, false,  true, 0, 1, 128, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_two_real_ip                         : t_fft := ( true, false,  true, 0, 1, 128, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, true);
+ CONSTANT c_fft_two_real_more_channels              : t_fft := ( true, false,  true, 1, 1, 128, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex                             : t_fft := ( true, false, false, 0, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_ip                          : t_fft := ( true, false, false, 0, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, true);
+ CONSTANT c_fft_complex_more_channels               : t_fft := ( true, false, false, 1, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_fft_shift                   : t_fft := ( true,  true, false, 0, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_fft_shift_more_channels     : t_fft := ( true,  true, false, 1, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_flipped                     : t_fft := (false, false, false, 0, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_flipped_ip                  : t_fft := (false, false, false, 0, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, true);
+ CONSTANT c_fft_complex_flipped_more_channels       : t_fft := (false, false, false, 1, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, false);
+ CONSTANT c_fft_complex_flipped_more_channels_ip    : t_fft := (false, false, false, 1, 1,  64, c_fft_in_dat_w, c_fft_out_dat_w, 0, c_dsp_mult_w, 18, 9, 2, true, 56, 2, true);
 
   CONSTANT c_diff_margin    : natural := 2;
   
