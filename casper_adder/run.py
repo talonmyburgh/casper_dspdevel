@@ -57,7 +57,7 @@ def generate_tests(obj, direc, add_sub, inp_pipeline, out_pipeline, in_dat_w):
                                 g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
 
-vu = from_argv(compile_builtins=False)
+vu = Vunit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 script_dir = os.path.dirname(__file__)
 

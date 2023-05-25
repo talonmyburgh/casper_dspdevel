@@ -1,7 +1,7 @@
 import os
 from vunit import VUnit            
 
-vu = from_argv(compile_builtins=False)
+vu = Vunit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 script_dir = os.path.dirname(__file__)
 

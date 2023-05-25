@@ -15,7 +15,7 @@ def manglePkg(file_name, line_number, new_line):
 # test_to_run = sys.argv[1]
 
 # Create VUnit instance by parsing command line arguments
-vu = from_argv(compile_builtins=False)
+vu = Vunit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
