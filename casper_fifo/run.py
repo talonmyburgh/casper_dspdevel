@@ -23,9 +23,9 @@ lib2.add_source_files(os.path.join(script_dir, "../common_components/common_ares
 lib2.add_source_files(os.path.join(script_dir, "../common_components/common_async.vhd"))
 
 lib3 = vu.add_library("common_pkg_lib",allow_duplicate = True)
-lib3.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
-lib3.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
-lib3.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
+lib3.add_source_files(os.path.join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+lib3.add_source_files(os.path.join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+lib3.add_source_files(os.path.join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 lib3.add_source_files(os.path.join(script_dir, "../common_pkg/*.vhd"))
 
 lib5 = vu.add_library("dp_pkg_lib",allow_duplicate = True)
