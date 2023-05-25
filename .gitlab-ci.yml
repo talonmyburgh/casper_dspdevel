@@ -29,6 +29,8 @@ casper_adders_test:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -45,6 +47,8 @@ counter:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -61,6 +65,8 @@ delay:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -78,6 +84,8 @@ filter:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -94,6 +102,8 @@ flow_control:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -110,6 +120,8 @@ misc:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -126,6 +138,8 @@ multiplexer:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -142,6 +156,8 @@ multiplier:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -158,6 +174,8 @@ fifo:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -174,6 +192,8 @@ ram:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -190,6 +210,8 @@ rtwosdf_fft:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -206,6 +228,8 @@ rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -223,6 +247,8 @@ pipe_fft:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -240,6 +266,8 @@ par_fft:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -256,6 +284,8 @@ wide_fft:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -273,6 +303,8 @@ single_filter:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -289,6 +321,8 @@ wide_filter:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -305,6 +339,8 @@ wbpfb:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
