@@ -1,4 +1,4 @@
-image: gitlabvunit:latest
+image: ghdl/vunit:llvm-master
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
@@ -11,6 +11,8 @@ casper_accumulators_test:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
