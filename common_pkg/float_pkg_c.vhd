@@ -975,20 +975,9 @@ package float_pkg is
 -- pragma synthesis_on
   -- IN VHDL-2006 std_logic_vector is a subtype of std_ulogic_vector, so these
   -- extra functions are needed for compatability.
-  function to_float (
-    arg                     : STD_LOGIC_VECTOR;
-    constant exponent_width : NATURAL := float_exponent_width;  -- length of FP output exponent
-    constant fraction_width : NATURAL := float_fraction_width)  -- length of FP output fraction
-    return UNRESOLVED_float;
 
-  function to_float (
-    arg      : STD_LOGIC_VECTOR;
-    size_res : UNRESOLVED_float)
-    return UNRESOLVED_float;
 
-  -- For Verilog compatability
-  function realtobits (arg : REAL) return STD_LOGIC_VECTOR;
-  function bitstoreal (arg : STD_LOGIC_VECTOR) return REAL;
+
 
 end package float_pkg;
 -------------------------------------------------------------------------------
@@ -1079,11 +1068,6 @@ package body float_pkg is
     return or_reduce (STD_ULOGIC_VECTOR (arg));
   end function or_reduce;
 
-  function or_reduce (arg : STD_LOGIC_VECTOR)
-    return STD_ULOGIC is
-  begin
-    return or_reduce (STD_ULOGIC_VECTOR (arg));
-  end function or_reduce;
 
   -- purpose: AND all of the bits in a vector together
   -- This is a copy of the proposed "and_reduce" from 1076.3
@@ -7083,45 +7067,8 @@ package body float_pkg is
   end function from_hstring;
 -- rtl_synthesis on
 -- pragma synthesis_on
-  function to_float (
-    arg                     : STD_LOGIC_VECTOR;
-    constant exponent_width : NATURAL := float_exponent_width;  -- length of FP output exponent
-    constant fraction_width : NATURAL := float_fraction_width)  -- length of FP output fraction
-    return UNRESOLVED_float is
-  begin
-    return to_float (
-      arg            => to_stdulogicvector (arg),
-      exponent_width => exponent_width,
-      fraction_width => fraction_width);
-  end function to_float;
 
-  function to_float (
-    arg      : STD_LOGIC_VECTOR;
-    size_res : UNRESOLVED_float)
-    return UNRESOLVED_float is
-  begin
-    return to_float (
-      arg      => to_stdulogicvector (arg),
-      size_res => size_res);
-  end function to_float;
 
-  -- For Verilog compatability
-  function realtobits (arg : REAL) return STD_LOGIC_VECTOR is
-    variable result : float64;          -- 64 bit floating point
-  begin
-    result := to_float (arg => arg,
-                        exponent_width => float64'high,
-                        fraction_width => -float64'low);
-    return to_slv (result);
-  end function realtobits;
 
-  function bitstoreal (arg : STD_LOGIC_VECTOR) return REAL is
-    variable arg64 : float64;           -- arg converted to float
-  begin
-    arg64 := to_float (arg => arg,
-                       exponent_width => float64'high,
-                       fraction_width => -float64'low);
-    return to_real (arg64);
-  end function bitstoreal;
 
 end package body float_pkg;
