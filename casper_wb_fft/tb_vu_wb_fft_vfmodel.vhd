@@ -60,12 +60,12 @@ constant c_fft_test : t_fft :=  (
                                 );
 signal clk                  : std_logic;
 signal rst                  : std_logic;
-signal in_re                : t_slv_array(c_fft_test.wb_factor - 1 downto 0)(c_fft_test.in_dat_w-1 downto 0); 
-signal in_im                : t_slv_array(c_fft_test.wb_factor - 1 downto 0)(c_fft_test.in_dat_w-1 downto 0); 
+signal in_re                : t_slv_44_arr(c_fft_test.wb_factor - 1 downto 0); 
+signal in_im                : t_slv_44_arr(c_fft_test.wb_factor - 1 downto 0); 
 signal in_val               : std_logic;
 signal shiftreg             : std_logic_vector(g_fftsize_log2-1 downto 0);
-signal out_re               : t_slv_array(c_fft_test.wb_factor - 1 downto 0)(c_fft_test.out_dat_w-1 downto 0);
-signal out_im               : t_slv_array(c_fft_test.wb_factor - 1 downto 0)(c_fft_test.out_dat_w-1 downto 0);
+signal out_re               : t_slv_64_arr(c_fft_test.wb_factor - 1 downto 0);
+signal out_im               : t_slv_64_arr(c_fft_test.wb_factor - 1 downto 0);
 signal ovflw                : std_logic_vector(g_fftsize_log2-1 downto 0);
 signal out_val              : std_logic;
 signal endsim               : std_logic := '0';
@@ -260,8 +260,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
         read(line_var,temp_number);
         dataQ             := to_signed(temp_number,g_in_dat_w);
         in_val            <= '1';
-        in_re(widx)       <= std_logic_vector(dataI);
-        in_im(widx)       <= std_logic_vector(dataQ);
+        in_re(widx)       <= std_logic_vector(resize(dataI,44));
+        in_im(widx)       <= std_logic_vector(resize(dataQ,44));
       end loop;
       wait until rising_edge(clk);
       in_val      <= '0';
@@ -275,8 +275,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     for n in 1 to (3*(c_fftsize/c_fft_test.wb_factor)) loop
       in_val      <= '1';
       for widx in 0 to (c_fft_test.wb_factor-1) loop
-        in_re(widx)       <= std_logic_vector(to_signed(0,g_in_dat_w));
-        in_im(widx)       <= std_logic_vector(to_signed(0,g_in_dat_w));
+        in_re(widx)       <= std_logic_vector(to_signed(0,44));
+        in_im(widx)       <= std_logic_vector(to_signed(0,44));
       end loop;
       wait until rising_edge(clk);
       in_val      <= '0';
