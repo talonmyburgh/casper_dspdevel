@@ -4,7 +4,7 @@ from itertools import product
 import numpy as np
 
 # Create VUnit instance by parsing command line arguments
-vu = Vunit.from_argv(compile_builtins=False)
+vu = VUnit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 script_dir = dirname(__file__)
 

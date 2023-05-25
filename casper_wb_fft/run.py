@@ -97,7 +97,7 @@ cli.parser.add_argument('--bitaccurate',action = 'store_true', help = 'Run the b
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_args(args = args,compile_builtins=False)
+vu = = VUnit.from_argv(args = args,compile_builtins=False)
 # If none of the flags are specified, run all tests.
 run_all = not(args.par or args.pipe or args.wide or args.bitaccurate)
 vu.add_vhdl_builtins()

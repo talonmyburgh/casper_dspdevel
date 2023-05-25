@@ -4,7 +4,7 @@ from random import sample, choice
 import glob
 from os.path import dirname
 # Create VUnit instance by parsing command line arguments
-vu = Vunit.from_argv(compile_builtins=False)
+vu = VUnit.from_argv(compile_builtins=False)
 vu.add_vhdl_builtins()
 # Function for mult range calculations
 def get_ranges(dat_w,margin):
