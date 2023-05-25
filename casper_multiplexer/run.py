@@ -73,7 +73,7 @@ lib2.add_source_files(os.path.join(script_dir, "../common_components/common_pipe
 lib2.add_source_files(os.path.join(script_dir, "../common_components/common_pipeline_sl.vhd"))
 
 lib3 = vu.add_library("common_pkg_lib")
-lib3.add_source_files(join(script_dir, "../common_pkg/fixed_float_types.vhd"))
+lib3.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
 lib3.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
 lib3.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 lib3.add_source_files(os.path.join(script_dir, "../common_pkg/*.vhd"))
