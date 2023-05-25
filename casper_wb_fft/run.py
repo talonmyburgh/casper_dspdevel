@@ -158,6 +158,9 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))
