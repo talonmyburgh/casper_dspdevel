@@ -1,8 +1,8 @@
 import os
 from vunit import VUnit            
 
-vu = VUnit.from_argv()
-
+vu = from_argv(compile_builtins=False)
+vu.add_vhdl_builtins()
 script_dir = os.path.dirname(__file__)
 
 lib1 = vu.add_library("tb_lib",allow_duplicate=True)

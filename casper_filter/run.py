@@ -17,8 +17,8 @@ cli.parser.add_argument('--wide',action = 'store_true', help = 'Run the wide Fil
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_args(args = args)
-
+vu = VUnit.from_args(args = args,compile_builtins=False)
+vu.add_vhdl_builtins()
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))

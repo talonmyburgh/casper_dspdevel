@@ -2,7 +2,8 @@ from vunit import VUnit
 from os.path import dirname, join
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
+vu = from_argv(compile_builtins=False)
+vu.add_vhdl_builtins()
 script_dir = dirname(__file__)
 
 # XPM Library compile

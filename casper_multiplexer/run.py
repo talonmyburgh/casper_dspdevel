@@ -44,8 +44,8 @@ test_nof_cycles = 500000):
             g_test_nof_cycles=test_nof_cycles)
       )
 
-vu = VUnit.from_argv()
-
+vu = from_argv(compile_builtins=False)
+vu.add_vhdl_builtins()
 script_dir = os.path.dirname(__file__)
 
 lib1 = vu.add_library("casper_multiplexer_lib")

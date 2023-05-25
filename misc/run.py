@@ -4,7 +4,7 @@ from itertools import product
 import random
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
+vu = from_argv(compile_builtins=False)
 script_dir = dirname(__file__)
 
 # Create library 'common_pkg_lib'
