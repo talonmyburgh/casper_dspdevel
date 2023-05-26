@@ -187,8 +187,6 @@ architecture rtl of fft_r2_wide is
     signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
 
-    signal in_fft_sepa_re_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
-    signal in_fft_sepa_im_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_val    : std_logic;
@@ -362,10 +360,7 @@ begin
         -- OPTIONAL: SEPARATION STAGE
         ---------------------------------------------------------------
         -- When the separate functionality is required:
-       gen_inputs_for_sep : for I in g_fft.wb_factor - 1 downto 0 generate
-            in_fft_sepa_re_arr(I) <= fft_out_re_arr(I)(43 downto 0);
-            in_fft_sepa_im_arr(I) <= fft_out_re_arr(I)(43 downto 0);
-        end generate;
+
         gen_separate : if g_fft.use_separate generate
             u_separator : entity work.fft_sepa_wide
                 generic map(
@@ -377,8 +372,8 @@ begin
                     clken      => clken,
                     clk        => clk,
                     rst        => rst,
-                    in_re_arr  => in_fft_sepa_re_arr,
-                    in_im_arr  => in_fft_sepa_im_arr,
+                    in_re_arr  => fft_out_re_arr,
+                    in_im_arr  => fft_out_im_arr,
                     in_val     => fft_out_val,
                     out_re_arr => sep_out_re_arr,
                     out_im_arr => sep_out_im_arr,
