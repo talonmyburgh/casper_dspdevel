@@ -1,4 +1,4 @@
-image: ghdl/vunit:llvm-master
+image: ghdl/vunit:mcode-master
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
