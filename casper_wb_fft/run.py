@@ -1,4 +1,5 @@
 from vunit import VUnit, VUnitCLI
+from vunit.sim_if.factory import SIMULATOR_FACTORY
 from os.path import join, abspath, split,realpath,dirname
 from importlib.machinery import SourceFileLoader
 # load the r2sdf fix point accurate model from r2sdf module.
@@ -97,8 +98,7 @@ cli.parser.add_argument('--bitaccurate',action = 'store_true', help = 'Run the b
 args = cli.parse_args()
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_args(args = args,compile_builtins=False)
-
+vu = VUnit.from_args(args = args)
 # If none of the flags are specified, run all tests.
 run_all = not(args.par or args.pipe or args.wide or args.bitaccurate)
 vu.add_vhdl_builtins()
@@ -158,6 +158,19 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c_2008redirect.vhdl"))
+else:
+    # use the "hacked" up VHDL93 version in other simulators 
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd")) 
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))

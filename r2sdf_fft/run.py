@@ -1,6 +1,6 @@
 from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
-
+from vunit.sim_if.factory import SIMULATOR_FACTORY
 # Create VUnit instance by parsing command line arguments
 
 
@@ -8,8 +8,8 @@ cli = VUnitCLI()
 cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle Tests')
 cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
 args = cli.parse_args()
-vu = VUnit.from_args(args = args,compile_builtins=False)
-#vu = VUnit.from_argv(argv = args,compile_builtins=False)
+vu = VUnit.from_args(args = args)
+#vu = VUnit.from_argv(argv = args,)
 vu.add_vhdl_builtins()
 vu.add_random()
 
@@ -68,6 +68,21 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+# the latest version (4.0.0) of GHDL doesn't like the hacked up vhdl 93 fixed library so we'll use the real one but compile if for common_pkg
+# Questa simulator will still use the hacked up one so we have some verification it works as expected since the hacked one is uses in Vivado sim and synth
+if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c_2008redirect.vhdl"))
+else:
+    # use the "hacked" up VHDL93 version in other simulators 
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))    
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))

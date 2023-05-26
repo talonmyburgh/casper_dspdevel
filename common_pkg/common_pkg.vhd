@@ -32,7 +32,7 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE IEEE.MATH_REAL.ALL;
-use work.fixed_float_types.all;
+use IEEE.fixed_float_types.all;
 use work.fixed_pkg.all;
 
 PACKAGE common_pkg IS

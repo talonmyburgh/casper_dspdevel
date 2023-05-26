@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all; 
 use ieee.math_real.all;
 library common_pkg_lib;
-use common_pkg_lib.fixed_float_types.all;
+use ieee.fixed_float_types.all;
 --use ieee.fixed_pkg.all;
 use common_pkg_lib.fixed_pkg.all;
 context vunit_lib.vunit_context;

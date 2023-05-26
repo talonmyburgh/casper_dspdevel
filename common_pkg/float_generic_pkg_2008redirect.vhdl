@@ -1,20 +1,43 @@
--- --------------------------------------------------------------------
--- "float_pkg" package contains functions for floating point math.
--- Please see the documentation for the floating point package.
--- This package should be compiled into "ieee_proposed" and used as follows:
--- use ieee.std_logic_1164.all;
--- use ieee.numeric_std.all;
--- use ieee_proposed.fixed_float_types.all;
--- use ieee_proposed.fixed_pkg.all;
--- use ieee_proposed.float_pkg.all;
+-- -----------------------------------------------------------------
+-- 
+-- Copyright 2019 IEEE P1076 WG Authors
+-- 
+-- See the LICENSE file distributed with this work for copyright and
+-- licensing information and the AUTHORS file.
+-- 
+-- This file to you under the Apache License, Version 2.0 (the "License").
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+-- 
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+-- implied.  See the License for the specific language governing
+-- permissions and limitations under the License.
 --
---  This verison is designed to work with the VHDL-93 compilers.  Please
---  note the "%%%" comments.  These are where we diverge from the
---  VHDL-200X LRM.
---
+--   Title     :  Floating-point package (Generic package declaration)
+--             :
+--   Library   :  This package shall be compiled into a library
+--             :  symbolically named IEEE.
+--             :
+--   Developers:  Accellera VHDL-TC and IEEE P1076 Working Group
+--             :
+--   Purpose   :  This packages defines basic binary floating point
+--             :  arithmetic functions
+--             :
+--   Note      :  This package may be modified to include additional data
+--             :  required by tools, but it must in no way change the
+--             :  external interfaces or simulation behavior of the
+--             :  description. It is permissible to add comments and/or
+--             :  attributes to the package declarations, but not to change
+--             :  or delete any original lines of the package declaration.
+--             :  The package body may be changed only in accordance with
+--             :  the terms of Clause 16 of this standard.
+--             :
 -- --------------------------------------------------------------------
--- Version    : $Revision: 1.2 $
--- Date       : $Date: 2011/03/24 07:44:24 $
+-- $Revision: 1220 $
+-- $Date: 2008-04-10 17:16:09 +0930 (Thu, 10 Apr 2008) $
 -- --------------------------------------------------------------------
 
 use STD.TEXTIO.all;
@@ -22,38 +45,42 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library common_pkg_lib;
-use ieee.fixed_float_types.all;
-use common_pkg_lib.fixed_pkg.all;
+use IEEE.fixed_float_types.all;
 
-package float_pkg is
--- generic (
-  -- Defaults for sizing routines, when you do a "to_float" this will be
-  -- the default size.  Example float32 would be 8 and 23 (8 downto -23)
-  constant float_exponent_width : NATURAL    := 8;
-  constant float_fraction_width : NATURAL    := 23;
-  -- Rounding algorithm, "round_nearest" is default, other valid values
-  -- are "round_zero" (truncation), "round_inf" (round up), and
-  -- "round_neginf" (round down)
-  constant float_round_style    : round_type := round_nearest;
-  -- Denormal numbers (very small numbers near zero) true or false
-  constant float_denormalize    : BOOLEAN    := true;
-  -- Turns on NAN processing (invalid numbers and overflow) true of false
-  constant float_check_error    : BOOLEAN    := true;
-  -- Guard bits are added to the bottom of every operation for rounding.
-  -- any natural number (including 0) are valid.
-  constant float_guard_bits     : NATURAL    := 3;
-  -- If TRUE, then turn off warnings on "X" propagation
-  constant no_warning : BOOLEAN := (false
-                                                 );
+package float_generic_pkg is
+  generic (
+    -- Defaults for sizing routines, when you do a "to_float" this will be
+    -- the default size.  Example float32 would be 8 and 23 (8 downto -23)
+    float_exponent_width : NATURAL    := 8;
+    float_fraction_width : NATURAL    := 23;
+    -- Rounding algorithm, "round_nearest" is default, other valid values
+    -- are "round_zero" (truncation), "round_inf" (round up), and
+    -- "round_neginf" (round down)
+    float_round_style    : round_type := round_nearest;
+    -- Denormal numbers (very small numbers near zero) true or false
+    float_denormalize    : BOOLEAN    := true;
+    -- Turns on NAN processing (invalid numbers and overflow) true of false
+    float_check_error    : BOOLEAN    := true;
+    -- Guard bits are added to the bottom of every operation for rounding.
+    -- any natural number (including 0) are valid.
+    float_guard_bits     : NATURAL    := 3;
+    -- If TRUE, then turn off warnings on "X" propagation
+    no_warning           : BOOLEAN    := false;
+    package fixed_pkg is new common_pkg_lib.fixed_generic_pkg
+                           generic map (<>) );
 
   -- Author David Bishop (dbishop@vhdl.org)
+  constant CopyRightNotice : STRING :=
+    "Copyright IEEE P1076 WG. Licensed Apache 2.0";
 
-  -- Note that the size of the vector is not defined here, but in
-  -- the package which calls this one.
+  use fixed_pkg.all;
+
+  -- Note that this is "INTEGER range <>", thus if you use a literal, then the
+  -- default range will be (INTEGER'low to INTEGER'low + X)
   type UNRESOLVED_float is array (INTEGER range <>) of STD_ULOGIC;  -- main type
-  subtype U_float is UNRESOLVED_float;
+  alias U_float is UNRESOLVED_float;
 
-  subtype float is UNRESOLVED_float;
+  subtype float is (resolved) UNRESOLVED_float;
   -----------------------------------------------------------------------------
   -- Use the float type to define your own floating point numbers.
   -- There must be a negative index or the packages will error out.
@@ -133,15 +160,15 @@ package float_pkg is
 
   -- Arithmetic functions, these operators do not require parameters.
   function "abs" (arg : UNRESOLVED_float) return UNRESOLVED_float;
-  function "-" (arg   : UNRESOLVED_float) return UNRESOLVED_float;
+  function "-"   (arg : UNRESOLVED_float) return UNRESOLVED_float;
 
   -- These allows the base math functions to use the default values
   -- of their parameters.  Thus they do full IEEE floating point.
 
-  function "+" (l, r   : UNRESOLVED_float) return UNRESOLVED_float;
-  function "-" (l, r   : UNRESOLVED_float) return UNRESOLVED_float;
-  function "*" (l, r   : UNRESOLVED_float) return UNRESOLVED_float;
-  function "/" (l, r   : UNRESOLVED_float) return UNRESOLVED_float;
+  function "+"   (l, r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "-"   (l, r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "*"   (l, r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "/"   (l, r : UNRESOLVED_float) return UNRESOLVED_float;
   function "rem" (l, r : UNRESOLVED_float) return UNRESOLVED_float;
   function "mod" (l, r : UNRESOLVED_float) return UNRESOLVED_float;
 
@@ -227,7 +254,7 @@ package float_pkg is
 
   -- Square root (all 754 based implementations need this)
   function sqrt (
-    arg                  : UNRESOLVED_float;  -- floating point input
+    arg                  : UNRESOLVED_float;       -- floating point input
     constant round_style : round_type := float_round_style;
     constant guard       : NATURAL    := float_guard_bits;
     constant check_error : BOOLEAN    := float_check_error;
@@ -284,14 +311,14 @@ package float_pkg is
   function ">"  (l, r : UNRESOLVED_float) return BOOLEAN;
   function "<"  (l, r : UNRESOLVED_float) return BOOLEAN;
 
-  function \?=\  (l, r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?/=\ (l, r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>\  (l, r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>=\ (l, r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<\  (l, r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<=\ (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?="  (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?/=" (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?>"  (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?>=" (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?<"  (l, r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?<=" (l, r : UNRESOLVED_float) return STD_ULOGIC;
 
-  function std_match (l, r     : UNRESOLVED_float) return BOOLEAN;
+  function std_match (l, r : UNRESOLVED_float) return BOOLEAN;
   function find_rightmost (arg : UNRESOLVED_float; y : STD_ULOGIC)
     return INTEGER;
   function find_leftmost (arg : UNRESOLVED_float; y : STD_ULOGIC)
@@ -381,7 +408,7 @@ package float_pkg is
 
   -- unsigned to float
   function to_float (
-    arg                     : UNSIGNED;
+    arg                     : UNRESOLVED_UNSIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style)  -- rounding option
@@ -389,7 +416,7 @@ package float_pkg is
 
   -- signed to float
   function to_float (
-    arg                     : SIGNED;
+    arg                     : UNRESOLVED_SIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style)  -- rounding option
@@ -431,14 +458,14 @@ package float_pkg is
 
   -- unsigned to float
   function to_float (
-    arg                  : UNSIGNED;
+    arg                  : UNRESOLVED_UNSIGNED;
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- signed to float
   function to_float (
-    arg                  : SIGNED;
+    arg                  : UNRESOLVED_SIGNED;
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
@@ -471,7 +498,7 @@ package float_pkg is
     constant size        : NATURAL;     -- length of output
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return UNSIGNED;
+    return UNRESOLVED_UNSIGNED;
 
   -- float to signed
   function to_signed (
@@ -479,7 +506,7 @@ package float_pkg is
     constant size        : NATURAL;     -- length of output
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return SIGNED;
+    return UNRESOLVED_SIGNED;
 
   -- purpose: Converts a float to unsigned fixed point
   function to_ufixed (
@@ -507,18 +534,18 @@ package float_pkg is
   -- float to unsigned
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
-    size_res             : UNSIGNED;
+    size_res             : UNRESOLVED_UNSIGNED;
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return UNSIGNED;
+    return UNRESOLVED_UNSIGNED;
 
   -- float to signed
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
-    size_res             : SIGNED;
+    size_res             : UNRESOLVED_SIGNED;
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return SIGNED;
+    return UNRESOLVED_SIGNED;
 
   -- purpose: Converts a float to unsigned fixed point
   function to_ufixed (
@@ -578,16 +605,16 @@ package float_pkg is
     arg         : in  UNRESOLVED_float;
     denormalize : in  BOOLEAN := float_denormalize;
     check_error : in  BOOLEAN := float_check_error;
-    fract       : out UNSIGNED;
-    expon       : out SIGNED;  -- NOTE:  Add 1 to get the real exponent!
+    fract       : out UNRESOLVED_UNSIGNED;
+    expon       : out UNRESOLVED_SIGNED;  -- NOTE:  Add 1 to get the real exponent!
     sign        : out STD_ULOGIC);
 
   procedure break_number (
     arg         : in  UNRESOLVED_float;
     denormalize : in  BOOLEAN := float_denormalize;
     check_error : in  BOOLEAN := float_check_error;
-    fract       : out ufixed;           -- a number between 1.0 and 2.0
-    expon       : out SIGNED;  -- NOTE:  Add 1 to get the real exponent!
+    fract       : out UNRESOLVED_ufixed;  -- a number between 1.0 and 2.0
+    expon       : out UNRESOLVED_SIGNED;  -- NOTE:  Add 1 to get the real exponent!
     sign        : out STD_ULOGIC);
 
   -- Normalize takes a fraction and and exponent and converts them into
@@ -595,8 +622,8 @@ package float_pkg is
   -- Exponent is assumed to be biased by -1
 
   function normalize (
-    fract                   : UNSIGNED;           -- fraction, unnormalized
-    expon                   : SIGNED;   -- exponent - 1, normalized
+    fract                   : UNRESOLVED_UNSIGNED;  -- fraction, unnormalized
+    expon                   : UNRESOLVED_SIGNED;   -- exponent - 1, normalized
     sign                    : STD_ULOGIC;         -- sign bit
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
@@ -608,8 +635,8 @@ package float_pkg is
 
   -- Exponent is assumed to be biased by -1
   function normalize (
-    fract                   : ufixed;   -- unsigned fixed point
-    expon                   : SIGNED;   -- exponent - 1, normalized
+    fract                   : UNRESOLVED_ufixed;   -- unsigned fixed point
+    expon                   : UNRESOLVED_SIGNED;   -- exponent - 1, normalized
     sign                    : STD_ULOGIC;         -- sign bit
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
@@ -620,8 +647,8 @@ package float_pkg is
     return UNRESOLVED_float;
 
   function normalize (
-    fract                : UNSIGNED;    -- unsigned
-    expon                : SIGNED;      -- exponent - 1, normalized
+    fract                : UNRESOLVED_UNSIGNED;    -- unsigned
+    expon                : UNRESOLVED_SIGNED;      -- exponent - 1, normalized
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
@@ -632,8 +659,8 @@ package float_pkg is
 
   -- Exponent is assumed to be biased by -1
   function normalize (
-    fract                : ufixed;      -- unsigned fixed point
-    expon                : SIGNED;      -- exponent - 1, normalized
+    fract                : UNRESOLVED_ufixed;      -- unsigned fixed point
+    expon                : UNRESOLVED_SIGNED;      -- exponent - 1, normalized
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
@@ -643,44 +670,44 @@ package float_pkg is
     return UNRESOLVED_float;
 
   -- overloaded versions
-  function "+"   (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "+"   (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "+"   (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "+"   (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "+"   (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "+"   (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function "-"   (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "-"   (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "-"   (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "-"   (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "-"   (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "-"   (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function "*"   (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "*"   (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "*"   (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "*"   (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "*"   (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "*"   (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function "/"   (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "/"   (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "/"   (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "/"   (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "/"   (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "/"   (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function "rem" (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "rem" (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "rem" (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "rem" (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "rem" (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "rem" (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function "mod" (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function "mod" (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function "mod" (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function "mod" (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function "mod" (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function "mod" (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
 
   -- overloaded compare functions
-  function "="   (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function "/="  (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function ">="  (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function "<="  (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function ">"   (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function "<"   (l : UNRESOLVED_float; r : REAL) return BOOLEAN;
-  function "="   (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
-  function "/="  (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
-  function ">="  (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
-  function "<="  (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
-  function ">"   (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
-  function "<"   (l : REAL; r : UNRESOLVED_float) return BOOLEAN;
+  function "="   (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function "/="  (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function ">="  (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function "<="  (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function ">"   (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function "<"   (l : UNRESOLVED_float; r : REAL)    return BOOLEAN;
+  function "="   (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
+  function "/="  (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
+  function ">="  (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
+  function "<="  (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
+  function ">"   (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
+  function "<"   (l : REAL; r : UNRESOLVED_float)    return BOOLEAN;
   function "="   (l : UNRESOLVED_float; r : INTEGER) return BOOLEAN;
   function "/="  (l : UNRESOLVED_float; r : INTEGER) return BOOLEAN;
   function ">="  (l : UNRESOLVED_float; r : INTEGER) return BOOLEAN;
@@ -693,35 +720,35 @@ package float_pkg is
   function "<="  (l : INTEGER; r : UNRESOLVED_float) return BOOLEAN;
   function ">"   (l : INTEGER; r : UNRESOLVED_float) return BOOLEAN;
   function "<"   (l : INTEGER; r : UNRESOLVED_float) return BOOLEAN;
-  function \?=\  (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?/=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?>\  (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?>=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?<\  (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?<=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC;
-  function \?=\  (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?/=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>\  (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<\  (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?=\  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?/=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?>\  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?>=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?<\  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?<=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
-  function \?=\  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?/=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>\  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?>=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<\  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
-  function \?<=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?="  (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?/=" (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?>"  (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?>=" (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?<"  (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?<=" (l : UNRESOLVED_float; r : REAL)    return STD_ULOGIC;
+  function "?="  (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?/=" (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?>"  (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?>=" (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?<"  (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?<=" (l : REAL; r : UNRESOLVED_float)    return STD_ULOGIC;
+  function "?="  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?/=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?>"  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?>=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?<"  (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?<=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC;
+  function "?="  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?/=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?>"  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?>=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?<"  (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
+  function "?<=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC;
   -- minimum and maximum overloads
-  function maximum (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function minimum (l : UNRESOLVED_float; r : REAL) return UNRESOLVED_float;
-  function maximum (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
-  function minimum (l : REAL; r : UNRESOLVED_float) return UNRESOLVED_float;
+  function maximum (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function minimum (l : UNRESOLVED_float; r : REAL)    return UNRESOLVED_float;
+  function maximum (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
+  function minimum (l : REAL; r : UNRESOLVED_float)    return UNRESOLVED_float;
   function maximum (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function minimum (l : UNRESOLVED_float; r : INTEGER) return UNRESOLVED_float;
   function maximum (l : INTEGER; r : UNRESOLVED_float) return UNRESOLVED_float;
@@ -763,12 +790,12 @@ package float_pkg is
   function "xnor" (l : UNRESOLVED_float; r : STD_ULOGIC)
     return UNRESOLVED_float;
   -- Reduction operators, same as numeric_std functions
-  function and_reduce  (l : UNRESOLVED_float) return STD_ULOGIC;
-  function nand_reduce (l : UNRESOLVED_float) return STD_ULOGIC;
-  function or_reduce   (l : UNRESOLVED_float) return STD_ULOGIC;
-  function nor_reduce  (l : UNRESOLVED_float) return STD_ULOGIC;
-  function xor_reduce  (l : UNRESOLVED_float) return STD_ULOGIC;
-  function xnor_reduce (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "and"  (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "nand" (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "or"   (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "nor"  (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "xor"  (l : UNRESOLVED_float) return STD_ULOGIC;
+  function "xnor" (l : UNRESOLVED_float) return STD_ULOGIC;
 
   -- Note: "sla", "sra", "sll", "slr", "rol" and "ror" not implemented.
 
@@ -782,7 +809,7 @@ package float_pkg is
   -- Returns y * 2**n for integral values of N without computing 2**n
   function Scalb (
     y                    : UNRESOLVED_float;  -- floating point input
-    N                    : INTEGER;     -- exponent to add    
+    N                    : INTEGER;     -- exponent to add
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -791,7 +818,7 @@ package float_pkg is
   -- Returns y * 2**n for integral values of N without computing 2**n
   function Scalb (
     y                    : UNRESOLVED_float;  -- floating point input
-    N                    : SIGNED;      -- exponent to add    
+    N                    : UNRESOLVED_SIGNED;      -- exponent to add
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -799,7 +826,7 @@ package float_pkg is
 
   -- returns the unbiased exponent of x
   function Logb (x : UNRESOLVED_float) return INTEGER;
-  function Logb (x : UNRESOLVED_float) return SIGNED;
+  function Logb (x : UNRESOLVED_float) return UNRESOLVED_SIGNED;
 
   -- returns the next representable neighbor of x in the direction toward y
   function Nextafter (
@@ -858,11 +885,10 @@ package float_pkg is
     size_res : UNRESOLVED_float)        -- variable is only use for sizing
     return UNRESOLVED_float;
 
-  -- ===========================================================================
+  --===========================================================================
   -- string and textio Functions
-  -- ===========================================================================
--- rtl_synthesis off
--- pragma synthesis_off
+  --===========================================================================
+
   -- writes S:EEEE:FFFFFFFF
   procedure WRITE (
     L         : inout LINE;              -- access type (pointer)
@@ -871,15 +897,15 @@ package float_pkg is
     FIELD     : in    WIDTH := 0);       -- width of field
 
   -- Reads SEEEEFFFFFFFF, "." and ":" are ignored
-  procedure READ (L : inout LINE; VALUE : out UNRESOLVED_float);
+  procedure READ (L    : inout LINE; VALUE : out UNRESOLVED_float);
   procedure READ (L    : inout LINE; VALUE : out UNRESOLVED_float;
                   GOOD : out   BOOLEAN);
 
   alias BREAD is READ [LINE, UNRESOLVED_float, BOOLEAN];
   alias BREAD is READ [LINE, UNRESOLVED_float];
   alias BWRITE is WRITE [LINE, UNRESOLVED_float, SIDE, WIDTH];
-  alias BINARY_READ is READ [LINE, UNRESOLVED_FLOAT, BOOLEAN];
-  alias BINARY_READ is READ [LINE, UNRESOLVED_FLOAT];
+  alias BINARY_READ is READ [LINE, UNRESOLVED_float, BOOLEAN];
+  alias BINARY_READ is READ [LINE, UNRESOLVED_float];
   alias BINARY_WRITE is WRITE [LINE, UNRESOLVED_float, SIDE, WIDTH];
 
   procedure OWRITE (
@@ -889,12 +915,12 @@ package float_pkg is
     FIELD     : in    WIDTH := 0);       -- width of field
 
   -- Octal read with padding, no separators used
-  procedure OREAD (L : inout LINE; VALUE : out UNRESOLVED_float);
+  procedure OREAD (L    : inout LINE; VALUE : out UNRESOLVED_float);
   procedure OREAD (L    : inout LINE; VALUE : out UNRESOLVED_float;
                    GOOD : out   BOOLEAN);
-  alias OCTAL_READ is OREAD [LINE, UNRESOLVED_FLOAT, BOOLEAN];
-  alias OCTAL_READ is OREAD [LINE, UNRESOLVED_FLOAT];
-  alias OCTAL_WRITE is OWRITE [LINE, UNRESOLVED_FLOAT, SIDE, WIDTH];
+  alias OCTAL_READ is OREAD [LINE, UNRESOLVED_float, BOOLEAN];
+  alias OCTAL_READ is OREAD [LINE, UNRESOLVED_float];
+  alias OCTAL_WRITE is OWRITE [LINE, UNRESOLVED_float, SIDE, WIDTH];
 
   -- Hex write with padding, no separators
   procedure HWRITE (
@@ -907,22 +933,22 @@ package float_pkg is
   procedure HREAD (L : inout LINE; VALUE : out UNRESOLVED_float);
   procedure HREAD (L    : inout LINE; VALUE : out UNRESOLVED_float;
                    GOOD : out   BOOLEAN);
-  alias HEX_READ is HREAD [LINE, UNRESOLVED_FLOAT, BOOLEAN];
-  alias HEX_READ is HREAD [LINE, UNRESOLVED_FLOAT];
-  alias HEX_WRITE is HWRITE [LINE, UNRESOLVED_FLOAT, SIDE, WIDTH];
+  alias HEX_READ is HREAD [LINE, UNRESOLVED_float, BOOLEAN];
+  alias HEX_READ is HREAD [LINE, UNRESOLVED_float];
+  alias HEX_WRITE is HWRITE [LINE, UNRESOLVED_float, SIDE, WIDTH];
 
   -- returns "S:EEEE:FFFFFFFF"
   function to_string (value : UNRESOLVED_float) return STRING;
-  alias TO_BSTRING is TO_STRING [UNRESOLVED_FLOAT return STRING];
-  alias TO_BINARY_STRING is TO_STRING [UNRESOLVED_FLOAT return STRING];
+  alias TO_BSTRING is TO_STRING [UNRESOLVED_float return STRING];
+  alias TO_BINARY_STRING is TO_STRING [UNRESOLVED_float return STRING];
 
   -- Returns a HEX string, with padding
   function to_hstring (value : UNRESOLVED_float) return STRING;
-  alias TO_HEX_STRING is TO_HSTRING [UNRESOLVED_FLOAT return STRING];
+  alias TO_HEX_STRING is to_hstring [UNRESOLVED_float return STRING];
 
   -- Returns and octal string, with padding
   function to_ostring (value : UNRESOLVED_float) return STRING;
-  alias TO_OCTAL_STRING is TO_OSTRING [UNRESOLVED_FLOAT return STRING];
+  alias TO_OCTAL_STRING is to_ostring [UNRESOLVED_float return STRING];
 
   function from_string (
     bstring                 : STRING;   -- binary string
@@ -951,7 +977,7 @@ package float_pkg is
 
   function from_string (
     bstring  : STRING;                  -- binary string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float;
   alias from_bstring is from_string [STRING, UNRESOLVED_float
                                      return UNRESOLVED_float];
@@ -960,39 +986,62 @@ package float_pkg is
 
   function from_ostring (
     ostring  : STRING;                  -- Octal string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float;
   alias from_octal_string is from_ostring [STRING, UNRESOLVED_float
                                            return UNRESOLVED_float];
 
   function from_hstring (
     hstring  : STRING;                  -- hex string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float;
   alias from_hex_string is from_hstring [STRING, UNRESOLVED_float
                                          return UNRESOLVED_float];
--- rtl_synthesis on
--- pragma synthesis_on
-  -- IN VHDL-2006 std_logic_vector is a subtype of std_ulogic_vector, so these
-  -- extra functions are needed for compatability.
 
-
-
-
-end package float_pkg;
--------------------------------------------------------------------------------
--- Proposed package body for the VHDL-200x-FT float_pkg package
--- This version is optimized for Synthesis, and not for simulation.
--- Note that there are functional differences between the synthesis and
--- simulation packages bodies.  The Synthesis version is preferred.
--- This package body supplies a recommended implementation of these functions
--- Version    : $Revision: 1.2 $
--- Date       : $Date: 2011/03/24 07:44:24 $
+end package float_generic_pkg;
+-- -----------------------------------------------------------------
+-- 
+-- Copyright 2019 IEEE P1076 WG Authors
+-- 
+-- See the LICENSE file distributed with this work for copyright and
+-- licensing information and the AUTHORS file.
+-- 
+-- This file to you under the Apache License, Version 2.0 (the "License").
+-- You may obtain a copy of the License at
+-- 
+--     http://www.apache.org/licenses/LICENSE-2.0
+-- 
+-- Unless required by applicable law or agreed to in writing, software
+-- distributed under the License is distributed on an "AS IS" BASIS,
+-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+-- implied.  See the License for the specific language governing
+-- permissions and limitations under the License.
 --
---  Created for VHDL-200X par, David Bishop (dbishop@vhdl.org)
--------------------------------------------------------------------------------
+--   Title     :  Floating-point package (Generic package body)
+--             :
+--   Library   :  This package shall be compiled into a library
+--             :  symbolically named IEEE.
+--             :
+--   Developers:  Accellera VHDL-TC and IEEE P1076 Working Group
+--             :
+--   Purpose   :  This packages defines basic binary floating point
+--             :  arithmetic functions
+--             :
+--   Note      :  This package may be modified to include additional data
+--             :  required by tools, but it must in no way change the
+--             :  external interfaces or simulation behavior of the
+--             :  description. It is permissible to add comments and/or
+--             :  attributes to the package declarations, but not to change
+--             :  or delete any original lines of the package declaration.
+--             :  The package body may be changed only in accordance with
+--             :  the terms of Clause 16 of this standard.
+--             :
+-- --------------------------------------------------------------------
+-- $Revision: 1220 $
+-- $Date: 2008-04-10 17:16:09 +0930 (Thu, 10 Apr 2008) $
+-- --------------------------------------------------------------------
 
-package body float_pkg is
+package body float_generic_pkg is
 
   -- Author David Bishop (dbishop@vhdl.org)
   -----------------------------------------------------------------------------
@@ -1010,226 +1059,12 @@ package body float_pkg is
   constant NAFP : UNRESOLVED_float (0 downto 1)  := (others => '0');
   constant NSLV : STD_ULOGIC_VECTOR (0 downto 1) := (others => '0');
 
-  -- %%% Replicated functions
-  -- These functions are replicated so that we don't need to reference the new
-  -- 2006 package std.standard, std_logic_1164 and numeric_std.
-  function maximum (
-    l, r : INTEGER)                     -- inputs
-    return INTEGER is
-  begin  -- function max
-    if l > r then return l;
-    else return r;
-    end if;
-  end function maximum;
-
-  function minimum (
-    l, r : INTEGER)                     -- inputs
-    return INTEGER is
-  begin  -- function min
-    if l > r then return r;
-    else return l;
-    end if;
-  end function minimum;
-
-  function or_reduce (arg : STD_ULOGIC_VECTOR)
-    return STD_LOGIC is
-    variable Upper, Lower : STD_ULOGIC;
-    variable Half         : INTEGER;
-    variable BUS_int      : STD_ULOGIC_VECTOR (arg'length - 1 downto 0);
-    variable Result       : STD_ULOGIC;
-  begin
-    if (arg'length < 1) then            -- In the case of a NULL range
-      Result := '0';
-    else
-      BUS_int := to_ux01 (arg);
-      if (BUS_int'length = 1) then
-        Result := BUS_int (BUS_int'left);
-      elsif (BUS_int'length = 2) then
-        Result := BUS_int (BUS_int'right) or BUS_int (BUS_int'left);
-      else
-        Half   := (BUS_int'length + 1) / 2 + BUS_int'right;
-        Upper  := or_reduce (BUS_int (BUS_int'left downto Half));
-        Lower  := or_reduce (BUS_int (Half - 1 downto BUS_int'right));
-        Result := Upper or Lower;
-      end if;
-    end if;
-    return Result;
-  end function or_reduce;
-
-  function or_reduce (arg : UNSIGNED)
-    return STD_ULOGIC is
-  begin
-    return or_reduce (STD_ULOGIC_VECTOR (arg));
-  end function or_reduce;
-
-  function or_reduce (arg : SIGNED)
-    return STD_ULOGIC is
-  begin
-    return or_reduce (STD_ULOGIC_VECTOR (arg));
-  end function or_reduce;
-
-
-  -- purpose: AND all of the bits in a vector together
-  -- This is a copy of the proposed "and_reduce" from 1076.3
-  function and_reduce (arg : STD_ULOGIC_VECTOR)
-    return STD_LOGIC is
-    variable Upper, Lower : STD_ULOGIC;
-    variable Half         : INTEGER;
-    variable BUS_int      : STD_ULOGIC_VECTOR (arg'length - 1 downto 0);
-    variable Result       : STD_ULOGIC;
-  begin
-    if (arg'length < 1) then            -- In the case of a NULL range
-      Result := '1';
-    else
-      BUS_int := to_ux01 (arg);
-      if (BUS_int'length = 1) then
-        Result := BUS_int (BUS_int'left);
-      elsif (BUS_int'length = 2) then
-        Result := BUS_int (BUS_int'right) and BUS_int (BUS_int'left);
-      else
-        Half   := (BUS_int'length + 1) / 2 + BUS_int'right;
-        Upper  := and_reduce (BUS_int (BUS_int'left downto Half));
-        Lower  := and_reduce (BUS_int (Half - 1 downto BUS_int'right));
-        Result := Upper and Lower;
-      end if;
-    end if;
-    return Result;
-  end function and_reduce;
-
-  function and_reduce (arg : UNSIGNED)
-    return STD_ULOGIC is
-  begin
-    return and_reduce (STD_ULOGIC_VECTOR (arg));
-  end function and_reduce;
-
-  function and_reduce (arg : SIGNED)
-    return STD_ULOGIC is
-  begin
-    return and_reduce (STD_ULOGIC_VECTOR (arg));
-  end function and_reduce;
-
-  function xor_reduce (arg : STD_ULOGIC_VECTOR) return STD_ULOGIC is
-    variable Upper, Lower : STD_ULOGIC;
-    variable Half         : INTEGER;
-    variable BUS_int      : STD_ULOGIC_VECTOR (arg'length - 1 downto 0);
-    variable Result       : STD_ULOGIC := '0';  -- In the case of a NULL range
-  begin
-    if (arg'length >= 1) then
-      BUS_int := to_ux01 (arg);
-      if (BUS_int'length = 1) then
-        Result := BUS_int (BUS_int'left);
-      elsif (BUS_int'length = 2) then
-        Result := BUS_int(BUS_int'right) xor BUS_int(BUS_int'left);
-      else
-        Half   := (BUS_int'length + 1) / 2 + BUS_int'right;
-        Upper  := xor_reduce (BUS_int (BUS_int'left downto Half));
-        Lower  := xor_reduce (BUS_int (Half - 1 downto BUS_int'right));
-        Result := Upper xor Lower;
-      end if;
-    end if;
-    return Result;
-  end function xor_reduce;
-
-  function nand_reduce(arg : STD_ULOGIC_VECTOR) return STD_ULOGIC is
-  begin
-    return not and_reduce (arg);
-  end function nand_reduce;
-
-  function nor_reduce(arg : STD_ULOGIC_VECTOR) return STD_ULOGIC is
-  begin
-    return not or_reduce (arg);
-  end function nor_reduce;
-
-  function xnor_reduce(arg : STD_ULOGIC_VECTOR) return STD_ULOGIC is
-  begin
-    return not xor_reduce (arg);
-  end function xnor_reduce;
-
-  function find_leftmost (ARG : UNSIGNED; Y : STD_ULOGIC)
-    return INTEGER is
-  begin
-    for INDEX in ARG'range loop
-      if ARG(INDEX) = Y then
-        return INDEX;
-      end if;
-    end loop;
-    return -1;
-  end function find_leftmost;
-
-  -- Match table, copied form new std_logic_1164
-  type stdlogic_table is array(STD_ULOGIC, STD_ULOGIC) of STD_ULOGIC;
-  constant match_logic_table : stdlogic_table := (
-    -----------------------------------------------------
-    -- U    X    0    1    Z    W    L    H    -         |   |  
-    -----------------------------------------------------
-    ('U', 'U', 'U', 'U', 'U', 'U', 'U', 'U', '1'),  -- | U |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '1'),  -- | X |
-    ('U', 'X', '1', '0', 'X', 'X', '1', '0', '1'),  -- | 0 |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', '1'),  -- | 1 |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '1'),  -- | Z |
-    ('U', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '1'),  -- | W |
-    ('U', 'X', '1', '0', 'X', 'X', '1', '0', '1'),  -- | L |
-    ('U', 'X', '0', '1', 'X', 'X', '0', '1', '1'),  -- | H |
-    ('1', '1', '1', '1', '1', '1', '1', '1', '1')   -- | - |
-    );
-
-
-  -------------------------------------------------------------------
-  -- ?= functions, Similar to "std_match", but returns "std_ulogic".
-  -------------------------------------------------------------------
-  -- %%% FUNCTION "?=" ( l, r : std_ulogic ) RETURN std_ulogic IS
-  function \?=\ (l, r : STD_ULOGIC) return STD_ULOGIC is
-  begin
-    return match_logic_table (l, r);
-  end function \?=\;
-  -- %%% END FUNCTION "?=";
-
-  -- %%% FUNCTION "?/=" ( l, r : std_ulogic ) RETURN std_ulogic is
-  function \?/=\ (l, r : STD_ULOGIC) return STD_ULOGIC is
-  begin
-    return not match_logic_table (l, r);
-  end function \?/=\;
-  -- %%% END FUNCTION "?/=";
-
-  function \?=\ (l, r : STD_ULOGIC_VECTOR) return STD_ULOGIC is
-    alias lv        : STD_ULOGIC_VECTOR(1 to l'length) is l;
-    alias rv        : STD_ULOGIC_VECTOR(1 to r'length) is r;
-    variable result, result1 : STD_ULOGIC;
-  begin
-    -- Logically identical to an "=" operator.
-    if ((l'length < 1) and (r'length < 1)) then
-      -- VHDL-2008 LRM 9.2.3 Two NULL arrays of the same type are equal
-      return '1';
-    elsif lv'length /= rv'length then
-      -- Two arrays of different lengths are false
-      return '0';
-    else
-      result := '1';
-      for i in lv'low to lv'high loop
-        result1 := match_logic_table(lv(i), rv(i));
-        result := result and result1;
-      end loop;
-      return result;
-    end if;
-  end function \?=\;
-
-  function Is_X (s : UNSIGNED) return BOOLEAN is
-  begin
-    return Is_X (STD_LOGIC_VECTOR (s));
-  end function Is_X;
-
-  function Is_X (s : SIGNED) return BOOLEAN is
-  begin
-    return Is_X (STD_LOGIC_VECTOR (s));
-  end function Is_X;
--- %%% END replicated functions
-
   -- Special version of "minimum" to do some boundary checking
   function mine (L, R : INTEGER)
     return INTEGER is
   begin  -- function minimum
     if (L = INTEGER'low or R = INTEGER'low) then
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
         & " Unbounded number passed, was a literal used?"
         severity error;
       return 0;
@@ -1240,7 +1075,8 @@ package body float_pkg is
   -- Generates the base number for the exponent normalization offset.
   function gen_expon_base (
     constant exponent_width : NATURAL)
-    return SIGNED is
+    return SIGNED
+  is
     variable result : SIGNED (exponent_width-1 downto 0);
   begin
     result                    := (others => '1');
@@ -1287,12 +1123,12 @@ package body float_pkg is
 
   -- purpose: Test the boundary conditions of a Real number
   procedure test_boundary (
-    arg                     : in  REAL;     -- Input, converted to real
-    constant fraction_width : in  NATURAL;  -- length of FP output fraction
-    constant exponent_width : in  NATURAL;  -- length of FP exponent
-    constant denormalize    : in  BOOLEAN := true;  -- Use IEEE extended FP
-    variable btype          : out boundary_type;
-    variable log2i          : out INTEGER
+    arg                     : in REAL;     -- Input, converted to real
+    constant fraction_width : in NATURAL;  -- length of FP output fraction
+    constant exponent_width : in NATURAL;  -- length of FP exponent
+    constant denormalize    : in BOOLEAN := true;  -- Use IEEE extended FP
+    variable btype : out boundary_type;
+    variable log2i : out INTEGER
     ) is
     constant expon_base : SIGNED (exponent_width-1 downto 0) :=
       gen_expon_base(exponent_width);   -- exponent offset
@@ -1321,7 +1157,7 @@ package body float_pkg is
           if log2arg < to_integer(exp_min)-1 then
             btype := zero;
           else
-            btype := normal;            -- Can still represent this number
+            btype := normal;              -- Can still represent this number
           end if;
         end if;
       elsif exponent_width < 11 then
@@ -1347,19 +1183,20 @@ package body float_pkg is
     remainder            : UNSIGNED;    -- remainder to round from
     sticky               : STD_ULOGIC := '0';      -- Sticky bit
     constant round_style : round_type)  -- rounding type
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable result     : BOOLEAN;
     variable or_reduced : STD_ULOGIC;
   begin  -- function check_round
     result := false;
     if (remainder'length > 0) then      -- if remainder in a null array
-      or_reduced := or_reduce (remainder & sticky);
+      or_reduced := or (remainder & sticky);
       rounding_case : case round_style is
         when round_nearest =>           -- Round Nearest, default mode
           if remainder(remainder'high) = '1' then  -- round
             if (remainder'length > 1) then
-              if ((or_reduce (remainder(remainder'high-1
-                                        downto remainder'low)) = '1'
+              if ((or (remainder(remainder'high-1
+                                 downto remainder'low)) = '1'
                    or sticky = '1')
                   or fract_in = '1') then
                 -- Make the bottom bit zero if possible if we are at 1/2
@@ -1387,12 +1224,12 @@ package body float_pkg is
   -- purpose: Rounds depending on the state of the "round_style"
   -- unsigned version
   procedure fp_round (
-    fract_in  : in  UNSIGNED;            -- input fraction
-    expon_in  : in  SIGNED;              -- input exponent
-    fract_out : out UNSIGNED;            -- output fraction
-    expon_out : out SIGNED) is           -- output exponent
+    fract_in  : in  UNSIGNED;           -- input fraction
+    expon_in  : in  SIGNED;             -- input exponent
+    fract_out : out UNSIGNED;           -- output fraction
+    expon_out : out SIGNED) is          -- output exponent
   begin  -- procedure fp_round
-    if and_reduce (fract_in) = '1' then  -- Fraction is all "1"
+    if and (fract_in) = '1' then        -- Fraction is all "1"
       expon_out := expon_in + 1;
       fract_out := to_unsigned(0, fract_out'high+1);
     else
@@ -1433,8 +1270,8 @@ package body float_pkg is
         exp                    := SIGNED(arg(exponent_width-1 downto 0));
         exp (exponent_width-1) := not exp(exponent_width-1);
       when others =>
-        assert NO_WARNING
-          report float_pkg'instance_name
+        assert no_warning
+          report float_generic_pkg'instance_name
           & "BREAK_NUMBER: " &
           "Meta state detected in fp_break_number process"
           severity warning;
@@ -1493,7 +1330,7 @@ package body float_pkg is
       case round_style is
         when round_nearest =>
           round := remainder(2) and
-                   (fract (0) or (or_reduce (remainder (1 downto 0))));
+                   (fract (0) or (or (remainder (1 downto 0))));
         when round_inf =>
           round := remainder(2) and not isign;
         when round_neginf =>
@@ -1515,7 +1352,8 @@ package body float_pkg is
   function smallfract (
     arg   : UNSIGNED;
     shift : NATURAL)
-    return STD_ULOGIC is
+    return STD_ULOGIC
+  is
     variable orx : STD_ULOGIC;
   begin
     orx := arg(shift);
@@ -1534,27 +1372,28 @@ package body float_pkg is
   -- negative indices are illegal in 1164 and 1076.3
   function to_sulv (
     arg : UNRESOLVED_float)             -- fp vector
-    return STD_ULOGIC_VECTOR is
-    variable result : STD_ULOGIC_VECTOR (arg'length-1 downto 0);
+    return STD_ULOGIC_VECTOR
+  is
+    variable intermediate_result : UNRESOLVED_float(arg'length-1 downto 0);
   begin  -- function to_std_ulogic_vector
     if arg'length < 1 then
       return NSLV;
     end if;
-    result := STD_ULOGIC_VECTOR (arg);
-    return result;
+    intermediate_result := arg;
+    return STD_ULOGIC_VECTOR (intermediate_result);
   end function to_sulv;
 
-  -- Converts an fp into an SLV
+  -- Converts an fp into an SULV
   function to_slv (arg : UNRESOLVED_float) return STD_LOGIC_VECTOR is
   begin
-    return to_stdlogicvector (to_sulv (arg));
+    return to_sulv (arg);
   end function to_slv;
 
   -- purpose: normalizes a floating point number
   -- This version assumes an "unsigned" input with
   function normalize (
-    fract                   : UNSIGNED;   -- fraction, unnormalized
-    expon                   : SIGNED;   -- exponent, normalized by -1
+    fract                   : UNRESOLVED_UNSIGNED;   -- fraction, unnormalized
+    expon                   : UNRESOLVED_SIGNED;   -- exponent, normalized by -1
     sign                    : STD_ULOGIC;         -- sign BIT
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
@@ -1562,7 +1401,8 @@ package body float_pkg is
     constant round_style    : round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)  -- guard bits
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable sfract     : UNSIGNED (fract'high downto 0);  -- shifted fraction
     variable rfract     : UNSIGNED (fraction_width-1 downto 0);   -- fraction
     variable exp        : SIGNED (exponent_width+1 downto 0);  -- exponent
@@ -1581,7 +1421,7 @@ package body float_pkg is
     shiftr  := find_leftmost (to_01(fract), '1')     -- Find the first "1"
                - fraction_width - nguard;  -- subtract the length we want
     exp := resize (expon, exp'length) + shiftr;
-    if (or_reduce (fract) = '0') then   -- Zero
+    if (or (fract) = '0') then   -- Zero
       zerores := true;
     elsif ((exp <= -resize(expon_base, exp'length)-1) and denormalize)
       or ((exp < -resize(expon_base, exp'length)-1) and not denormalize) then
@@ -1604,7 +1444,7 @@ package body float_pkg is
     else
       sfract := fract srl shiftr;       -- shift
       if shiftr > 0 then
---        stickyx := sticky or (or_reduce(fract (shiftr-1 downto 0)));
+--        stickyx := sticky or (or (fract (shiftr-1 downto 0)));
         stickyx := sticky or smallfract (fract, shiftr-1);
       else
         stickyx := sticky;
@@ -1639,8 +1479,8 @@ package body float_pkg is
   -- purpose: normalizes a floating point number
   -- This version assumes a "ufixed" input
   function normalize (
-    fract                   : ufixed;   -- unsigned fixed point
-    expon                   : SIGNED;   -- exponent, normalized by -1
+    fract                   : UNRESOLVED_ufixed;  -- unsigned fixed point
+    expon                   : UNRESOLVED_SIGNED;  -- exponent, normalized by -1
     sign                    : STD_ULOGIC;         -- sign bit
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
@@ -1648,7 +1488,8 @@ package body float_pkg is
     constant round_style    : round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)   -- guard bits
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable arguns : UNSIGNED (fract'high + fraction_width + nguard
                                 downto 0) := (others => '0');
@@ -1670,15 +1511,16 @@ package body float_pkg is
   -- purpose: normalizes a floating point number
   -- This version assumes a "ufixed" input with a "size_res" input
   function normalize (
-    fract                : ufixed;      -- unsigned fixed point
-    expon                : SIGNED;      -- exponent, normalized by -1
+    fract                : UNRESOLVED_ufixed;  -- unsigned fixed point
+    expon                : UNRESOLVED_SIGNED;  -- exponent, normalized by -1
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
     constant round_style : round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard      : NATURAL    := float_guard_bits)   -- guard bits
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL := -size_res'low;
     constant exponent_width : NATURAL := size_res'high;
     variable result         : UNRESOLVED_float (exponent_width downto -fraction_width);
@@ -1701,8 +1543,8 @@ package body float_pkg is
 
   -- Regular "normalize" function with a "size_res" input.
   function normalize (
-    fract                : UNSIGNED;    -- unsigned
-    expon                : SIGNED;      -- exponent - 1, normalized
+    fract                : UNRESOLVED_UNSIGNED;              -- unsigned
+    expon                : UNRESOLVED_SIGNED;  -- exponent - 1, normalized
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
@@ -1726,14 +1568,15 @@ package body float_pkg is
   function Classfp (
     x           : UNRESOLVED_float;     -- floating point input
     check_error : BOOLEAN := float_check_error)   -- check for errors
-    return valid_fpstate is
+    return valid_fpstate
+  is
     constant fraction_width : INTEGER := -mine(x'low, x'low);  -- length of FP output fraction
     constant exponent_width : INTEGER := x'high;  -- length of FP output exponent
     variable arg            : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin  -- classfp
     if (arg'length < 1 or fraction_width < 3 or exponent_width < 3
         or x'left < x'right) then
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
         & "CLASSFP: " &
         "Floating point number detected with a bad range"
         severity error;
@@ -1745,9 +1588,9 @@ package body float_pkg is
       return isx;                       -- If there is an X in the number
       -- Special cases, check for illegal number
     elsif check_error and
-      (and_reduce (STD_ULOGIC_VECTOR (arg (exponent_width-1 downto 0)))
+      (and (STD_ULOGIC_VECTOR (arg (exponent_width-1 downto 0)))
        = '1') then                      -- Exponent is all "1".
-      if or_reduce (to_slv (arg (-1 downto -fraction_width)))
+      if or (to_slv (arg (-1 downto -fraction_width)))
         /= '0' then  -- Fraction must be all "0" or this is not a number.
         if (arg(-1) = '1') then         -- From "W. Khan - IEEE standard
           return nan;            -- 754 binary FP Signaling nan (Not a number)
@@ -1761,9 +1604,9 @@ package body float_pkg is
         return neg_inf;                 -- Negative infinity
       end if;
       -- check for "0"
-    elsif or_reduce (STD_LOGIC_VECTOR (arg (exponent_width-1 downto 0)))
+    elsif or (STD_LOGIC_VECTOR (arg (exponent_width-1 downto 0)))
       = '0' then                        -- Exponent is all "0"
-      if or_reduce (to_slv (arg (-1 downto -fraction_width)))
+      if or (to_slv (arg (-1 downto -fraction_width)))
         = '0' then                      -- Fraction is all "0"
         if arg(exponent_width) = '0' then
           return pos_zero;              -- Zero
@@ -1790,10 +1633,9 @@ package body float_pkg is
     arg         : in  UNRESOLVED_float;
     denormalize : in  BOOLEAN := float_denormalize;
     check_error : in  BOOLEAN := float_check_error;
-    fract       : out UNSIGNED;
-    expon       : out SIGNED;
+    fract       : out UNRESOLVED_UNSIGNED;
+    expon       : out UNRESOLVED_SIGNED;
     sign        : out STD_ULOGIC) is
-    constant fraction_width : NATURAL := -mine(arg'low, arg'low);  -- length of FP output fraction
     variable fptyp          : valid_fpstate;
   begin
     fptyp := Classfp (arg, check_error);
@@ -1805,13 +1647,13 @@ package body float_pkg is
       fract       => fract,
       expon       => expon);
   end procedure break_number;
-  
+
   procedure break_number (
     arg         : in  UNRESOLVED_float;
     denormalize : in  BOOLEAN := float_denormalize;
     check_error : in  BOOLEAN := float_check_error;
-    fract       : out ufixed;           -- 1 downto -fraction_width
-    expon       : out SIGNED;           -- exponent_width-1 downto 0
+    fract       : out UNRESOLVED_ufixed;  -- 1 downto -fraction_width
+    expon       : out UNRESOLVED_SIGNED;  -- exponent_width-1 downto 0
     sign        : out STD_ULOGIC) is
     constant fraction_width : NATURAL := -mine(arg'low, arg'low);  -- length of FP output fraction
     variable fptyp          : valid_fpstate;
@@ -1831,12 +1673,13 @@ package body float_pkg is
   -- Arithmetic functions
   function "abs" (
     arg : UNRESOLVED_float)             -- floating point input
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (arg'range);  -- result
   begin
     if (arg'length > 0) then
       result            := to_01 (arg, 'X');
-      result (arg'high) := '0';         -- set the sign bit to positive     
+      result (arg'high) := '0';         -- set the sign bit to positive
       return result;
     else
       return NAFP;
@@ -1846,7 +1689,8 @@ package body float_pkg is
   -- IEEE 754 "negative" function
   function "-" (
     arg : UNRESOLVED_float)                          -- floating point input
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (arg'range);  -- result
   begin
     if (arg'length > 0) then
@@ -1865,7 +1709,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     constant addguard         : NATURAL := guard;         -- add one guard bit
@@ -1886,8 +1731,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     if (lfptype = isx or rfptype = isx) then
       fpresult := (others => 'X');
@@ -1909,25 +1754,25 @@ package body float_pkg is
       fpresult := neg_zerofp (fraction_width => fraction_width,
                              exponent_width => exponent_width);
     else
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      lfptype := classfp (lresize, false);    -- errors already checked
-      rresize := resize (arg            => to_x01(r),
+      lfptype := Classfp (lresize, false);    -- errors already checked
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rfptype := classfp (rresize, false);    -- errors already checked
+      rfptype := Classfp (rresize, false);    -- errors already checked
       break_number (
         arg         => lresize,
         fptyp       => lfptype,
         denormalize => denormalize,
         fract       => ulfract,
         expon       => exponl);
-      fractl := (others => '0');
+      fractl                                           := (others => '0');
       fractl (fraction_width+addguard downto addguard) := ulfract;
       break_number (
         arg         => rresize,
@@ -1935,7 +1780,7 @@ package body float_pkg is
         denormalize => denormalize,
         fract       => urfract,
         expon       => exponr);
-      fractr := (others => '0');
+      fractr                                           := (others => '0');
       fractr (fraction_width+addguard downto addguard) := urfract;
       shiftx := (exponl(exponent_width-1) & exponl) - exponr;
       if shiftx < -fractl'high then
@@ -1943,14 +1788,14 @@ package body float_pkg is
         fractc    := fractr;
         fracts    := (others => '0');   -- add zero
         leftright := false;
-        sticky    := or_reduce (fractl);
+        sticky    := or (fractl);
       elsif shiftx < 0 then
         shiftx    := - shiftx;
         fracts    := shift_right (fractl, to_integer(shiftx));
         fractc    := fractr;
         rexpon    := exponr(exponent_width-1) & exponr;
         leftright := false;
---        sticky    := or_reduce (fractl (to_integer(shiftx) downto 0));
+--        sticky    := or (fractl (to_integer(shiftx) downto 0));
         sticky    := smallfract (fractl, to_integer(shiftx));
       elsif shiftx = 0 then
         rexpon := exponl(exponent_width-1) & exponl;
@@ -1969,13 +1814,13 @@ package body float_pkg is
         fracts    := (others => '0');   -- add zero
         fractc    := fractl;
         leftright := true;
-        sticky    := or_reduce (fractr);
+        sticky    := or (fractr);
       elsif shiftx > 0 then
         fracts    := shift_right (fractr, to_integer(shiftx));
         fractc    := fractl;
         rexpon    := exponl(exponent_width-1) & exponl;
         leftright := true;
---        sticky    := or_reduce (fractr (to_integer(shiftx) downto 0));
+--        sticky    := or (fractr (to_integer(shiftx) downto 0));
         sticky    := smallfract (fractr, to_integer(shiftx));
       end if;
       -- add
@@ -1991,10 +1836,10 @@ package body float_pkg is
           sign := r(r'high);
         end if;
       end if;
-      if or_reduce (ufract) = '0' then
+      if or (ufract) = '0' then
         sign := '0';                    -- IEEE 854, 6.3, paragraph 2.
       end if;
-        -- normalize
+      -- normalize
       fpresult := normalize (fract          => ufract,
                              expon          => rexpon,
                              sign           => sign,
@@ -2015,10 +1860,11 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable negr : UNRESOLVED_float (r'range);  -- negative version of r
   begin
-    negr := -r;
+    negr := -r;                         -- r := -r
     return add (l           => l,
                 r           => negr,
                 round_style => round_style,
@@ -2034,7 +1880,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     constant multguard        : NATURAL := guard;           -- guard bits
@@ -2053,8 +1900,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     if (lfptype = isx or rfptype = isx) then
       fpresult := (others => 'X');
@@ -2079,18 +1926,18 @@ package body float_pkg is
       fpresult (exponent_width) := fp_sign;
     else
       fp_sign := l(l'high) xor r(r'high);     -- figure out the sign
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      lfptype := classfp (lresize, false);    -- errors already checked
-      rresize := resize (arg            => to_x01(r),
+      lfptype := Classfp (lresize, false);    -- errors already checked
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rfptype := classfp (rresize, false);    -- errors already checked
+      rfptype := Classfp (rresize, false);    -- errors already checked
       break_number (
         arg         => lresize,
         fptyp       => lfptype,
@@ -2119,7 +1966,7 @@ package body float_pkg is
       rfract := fractl * fractr;        -- Multiply the fraction
       sfract := rfract (rfract'high downto
                         rfract'high - (fraction_width+1+multguard));
-      sticky := or_reduce (rfract (rfract'high-(fraction_width+1+multguard)
+      sticky := or (rfract (rfract'high-(fraction_width+1+multguard)
                                    downto 0));
       -- normalize
       fpresult := normalize (fract          => sfract,
@@ -2137,7 +1984,8 @@ package body float_pkg is
 
   function short_divide (
     lx, rx : UNSIGNED)
-    return UNSIGNED is
+    return UNSIGNED
+  is
     -- This is a special divider for the floating point routines.
     -- For a true unsigned divider, "stages" needs to = lx'high
     constant stages       : INTEGER := lx'high - rx'high;  -- number of stages
@@ -2170,13 +2018,15 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL := -mine(arg'low, arg'low);  -- length of FP output fraction
     constant exponent_width : NATURAL := arg'high;  -- length of FP output exponent
     constant divguard       : NATURAL := guard;     -- guard bits
     function onedivy (
       arg : UNSIGNED)
-      return UNSIGNED is
+      return UNSIGNED
+    is
       variable q   : UNSIGNED((2*arg'high)+1 downto 0);
       variable one : UNSIGNED (q'range);
     begin
@@ -2193,7 +2043,7 @@ package body float_pkg is
     variable sfract        : UNSIGNED (fraction_width+1+divguard downto 0);  -- result fraction
     variable fpresult      : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin  -- reciprocal
-    fptype := classfp(arg, check_error);
+    fptype := Classfp(arg, check_error);
     classcase : case fptype is
       when isx =>
         fpresult := (others => 'X');
@@ -2205,7 +2055,7 @@ package body float_pkg is
         fpresult := zerofp (fraction_width => fraction_width,
                             exponent_width => exponent_width);
       when neg_zero | pos_zero =>       -- 1/0
-        report float_pkg'instance_name
+        report float_generic_pkg'instance_name
           & "RECIPROCAL: Floating Point divide by zero"
           severity error;
         fpresult := pos_inffp (fraction_width => fraction_width,
@@ -2239,7 +2089,7 @@ package body float_pkg is
             end if;
           else
             fractg (fractg'high downto divguard) := fract;
-            denorm_offset := 0;
+            denorm_offset                        := 0;
           end if;
           expon  := - expon - 3 + denorm_offset;
           sfract := onedivy (fractg);
@@ -2265,7 +2115,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     constant divguard         : NATURAL := guard;  -- division guard bits
@@ -2285,8 +2136,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     classcase : case rfptype is
       when isx =>
@@ -2314,7 +2165,7 @@ package body float_pkg is
           fpresult := qnanfp (fraction_width => fraction_width,
                               exponent_width => exponent_width);
         else
-          report float_pkg'instance_name
+          report float_generic_pkg'instance_name
             & "DIVIDE: Floating Point divide by zero"
             severity error;
           -- Infinity, define in 754-1985-7.2
@@ -2343,18 +2194,18 @@ package body float_pkg is
             fpresult(exponent_width) := fp_sign;
           when others =>
             fp_sign := l(l'high) xor r(r'high);        -- sign
-            lresize := resize (arg            => to_x01(l),
+            lresize := resize (arg            => to_X01(l),
                                exponent_width => exponent_width,
                                fraction_width => fraction_width,
                                denormalize_in => denormalize,
                                denormalize    => denormalize);
-            lfptype := classfp (lresize, false);   -- errors already checked
-            rresize := resize (arg            => to_x01(r),
+            lfptype := Classfp (lresize, false);   -- errors already checked
+            rresize := resize (arg            => to_X01(r),
                                exponent_width => exponent_width,
                                fraction_width => fraction_width,
                                denormalize_in => denormalize,
                                denormalize    => denormalize);
-            rfptype := classfp (rresize, false);   -- errors already checked
+            rfptype := Classfp (rresize, false);   -- errors already checked
             break_number (
               arg         => lresize,
               fptyp       => lfptype,
@@ -2413,7 +2264,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     variable lfptype, rfptype : valid_fpstate;
@@ -2427,8 +2279,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     classcase : case rfptype is
       when isx =>
@@ -2454,7 +2306,7 @@ package body float_pkg is
           fpresult := qnanfp (fraction_width => fraction_width,
                               exponent_width => exponent_width);
         else
-          report float_pkg'instance_name
+          report float_generic_pkg'instance_name
             & "DIVIDEBYP2: Floating Point divide by zero"
             severity error;
           -- Infinity, define in 754-1985-7.2
@@ -2483,18 +2335,18 @@ package body float_pkg is
             fpresult (exponent_width) := fp_sign;  -- sign
           when others =>
             fp_sign := l(l'high) xor r(r'high);        -- sign
-            lresize := resize (arg            => to_x01(l),
+            lresize := resize (arg            => to_X01(l),
                                exponent_width => exponent_width,
                                fraction_width => fraction_width,
                                denormalize_in => denormalize,
                                denormalize    => denormalize);
-            lfptype := classfp (lresize, false);  -- errors already checked
-            rresize := resize (arg            => to_x01(r),
+            lfptype := Classfp (lresize, false);  -- errors already checked
+            rresize := resize (arg            => to_X01(r),
                                exponent_width => exponent_width,
                                fraction_width => fraction_width,
                                denormalize_in => denormalize,
                                denormalize    => denormalize);
-            rfptype := classfp (rresize, false);  -- errors already checked
+            rfptype := Classfp (rresize, false);  -- errors already checked
             break_number (
               arg         => lresize,
               fptyp       => lfptype,
@@ -2508,8 +2360,8 @@ package body float_pkg is
               denormalize => denormalize,
               fract       => urfract,
               expon       => exponr);
-            assert (or_reduce (urfract (fraction_width-1 downto 0)) = '0')
-              report float_pkg'instance_name
+            assert (or (urfract (fraction_width-1 downto 0)) = '0')
+              report float_generic_pkg'instance_name
               & "DIVIDEBYP2: "
               & "Dividebyp2 called with a non power of two divisor"
               severity error;
@@ -2537,7 +2389,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL :=
       -mine (mine(l'low, r'low), c'low);   -- length of FP output fraction
     constant exponent_width : NATURAL :=
@@ -2548,7 +2401,7 @@ package body float_pkg is
     variable fractx                    : UNSIGNED (fraction_width+guard downto 0);
     variable fractc, fracts            : UNSIGNED (fraction_width+1+guard downto 0);
     variable rfract                    : UNSIGNED ((2*(fraction_width))+1 downto 0);  -- result fraction
-    variable sfract, ufract            : UNSIGNED (fraction_width+1+guard downto 0);  -- result fraction
+    variable ufract            : UNSIGNED (fraction_width+1+guard downto 0);  -- result fraction
     variable exponl, exponr, exponc    : SIGNED (exponent_width-1 downto 0);  -- exponents
     variable rexpon, rexpon2           : SIGNED (exponent_width+1 downto 0);  -- result exponent
     variable shifty                    : INTEGER;      -- denormal shift
@@ -2562,9 +2415,9 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7 or c'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
-      cfptype := classfp (c, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
+      cfptype := Classfp (c, check_error);
     end if;
     if (lfptype = isx or rfptype = isx or cfptype = isx) then
       fpresult := (others => 'X');
@@ -2590,24 +2443,24 @@ package body float_pkg is
       fpresult (exponent_width) := l(l'high) xor r(r'high);
     else
       fp_sign := l(l'high) xor r(r'high);  -- figure out the sign
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      lfptype := classfp (lresize, false);        -- errors already checked
-      rresize := resize (arg            => to_x01(r),
+      lfptype := Classfp (lresize, false);        -- errors already checked
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rfptype := classfp (rresize, false);        -- errors already checked
-      cresize := resize (arg            => to_x01(c),
+      rfptype := Classfp (rresize, false);        -- errors already checked
+      cresize := resize (arg            => to_X01(c),
                          exponent_width => exponent_width,
                          fraction_width => -cresize'low,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      cfptype := classfp (cresize, false);        -- errors already checked
+      cfptype := Classfp (cresize, false);        -- errors already checked
       break_number (
         arg         => lresize,
         fptyp       => lfptype,
@@ -2645,7 +2498,7 @@ package body float_pkg is
         rexpon2 := resize (exponc, rexpon2'length);
         fractc  := "0" & fractx;
         fracts  := (others => '0');
-        sticky  := or_reduce (rfract);
+        sticky  := or (rfract);
       elsif shiftx < 0 then
         shiftx := - shiftx;
         fracts := shift_right (rfract (rfract'high downto rfract'high
@@ -2654,11 +2507,11 @@ package body float_pkg is
         fractc    := "0" & fractx;
         rexpon2   := resize (exponc, rexpon2'length);
         leftright := false;
-        sticky := or_reduce (rfract (to_integer(shiftx)+rfract'high
+        sticky := or (rfract (to_integer(shiftx)+rfract'high
                                      - fracts'length downto 0));
       elsif shiftx = 0 then
         rexpon2 := resize (exponc, rexpon2'length);
-        sticky  := or_reduce (rfract (rfract'high - fractc'length downto 0));
+        sticky  := or (rfract (rfract'high - fractc'length downto 0));
         if rfract (rfract'high downto rfract'high - fractc'length+1) > fractx
         then
           fractc := "0" & fractx;
@@ -2676,14 +2529,14 @@ package body float_pkg is
         fracts    := (others => '0');
         fractc    := rfract (rfract'high downto rfract'high - fractc'length+1);
         leftright := true;
-        sticky := or_reduce (fractx & rfract (rfract'high - fractc'length
+        sticky := or (fractx & rfract (rfract'high - fractc'length
                                               downto 0));
       else                              -- fractx'high > shiftx > 0
         rexpon2   := rexpon;
         fracts    := "0" & shift_right (fractx, to_integer (shiftx));
         fractc    := rfract (rfract'high downto rfract'high - fractc'length+1);
         leftright := true;
-        sticky := or_reduce (fractx (to_integer (shiftx) downto 0)
+        sticky := or (fractx (to_integer (shiftx) downto 0)
                              & rfract (rfract'high - fractc'length downto 0));
       end if;
       fracts (0) := fracts (0) or sticky;  -- Or the sticky bit into the LSB
@@ -2719,7 +2572,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     constant divguard         : NATURAL := guard;  -- division guard bits
@@ -2738,8 +2592,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     if (lfptype = isx or rfptype = isx) then
       fpresult := (others => 'X');
@@ -2759,18 +2613,18 @@ package body float_pkg is
       fpresult := l;
     else
       fp_sign := to_X01(l(l'high));     -- sign
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      lfptype := classfp (lresize, false);         -- errors already checked
-      rresize := resize (arg            => to_x01(r),
+      lfptype := Classfp (lresize, false);         -- errors already checked
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rfptype := classfp (rresize, false);         -- errors already checked
+      rfptype := Classfp (rresize, false);         -- errors already checked
       fractl  := (others => '0');
       break_number (
         arg         => lresize,
@@ -2780,7 +2634,7 @@ package body float_pkg is
         expon       => exponl);
       fractl (fraction_width+divguard downto divguard) := ulfract;
       -- right side
-      fractr := (others => '0');
+      fractr                                           := (others => '0');
       break_number (
         arg         => rresize,
         fptyp       => rfptype,
@@ -2788,8 +2642,8 @@ package body float_pkg is
         fract       => urfract,
         expon       => exponr);
       fractr (fraction_width+divguard downto divguard) := urfract;
-      rexpon := (exponr(exponr'high)&exponr);
-      shifty := to_integer(exponl - rexpon);
+      rexpon                                           := (exponr(exponr'high)&exponr);
+      shifty                                           := to_integer(exponl - rexpon);
       if (shifty > 0) then
         fractr := shift_right (fractr, shifty);
         rexpon := rexpon + shifty;
@@ -2823,7 +2677,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width   : NATURAL := - mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     variable lfptype, rfptype : valid_fpstate;
@@ -2833,8 +2688,8 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       lfptype := isx;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     if (lfptype = isx or rfptype = isx) then
       fpresult := (others => 'X');
@@ -2859,10 +2714,10 @@ package body float_pkg is
                            denormalize => denormalize);
       -- MOD is the same as REM, but you do something different with
       -- negative values
-      if (is_negative (l)) then
+      if (Is_Negative (l)) then
         remres := - remres;
       end if;
-      if (is_negative (l) = is_negative (r) or remres = 0) then
+      if (Is_Negative (l) = Is_Negative (r) or remres = 0) then
         fpresult := remres;
       else
         fpresult := add (l           => remres,
@@ -2870,7 +2725,7 @@ package body float_pkg is
                          round_style => round_style,
                          guard       => guard,
                          check_error => false,
-                         denormalize => denormalize);        
+                         denormalize => denormalize);
       end if;
     end if;
     return fpresult;
@@ -2883,7 +2738,8 @@ package body float_pkg is
     constant guard       : NATURAL    := float_guard_bits;
     constant check_error : BOOLEAN    := float_check_error;
     constant denormalize : BOOLEAN    := float_denormalize)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL := guard-arg'low;  -- length of FP output fraction
     constant exponent_width : NATURAL := arg'high;  -- length of FP output exponent
     variable sign           : STD_ULOGIC;
@@ -2962,7 +2818,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;  -- floating point input
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable lfptype, rfptype       : valid_fpstate;
     variable is_equal, is_unordered : BOOLEAN;
     constant fraction_width         : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
@@ -2972,19 +2829,19 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       return false;
     else
-      lfptype := classfp (l, check_error);
-      rfptype := classfp (r, check_error);
+      lfptype := Classfp (l, check_error);
+      rfptype := Classfp (r, check_error);
     end if;
     if (lfptype = neg_zero or lfptype = pos_zero) and
       (rfptype = neg_zero or rfptype = pos_zero) then
       is_equal := true;
     else
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rresize := resize (arg            => to_x01(r),
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
@@ -3004,7 +2861,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;         -- floating point input
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     constant fraction_width             : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width             : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     variable lfptype, rfptype           : valid_fpstate;
@@ -3016,12 +2874,12 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       is_less_than := false;
     else
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rresize := resize (arg            => to_x01(r),
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
@@ -3045,8 +2903,8 @@ package body float_pkg is
           end if;
         end if;
       else
-        lfptype := classfp (l, check_error);
-        rfptype := classfp (r, check_error);
+        lfptype := Classfp (l, check_error);
+        rfptype := Classfp (r, check_error);
         if (lfptype = neg_zero and rfptype = pos_zero) then
           is_less_than := false;        -- -0 < 0 returns false.
         else
@@ -3067,7 +2925,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;  -- floating point input
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
     constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
     variable lfptype, rfptype : valid_fpstate;
@@ -3080,12 +2939,12 @@ package body float_pkg is
     if (fraction_width = 0 or l'length < 7 or r'length < 7) then
       is_greater_than := false;
     else
-      lresize := resize (arg            => to_x01(l),
+      lresize := resize (arg            => to_X01(l),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
                          denormalize    => denormalize);
-      rresize := resize (arg            => to_x01(r),
+      rresize := resize (arg            => to_X01(r),
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => denormalize,
@@ -3109,8 +2968,8 @@ package body float_pkg is
           end if;
         end if;
       else
-        lfptype := classfp (l, check_error);
-        rfptype := classfp (r, check_error);
+        lfptype := Classfp (l, check_error);
+        rfptype := Classfp (r, check_error);
         if (lfptype = pos_zero and rfptype = neg_zero) then
           is_greater_than := false;     -- 0 > -0 returns false.
         else
@@ -3132,7 +2991,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable is_equal, is_unordered : BOOLEAN;
   begin
     is_equal := eq (l           => l,
@@ -3152,7 +3012,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;  -- floating point input
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable is_greater_than, is_unordered : BOOLEAN;
   begin
     is_greater_than := gt (l           => l,
@@ -3172,7 +3033,8 @@ package body float_pkg is
     l, r                 : UNRESOLVED_float;  -- floating point input
     constant check_error : BOOLEAN := float_check_error;
     constant denormalize : BOOLEAN := float_denormalize)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable is_less_than, is_unordered : BOOLEAN;
   begin
     is_less_than := lt (l           => l,
@@ -3188,34 +3050,34 @@ package body float_pkg is
     return not is_less_than and not is_unordered;
   end function ge;
 
-  function \?=\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width         : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
-    constant exponent_width         : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
+  function "?=" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width         : NATURAL := -mine(L'low, R'low);  -- length of FP output fraction
+    constant exponent_width         : NATURAL := maximum(L'high, R'high);  -- length of FP output exponent
     variable lfptype, rfptype       : valid_fpstate;
     variable is_equal, is_unordered : STD_ULOGIC;
     variable lresize, rresize       : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin  -- ?=
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
-      lfptype := classfp (l, float_check_error);
-      rfptype := classfp (r, float_check_error);
+      lfptype := Classfp (L, float_check_error);
+      rfptype := Classfp (R, float_check_error);
     end if;
     if (lfptype = neg_zero or lfptype = pos_zero) and
       (rfptype = neg_zero or rfptype = pos_zero) then
       is_equal := '1';
     else
-      lresize := resize (arg            => l,
+      lresize := resize (arg            => L,
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => float_denormalize,
                          denormalize    => float_denormalize);
-      rresize := resize (arg            => r,
+      rresize := resize (arg            => R,
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => float_denormalize,
                          denormalize    => float_denormalize);
-      is_equal := \?=\ (to_sulv(lresize), to_sulv(rresize));
+      is_equal := to_sulv(lresize) ?= to_sulv(rresize);
     end if;
     if (float_check_error) then
       if (lfptype = nan or lfptype = quiet_nan or
@@ -3228,36 +3090,36 @@ package body float_pkg is
       is_unordered := '0';
     end if;
     return is_equal and not is_unordered;
-  end function \?=\;
+  end function "?=";
 
-  function \?/=\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width         : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
-    constant exponent_width         : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
+  function "?/=" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width         : NATURAL := -mine(L'low, R'low);  -- length of FP output fraction
+    constant exponent_width         : NATURAL := maximum(L'high, R'high);  -- length of FP output exponent
     variable lfptype, rfptype       : valid_fpstate;
     variable is_equal, is_unordered : STD_ULOGIC;
     variable lresize, rresize       : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin  -- ?/=
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
-      lfptype := classfp (l, float_check_error);
-      rfptype := classfp (r, float_check_error);
+      lfptype := Classfp (L, float_check_error);
+      rfptype := Classfp (R, float_check_error);
     end if;
     if (lfptype = neg_zero or lfptype = pos_zero) and
       (rfptype = neg_zero or rfptype = pos_zero) then
       is_equal := '1';
     else
-      lresize := resize (arg            => l,
+      lresize := resize (arg            => L,
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => float_denormalize,
                          denormalize    => float_denormalize);
-      rresize := resize (arg            => r,
+      rresize := resize (arg            => R,
                          exponent_width => exponent_width,
                          fraction_width => fraction_width,
                          denormalize_in => float_denormalize,
                          denormalize    => float_denormalize);
-      is_equal := \?=\ (to_sulv(lresize), to_sulv(rresize));
+      is_equal := to_sulv(lresize) ?= to_sulv(rresize);
     end if;
     if (float_check_error) then
       if (lfptype = nan or lfptype = quiet_nan or
@@ -3270,13 +3132,13 @@ package body float_pkg is
       is_unordered := '0';
     end if;
     return not (is_equal and not is_unordered);
-  end function \?/=\;
+  end function "?/=";
 
-  function \?>\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width : NATURAL := -mine(l'low, r'low);
+  function "?>" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width : NATURAL := -mine(L'low, R'low);
     variable founddash      : BOOLEAN := false;
   begin
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
       for i in L'range loop
@@ -3290,25 +3152,25 @@ package body float_pkg is
         end if;
       end loop;
       if founddash then
-        report float_pkg'instance_name
+        report float_generic_pkg'instance_name
           & " ""?>"": '-' found in compare string"
           severity error;
         return 'X';
-      elsif is_x(l) or is_x(r) then
+      elsif Is_X(L) or Is_X(R) then
         return 'X';
-      elsif l > r then
+      elsif L > R then
         return '1';
       else
         return '0';
       end if;
     end if;
-  end function \?>\;
+  end function "?>";
 
-  function \?>=\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width : NATURAL := -mine(l'low, r'low);
+  function "?>=" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width : NATURAL := -mine(L'low, R'low);
     variable founddash      : BOOLEAN := false;
   begin
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
       for i in L'range loop
@@ -3322,25 +3184,25 @@ package body float_pkg is
         end if;
       end loop;
       if founddash then
-        report float_pkg'instance_name
+        report float_generic_pkg'instance_name
           & " ""?>="": '-' found in compare string"
           severity error;
         return 'X';
-      elsif is_x(l) or is_x(r) then
+      elsif Is_X(L) or Is_X(R) then
         return 'X';
-      elsif l >= r then
+      elsif L >= R then
         return '1';
       else
         return '0';
       end if;
     end if;
-  end function \?>=\;
+  end function "?>=";
 
-  function \?<\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width : NATURAL := -mine(l'low, r'low);
+  function "?<" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width : NATURAL := -mine(L'low, R'low);
     variable founddash      : BOOLEAN := false;
   begin
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
       for i in L'range loop
@@ -3354,25 +3216,25 @@ package body float_pkg is
         end if;
       end loop;
       if founddash then
-        report float_pkg'instance_name
+        report float_generic_pkg'instance_name
           & " ""?<"": '-' found in compare string"
           severity error;
         return 'X';
-      elsif is_x(l) or is_x(r) then
+      elsif Is_X(L) or Is_X(R) then
         return 'X';
-      elsif l < r then
+      elsif L < R then
         return '1';
       else
         return '0';
       end if;
     end if;
-  end function \?<\;
+  end function "?<";
 
-  function \?<=\ (L, R : UNRESOLVED_float) return STD_ULOGIC is
-    constant fraction_width : NATURAL := -mine(l'low, r'low);
+  function "?<=" (L, R : UNRESOLVED_float) return STD_ULOGIC is
+    constant fraction_width : NATURAL := -mine(L'low, R'low);
     variable founddash      : BOOLEAN := false;
   begin
-    if (fraction_width = 0 or l'length < 7 or r'length < 7) then
+    if (fraction_width = 0 or L'length < 7 or R'length < 7) then
       return 'X';
     else
       for i in L'range loop
@@ -3386,26 +3248,26 @@ package body float_pkg is
         end if;
       end loop;
       if founddash then
-        report float_pkg'instance_name
+        report float_generic_pkg'instance_name
           & " ""?<="": '-' found in compare string"
           severity error;
         return 'X';
-      elsif is_x(l) or is_x(r) then
+      elsif Is_X(L) or Is_X(R) then
         return 'X';
-      elsif l <= r then
+      elsif L <= R then
         return '1';
       else
         return '0';
       end if;
     end if;
-  end function \?<=\;
+  end function "?<=";
 
   function std_match (L, R : UNRESOLVED_float) return BOOLEAN is
   begin
     if (L'high = R'high and L'low = R'low) then
       return std_match(to_sulv(L), to_sulv(R));
     else
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
         & "STD_MATCH: L'RANGE /= R'RANGE, returning FALSE"
         severity warning;
       return false;
@@ -3415,7 +3277,7 @@ package body float_pkg is
   function find_rightmost (arg : UNRESOLVED_float; y : STD_ULOGIC) return INTEGER is
   begin
     for_loop : for i in arg'reverse_range loop
-      if \?=\ (arg(i), y) = '1' then
+      if arg(i) ?= y then
         return i;
       end if;
     end loop;
@@ -3425,7 +3287,7 @@ package body float_pkg is
   function find_leftmost (arg : UNRESOLVED_float; y : STD_ULOGIC) return INTEGER is
   begin
     for_loop : for i in arg'range loop
-      if \?=\ (arg(i), y) = '1' then
+      if arg(i) ?= y then
         return i;
       end if;
     end loop;
@@ -3466,15 +3328,16 @@ package body float_pkg is
   -- purpose: maximum of two numbers (overrides default)
   function maximum (
     L, R : UNRESOLVED_float)
-    return UNRESOLVED_float is
-    constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
-    constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
+    return UNRESOLVED_float
+  is
+    constant fraction_width   : NATURAL := -mine(L'low, R'low);  -- length of FP output fraction
+    constant exponent_width   : NATURAL := maximum(L'high, R'high);  -- length of FP output exponent
     variable lresize, rresize : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin
     if ((L'length < 1) or (R'length < 1)) then return NAFP;
     end if;
-    lresize := resize (l, exponent_width, fraction_width);
-    rresize := resize (r, exponent_width, fraction_width);
+    lresize := resize (L, exponent_width, fraction_width);
+    rresize := resize (R, exponent_width, fraction_width);
     if lresize > rresize then return lresize;
     else return rresize;
     end if;
@@ -3482,15 +3345,16 @@ package body float_pkg is
 
   function minimum (
     L, R : UNRESOLVED_float)
-    return UNRESOLVED_float is
-    constant fraction_width   : NATURAL := -mine(l'low, r'low);  -- length of FP output fraction
-    constant exponent_width   : NATURAL := maximum(l'high, r'high);  -- length of FP output exponent
+    return UNRESOLVED_float
+  is
+    constant fraction_width   : NATURAL := -mine(L'low, R'low);  -- length of FP output fraction
+    constant exponent_width   : NATURAL := maximum(L'high, R'high);  -- length of FP output exponent
     variable lresize, rresize : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin
     if ((L'length < 1) or (R'length < 1)) then return NAFP;
     end if;
-    lresize := resize (l, exponent_width, fraction_width);
-    rresize := resize (r, exponent_width, fraction_width);
+    lresize := resize (L, exponent_width, fraction_width);
+    rresize := resize (R, exponent_width, fraction_width);
     if lresize > rresize then return rresize;
     else return lresize;
     end if;
@@ -3509,7 +3373,8 @@ package body float_pkg is
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant in_fraction_width : NATURAL := -arg'low;  -- length of FP output fraction
     constant in_exponent_width : NATURAL := arg'high;  -- length of FP output exponent
     variable result            : UNRESOLVED_float (exponent_width downto -fraction_width);
@@ -3517,12 +3382,10 @@ package body float_pkg is
     variable fptype            : valid_fpstate;
     variable expon_in          : SIGNED (in_exponent_width-1 downto 0);
     variable fract_in          : UNSIGNED (in_fraction_width downto 0);
-    variable round             : BOOLEAN;
     variable expon_out         : SIGNED (exponent_width-1 downto 0);  -- output fract
     variable fract_out         : UNSIGNED (fraction_width downto 0);  -- output fract
-    variable passguard         : NATURAL;
   begin
-    fptype := classfp(arg, check_error);
+    fptype := Classfp(arg, check_error);
     if ((fptype = pos_denormal or fptype = neg_denormal) and denormalize_in
         and (in_exponent_width < exponent_width
              or in_fraction_width < fraction_width))
@@ -3586,10 +3449,10 @@ package body float_pkg is
           result (exponent_width-1 downto 0) := (others => '1');
         else
           -- invert top BIT
-          expon_in(expon_in'high)            := not expon_in(expon_in'high);
+          expon_in(expon_in'high)   := not expon_in(expon_in'high);
           expon_out := resize (expon_in, expon_out'length);  -- signed expand
           -- Flip it back.
-          expon_out(expon_out'high)          := not expon_out(expon_out'high);
+          expon_out(expon_out'high) := not expon_out(expon_out'high);
           result (exponent_width-1 downto 0) := UNRESOLVED_float(expon_out);
         end if;
         result (exponent_width) := arg (in_exponent_width);     -- sign
@@ -3615,7 +3478,8 @@ package body float_pkg is
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -3691,7 +3555,8 @@ package body float_pkg is
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable arg_real   : REAL;         -- Real version of argument
     variable validfp    : boundary_type;      -- Check for valid results
@@ -3730,14 +3595,14 @@ package body float_pkg is
         expon := (others => '0');
         frac  := arg_real * (2.0 ** (to_integer(expon_base)-1));
       else                              -- Number less than 1. "normal" number
-        expon := UNSIGNED (to_signed (exp-1, exponent_width));
+        expon    := UNSIGNED (to_signed (exp-1, exponent_width));
         expon(exponent_width-1) := not expon(exponent_width-1);
-        frac := (arg_real / 2.0 ** exp) - 1.0;  -- Number less than 1.
+        frac     := (arg_real / 2.0 ** exp) - 1.0;  -- Number less than 1.
       end if;
       for i in 0 to fract'high loop
         if frac >= 2.0 ** (-1 - i) then
           fract (fract'high - i) := '1';
-          frac := frac - 2.0 ** (-1 - i);
+          frac                   := frac - 2.0 ** (-1 - i);
         else
           fract (fract'high - i) := '0';
         end if;
@@ -3760,7 +3625,7 @@ package body float_pkg is
           null;                         -- don't round
       end case;
       if (round) then
-        if and_reduce (fract) = '1' then      -- fraction is all "1"
+        if and(fract) = '1' then        -- fraction is all "1"
           expon := expon + 1;
           fract := (others => '0');
         else
@@ -3779,7 +3644,8 @@ package body float_pkg is
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable arg_int    : NATURAL;      -- Natural version of argument
     variable expon      : SIGNED (exponent_width-1 downto 0);
@@ -3874,14 +3740,15 @@ package body float_pkg is
 
   -- to_float (unsigned)
   function to_float (
-    arg                     : UNSIGNED;
+    arg                     : UNRESOLVED_UNSIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result   : UNRESOLVED_float (exponent_width downto -fraction_width);
-    constant ARG_LEFT : INTEGER := ARG'length-1;
-    alias XARG        : UNSIGNED(ARG_LEFT downto 0) is ARG;
+    constant ARG_LEFT : INTEGER := arg'length-1;
+    alias XARG        : UNRESOLVED_UNSIGNED(ARG_LEFT downto 0) is arg;
     variable sarg     : SIGNED (ARG_LEFT+1 downto 0);  -- signed version of arg
   begin
     if arg'length < 1 then
@@ -3898,16 +3765,17 @@ package body float_pkg is
 
   -- to_float (signed)
   function to_float (
-    arg                     : SIGNED;
+    arg                     : UNRESOLVED_SIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
-    constant ARG_LEFT   : INTEGER := ARG'length-1;
-    alias XARG          : SIGNED(ARG_LEFT downto 0) is ARG;
-    variable arg_int    : UNSIGNED(xarg'range);  -- Real version of argument
-    variable argb2      : UNSIGNED(xarg'high/2 downto 0);  -- log2 of input
+    constant ARG_LEFT   : INTEGER := arg'length-1;
+    alias XARG          : UNRESOLVED_SIGNED(ARG_LEFT downto 0) is arg;
+    variable arg_int    : UNSIGNED(XARG'range);  -- Real version of argument
+    variable argb2      : UNSIGNED(XARG'high/2 downto 0);  -- log2 of input
     variable rexp       : SIGNED (exponent_width - 1 downto 0);
     variable exp        : SIGNED (exponent_width - 1 downto 0);
     -- signed version of exp.
@@ -3923,14 +3791,14 @@ package body float_pkg is
     if arg'length < 1 then
       return NAFP;
     end if;
-    if Is_X (xarg) then
+    if Is_X (XARG) then
       result := (others => 'X');
-    elsif (xarg = 0) then
+    elsif (XARG = 0) then
       result := zerofp (fraction_width => fraction_width,
                         exponent_width => exponent_width);
     else                                -- Normal number (can't be denormal)
-      sign := to_X01(xarg (xarg'high));
-      arg_int := UNSIGNED(abs (to_01(xarg)));
+      sign := to_X01(XARG (XARG'high));
+      arg_int := UNSIGNED(abs (to_01(XARG)));
       -- Compute Exponent
       argb2 := to_unsigned(find_leftmost(arg_int, '1'), argb2'length);  -- Log2
       if argb2 > UNSIGNED(expon_base) then
@@ -3978,7 +3846,8 @@ package body float_pkg is
     arg                     : STD_ULOGIC_VECTOR;
     constant exponent_width : NATURAL := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- length of FP output fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable fpvar : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin
     if arg'length < 1 then
@@ -3995,7 +3864,8 @@ package body float_pkg is
     constant fraction_width : NATURAL    := float_fraction_width;  -- width of fraction
     constant round_style    : round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- use ieee extensions
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable sarg   : sfixed (arg'high+1 downto arg'low);  -- Signed version of arg
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width);
   begin  -- function to_float
@@ -4018,7 +3888,8 @@ package body float_pkg is
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
     constant round_style    : round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant integer_width     : INTEGER := arg'high;
     constant in_fraction_width : INTEGER := arg'low;
     variable xresult     : sfixed (integer_width downto in_fraction_width);
@@ -4124,7 +3995,8 @@ package body float_pkg is
     arg                  : INTEGER;
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4144,7 +4016,8 @@ package body float_pkg is
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4161,10 +4034,11 @@ package body float_pkg is
 
   -- unsigned to float
   function to_float (
-    arg                  : UNSIGNED;
+    arg                  : UNRESOLVED_UNSIGNED;
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4180,10 +4054,11 @@ package body float_pkg is
 
   -- signed to float
   function to_float (
-    arg                  : SIGNED;
+    arg                  : UNRESOLVED_SIGNED;
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style)  -- rounding
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4201,7 +4076,8 @@ package body float_pkg is
   function to_float (
     arg      : STD_ULOGIC_VECTOR;
     size_res : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4220,7 +4096,8 @@ package body float_pkg is
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- use ieee extensions
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4241,7 +4118,8 @@ package body float_pkg is
     size_res             : UNRESOLVED_float;
     constant round_style : round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- rounding option
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4259,9 +4137,10 @@ package body float_pkg is
   -- to_integer (float)
   function to_integer (
     arg                  : UNRESOLVED_float;   -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return INTEGER is
+    return INTEGER
+  is
     variable validfp : valid_fpstate;   -- Valid FP state
     variable frac    : UNSIGNED (-arg'low downto 0);         -- Fraction
     variable fract   : UNSIGNED (1-arg'low downto 0);        -- Fraction
@@ -4271,7 +4150,7 @@ package body float_pkg is
     variable result  : INTEGER;
     variable base    : INTEGER;         -- Integer exponent
   begin
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | nan | quiet_nan | pos_zero | neg_zero | pos_denormal | neg_denormal =>
         result := 0;                    -- return 0
@@ -4306,7 +4185,7 @@ package body float_pkg is
               if frac'high - base > 1 then
                 round := fract (frac'high - base - 1) and
                          (fract (frac'high - base)
-                          or (or_reduce (fract (frac'high - base - 2 downto 0))));
+                          or (or (fract (frac'high - base - 2 downto 0))));
               else
                 round := fract (frac'high - base - 1) and
                          fract (frac'high - base);
@@ -4335,12 +4214,13 @@ package body float_pkg is
     constant size        : NATURAL;     -- length of output
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return UNSIGNED is
+    return UNRESOLVED_UNSIGNED
+  is
     variable validfp : valid_fpstate;   -- Valid FP state
-    variable frac    : UNSIGNED (size-1 downto 0);           -- Fraction
+    variable frac    : UNRESOLVED_UNSIGNED (size-1 downto 0);  -- Fraction
     variable sign    : STD_ULOGIC;      -- not used
   begin
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | nan | quiet_nan =>
         frac := (others => 'X');
@@ -4366,13 +4246,14 @@ package body float_pkg is
     constant size        : NATURAL;     -- length of output
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return SIGNED is
+    return UNRESOLVED_SIGNED
+  is
     variable sign    : STD_ULOGIC;      -- true if negative
     variable validfp : valid_fpstate;   -- Valid FP state
-    variable frac    : UNSIGNED (size-1 downto 0);           -- Fraction
-    variable result  : SIGNED (size-1 downto 0);
+    variable frac    : UNRESOLVED_UNSIGNED (size-1 downto 0);  -- Fraction
+    variable result  : UNRESOLVED_SIGNED (size-1 downto 0);
   begin
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | nan | quiet_nan =>
         result := (others => 'X');
@@ -4393,7 +4274,7 @@ package body float_pkg is
           bias        => 0,
           round_style => round_style);
         result (size-1)          := '0';
-        result (size-2 downto 0) := SIGNED(frac (size-2 downto 0));
+        result (size-2 downto 0) := UNRESOLVED_SIGNED(frac (size-2 downto 0));
         if sign = '1' then
           -- Because the most negative signed number is 1 less than the most
           -- positive signed number, we need this code.
@@ -4422,10 +4303,11 @@ package body float_pkg is
     constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
-    return UNRESOLVED_ufixed is
-    constant fraction_width : INTEGER                    := -mine(arg'low, arg'low);  -- length of FP output fraction
-    constant exponent_width : INTEGER                    := arg'high;  -- length of FP output exponent
-    constant size           : INTEGER                    := left_index - right_index + 4;  -- unsigned size
+    return UNRESOLVED_ufixed
+  is
+    constant fraction_width : INTEGER := -mine(arg'low, arg'low);  -- length of FP output fraction
+    constant exponent_width : INTEGER := arg'high;  -- length of FP output exponent
+    constant size           : INTEGER := left_index - right_index + 4;  -- unsigned size
     variable expon_base     : INTEGER;  -- exponent offset
     variable validfp        : valid_fpstate;               -- Valid FP state
     variable exp            : INTEGER;  -- Exponent
@@ -4437,7 +4319,7 @@ package body float_pkg is
     variable result_big     : UNRESOLVED_ufixed (left_index downto right_index-3);
     variable result         : UNRESOLVED_ufixed (left_index downto right_index);  -- result
   begin  -- function to_ufixed
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | nan | quiet_nan =>
         frac := (others => 'X');
@@ -4494,10 +4376,11 @@ package body float_pkg is
     constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
-    return UNRESOLVED_sfixed is
-    constant fraction_width : INTEGER                    := -mine(arg'low, arg'low);  -- length of FP output fraction
-    constant exponent_width : INTEGER                    := arg'high;  -- length of FP output exponent
-    constant size           : INTEGER                    := left_index - right_index + 4;  -- unsigned size
+    return UNRESOLVED_sfixed
+  is
+    constant fraction_width : INTEGER := -mine(arg'low, arg'low);  -- length of FP output fraction
+    constant exponent_width : INTEGER := arg'high;  -- length of FP output exponent
+    constant size           : INTEGER := left_index - right_index + 4;  -- unsigned size
     variable expon_base     : INTEGER;  -- exponent offset
     variable validfp        : valid_fpstate;     -- Valid FP state
     variable exp            : INTEGER;  -- Exponent
@@ -4510,9 +4393,9 @@ package body float_pkg is
     variable rsigned        : SIGNED (size-1 downto 0);  -- signed version of result
     variable result_big     : UNRESOLVED_sfixed (left_index downto right_index-3);
     variable result         : UNRESOLVED_sfixed (left_index downto right_index)
-      := (others => '0');               -- result
+      := (others => '0');  -- result
   begin  -- function to_sfixed
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | nan | quiet_nan =>
         result := (others => 'X');
@@ -4578,13 +4461,14 @@ package body float_pkg is
   -- float to unsigned
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
-    size_res             : UNSIGNED;
+    size_res             : UNRESOLVED_UNSIGNED;
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return UNSIGNED is
-    variable result : UNSIGNED (size_res'range);
+    return UNRESOLVED_UNSIGNED
+  is
+    variable result : UNRESOLVED_UNSIGNED (size_res'range);
   begin
-    if (SIZE_RES'length = 0) then
+    if (size_res'length = 0) then
       return result;
     else
       result := to_unsigned (
@@ -4599,13 +4483,14 @@ package body float_pkg is
   -- float to signed
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
-    size_res             : SIGNED;
+    size_res             : UNRESOLVED_SIGNED;
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
-    return SIGNED is
-    variable result : SIGNED (size_res'range);
+    return UNRESOLVED_SIGNED
+  is
+    variable result : UNRESOLVED_SIGNED (size_res'range);
   begin
-    if (SIZE_RES'length = 0) then
+    if (size_res'length = 0) then
       return result;
     else
       result := to_signed (
@@ -4625,7 +4510,8 @@ package body float_pkg is
     constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
-    return UNRESOLVED_ufixed is
+    return UNRESOLVED_ufixed
+  is
     variable result : UNRESOLVED_ufixed (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4651,7 +4537,8 @@ package body float_pkg is
     constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
-    return UNRESOLVED_sfixed is
+    return UNRESOLVED_sfixed
+  is
     variable result : UNRESOLVED_sfixed (size_res'left downto size_res'right);
   begin
     if (result'length < 1) then
@@ -4675,7 +4562,8 @@ package body float_pkg is
     arg                  : UNRESOLVED_float;        -- floating point input
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return REAL is
+    return REAL
+  is
     constant fraction_width : INTEGER := -mine(arg'low, arg'low);  -- length of FP output fraction
     constant exponent_width : INTEGER := arg'high;  -- length of FP output exponent
     variable sign           : REAL;     -- Sign, + or - 1
@@ -4686,7 +4574,7 @@ package body float_pkg is
     variable expon          : UNSIGNED (exponent_width - 1 downto 0)
       := (others => '1');               -- Vectorized exponent
   begin
-    validfp := classfp (arg, check_error);
+    validfp := Classfp (arg, check_error);
     classcase : case validfp is
       when isx | pos_zero | neg_zero | nan | quiet_nan =>
         return 0.0;
@@ -4744,12 +4632,13 @@ package body float_pkg is
   function to_01 (
     arg  : UNRESOLVED_float;            -- floating point input
     XMAP : STD_LOGIC := '0')
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (arg'range);
   begin  -- function to_01
     if (arg'length < 1) then
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & "TO_01: null detected, returning NULL"
         severity warning;
       return NAFP;
@@ -4769,8 +4658,8 @@ package body float_pkg is
     variable result : UNRESOLVED_float (arg'range);
   begin
     if (arg'length < 1) then
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & "TO_X01: null detected, returning NULL"
         severity warning;
       return NAFP;
@@ -4784,8 +4673,8 @@ package body float_pkg is
     variable result : UNRESOLVED_float (arg'range);
   begin
     if (arg'length < 1) then
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & "TO_X01Z: null detected, returning NULL"
         severity warning;
       return NAFP;
@@ -4799,8 +4688,8 @@ package body float_pkg is
     variable result : UNRESOLVED_float (arg'range);
   begin
     if (arg'length < 1) then
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & "TO_UX01: null detected, returning NULL"
         severity warning;
       return NAFP;
@@ -5180,180 +5069,181 @@ package body float_pkg is
   end function "<";
 
   -- ?= overloads
-  function \?=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?=" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?=\ (l, r_float);
-  end function \?=\;
+    return l ?= r_float;
+  end function "?=";
 
-  function \?/=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?/=" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?/=\ (l, r_float);
-  end function \?/=\;
+    return l ?/= r_float;
+  end function "?/=";
 
-  function \?>\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?>" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?>\ (l, r_float);
-  end function \?>\;
+    return l ?> r_float;
+  end function "?>";
 
-  function \?>=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?>=" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?>=\ (l, r_float);
-  end function \?>=\;
+    return l ?>= r_float;
+  end function "?>=";
 
-  function \?<\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?<" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?<\ (l, r_float);
-  end function \?<\;
+    return l ?< r_float;
+  end function "?<";
 
-  function \?<=\ (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
+  function "?<=" (l : UNRESOLVED_float; r : REAL) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?<=\ (l, r_float);
-  end function \?<=\;
+    return l ?<= r_float;
+  end function "?<=";
 
   -- real and float
-  function \?=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?=" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?=\ (l_float, r);
-  end function \?=\;
+    return l_float ?= r;
+  end function "?=";
 
-  function \?/=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?/=" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?/=\ (l_float, r);
-  end function \?/=\;
+    return l_float ?/= r;
+  end function "?/=";
 
-  function \?>\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?>" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?>\ (l_float, r);
-  end function \?>\;
+    return l_float ?> r;
+  end function "?>";
 
-  function \?>=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?>=" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?>=\ (l_float, r);
-  end function \?>=\;
+    return l_float ?>= r;
+  end function "?>=";
 
-  function \?<\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?<" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?<\ (l_float, r);
-  end function \?<\;
+    return l_float ?< r;
+  end function "?<";
 
-  function \?<=\ (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?<=" (l : REAL; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?<=\ (l_float, r);
-  end function \?<=\;
+    return l_float ?<= r;
+  end function "?<=";
 
   -- ?= overloads
-  function \?=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?=\ (l, r_float);
-  end function \?=\;
+    return l ?= r_float;
+  end function "?=";
 
-  function \?/=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?/=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?/=\ (l, r_float);
-  end function \?/=\;
+    return l ?/= r_float;
+  end function "?/=";
 
-  function \?>\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?>" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?>\ (l, r_float);
-  end function \?>\;
+    return l ?> r_float;
+  end function "?>";
 
-  function \?>=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?>=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?>=\ (l, r_float);
-  end function \?>=\;
+    return l ?>= r_float;
+  end function "?>=";
 
-  function \?<\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?<" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?<\ (l, r_float);
-  end function \?<\;
+    return l ?< r_float;
+  end function "?<";
 
-  function \?<=\ (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
+  function "?<=" (l : UNRESOLVED_float; r : INTEGER) return STD_ULOGIC is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
-    return \?<=\ (l, r_float);
-  end function \?<=\;
+    return l ?<= r_float;
+  end function "?<=";
 
   -- integer and float
-  function \?=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?=\ (l_float, r);
-  end function \?=\;
+    return l_float ?= r;
+  end function "?=";
 
-  function \?/=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?/=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?/=\ (l_float, r);
-  end function \?/=\;
+    return l_float ?/= r;
+  end function "?/=";
 
-  function \?>\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?>" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?>\ (l_float, r);
-  end function \?>\;
+    return l_float ?> r;
+  end function "?>";
 
-  function \?>=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?>=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?>=\ (l_float, r);
-  end function \?>=\;
+    return l_float ?>= r;
+  end function "?>=";
 
-  function \?<\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?<" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?<\ (l_float, r);
-  end function \?<\;
+    return l_float ?< r;
+  end function "?<";
 
-  function \?<=\ (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
+  function "?<=" (l : INTEGER; r : UNRESOLVED_float) return STD_ULOGIC is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
-    return \?<=\ (l_float, r);
-  end function \?<=\;
+    return l_float ?<= r;
+  end function "?<=";
 
   -- minimum and maximum overloads
   function minimum (l : UNRESOLVED_float; r : REAL)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
@@ -5361,7 +5251,8 @@ package body float_pkg is
   end function minimum;
 
   function maximum (l : UNRESOLVED_float; r : REAL)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
@@ -5369,7 +5260,8 @@ package body float_pkg is
   end function maximum;
 
   function minimum (l : REAL; r : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
@@ -5377,7 +5269,8 @@ package body float_pkg is
   end function minimum;
 
   function maximum (l : REAL; r : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
@@ -5385,7 +5278,8 @@ package body float_pkg is
   end function maximum;
 
   function minimum (l : UNRESOLVED_float; r : INTEGER)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
@@ -5393,7 +5287,8 @@ package body float_pkg is
   end function minimum;
 
   function maximum (l : UNRESOLVED_float; r : INTEGER)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable r_float : UNRESOLVED_float (l'range);
   begin
     r_float := to_float (r, l'high, -l'low);
@@ -5401,7 +5296,8 @@ package body float_pkg is
   end function maximum;
 
   function minimum (l : INTEGER; r : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
@@ -5409,7 +5305,8 @@ package body float_pkg is
   end function minimum;
 
   function maximum (l : INTEGER; r : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable l_float : UNRESOLVED_float (r'range);
   begin
     l_float := to_float (l, r'high, -r'low);
@@ -5432,8 +5329,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) and to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """and"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5447,8 +5344,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) or to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """or"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5462,8 +5359,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) nand to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """nand"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5477,8 +5374,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) nor to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """nor"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5492,8 +5389,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) xor to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """xor"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5507,8 +5404,8 @@ package body float_pkg is
      if (L'high = R'high and L'low = R'low) then
       RESULT := to_sulv(L) xnor to_sulv(R);
     else
-      assert NO_WARNING
-        report float_pkg'instance_name
+      assert no_warning
+        report float_generic_pkg'instance_name
         & """xnor"": Range error L'RANGE /= R'RANGE"
         severity warning;
       RESULT := (others => 'X');
@@ -5518,156 +5415,144 @@ package body float_pkg is
 
   -- Vector and std_ulogic functions, same as functions in numeric_std
   function "and" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L and R(i);
-    end loop;
+    result := UNRESOLVED_float (L and to_sulv(R));
     return result;
   end function "and";
 
   function "and" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) and R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) and R);
     return result;
   end function "and";
 
   function "or" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L or R(i);
-    end loop;
+    result := UNRESOLVED_float (L or to_sulv(R));
     return result;
   end function "or";
 
   function "or" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) or R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) or R);
     return result;
   end function "or";
 
   function "nand" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L nand R(i);
-    end loop;
+    result := UNRESOLVED_float (L nand to_sulv(R));
     return result;
   end function "nand";
 
   function "nand" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) nand R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) nand R);
     return result;
   end function "nand";
 
   function "nor" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L nor R(i);
-    end loop;
+    result := UNRESOLVED_float (L nor to_sulv(R));
     return result;
   end function "nor";
 
   function "nor" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) nor R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) nor R);
     return result;
   end function "nor";
 
   function "xor" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L xor R(i);
-    end loop;
+    result := UNRESOLVED_float (L xor to_sulv(R));
     return result;
   end function "xor";
 
   function "xor" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) xor R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) xor R);
     return result;
   end function "xor";
 
   function "xnor" (L : STD_ULOGIC; R : UNRESOLVED_float)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (R'range);
   begin
-    for i in result'range loop
-      result(i) := L xnor R(i);
-    end loop;
+    result := UNRESOLVED_float (L xnor to_sulv(R));
     return result;
   end function "xnor";
 
   function "xnor" (L : UNRESOLVED_float; R : STD_ULOGIC)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (L'range);
   begin
-    for i in result'range loop
-      result(i) := L(i) xnor R;
-    end loop;
+    result := UNRESOLVED_float (to_sulv(L) xnor R);
     return result;
   end function "xnor";
 
-  -- Reduction operator_reduces, same as numeric_std functions
+  -- Reduction operators, same as numeric_std functions
 
-  function and_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "and" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return and_reduce (to_sulv(l));
-  end function and_reduce;
+    return and to_sulv(l);
+  end function "and";
 
-  function nand_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "nand" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return nand_reduce (to_sulv(l));
-  end function nand_reduce;
+    return nand to_sulv(l);
+  end function "nand";
 
-  function or_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "or" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return or_reduce (to_sulv(l));
-  end function or_reduce;
+    return or to_sulv(l);
+  end function "or";
 
-  function nor_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "nor" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return nor_reduce (to_sulv(l));
-  end function nor_reduce;
+    return nor to_sulv(l);
+  end function "nor";
 
-  function xor_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "xor" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return xor_reduce (to_sulv(l));
-  end function xor_reduce;
+    return xor to_sulv(l);
+  end function "xor";
 
-  function xnor_reduce (l : UNRESOLVED_float) return STD_ULOGIC is
+  function "xnor" (l : UNRESOLVED_float) return STD_ULOGIC is
   begin
-    return xnor_reduce (to_sulv(l));
-  end function xnor_reduce;
+    return xnor to_sulv(l);
+  end function "xnor";
 
   -----------------------------------------------------------------------------
   -- Recommended Functions from the IEEE 754 Appendix
@@ -5683,24 +5568,23 @@ package body float_pkg is
   -- Returns y * 2**n for integral values of N without computing 2**n
   function Scalb (
     y                    : UNRESOLVED_float;      -- floating point input
-    N                    : INTEGER;     -- exponent to add    
+    N                    : INTEGER;     -- exponent to add
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL := -mine(y'low, y'low);  -- length of FP output fraction
     constant exponent_width : NATURAL := y'high;  -- length of FP output exponent
     variable arg, result    : UNRESOLVED_float (exponent_width downto -fraction_width);  -- internal argument
     variable expon          : SIGNED (exponent_width-1 downto 0);  -- Vectorized exp
     variable exp            : SIGNED (exponent_width downto 0);
     variable ufract         : UNSIGNED (fraction_width downto 0);
-    constant expon_base     : SIGNED (exponent_width-1 downto 0)
-      := gen_expon_base(exponent_width);          -- exponent offset
     variable fptype : valid_fpstate;
   begin
     -- This can be done by simply adding N to the exponent.
     arg    := to_01 (y, 'X');
-    fptype := classfp(arg, check_error);
+    fptype := Classfp(arg, check_error);
     classcase : case fptype is
       when isx =>
         result := (others => 'X');
@@ -5731,12 +5615,13 @@ package body float_pkg is
 
   -- Returns y * 2**n for integral values of N without computing 2**n
   function Scalb (
-    y                    : UNRESOLVED_float;  -- floating point input
-    N                    : SIGNED;      -- exponent to add    
+    y                    : UNRESOLVED_float;   -- floating point input
+    N                    : UNRESOLVED_SIGNED;  -- exponent to add
     constant round_style : round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable n_int : INTEGER;
   begin
     n_int := to_integer(N);
@@ -5750,7 +5635,8 @@ package body float_pkg is
   -- returns the unbiased exponent of x
   function Logb (
     x : UNRESOLVED_float)               -- floating point input
-    return INTEGER is
+    return INTEGER
+  is
     constant fraction_width : NATURAL := -mine (x'low, x'low);  -- length of FP output fraction
     constant exponent_width : NATURAL := x'high;  -- length of FP output exponent
     variable result         : INTEGER;  -- result
@@ -5763,7 +5649,7 @@ package body float_pkg is
   begin
     -- Just return the exponent.
     arg    := to_01 (x, 'X');
-    fptype := classfp(arg);
+    fptype := Classfp(arg);
     classcase : case fptype is
       when isx | nan | quiet_nan =>
         -- Return quiet NAN, IEEE754-1985-7.1,1
@@ -5787,7 +5673,8 @@ package body float_pkg is
   -- returns the unbiased exponent of x
   function Logb (
     x : UNRESOLVED_float)               -- floating point input
-    return SIGNED is
+    return UNRESOLVED_SIGNED
+  is
     constant exponent_width : NATURAL := x'high;  -- length of FP output exponent
     variable result         : SIGNED (exponent_width - 1 downto 0);  -- result
   begin
@@ -5801,7 +5688,8 @@ package body float_pkg is
     x, y                 : UNRESOLVED_float;      -- floating point input
     constant check_error : BOOLEAN := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN := float_denormalize)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant fraction_width : NATURAL := -mine(x'low, x'low);  -- length of FP output fraction
     constant exponent_width : NATURAL := x'high;  -- length of FP output exponent
     function "=" (
@@ -5827,8 +5715,8 @@ package body float_pkg is
     variable validfpx, validfpy : valid_fpstate;  -- Valid FP state
   begin  -- fp_Nextafter
     -- If Y > X, add one to the fraction, otherwise subtract.
-    validfpx := classfp (x, check_error);
-    validfpy := classfp (y, check_error);
+    validfpx := Classfp (x, check_error);
+    validfpy := Classfp (y, check_error);
     if validfpx = isx or validfpy = isx then
       result := (others => 'X');
       return result;
@@ -5858,12 +5746,12 @@ package body float_pkg is
           fract    := (others => '0');
           fract(0) := '1';
         elsif validfpx = pos_normal then
-          if and_reduce (fract) = '1' then        -- fraction is all "1".
-            if and_reduce (expon (exponent_width-1 downto 1)) = '1'
+          if and (fract) = '1' then     -- fraction is all "1".
+            if and (expon (exponent_width-1 downto 1)) = '1'
               and expon (0) = '0' then
                                         -- Exponent is one away from infinity.
-              assert NO_WARNING
-                report float_pkg'instance_name
+              assert no_warning
+                report float_generic_pkg'instance_name
                 & "FP_NEXTAFTER: NextAfter overflow"
                 severity warning;
               return pos_inffp (fraction_width => fraction_width,
@@ -5876,7 +5764,7 @@ package body float_pkg is
             fract := fract + 1;
           end if;
         elsif validfpx = pos_denormal then
-          if and_reduce (fract) = '1' then        -- fraction is all "1".
+          if and (fract) = '1' then     -- fraction is all "1".
             -- return smallest possible normal number
             expon    := (others => '0');
             expon(0) := '1';
@@ -5885,8 +5773,8 @@ package body float_pkg is
             fract := fract + 1;
           end if;
         elsif validfpx = neg_normal then
-          if or_reduce (fract) = '0' then         -- fraction is all "0".
-            if or_reduce (expon (exponent_width-1 downto 1)) = '0' and
+          if or (fract) = '0' then      -- fraction is all "0".
+            if or (expon (exponent_width-1 downto 1)) = '0' and
               expon (0) = '1' then      -- Smallest exponent
               -- return the largest negative denormal number
               expon := (others => '0');
@@ -5899,7 +5787,7 @@ package body float_pkg is
             fract := fract - 1;
           end if;
         elsif validfpx = neg_denormal then
-          if or_reduce (fract(fract'high downto 1)) = '0'
+          if or (fract(fract'high downto 1)) = '0'
             and fract (0) = '1' then    -- Smallest possible fraction
             return zerofp (fraction_width => fraction_width,
                            exponent_width => exponent_width);
@@ -5915,19 +5803,19 @@ package body float_pkg is
           expon (0) := '0';
           fract     := (others => '1');
         elsif validfpx = pos_zero
-          or classfp (x) = neg_zero then
+          or Classfp (x) = neg_zero then
           -- return smallest negative denormal number
           sign     := '1';
           expon    := (others => '0');
           fract    := (others => '0');
           fract(0) := '1';
         elsif validfpx = neg_normal then
-          if and_reduce (fract) = '1' then        -- fraction is all "1".
-            if and_reduce (expon (exponent_width-1 downto 1)) = '1'
+          if and (fract) = '1' then     -- fraction is all "1".
+            if and (expon (exponent_width-1 downto 1)) = '1'
               and expon (0) = '0' then
                                         -- Exponent is one away from infinity.
-              assert NO_WARNING
-                report float_pkg'instance_name
+              assert no_warning
+                report float_generic_pkg'instance_name
                 & "FP_NEXTAFTER: NextAfter overflow"
                 severity warning;
               return neg_inffp (fraction_width => fraction_width,
@@ -5940,7 +5828,7 @@ package body float_pkg is
             fract := fract + 1;
           end if;
         elsif validfpx = neg_denormal then
-          if and_reduce (fract) = '1' then        -- fraction is all "1".
+          if and (fract) = '1' then     -- fraction is all "1".
             -- return smallest possible normal number
             expon    := (others => '0');
             expon(0) := '1';
@@ -5949,8 +5837,8 @@ package body float_pkg is
             fract := fract + 1;
           end if;
         elsif validfpx = pos_normal then
-          if or_reduce (fract) = '0' then         -- fraction is all "0".
-            if or_reduce (expon (exponent_width-1 downto 1)) = '0' and
+          if or (fract) = '0' then      -- fraction is all "0".
+            if or (expon (exponent_width-1 downto 1)) = '0' and
               expon (0) = '1' then      -- Smallest exponent
               -- return the largest positive denormal number
               expon := (others => '0');
@@ -5963,7 +5851,7 @@ package body float_pkg is
             fract := fract - 1;
           end if;
         elsif validfpx = pos_denormal then
-          if or_reduce (fract(fract'high downto 1)) = '0'
+          if or (fract(fract'high downto 1)) = '0'
             and fract (0) = '1' then    -- Smallest possible fraction
             return zerofp (fraction_width => fraction_width,
                            exponent_width => exponent_width);
@@ -5982,11 +5870,12 @@ package body float_pkg is
   -- Returns True if X is unordered with Y.
   function Unordered (
     x, y : UNRESOLVED_float)            -- floating point input
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable lfptype, rfptype : valid_fpstate;
   begin
-    lfptype := classfp (x);
-    rfptype := classfp (y);
+    lfptype := Classfp (x);
+    rfptype := Classfp (y);
     if (lfptype = nan or lfptype = quiet_nan or
         rfptype = nan or rfptype = quiet_nan or
         lfptype = isx or rfptype = isx) then
@@ -5998,7 +5887,8 @@ package body float_pkg is
 
   function Finite (
     x : UNRESOLVED_float)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable fp_state : valid_fpstate;  -- fp state
   begin
     fp_state := Classfp (x);
@@ -6011,7 +5901,8 @@ package body float_pkg is
 
   function Isnan (
     x : UNRESOLVED_float)
-    return BOOLEAN is
+    return BOOLEAN
+  is
     variable fp_state : valid_fpstate;  -- fp state
   begin
     fp_state := Classfp (x);
@@ -6026,7 +5917,8 @@ package body float_pkg is
   function zerofp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     constant result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                                          -- zero
   begin
@@ -6036,13 +5928,14 @@ package body float_pkg is
   function nanfp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                  -- zero
   begin
     result (exponent_width-1 downto 0) := (others => '1');
     -- Exponent all "1"
-    result (-1) := '1';  -- MSB of Fraction "1"
+    result (-1)                        := '1';  -- MSB of Fraction "1"
     -- Note: From W. Khan "IEEE Standard 754 for Binary Floating Point"
     -- The difference between a signaling NAN and a quiet NAN is that
     -- the MSB of the Fraction is a "1" in a Signaling NAN, and is a
@@ -6053,7 +5946,8 @@ package body float_pkg is
   function qnanfp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                  -- zero
   begin
@@ -6067,7 +5961,8 @@ package body float_pkg is
   function pos_inffp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                  -- zero
   begin
@@ -6078,7 +5973,8 @@ package body float_pkg is
   function neg_inffp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                  -- zero
   begin
@@ -6089,7 +5985,8 @@ package body float_pkg is
   function neg_zerofp (
     constant exponent_width : NATURAL := float_exponent_width;  -- exponent
     constant fraction_width : NATURAL := float_fraction_width)  -- fraction
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width) :=
       (others => '0');                                          -- zero
   begin
@@ -6152,10 +6049,6 @@ package body float_pkg is
       fraction_width => -size_res'low);
   end function neg_zerofp;
 
--- rtl_synthesis off
--- pragma synthesis_off
-
-  --%%% these functions are copied from std_logic_1164 (VHDL-200X edition)
   -- Textio functions
   -- purpose: writes float into a line (NOTE changed basetype)
   type MVL9plus is ('U', 'X', '0', '1', 'Z', 'W', 'L', 'H', '-', error);
@@ -6171,275 +6064,23 @@ package body float_pkg is
   constant char_to_MVL9plus : MVL9plus_indexed_by_char :=
     ('U' => 'U', 'X' => 'X', '0' => '0', '1' => '1', 'Z' => 'Z',
      'W' => 'W', 'L' => 'L', 'H' => 'H', '-' => '-', others => error);
-  constant NUS : STRING(2 to 1) := (others => ' ');
 
   -- purpose: Skips white space
   procedure skip_whitespace (
     L : inout LINE) is
-    variable readOk : BOOLEAN;
-    variable c      : CHARACTER;
+    variable c : CHARACTER;
+    variable left : positive;
   begin
     while L /= null and L.all'length /= 0 loop
-      if (L.all(1) = ' ' or L.all(1) = NBSP or L.all(1) = HT) then
-        read (l, c, readOk);
+      left := L.all'left;
+      c := L.all(left);
+      if (c = ' ' or c = NBSP or c = HT) then
+        read (L, c);
       else
         exit;
       end if;
     end loop;
   end procedure skip_whitespace;
-
--- %%% Replicated textio functions
-  function to_ostring (value : STD_LOGIC_VECTOR) return STRING is
-    constant ne     : INTEGER := (value'length+2)/3;
-    variable pad    : STD_LOGIC_VECTOR(0 to (ne*3 - value'length) - 1);
-    variable ivalue : STD_LOGIC_VECTOR(0 to ne*3 - 1);
-    variable result : STRING(1 to ne);
-    variable tri    : STD_LOGIC_VECTOR(0 to 2);
-  begin
-    if value'length < 1 then
-      return NUS;
-    else
-      if value (value'left) = 'Z' then
-        pad := (others => 'Z');
-      else
-        pad := (others => '0');
-      end if;
-      ivalue := pad & value;
-      for i in 0 to ne-1 loop
-        tri := To_X01Z(ivalue(3*i to 3*i+2));
-        case tri is
-          when o"0"   => result(i+1) := '0';
-          when o"1"   => result(i+1) := '1';
-          when o"2"   => result(i+1) := '2';
-          when o"3"   => result(i+1) := '3';
-          when o"4"   => result(i+1) := '4';
-          when o"5"   => result(i+1) := '5';
-          when o"6"   => result(i+1) := '6';
-          when o"7"   => result(i+1) := '7';
-          when "ZZZ"  => result(i+1) := 'Z';
-          when others => result(i+1) := 'X';
-        end case;
-      end loop;
-      return result;
-    end if;
-  end function to_ostring;
-  -------------------------------------------------------------------   
-  function to_hstring (value : STD_LOGIC_VECTOR) return STRING is
-    constant ne     : INTEGER := (value'length+3)/4;
-    variable pad    : STD_LOGIC_VECTOR(0 to (ne*4 - value'length) - 1);
-    variable ivalue : STD_LOGIC_VECTOR(0 to ne*4 - 1);
-    variable result : STRING(1 to ne);
-    variable quad   : STD_LOGIC_VECTOR(0 to 3);
-  begin
-    if value'length < 1 then
-      return NUS;
-    else
-      if value (value'left) = 'Z' then
-        pad := (others => 'Z');
-      else
-        pad := (others => '0');
-      end if;
-      ivalue := pad & value;
-      for i in 0 to ne-1 loop
-        quad := To_X01Z(ivalue(4*i to 4*i+3));
-        case quad is
-          when x"0"   => result(i+1) := '0';
-          when x"1"   => result(i+1) := '1';
-          when x"2"   => result(i+1) := '2';
-          when x"3"   => result(i+1) := '3';
-          when x"4"   => result(i+1) := '4';
-          when x"5"   => result(i+1) := '5';
-          when x"6"   => result(i+1) := '6';
-          when x"7"   => result(i+1) := '7';
-          when x"8"   => result(i+1) := '8';
-          when x"9"   => result(i+1) := '9';
-          when x"A"   => result(i+1) := 'A';
-          when x"B"   => result(i+1) := 'B';
-          when x"C"   => result(i+1) := 'C';
-          when x"D"   => result(i+1) := 'D';
-          when x"E"   => result(i+1) := 'E';
-          when x"F"   => result(i+1) := 'F';
-          when "ZZZZ" => result(i+1) := 'Z';
-          when others => result(i+1) := 'X';
-        end case;
-      end loop;
-      return result;
-    end if;
-  end function to_hstring;
-  procedure Char2TriBits (C           :     CHARACTER;
-                          RESULT      : out STD_LOGIC_VECTOR(2 downto 0);
-                          GOOD        : out BOOLEAN;
-                          ISSUE_ERROR : in  BOOLEAN) is
-  begin
-    case c is
-      when '0' => result := o"0"; good := true;
-      when '1' => result := o"1"; good := true;
-      when '2' => result := o"2"; good := true;
-      when '3' => result := o"3"; good := true;
-      when '4' => result := o"4"; good := true;
-      when '5' => result := o"5"; good := true;
-      when '6' => result := o"6"; good := true;
-      when '7' => result := o"7"; good := true;
-      when 'Z' => result := "ZZZ"; good := true;
-      when 'X' => result := "XXX"; good := true;
-      when others =>
-        assert not ISSUE_ERROR
-          report float_pkg'instance_name
-          & "OREAD Error: Read a '" & c &
-          "', expected an Octal character (0-7)."
-          severity error;
-        result := "UUU";
-        good   := false;
-    end case;
-  end procedure Char2TriBits;
-
-  procedure OREAD (L    : inout LINE; VALUE : out STD_LOGIC_VECTOR;
-                   GOOD : out   BOOLEAN) is
-    variable ok    : BOOLEAN;
-    variable c     : CHARACTER;
-    constant ne    : INTEGER := (VALUE'length+2)/3;
-    constant pad   : INTEGER := ne*3 - VALUE'length;
-    variable sv    : STD_LOGIC_VECTOR(0 to ne*3 - 1);
-    variable i     : INTEGER;
-    variable lastu : BOOLEAN := false;           -- last character was an "_"
-  begin
-    VALUE := (VALUE'range => 'U');               -- initialize to a "U"
-    Skip_whitespace (L);
-    if VALUE'length > 0 then
-      read (l, c, ok);
-      i := 0;
-      while i < ne loop
-        -- Bail out if there was a bad read
-        if not ok then
-          good := false;
-          return;
-        elsif c = '_' then
-          if i = 0 then
-            good := false;                       -- Begins with an "_"
-            return;
-          elsif lastu then
-            good := false;                       -- "__" detected
-            return;
-          else
-            lastu := true;
-          end if;
-        else
-          Char2TriBits(c, sv(3*i to 3*i+2), ok, false);
-          if not ok then
-            good := false;
-            return;
-          end if;
-          i := i + 1;
-          lastu := false;
-        end if;
-        if i < ne then
-          read(L, c, ok);
-        end if;
-      end loop;
-      if or_reduce (sv (0 to pad-1)) = '1' then  -- %%% replace with "or"
-        good := false;                           -- vector was truncated.
-      else
-        good  := true;
-        VALUE := sv (pad to sv'high);
-      end if;
-    else
-      good := true;                              -- read into a null array
-    end if;
-  end procedure OREAD;
-
-  -- Hex Read and Write procedures for STD_ULOGIC_VECTOR.
-  -- Modified from the original to be more forgiving.
-
-  procedure Char2QuadBits (C           :     CHARACTER;
-                           RESULT      : out STD_LOGIC_VECTOR(3 downto 0);
-                           GOOD        : out BOOLEAN;
-                           ISSUE_ERROR : in  BOOLEAN) is
-  begin
-    case c is
-      when '0'       => result := x"0"; good := true;
-      when '1'       => result := x"1"; good := true;
-      when '2'       => result := x"2"; good := true;
-      when '3'       => result := x"3"; good := true;
-      when '4'       => result := x"4"; good := true;
-      when '5'       => result := x"5"; good := true;
-      when '6'       => result := x"6"; good := true;
-      when '7'       => result := x"7"; good := true;
-      when '8'       => result := x"8"; good := true;
-      when '9'       => result := x"9"; good := true;
-      when 'A' | 'a' => result := x"A"; good := true;
-      when 'B' | 'b' => result := x"B"; good := true;
-      when 'C' | 'c' => result := x"C"; good := true;
-      when 'D' | 'd' => result := x"D"; good := true;
-      when 'E' | 'e' => result := x"E"; good := true;
-      when 'F' | 'f' => result := x"F"; good := true;
-      when 'Z'       => result := "ZZZZ"; good := true;
-      when 'X'       => result := "XXXX"; good := true;
-      when others =>
-        assert not ISSUE_ERROR
-          report float_pkg'instance_name
-          & "HREAD Error: Read a '" & c &
-          "', expected a Hex character (0-F)."
-          severity error;
-        result := "UUUU";
-        good   := false;
-    end case;
-  end procedure Char2QuadBits;
-
-  procedure HREAD (L    : inout LINE; VALUE : out STD_LOGIC_VECTOR;
-                   GOOD : out   BOOLEAN) is
-    variable ok    : BOOLEAN;
-    variable c     : CHARACTER;
-    constant ne    : INTEGER := (VALUE'length+3)/4;
-    constant pad   : INTEGER := ne*4 - VALUE'length;
-    variable sv    : STD_LOGIC_VECTOR(0 to ne*4 - 1);
-    variable i     : INTEGER;
-    variable lastu : BOOLEAN := false;  -- last character was an "_"
-  begin
-    VALUE := (VALUE'range => 'U');      -- initialize to a "U"
-    Skip_whitespace (L);
-    if VALUE'length > 0 then
-      read (l, c, ok);
-      i := 0;
-      while i < ne loop
-        -- Bail out if there was a bad read
-        if not ok then
-          good := false;
-          return;
-        elsif c = '_' then
-          if i = 0 then
-            good := false;              -- Begins with an "_"
-            return;
-          elsif lastu then
-            good := false;              -- "__" detected
-            return;
-          else
-            lastu := true;
-          end if;
-        else
-          Char2QuadBits(c, sv(4*i to 4*i+3), ok, false);
-          if not ok then
-            good := false;
-            return;
-          end if;
-          i := i + 1;
-          lastu := false;
-        end if;
-        if i < ne then
-          read(L, c, ok);
-        end if;
-      end loop;
-      if or_reduce (sv (0 to pad-1)) = '1' then  -- %%% replace with "or"
-        good := false;                  -- vector was truncated.
-      else
-        good  := true;
-        VALUE := sv (pad to sv'high);
-      end if;
-    else
-      good := true;                     -- Null input string, skips whitespace
-    end if;
-  end procedure HREAD;
-
--- %%% END replicated textio functions
 
   -- purpose: Checks the punctuation in a line
   procedure check_punctuation (
@@ -6501,7 +6142,7 @@ package body float_pkg is
     VALUE     : in    UNRESOLVED_float;  -- floating point input
     JUSTIFIED : in    SIDE  := right;
     FIELD     : in    WIDTH := 0) is
-    variable s     : STRING(1 to value'high - value'low +3);
+    variable s     : STRING(1 to VALUE'high - VALUE'low +3);
     variable sindx : INTEGER;
   begin  -- function write
     s(1)  := MVL9_to_char(STD_ULOGIC(VALUE(VALUE'high)));
@@ -6530,33 +6171,33 @@ package body float_pkg is
     variable i      : INTEGER;          -- index variable
   begin  -- READ
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
-    Skip_whitespace (L);
-    READ (l, c, readOk);
+    skip_whitespace (L);
+    READ (L, c, readOk);
     if VALUE'length > 0 then
-      i := value'high;
+      i := VALUE'high;
       readloop : loop
         if readOk = false then          -- Bail out if there was a bad read
-          report float_pkg'instance_name
+          report float_generic_pkg'instance_name
             & "READ(float): "
             & "Error end of file encountered."
             severity error;
           return;
         elsif c = ' ' or c = CR or c = HT then  -- reading done.
-          if (i /= value'low) then
-            report float_pkg'instance_name
+          if (i /= VALUE'low) then
+            report float_generic_pkg'instance_name
               & "READ(float): "
               & "Warning: Value truncated."
               severity warning;
             return;
           end if;
         elsif c = '_' then
-          if i = value'high then        -- Begins with an "_"
-            report float_pkg'instance_name
+          if i = VALUE'high then        -- Begins with an "_"
+            report float_generic_pkg'instance_name
               & "READ(float): "
               & "String begins with an ""_""" severity error;
             return;
           elsif lastu then              -- "__" detected
-            report float_pkg'instance_name
+            report float_generic_pkg'instance_name
               & "READ(float): "
               & "Two underscores detected in input string ""__"""
               severity error;
@@ -6565,8 +6206,8 @@ package body float_pkg is
             lastu := true;
           end if;
         elsif c = ':' or c = '.' then   -- separator, ignore
-          if not (i = -1 or i = value'high-1) then
-            report float_pkg'instance_name
+          if not (i = -1 or i = VALUE'high-1) then
+            report float_generic_pkg'instance_name
               & "READ(float):  "
               & "Warning: Separator point does not match number format: '"
               & c & "' encountered at location " & INTEGER'image(i) & "."
@@ -6574,7 +6215,7 @@ package body float_pkg is
           end if;
           lastu := false;
         elsif (char_to_MVL9plus(c) = error) then
-          report float_pkg'instance_name
+          report float_generic_pkg'instance_name
             & "READ(float): "
             & "Error: Character '" & c & "' read, expected STD_ULOGIC literal."
             severity error;
@@ -6582,13 +6223,13 @@ package body float_pkg is
         else
           mv (i) := char_to_MVL9(c);
           i := i - 1;
-          if i < value'low then
+          if i < VALUE'low then
             VALUE := mv;
             return;
           end if;
           lastu := false;
         end if;
-        READ (l, c, readOk);
+        READ (L, c, readOk);
       end loop readloop;
     end if;
   end procedure READ;
@@ -6603,11 +6244,11 @@ package body float_pkg is
     variable readOk : BOOLEAN;
   begin  -- READ
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
-    Skip_whitespace (L);
-    READ (l, c, readOk);
+    skip_whitespace (L);
+    READ (L, c, readOk);
     if VALUE'length > 0 then
-      i := value'high;
-      good := false;
+      i := VALUE'high;
+      GOOD := false;
       readloop : loop
         if readOk = false then          -- Bail out if there was a bad read
           return;
@@ -6629,17 +6270,17 @@ package body float_pkg is
         else
           mv (i) := char_to_MVL9(c);
           i := i - 1;
-          if i < value'low then
-            good  := true;
+          if i < VALUE'low then
+            GOOD  := true;
             VALUE := mv;
             return;
           end if;
           lastu := false;
         end if;
-        READ (l, c, readOk);
+        READ (L, c, readOk);
       end loop readloop;
     else
-      good := true;                     -- read into a null array
+      GOOD := true;                     -- read into a null array
     end if;
   end procedure READ;
 
@@ -6656,7 +6297,7 @@ package body float_pkg is
   end procedure OWRITE;
 
   procedure OREAD (L : inout LINE; VALUE : out UNRESOLVED_float) is
-    constant ne         : INTEGER := ((value'length+2)/3) * 3;   -- pad
+    constant ne         : INTEGER := ((VALUE'length+2)/3) * 3;   -- pad
     variable slv        : STD_LOGIC_VECTOR (ne-1 downto 0);      -- slv
     variable slvu       : ufixed (VALUE'range);  -- Unsigned fixed point
     variable c          : CHARACTER;
@@ -6665,7 +6306,7 @@ package body float_pkg is
     variable colon, dot : BOOLEAN;
   begin
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
-    Skip_whitespace (L);
+    skip_whitespace (L);
     if VALUE'length > 0 then
       check_punctuation (arg   => L.all,
                          colon => colon,
@@ -6673,7 +6314,7 @@ package body float_pkg is
                          good  => ok,
                          chars => ne/3);
       if not ok then
-        report float_pkg'instance_name & "OREAD: "
+        report float_generic_pkg'instance_name & "OREAD: "
           & "short string encounted: " & L.all
           & " needs to have " & integer'image (ne/3)
           & " valid octal characters."
@@ -6682,7 +6323,7 @@ package body float_pkg is
       elsif dot then
         OREAD (L, slvu, ok);            -- read it like a UFIXED number
         if not ok then
-          report float_pkg'instance_name & "OREAD: "
+          report float_generic_pkg'instance_name & "OREAD: "
             & "error encounted reading STRING " & L.all
             severity error;
           return;
@@ -6692,21 +6333,21 @@ package body float_pkg is
       elsif colon then
         OREAD (L, nybble, ok);          -- read the sign bit
         if not ok then
-          report float_pkg'instance_name & "OREAD: "
+          report float_generic_pkg'instance_name & "OREAD: "
             & "End of string encountered"
             severity error;
           return;
         elsif nybble (2 downto 1) /= "00" then
-          report float_pkg'instance_name & "OREAD: "
+          report float_generic_pkg'instance_name & "OREAD: "
             & "Illegal sign bit STRING encounted "
             severity error;
           return;
         end if;
-        read (l, c, ok);                -- read the colon
+        read (L, c, ok);                -- read the colon
         fix_colon (L.all, ne/3);         -- replaces the colon with a ".".
         OREAD (L, slvu (slvu'high-1 downto slvu'low), ok);  -- read it like a UFIXED number
         if not ok then
-          report float_pkg'instance_name & "OREAD: "
+          report float_generic_pkg'instance_name & "OREAD: "
             & "error encounted reading STRING " & L.all
             severity error;
           return;
@@ -6717,13 +6358,13 @@ package body float_pkg is
       else
         OREAD (L, slv, ok);
         if not ok then
-          report float_pkg'instance_name & "OREAD: "
+          report float_generic_pkg'instance_name & "OREAD: "
             & "Error encounted during read"
             severity error;
           return;
         end if;
-        if (or_reduce (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
-          report float_pkg'instance_name & "OREAD: "
+        if (or (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
+          report float_generic_pkg'instance_name & "OREAD: "
             & "Vector truncated."
             severity error;
           return;
@@ -6735,7 +6376,7 @@ package body float_pkg is
   end procedure OREAD;
 
   procedure OREAD(L : inout LINE; VALUE : out UNRESOLVED_float; GOOD : out BOOLEAN) is
-    constant ne         : INTEGER := ((value'length+2)/3) * 3;   -- pad
+    constant ne         : INTEGER := ((VALUE'length+2)/3) * 3;   -- pad
     variable slv        : STD_LOGIC_VECTOR (ne-1 downto 0);      -- slv
     variable slvu       : ufixed (VALUE'range);  -- Unsigned fixed point
     variable c          : CHARACTER;
@@ -6745,7 +6386,7 @@ package body float_pkg is
   begin
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
     GOOD  := false;
-    Skip_whitespace (L);
+    skip_whitespace (L);
     if VALUE'length > 0 then
       check_punctuation (arg   => L.all,
                          colon => colon,
@@ -6768,7 +6409,7 @@ package body float_pkg is
         elsif nybble (2 downto 1) /= "00" then
           return;
         end if;
-        read (l, c, ok);                -- read the colon
+        read (L, c, ok);                -- read the colon
         fix_colon (L.all, ne/3);         -- replaces the colon with a ".".
         OREAD (L, slvu (slvu'high-1 downto slvu'low), ok);  -- read it like a UFIXED number
         if not ok then
@@ -6782,7 +6423,7 @@ package body float_pkg is
         if not ok then
           return;
         end if;
-        if (or_reduce (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
+        if (or (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
           return;
         end if;
         VALUE := to_float (slv(VALUE'high-VALUE'low downto 0),
@@ -6805,7 +6446,7 @@ package body float_pkg is
   end procedure HWRITE;
 
   procedure HREAD (L : inout LINE; VALUE : out UNRESOLVED_float) is
-    constant ne         : INTEGER := ((value'length+3)/4) * 4;   -- pad
+    constant ne         : INTEGER := ((VALUE'length+3)/4) * 4;   -- pad
     variable slv        : STD_LOGIC_VECTOR (ne-1 downto 0);      -- slv
     variable slvu       : ufixed (VALUE'range);  -- Unsigned fixed point
     variable c          : CHARACTER;
@@ -6814,7 +6455,7 @@ package body float_pkg is
     variable colon, dot : BOOLEAN;
   begin
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
-    Skip_whitespace (L);
+    skip_whitespace (L);
     if VALUE'length > 0 then
       check_punctuation (arg   => L.all,
                          colon => colon,
@@ -6822,7 +6463,7 @@ package body float_pkg is
                          good  => ok,
                          chars => ne/4);
       if not ok then
-        report float_pkg'instance_name & "HREAD: "
+        report float_generic_pkg'instance_name & "HREAD: "
           & "short string encounted: " & L.all
           & " needs to have " & integer'image (ne/4)
           & " valid hex characters."
@@ -6831,7 +6472,7 @@ package body float_pkg is
       elsif dot then
         HREAD (L, slvu, ok);            -- read it like a UFIXED number
         if not ok then
-          report float_pkg'instance_name & "HREAD: "
+          report float_generic_pkg'instance_name & "HREAD: "
             & "error encounted reading STRING " & L.all
             severity error;
           return;
@@ -6841,21 +6482,21 @@ package body float_pkg is
       elsif colon then
         HREAD (L, nybble, ok);          -- read the sign bit
         if not ok then
-          report float_pkg'instance_name & "HREAD: "
+          report float_generic_pkg'instance_name & "HREAD: "
             & "End of string encountered"
             severity error;
           return;
         elsif nybble (3 downto 1) /= "000" then
-          report float_pkg'instance_name & "HREAD: "
+          report float_generic_pkg'instance_name & "HREAD: "
             & "Illegal sign bit STRING encounted "
             severity error;
           return;
         end if;
-        read (l, c, ok);                -- read the colon
+        read (L, c, ok);                -- read the colon
         fix_colon (L.all, ne/4);         -- replaces the colon with a ".".
         HREAD (L, slvu (slvu'high-1 downto slvu'low), ok);  -- read it like a UFIXED number
         if not ok then
-          report float_pkg'instance_name & "HREAD: "
+          report float_generic_pkg'instance_name & "HREAD: "
             & "error encounted reading STRING " & L.all
             severity error;
           return;
@@ -6866,13 +6507,13 @@ package body float_pkg is
       else
         HREAD (L, slv, ok);
         if not ok then
-          report float_pkg'instance_name & "HREAD: "
+          report float_generic_pkg'instance_name & "HREAD: "
             & "Error encounted during read"
             severity error;
           return;
         end if;
-        if (or_reduce (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
-          report float_pkg'instance_name & "HREAD: "
+        if (or (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
+          report float_generic_pkg'instance_name & "HREAD: "
             & "Vector truncated."
             severity error;
           return;
@@ -6884,7 +6525,7 @@ package body float_pkg is
   end procedure HREAD;
 
   procedure HREAD (L : inout LINE; VALUE : out UNRESOLVED_float; GOOD : out BOOLEAN) is
-    constant ne         : INTEGER := ((value'length+3)/4) * 4;   -- pad
+    constant ne         : INTEGER := ((VALUE'length+3)/4) * 4;   -- pad
     variable slv        : STD_LOGIC_VECTOR (ne-1 downto 0);      -- slv
     variable slvu       : ufixed (VALUE'range);  -- Unsigned fixed point
     variable c          : CHARACTER;
@@ -6894,7 +6535,7 @@ package body float_pkg is
   begin
     VALUE := (VALUE'range => 'U');      -- initialize to a "U"
     GOOD  := false;
-    Skip_whitespace (L);
+    skip_whitespace (L);
     if VALUE'length > 0 then
       check_punctuation (arg   => L.all,
                          colon => colon,
@@ -6917,7 +6558,7 @@ package body float_pkg is
         elsif nybble (3 downto 1) /= "000" then
           return;
         end if;
-        read (l, c, ok);                -- read the colon
+        read (L, c, ok);                -- read the colon
         fix_colon (L.all, ne/4);         -- replaces the colon with a ".".
         HREAD (L, slvu (slvu'high-1 downto slvu'low), ok);  -- read it like a UFIXED number
         if not ok then
@@ -6931,7 +6572,7 @@ package body float_pkg is
         if not ok then
           return;
         end if;
-        if (or_reduce (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
+        if (or (slv(ne-1 downto VALUE'high-VALUE'low+1)) = '1') then
           return;
         end if;
         VALUE := to_float (slv(VALUE'high-VALUE'low downto 0),
@@ -6945,17 +6586,17 @@ package body float_pkg is
     variable s     : STRING(1 to value'high - value'low +3);
     variable sindx : INTEGER;
   begin  -- function write
-    s(1)  := MVL9_to_char(STD_ULOGIC(VALUE(VALUE'high)));
+    s(1)  := MVL9_to_char(STD_ULOGIC(value(value'high)));
     s(2)  := ':';
     sindx := 3;
-    for i in VALUE'high-1 downto 0 loop
-      s(sindx) := MVL9_to_char(STD_ULOGIC(VALUE(i)));
+    for i in value'high-1 downto 0 loop
+      s(sindx) := MVL9_to_char(STD_ULOGIC(value(i)));
       sindx    := sindx + 1;
     end loop;
     s(sindx) := ':';
     sindx    := sindx + 1;
-    for i in -1 downto VALUE'low loop
-      s(sindx) := MVL9_to_char(STD_ULOGIC(VALUE(i)));
+    for i in -1 downto value'low loop
+      s(sindx) := MVL9_to_char(STD_ULOGIC(value(i)));
       sindx    := sindx + 1;
     end loop;
     return s;
@@ -6983,7 +6624,8 @@ package body float_pkg is
     bstring                 : STRING;   -- binary string
     constant exponent_width : NATURAL := float_exponent_width;
     constant fraction_width : NATURAL := float_fraction_width)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable L      : LINE;
     variable good   : BOOLEAN;
@@ -6992,7 +6634,7 @@ package body float_pkg is
     READ (L, result, good);
     deallocate (L);
     assert (good)
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
       & "from_string: Bad string " & bstring
       severity error;
     return result;
@@ -7002,7 +6644,8 @@ package body float_pkg is
     ostring                 : STRING;   -- Octal string
     constant exponent_width : NATURAL := float_exponent_width;
     constant fraction_width : NATURAL := float_fraction_width)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable L      : LINE;
     variable good   : BOOLEAN;
@@ -7011,7 +6654,7 @@ package body float_pkg is
     OREAD (L, result, good);
     deallocate (L);
     assert (good)
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
       & "from_ostring: Bad string " & ostring
       severity error;
     return result;
@@ -7021,7 +6664,8 @@ package body float_pkg is
     hstring                 : STRING;   -- hex string
     constant exponent_width : NATURAL := float_exponent_width;
     constant fraction_width : NATURAL := float_fraction_width)
-    return UNRESOLVED_float is
+    return UNRESOLVED_float
+  is
     variable result : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable L      : LINE;
     variable good   : BOOLEAN;
@@ -7030,7 +6674,7 @@ package body float_pkg is
     HREAD (L, result, good);
     deallocate (L);
     assert (good)
-      report float_pkg'instance_name
+      report float_generic_pkg'instance_name
       & "from_hstring: Bad string " & hstring
       severity error;
     return result;
@@ -7038,7 +6682,7 @@ package body float_pkg is
 
   function from_string (
     bstring  : STRING;                  -- binary string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float is
   begin
     return from_string (bstring        => bstring,
@@ -7048,7 +6692,7 @@ package body float_pkg is
 
   function from_ostring (
     ostring  : STRING;                  -- Octal string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float is
   begin
     return from_ostring (ostring        => ostring,
@@ -7058,17 +6702,12 @@ package body float_pkg is
 
   function from_hstring (
     hstring  : STRING;                  -- hex string
-    size_res : UNRESOLVED_float)        -- used for sizing only 
+    size_res : UNRESOLVED_float)        -- used for sizing only
     return UNRESOLVED_float is
   begin
     return from_hstring (hstring        => hstring,
                          exponent_width => size_res'high,
                          fraction_width => -size_res'low);
   end function from_hstring;
--- rtl_synthesis on
--- pragma synthesis_on
 
-
-
-
-end package body float_pkg;
+end package body float_generic_pkg;
