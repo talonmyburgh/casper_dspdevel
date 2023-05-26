@@ -1,4 +1,4 @@
-image: ghdl/vunit:llvm-master
+image: ghdl/vunit:mcode-master
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
@@ -16,6 +16,7 @@ casper_accumulators_test:   # This job runs in the test stage.
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
+    - ghdl --version
     - /usr/bin/python3 casper_accumulators/run.py --xunit-xml ./casper_accumulators/casper_accumulators_report.xml
   artifacts:
     when: always
