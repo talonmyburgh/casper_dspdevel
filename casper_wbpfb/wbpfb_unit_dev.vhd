@@ -402,17 +402,17 @@ architecture str of wbpfb_unit_dev is
 
 
 
-    signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fil_in_dat_w-1 downto 0);
+    signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fil_in_val  : std_logic;
-    signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fil_out_dat_w-1 downto 0) := (others => (others => '0'));
+    signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => (others => '0'));
     signal fil_out_val : std_logic;
 
-    signal fft_in_re_arr : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_in_dat_w-1 downto 0);
-    signal fft_in_im_arr : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_in_dat_w-1 downto 0);
+    signal fft_in_re_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_im_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fft_in_val    : std_logic;
 
-    signal fft_out_re_arr      : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
-    signal fft_out_im_arr      : t_slv_array(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_re_arr      : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);--(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_im_arr      : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);--(g_wpfb.fft_out_dat_w-1 downto 0);
     signal fft_out_val_arr     : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
 
     signal fft_out_sosi     : t_fft_sosi_out;
@@ -471,8 +471,8 @@ begin
         wire_fft_in_wideband : for P in 0 to g_wpfb.wb_factor - 1 generate
             assert g_wpfb.fft_in_dat_w=g_wpfb.fil_out_dat_w report "wbpfb: Taking highest bits from filter because FFT is different size than Filter output, no rounding is implemented." severity warning;
             assert g_wpfb.fft_in_dat_w<=g_wpfb.fil_out_dat_w report "wbpfb: FFT input must be smaller or equal to FILter output" severity failure;
-            fft_in_re_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w);
-            fft_in_im_arr(S * g_wpfb.wb_factor + P) <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex + 1)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w);
+            fft_in_re_arr(S * g_wpfb.wb_factor + P) <= RESIZE_SVEC(fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w),44);
+            fft_in_im_arr(S * g_wpfb.wb_factor + P) <= RESIZE_SVEC(fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex + 1)(g_wpfb.fil_out_dat_w-1 downto g_wpfb.fil_out_dat_w-g_wpfb.fft_in_dat_w),44);
         end generate;
     end generate;
 
@@ -549,6 +549,10 @@ begin
     ---------------------------------------------------------------
     gen_pipeline_fft : if g_wpfb.wb_factor = 1 generate
         gen_fft_r2_pipe_streams : for S in 0 to g_wpfb.nof_wb_streams - 1 generate
+        signal temp_re : std_logic_vector(c_fft.out_dat_w-1 downto 0);
+        signal temp_im : std_logic_vector(c_fft.out_dat_w-1 downto 0);
+        
+        begin
             u_fft_r2_pipe : entity wb_fft_lib.fft_r2_pipe
                 generic map(
                     g_fft                => c_fft,
@@ -566,15 +570,18 @@ begin
                     clk      => clk,
                     rst      => rst,
                     shiftreg => shiftreg,
-                    in_re    => fft_in_re_arr(S),
-                    in_im    => fft_in_im_arr(S),
+                    in_re    => fft_in_re_arr(S)(c_fft.in_dat_w-1 downto 0),
+                    in_im    => fft_in_im_arr(S)(c_fft.in_dat_w-1 downto 0),
                     in_val   => fft_in_val,
-                    out_re   => fft_out_re_arr(S),
-                    out_im   => fft_out_im_arr(S),
+                    out_re   => temp_re,
+                    out_im   => temp_im,
                     ovflw    => ovflw,
                     out_val  => fft_out_val_arr(S)
                 );
+            fft_out_re_arr(S) <= RESIZE_SVEC(temp_re,64);
+            fft_out_im_arr(S) <= RESIZE_SVEC(temp_im,64);
         end generate;
+
     end generate;
 
     ---------------------------------------------------------------
@@ -589,8 +596,8 @@ begin
     fft_out_sosi.valid <= fft_out_val_arr(0);
 
     wire_fft_out_sosi_arr : for I in 0 to g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 generate
-        fft_out_sosi_arr(I).re    <= fft_out_re_arr(I);
-        fft_out_sosi_arr(I).im    <= fft_out_im_arr(I);
+        fft_out_sosi_arr(I).re    <= fft_out_re_arr(I)(c_fft.out_dat_w-1 downto 0);
+        fft_out_sosi_arr(I).im    <= fft_out_im_arr(I)(c_fft.out_dat_w-1 downto 0);
         fft_out_sosi_arr(I).valid <= fft_out_val_arr(I);
     end generate;
 

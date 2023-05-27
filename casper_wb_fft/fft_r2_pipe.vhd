@@ -62,7 +62,7 @@ entity fft_r2_pipe is
         g_use_dsp            : string         := "yes"; --! = "yes" or "no"
         g_ovflw_behav        : string         := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
         g_use_round          : string         := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
-        g_use_mult_round     : string      := "TRUNCATE";
+        g_use_mult_round     : string         := "TRUNCATE";
         g_twid_file_stem     : string         := "UNUSED"; --! path stem for twiddle factors
         g_ram_primitive      : string         := "auto" --! = "auto", "distributed", "ultra" or "block"
     );

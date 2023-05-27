@@ -63,18 +63,18 @@ end entity fft_wide_unit;
 
 architecture str of fft_wide_unit is
 
-    signal fft_in_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0);
-    signal fft_in_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.in_dat_w-1 downto 0);
+    signal fft_in_re_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal fft_in_im_arr : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
 
-    signal fft_out_re_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
-    signal fft_out_im_arr : t_slv_array(g_fft.wb_factor - 1 downto 0)(g_fft.out_dat_w-1 downto 0);
+    signal fft_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+    signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
 
     signal fft_out_fft_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor - 1 downto 0);
     signal fft_shiftreg         : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
 
     type reg_type is record
-        in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0)(re(g_fft.in_dat_w-1 downto 0),im(g_fft.in_dat_w-1 downto 0));
+        in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0);
         shiftreg        : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
     end record;
 
@@ -109,8 +109,8 @@ begin
     -- to fit the format of the fft_r2_wide unit. 
 
     gen_prep_fft_data : for I in 0 to g_fft.wb_factor - 1 generate
-        fft_in_re_arr(I) <= r.in_fft_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0);
-        fft_in_im_arr(I) <= r.in_fft_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0);
+        fft_in_re_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0),44);
+        fft_in_im_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0),44);
     end generate;
     fft_shiftreg <= r.shiftreg;
 

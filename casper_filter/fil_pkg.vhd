@@ -32,9 +32,9 @@ coef_dat_w     : natural; -- = 16, data width of the FIR coefficients
 end record;
 
 constant c_fil_ppf : t_fil_ppf := (c_fil_wb_factor, c_fil_nof_chan, c_fil_nof_bands, c_fil_nof_taps, c_fil_nof_streams, c_fil_backoff_w, c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w);
-TYPE t_fil_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR; --(c_fil_in_dat_w-1 DOWNTO 0);
-TYPE t_fil_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR; -- (c_fil_out_dat_w-1 DOWNTO 0);
-TYPE t_fil_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR; --(c_fil_coef_dat_w -1 DOWNTO 0);
+TYPE t_fil_slv_arr_in is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_in_dat_w-1 DOWNTO 0);
+TYPE t_fil_slv_arr_out is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);
+TYPE t_fil_slv_arr_coef is array (INTEGER range <>) of STD_LOGIC_VECTOR(c_fil_coef_dat_w -1 DOWNTO 0);
 
 -- Record with the pipeline settings for the filter units. 
 type t_fil_ppf_pipeline is record

@@ -131,12 +131,12 @@ architecture tb of tb_fil_ppf_wide is
 --  signal ram_coefs_mosi : t_mem_mosi := c_mem_mosi_rst;
 --  signal ram_coefs_miso : t_mem_miso;
 
-  signal in_dat_arr      : t_fil_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0)(g_fil_ppf.in_dat_w-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
+  signal in_dat_arr      : t_fil_slv_arr_in(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.in_dat_w <= 32
   signal in_val          : std_logic; 
   signal in_val_cnt      : natural := 0;
   signal in_gap          : std_logic := '0'; 
                          
-  signal out_dat_arr     : t_fil_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0)(g_fil_ppf.out_dat_w-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
+  signal out_dat_arr     : t_fil_slv_arr_out(g_fil_ppf.wb_factor*g_fil_ppf.nof_streams-1 downto 0);  -- = t_slv_32_arr fits g_fil_ppf.out_dat_w <= 32
   signal out_val         : std_logic; 
   signal out_val_cnt     : natural := 0;
                          
