@@ -69,8 +69,9 @@ BEGIN
 			clocken => clocken,
 			q         => q
 		);
-	else generate
-		assert FALSE report "No rom Generated" severity failure;
+--  Only allowed in VHDL2008
+--	else generate
+--		assert FALSE report "No rom Generated" severity failure;
 	END GENERATE;
 
 	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE

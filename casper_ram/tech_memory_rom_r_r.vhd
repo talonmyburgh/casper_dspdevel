@@ -48,7 +48,7 @@ ENTITY tech_memory_rom_r_r IS
 		clock     : IN  STD_LOGIC;
 		clocken   : IN  STD_LOGIC := '1';
 		q_a         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
-		q_B         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+		q_b         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 	);
 END tech_memory_rom_r_r;
 
@@ -75,8 +75,9 @@ BEGIN
 			q_a         => q_a,
 			q_b         => q_b
 		);
-	else generate
-		assert FALSE report "No rom Generated" severity failure;
+--  Only allowed in VHDL2008 
+--	else generate
+--		assert FALSE report "No rom Generated" severity failure;
 	END GENERATE;
     
 	--	gen_ip_stratixiv : IF g_technology = 0 GENERATE
