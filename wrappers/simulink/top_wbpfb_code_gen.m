@@ -69,8 +69,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    ce                  : in  std_logic := '1';"
     "    shiftreg            : in  std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register"
     "    ovflw               : out std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'0');"
-    "    in_sync             : in std_logic;"
-    "    in_valid            : in std_logic;"
+    "    in_sync             : in std_logic := '0';"
+    "    in_valid            : in std_logic :=' 0';"
     "    out_sync            : out std_logic := '0';"
     "    out_valid           : out std_logic := '0';"
     "    fil_sync            : out std_logic := '0';"
@@ -153,8 +153,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    ce                  : in  std_logic := '1';"
     "    shiftreg            : in  std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register"
     "    ovflw               : out std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'0');"
-    "    in_sync             : in std_logic;"
-    "    in_valid            : in std_logic;"
+    "    in_sync             : in std_logic := '0';"
+    "    in_valid            : in std_logic := '0';"
     "    out_sync            : out std_logic := '0';"
     "    out_valid           : out std_logic := '0';"
     "    fil_sync            : out std_logic := '0';"
@@ -331,9 +331,9 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w,twid_filepath_stem);
 
     %generate twiddlePkg for parallel twiddle factors if wb_factor > 1:
-    if wb_factor > 1
-        par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
-    end
+    % if wb_factor > 1
+    %     par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    % end
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
