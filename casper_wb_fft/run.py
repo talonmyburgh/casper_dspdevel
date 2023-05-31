@@ -158,6 +158,7 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
 if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg_2008redirect.vhdl"))
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg_2008redirect.vhdl"))
@@ -165,7 +166,6 @@ if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c_2008redirect.vhdl"))
 else:
     # use the "hacked" up VHDL93 version in other simulators 
-    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd")) 
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))

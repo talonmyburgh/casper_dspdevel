@@ -27,9 +27,9 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all; 
 use ieee.math_real.all;
 library common_pkg_lib;
-use ieee.fixed_float_types.all;
+use common_pkg_lib.common_fixed_float_types.all;
 --use ieee.fixed_pkg.all;
-use ieee.fixed_pkg.all;
+use common_pkg_lib.fixed_pkg.all;
 
  package twiddlesPkg is 
  constant copyRightNotice: string := "Copyright 2023 , NRAO. All rights reserved."; 

@@ -22,7 +22,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library common_pkg_lib;
-use ieee.fixed_float_types.all;
+use common_pkg_lib.common_fixed_float_types.all;
 use common_pkg_lib.fixed_pkg.all;
 
 package float_pkg is
@@ -34,7 +34,7 @@ package float_pkg is
   -- Rounding algorithm, "round_nearest" is default, other valid values
   -- are "round_zero" (truncation), "round_inf" (round up), and
   -- "round_neginf" (round down)
-  constant float_round_style    : round_type := round_nearest;
+  constant float_round_style    : com_round_type := round_nearest;
   -- Denormal numbers (very small numbers near zero) true or false
   constant float_denormalize    : BOOLEAN    := true;
   -- Turns on NAN processing (invalid numbers and overflow) true of false
@@ -153,7 +153,7 @@ package float_pkg is
 
   function add (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -161,7 +161,7 @@ package float_pkg is
 
   function subtract (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -169,7 +169,7 @@ package float_pkg is
 
   function multiply (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -177,7 +177,7 @@ package float_pkg is
 
   function divide (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -185,7 +185,7 @@ package float_pkg is
 
   function remainder (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -193,7 +193,7 @@ package float_pkg is
 
   function modulo (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -202,7 +202,7 @@ package float_pkg is
   -- reciprocal
   function reciprocal (
     arg                  : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -210,7 +210,7 @@ package float_pkg is
 
   function dividebyp2 (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -219,7 +219,7 @@ package float_pkg is
   -- Multiply accumulate  result = l*r + c
   function mac (
     l, r, c              : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -228,7 +228,7 @@ package float_pkg is
   -- Square root (all 754 based implementations need this)
   function sqrt (
     arg                  : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;
+    constant round_style : com_round_type := float_round_style;
     constant guard       : NATURAL    := float_guard_bits;
     constant check_error : BOOLEAN    := float_check_error;
     constant denormalize : BOOLEAN    := float_denormalize)
@@ -306,7 +306,7 @@ package float_pkg is
     arg                     : UNRESOLVED_float;  -- Floating point input
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -315,7 +315,7 @@ package float_pkg is
   function resize (
     arg                     : UNRESOLVED_float;  -- Floating point input
     size_res                : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -323,7 +323,7 @@ package float_pkg is
 
   function to_float32 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -331,7 +331,7 @@ package float_pkg is
 
   function to_float64 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -339,7 +339,7 @@ package float_pkg is
 
   function to_float128 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -367,7 +367,7 @@ package float_pkg is
     arg                     : INTEGER;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- real to float
@@ -375,7 +375,7 @@ package float_pkg is
     arg                     : REAL;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float;
 
@@ -384,7 +384,7 @@ package float_pkg is
     arg                     : UNSIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- signed to float
@@ -392,7 +392,7 @@ package float_pkg is
     arg                     : SIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- unsigned fixed point to float
@@ -400,7 +400,7 @@ package float_pkg is
     arg                     : UNRESOLVED_ufixed;  -- unsigned fixed point input
     constant exponent_width : NATURAL    := float_exponent_width;  -- width of exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- width of fraction
-    constant round_style    : round_type := float_round_style;  -- rounding
+    constant round_style    : com_round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- use ieee extensions
     return UNRESOLVED_float;
 
@@ -409,7 +409,7 @@ package float_pkg is
     arg                     : UNRESOLVED_sfixed;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding
+    constant round_style    : com_round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- rounding option
     return UNRESOLVED_float;
 
@@ -418,14 +418,14 @@ package float_pkg is
   function to_float (
     arg                  : INTEGER;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding option
+    constant round_style : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- real to float
   function to_float (
     arg                  : REAL;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float;
 
@@ -433,14 +433,14 @@ package float_pkg is
   function to_float (
     arg                  : UNSIGNED;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding option
+    constant round_style : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- signed to float
   function to_float (
     arg                  : SIGNED;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding option
+    constant round_style : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float;
 
   -- sulv to float
@@ -453,7 +453,7 @@ package float_pkg is
   function to_float (
     arg                  : UNRESOLVED_ufixed;  -- unsigned fixed point input
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding
+    constant round_style : com_round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- use ieee extensions
     return UNRESOLVED_float;
 
@@ -461,7 +461,7 @@ package float_pkg is
   function to_float (
     arg                  : UNRESOLVED_sfixed;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding
+    constant round_style : com_round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- rounding option
     return UNRESOLVED_float;
 
@@ -469,7 +469,7 @@ package float_pkg is
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
     constant size        : NATURAL;     -- length of output
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return UNSIGNED;
 
@@ -477,7 +477,7 @@ package float_pkg is
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
     constant size        : NATURAL;     -- length of output
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return SIGNED;
 
@@ -486,8 +486,8 @@ package float_pkg is
     arg                     : UNRESOLVED_float;  -- fp input
     constant left_index     : INTEGER;  -- integer part
     constant right_index    : INTEGER;  -- fraction part
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_ufixed;
@@ -497,8 +497,8 @@ package float_pkg is
     arg                     : UNRESOLVED_float;  -- fp input
     constant left_index     : INTEGER;  -- integer part
     constant right_index    : INTEGER;  -- fraction part
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_sfixed;
@@ -508,7 +508,7 @@ package float_pkg is
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
     size_res             : UNSIGNED;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return UNSIGNED;
 
@@ -516,7 +516,7 @@ package float_pkg is
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
     size_res             : SIGNED;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return SIGNED;
 
@@ -524,8 +524,8 @@ package float_pkg is
   function to_ufixed (
     arg                     : UNRESOLVED_float;  -- fp input
     size_res                : UNRESOLVED_ufixed;
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_ufixed;
@@ -534,8 +534,8 @@ package float_pkg is
   function to_sfixed (
     arg                     : UNRESOLVED_float;  -- fp input
     size_res                : UNRESOLVED_sfixed;
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_sfixed;
@@ -550,7 +550,7 @@ package float_pkg is
   -- float to integer
   function to_integer (
     arg                  : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return INTEGER;
 
@@ -601,7 +601,7 @@ package float_pkg is
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- size of output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float;
@@ -614,7 +614,7 @@ package float_pkg is
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- size of output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float;
@@ -625,7 +625,7 @@ package float_pkg is
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard      : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float;
@@ -637,7 +637,7 @@ package float_pkg is
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard      : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float;
@@ -783,7 +783,7 @@ package float_pkg is
   function Scalb (
     y                    : UNRESOLVED_float;  -- floating point input
     N                    : INTEGER;     -- exponent to add    
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float;
@@ -792,7 +792,7 @@ package float_pkg is
   function Scalb (
     y                    : UNRESOLVED_float;  -- floating point input
     N                    : SIGNED;      -- exponent to add    
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float;
@@ -1346,7 +1346,7 @@ package body float_pkg is
     sign                 : STD_ULOGIC;  -- sign bit
     remainder            : UNSIGNED;    -- remainder to round from
     sticky               : STD_ULOGIC := '0';      -- Sticky bit
-    constant round_style : round_type)  -- rounding type
+    constant round_style : com_round_type)  -- rounding type
     return BOOLEAN is
     variable result     : BOOLEAN;
     variable or_reduced : STD_ULOGIC;
@@ -1453,7 +1453,7 @@ package body float_pkg is
     variable frac        : out UNSIGNED;            -- unsigned biased output
     constant denormalize : in  BOOLEAN;             -- turn on denormalization
     constant bias        : in  NATURAL;             -- bias for fixed point
-    constant round_style : in  round_type) is       -- rounding method
+    constant round_style : in  com_round_type) is       -- rounding method
     constant fraction_width : INTEGER := -mine(arg'low, arg'low);  -- length of FP output fraction
     constant exponent_width : INTEGER := arg'high;  -- length of FP output exponent
     variable fract          : UNSIGNED (frac'range);  -- internal version of frac
@@ -1559,7 +1559,7 @@ package body float_pkg is
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- size of output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)  -- guard bits
     return UNRESOLVED_float is
@@ -1645,7 +1645,7 @@ package body float_pkg is
     sticky                  : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     constant exponent_width : NATURAL    := float_exponent_width;  -- size of output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- size of output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard         : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float is
@@ -1675,7 +1675,7 @@ package body float_pkg is
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard      : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float is
@@ -1706,7 +1706,7 @@ package body float_pkg is
     sign                 : STD_ULOGIC;  -- sign bit
     sticky               : STD_ULOGIC := '0';  -- Sticky bit (rounding)
     size_res             : UNRESOLVED_float;   -- used for sizing only
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant nguard      : NATURAL    := float_guard_bits)   -- guard bits
     return UNRESOLVED_float is
@@ -1861,7 +1861,7 @@ package body float_pkg is
   -- Addition, adds two floating point numbers
   function add (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2011,7 +2011,7 @@ package body float_pkg is
   -- Subtraction, Calls "add".
   function subtract (
     l, r                 : UNRESOLVED_float;     -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2030,7 +2030,7 @@ package body float_pkg is
   -- Floating point multiply
   function multiply (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2166,7 +2166,7 @@ package body float_pkg is
   -- 1/X function.  Needed for algorithm development.
   function reciprocal (
     arg                  : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2261,7 +2261,7 @@ package body float_pkg is
   -- floating point division
   function divide (
     l, r                 : UNRESOLVED_float;       -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2409,7 +2409,7 @@ package body float_pkg is
   -- division by a power of 2
   function dividebyp2 (
     l, r                 : UNRESOLVED_float;      -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2533,7 +2533,7 @@ package body float_pkg is
   -- Multiply accumulate  result = l*r + c
   function mac (
     l, r, c              : UNRESOLVED_float;      -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2715,7 +2715,7 @@ package body float_pkg is
   -- "rem" function
   function remainder (
     l, r                 : UNRESOLVED_float;       -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2819,7 +2819,7 @@ package body float_pkg is
   -- "mod" function
   function modulo (
     l, r                 : UNRESOLVED_float;  -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant guard       : NATURAL    := float_guard_bits;  -- number of guard bits
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -2879,7 +2879,7 @@ package body float_pkg is
   -- Square root of a floating point number.  Done using Newton's Iteration.
   function sqrt (
     arg                  : UNRESOLVED_float;        -- floating point input
-    constant round_style : round_type := float_round_style;
+    constant round_style : com_round_type := float_round_style;
     constant guard       : NATURAL    := float_guard_bits;
     constant check_error : BOOLEAN    := float_check_error;
     constant denormalize : BOOLEAN    := float_denormalize)
@@ -3505,7 +3505,7 @@ package body float_pkg is
     arg                     : UNRESOLVED_float;        -- Floating point input
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -3611,7 +3611,7 @@ package body float_pkg is
   function resize (
     arg                     : UNRESOLVED_float;  -- floating point input
     size_res                : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -3634,7 +3634,7 @@ package body float_pkg is
 
   function to_float32 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -3651,7 +3651,7 @@ package body float_pkg is
 
   function to_float64 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -3668,7 +3668,7 @@ package body float_pkg is
 
   function to_float128 (
     arg                     : UNRESOLVED_float;
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant check_error    : BOOLEAN    := float_check_error;
     constant denormalize_in : BOOLEAN    := float_denormalize;  -- Use IEEE extended FP
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
@@ -3689,7 +3689,7 @@ package body float_pkg is
     arg                     : REAL;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding option
+    constant round_style    : com_round_type := float_round_style;  -- rounding option
     constant denormalize    : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
@@ -3778,7 +3778,7 @@ package body float_pkg is
     arg                     : INTEGER;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
     variable arg_int    : NATURAL;      -- Natural version of argument
@@ -3877,7 +3877,7 @@ package body float_pkg is
     arg                     : UNSIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float is
     variable result   : UNRESOLVED_float (exponent_width downto -fraction_width);
     constant ARG_LEFT : INTEGER := ARG'length-1;
@@ -3901,7 +3901,7 @@ package body float_pkg is
     arg                     : SIGNED;
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style)  -- rounding option
+    constant round_style    : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float is
     variable result     : UNRESOLVED_float (exponent_width downto -fraction_width);
     constant ARG_LEFT   : INTEGER := ARG'length-1;
@@ -3993,7 +3993,7 @@ package body float_pkg is
     arg                     : UNRESOLVED_ufixed;  -- unsigned fixed point input
     constant exponent_width : NATURAL    := float_exponent_width;  -- width of exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- width of fraction
-    constant round_style    : round_type := float_round_style;  -- rounding
+    constant round_style    : com_round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- use ieee extensions
     return UNRESOLVED_float is
     variable sarg   : sfixed (arg'high+1 downto arg'low);  -- Signed version of arg
@@ -4016,7 +4016,7 @@ package body float_pkg is
     arg                     : UNRESOLVED_sfixed;    -- signed fixed point
     constant exponent_width : NATURAL    := float_exponent_width;  -- length of FP output exponent
     constant fraction_width : NATURAL    := float_fraction_width;  -- length of FP output fraction
-    constant round_style    : round_type := float_round_style;  -- rounding
+    constant round_style    : com_round_type := float_round_style;  -- rounding
     constant denormalize    : BOOLEAN    := float_denormalize)  -- rounding option
     return UNRESOLVED_float is
     constant integer_width     : INTEGER := arg'high;
@@ -4123,7 +4123,7 @@ package body float_pkg is
   function to_float (
     arg                  : INTEGER;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding option
+    constant round_style : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
@@ -4142,7 +4142,7 @@ package body float_pkg is
   function to_float (
     arg                  : REAL;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
@@ -4163,7 +4163,7 @@ package body float_pkg is
   function to_float (
     arg                  : UNSIGNED;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding option
+    constant round_style : com_round_type := float_round_style)  -- rounding option
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
@@ -4182,7 +4182,7 @@ package body float_pkg is
   function to_float (
     arg                  : SIGNED;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style)  -- rounding
+    constant round_style : com_round_type := float_round_style)  -- rounding
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
   begin
@@ -4218,7 +4218,7 @@ package body float_pkg is
   function to_float (
     arg                  : UNRESOLVED_ufixed;  -- unsigned fixed point input
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding
+    constant round_style : com_round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- use ieee extensions
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
@@ -4239,7 +4239,7 @@ package body float_pkg is
   function to_float (
     arg                  : UNRESOLVED_sfixed;
     size_res             : UNRESOLVED_float;
-    constant round_style : round_type := float_round_style;  -- rounding
+    constant round_style : com_round_type := float_round_style;  -- rounding
     constant denormalize : BOOLEAN    := float_denormalize)  -- rounding option
     return UNRESOLVED_float is
     variable result : UNRESOLVED_float (size_res'left downto size_res'right);
@@ -4259,7 +4259,7 @@ package body float_pkg is
   -- to_integer (float)
   function to_integer (
     arg                  : UNRESOLVED_float;   -- floating point input
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return INTEGER is
     variable validfp : valid_fpstate;   -- Valid FP state
@@ -4333,7 +4333,7 @@ package body float_pkg is
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
     constant size        : NATURAL;     -- length of output
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return UNSIGNED is
     variable validfp : valid_fpstate;   -- Valid FP state
@@ -4364,7 +4364,7 @@ package body float_pkg is
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
     constant size        : NATURAL;     -- length of output
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return SIGNED is
     variable sign    : STD_ULOGIC;      -- true if negative
@@ -4418,8 +4418,8 @@ package body float_pkg is
     arg                     : UNRESOLVED_float;            -- fp input
     constant left_index     : INTEGER;  -- integer part
     constant right_index    : INTEGER;  -- fraction part
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_ufixed is
@@ -4490,8 +4490,8 @@ package body float_pkg is
     arg                     : UNRESOLVED_float;  -- fp input
     constant left_index     : INTEGER;  -- integer part
     constant right_index    : INTEGER;  -- fraction part
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_sfixed is
@@ -4579,7 +4579,7 @@ package body float_pkg is
   function to_unsigned (
     arg                  : UNRESOLVED_float;  -- floating point input
     size_res             : UNSIGNED;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return UNSIGNED is
     variable result : UNSIGNED (size_res'range);
@@ -4600,7 +4600,7 @@ package body float_pkg is
   function to_signed (
     arg                  : UNRESOLVED_float;  -- floating point input
     size_res             : SIGNED;
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error)  -- check for errors
     return SIGNED is
     variable result : SIGNED (size_res'range);
@@ -4621,8 +4621,8 @@ package body float_pkg is
   function to_ufixed (
     arg                     : UNRESOLVED_float;  -- fp input
     size_res                : UNRESOLVED_ufixed;
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_ufixed is
@@ -4647,8 +4647,8 @@ package body float_pkg is
   function to_sfixed (
     arg                     : UNRESOLVED_float;  -- fp input
     size_res                : UNRESOLVED_sfixed;
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;  -- saturate
-    constant round_style    : fixed_round_style_type    := fixed_round_style;  -- rounding
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;  -- saturate
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;  -- rounding
     constant check_error    : BOOLEAN                   := float_check_error;  -- check for errors
     constant denormalize    : BOOLEAN                   := float_denormalize)
     return UNRESOLVED_sfixed is
@@ -5684,7 +5684,7 @@ package body float_pkg is
   function Scalb (
     y                    : UNRESOLVED_float;      -- floating point input
     N                    : INTEGER;     -- exponent to add    
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float is
@@ -5733,7 +5733,7 @@ package body float_pkg is
   function Scalb (
     y                    : UNRESOLVED_float;  -- floating point input
     N                    : SIGNED;      -- exponent to add    
-    constant round_style : round_type := float_round_style;  -- rounding option
+    constant round_style : com_round_type := float_round_style;  -- rounding option
     constant check_error : BOOLEAN    := float_check_error;  -- check for errors
     constant denormalize : BOOLEAN    := float_denormalize)  -- Use IEEE extended FP
     return UNRESOLVED_float is
