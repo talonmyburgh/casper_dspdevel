@@ -138,14 +138,14 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_multiplier/tech_agilex_versal_cmult.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_multiplier/tech_complex_mult.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -431,6 +431,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../casper_wb_fft/fft_r2_par.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wb_fft_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../r2sdf_fft/rTwoBFStage.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
@@ -439,7 +446,7 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../r2sdf_fft/rTwoWeights.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -473,6 +480,20 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../casper_wb_fft/fft_sepa_wide.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wb_fft_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_wb_fft/fft_r2_wide.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wb_fft_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../casper_filter/fil_ppf_ctrl.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_filter_lib"/>
@@ -488,6 +509,13 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_filter/fil_ppf_single.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_filter_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_filter/fil_ppf_wide.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_filter_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -536,36 +564,8 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/fft_r2_par.vhd">
-        <FileInfo SFType="VHDL2008">
-          <Attr Name="Library" Val="wb_fft_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/fft_sepa_wide.vhd">
-        <FileInfo SFType="VHDL2008">
-          <Attr Name="Library" Val="wb_fft_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_wb_fft/fft_r2_wide.vhd">
-        <FileInfo SFType="VHDL2008">
-          <Attr Name="Library" Val="wb_fft_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_wide.vhd">
-        <FileInfo SFType="VHDL2008">
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../wbpfb_unit_dev.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="wpfb_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
