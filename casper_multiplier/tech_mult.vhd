@@ -56,9 +56,10 @@ begin
 				ce    => clken,
 				out_p => result
 			);
-	else generate
-		-- Use an inferred mult
-		assert false report "No Multiplier Generated!" severity failure;
+--  only allowed in VHDL 2008			
+--	else generate
+--		-- Use an inferred mult
+--		assert false report "No Multiplier Generated!" severity failure;
 	end generate;
 
 	-------------------------------------------------------------------------------

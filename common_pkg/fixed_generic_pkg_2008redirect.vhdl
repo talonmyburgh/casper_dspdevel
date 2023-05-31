@@ -45,15 +45,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 library common_pkg_lib;
-use ieee.fixed_float_types.all;
+use common_pkg_lib.common_fixed_float_types.all;
 use ieee.math_real.all;
 
 package fixed_generic_pkg is
   generic (
     -- Rounding routine to use in fixed point, fixed_round or fixed_truncate
-    fixed_round_style    : fixed_round_style_type    := fixed_round;
+    fixed_round_style    : com_fixed_round_style_type    := fixed_round;
     -- Overflow routine to use in fixed point, fixed_saturate or fixed_wrap
-    fixed_overflow_style : fixed_overflow_style_type := fixed_saturate;
+    fixed_overflow_style : com_fixed_overflow_style_type := fixed_saturate;
     -- Extra bits used in divide routines
     fixed_guard_bits     : NATURAL                   := 3;
     -- If TRUE, then turn off warnings on "X" propagation
@@ -294,7 +294,7 @@ package fixed_generic_pkg is
   -- ufixed(a downto b) / ufixed(c downto d) = ufixed(a-d downto b-c-1)
   function divide (
     l, r                 : UNRESOLVED_ufixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
@@ -302,7 +302,7 @@ package fixed_generic_pkg is
   -- sfixed(a downto b) / sfixed(c downto d) = sfixed(a-d+1 downto b-c)
   function divide (
     l, r                 : UNRESOLVED_sfixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
@@ -310,14 +310,14 @@ package fixed_generic_pkg is
   -- 1 / ufixed(a downto b) = ufixed(-b downto -a-1)
   function reciprocal (
     arg                  : UNRESOLVED_ufixed;  -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
   -- 1 / sfixed(a downto b) = sfixed(-b+1 downto -a)
   function reciprocal (
     arg                  : UNRESOLVED_sfixed;  -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
@@ -326,7 +326,7 @@ package fixed_generic_pkg is
   --   = ufixed (minimum(a,c) downto minimum(b,d))
   function remainder (
     l, r                 : UNRESOLVED_ufixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
@@ -334,7 +334,7 @@ package fixed_generic_pkg is
   --   = sfixed (minimum(a,c) downto minimum(b,d))
   function remainder (
     l, r                 : UNRESOLVED_sfixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
@@ -343,7 +343,7 @@ package fixed_generic_pkg is
   --        = ufixed (minimum(a,c) downto minimum(b, d))
   function modulo (
     l, r                 : UNRESOLVED_ufixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
@@ -351,8 +351,8 @@ package fixed_generic_pkg is
   --        = sfixed (c downto minimum(b, d))
   function modulo (
     l, r                    : UNRESOLVED_sfixed;
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
@@ -729,8 +729,8 @@ package fixed_generic_pkg is
     arg                     : UNRESOLVED_ufixed;  -- input
     constant left_index     : INTEGER;  -- integer portion
     constant right_index    : INTEGER;  -- size of fraction
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   -- "size_res" functions create the size of the output from the indices
@@ -738,8 +738,8 @@ package fixed_generic_pkg is
   function resize (
     arg                     : UNRESOLVED_ufixed;  -- input
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   -- Note that in "wrap" mode the sign bit is not replicated.  Thus the
@@ -748,15 +748,15 @@ package fixed_generic_pkg is
     arg                     : UNRESOLVED_sfixed;  -- input
     constant left_index     : INTEGER;            -- integer portion
     constant right_index    : INTEGER;            -- size of fraction
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   function resize (
     arg                     : UNRESOLVED_sfixed;  -- input
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   --===========================================================================
@@ -770,15 +770,15 @@ package fixed_generic_pkg is
     arg                     : NATURAL;  -- integer
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   function to_ufixed (
     arg                     : NATURAL;            -- integer
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   -- real to unsigned fixed point
@@ -786,16 +786,16 @@ package fixed_generic_pkg is
     arg                     : REAL;     -- real
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
   function to_ufixed (
     arg                     : REAL;     -- real
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_ufixed;
 
@@ -804,15 +804,15 @@ package fixed_generic_pkg is
     arg                     : UNRESOLVED_UNSIGNED;             -- unsigned
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   function to_ufixed (
     arg                     : UNRESOLVED_UNSIGNED;           -- unsigned
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed;
 
   -- Performs a conversion.  ufixed (arg'range) is returned
@@ -824,16 +824,16 @@ package fixed_generic_pkg is
   function to_unsigned (
     arg                     : UNRESOLVED_ufixed;  -- fixed point input
     constant size           : NATURAL;            -- length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_UNSIGNED;
 
   -- unsigned fixed point to unsigned
   function to_unsigned (
     arg                     : UNRESOLVED_ufixed;    -- fixed point input
     size_res                : UNRESOLVED_UNSIGNED;  -- used for length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_UNSIGNED;
 
   -- unsigned fixed point to real
@@ -844,8 +844,8 @@ package fixed_generic_pkg is
   -- unsigned fixed point to integer
   function to_integer (
     arg                     : UNRESOLVED_ufixed;  -- fixed point input
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return NATURAL;
 
   -- Integer to UNRESOLVED_sfixed
@@ -853,15 +853,15 @@ package fixed_generic_pkg is
     arg                     : INTEGER;   -- integer
     constant left_index     : INTEGER;   -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   function to_sfixed (
     arg                     : INTEGER;            -- integer
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   -- Real to sfixed
@@ -869,16 +869,16 @@ package fixed_generic_pkg is
     arg                     : REAL;     -- real
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
   function to_sfixed (
     arg                     : REAL;     -- real
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_sfixed;
 
@@ -887,15 +887,15 @@ package fixed_generic_pkg is
     arg                     : UNRESOLVED_SIGNED;               -- signed
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   function to_sfixed (
     arg                     : UNRESOLVED_SIGNED;  -- signed
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed;
 
   -- signed to sfixed (output assumed to be size of signed input)
@@ -912,16 +912,16 @@ package fixed_generic_pkg is
   function to_signed (
     arg                     : UNRESOLVED_sfixed;  -- fixed point input
     constant size           : NATURAL;            -- length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_SIGNED;
 
   -- signed fixed point to signed
   function to_signed (
     arg                     : UNRESOLVED_sfixed;  -- fixed point input
     size_res                : UNRESOLVED_SIGNED;  -- used for length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_SIGNED;
 
   -- signed fixed point to real
@@ -932,8 +932,8 @@ package fixed_generic_pkg is
   -- signed fixed point to integer
   function to_integer (
     arg                     : UNRESOLVED_sfixed;  -- fixed point input
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return INTEGER;
 
   -- Because of the fairly complicated sizing rules in the fixed point
@@ -1587,7 +1587,7 @@ package body fixed_generic_pkg is
   -- bottom bit is a "1" it is rounded, otherwise it remains the same.
   function round_fixed (arg            : UNRESOLVED_ufixed;
                         remainder      : UNRESOLVED_ufixed;
-                        overflow_style : fixed_overflow_style_type := fixed_overflow_style)
+                        overflow_style : com_fixed_overflow_style_type := fixed_overflow_style)
     return UNRESOLVED_ufixed
   is
     variable rounds         : BOOLEAN;
@@ -1620,7 +1620,7 @@ package body fixed_generic_pkg is
   -- Rounding case statement
   function round_fixed (arg            : UNRESOLVED_sfixed;
                         remainder      : UNRESOLVED_sfixed;
-                        overflow_style : fixed_overflow_style_type := fixed_overflow_style)
+                        overflow_style : com_fixed_overflow_style_type := fixed_overflow_style)
     return UNRESOLVED_sfixed
   is
     variable rounds         : BOOLEAN;
@@ -1970,7 +1970,7 @@ package body fixed_generic_pkg is
   -- ufixed(a downto b) / ufixed(c downto d) = ufixed(a-d downto b-c-1)
   function divide (
     l, r                 : UNRESOLVED_ufixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed
   is
@@ -2012,7 +2012,7 @@ package body fixed_generic_pkg is
   -- sfixed(a downto b) / sfixed(c downto d) = sfixed(a-d+1 downto b-c)
   function divide (
     l, r                 : UNRESOLVED_sfixed;
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed
   is
@@ -2054,7 +2054,7 @@ package body fixed_generic_pkg is
   -- 1 / ufixed(a downto b) = ufixed(-b downto -a-1)
   function reciprocal (
     arg                  : UNRESOLVED_ufixed;  -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed
   is
@@ -2069,7 +2069,7 @@ package body fixed_generic_pkg is
   -- 1 / sfixed(a downto b) = sfixed(-b+1 downto -a)
   function reciprocal (
     arg                  : UNRESOLVED_sfixed;              -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed
   is
@@ -2110,7 +2110,7 @@ package body fixed_generic_pkg is
   --        = ufixed (min(a,c) downto min(b,d))
   function remainder (
     l, r                 : UNRESOLVED_ufixed;            -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed
   is
@@ -2167,7 +2167,7 @@ package body fixed_generic_pkg is
   --        = sfixed (min(a,c) downto min(b,d))
   function remainder (
     l, r                 : UNRESOLVED_sfixed;  -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_sfixed
   is
@@ -2219,7 +2219,7 @@ package body fixed_generic_pkg is
   --        = ufixed (min(a,c) downto min(b, d))
   function modulo (
     l, r                 : UNRESOLVED_ufixed;  -- fixed point input
-    constant round_style : fixed_round_style_type := fixed_round_style;
+    constant round_style : com_fixed_round_style_type := fixed_round_style;
     constant guard_bits  : NATURAL                := fixed_guard_bits)
     return UNRESOLVED_ufixed is
   begin
@@ -2233,8 +2233,8 @@ package body fixed_generic_pkg is
   --        = sfixed (c downto min(b, d))
   function modulo (
     l, r                    : UNRESOLVED_sfixed;  -- fixed point input
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)
     return UNRESOLVED_sfixed
   is
@@ -3853,8 +3853,8 @@ package body fixed_generic_pkg is
     arg                     : NATURAL;  -- integer
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant fw      : INTEGER := mins (right_index, right_index);  -- catch literals
@@ -3900,8 +3900,8 @@ package body fixed_generic_pkg is
     arg                     : INTEGER;  -- integer
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant fw      : INTEGER := mins (right_index, right_index);  -- catch literals
@@ -3959,8 +3959,8 @@ package body fixed_generic_pkg is
     arg                     : REAL;     -- real
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)  -- # of guard bits
     return UNRESOLVED_ufixed
   is
@@ -4017,8 +4017,8 @@ package body fixed_generic_pkg is
     arg                     : REAL;     -- real
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)  -- # of guard bits
     return UNRESOLVED_sfixed
   is
@@ -4076,8 +4076,8 @@ package body fixed_generic_pkg is
     arg                     : UNRESOLVED_UNSIGNED;             -- unsigned
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant ARG_LEFT : INTEGER := arg'length-1;
@@ -4113,8 +4113,8 @@ package body fixed_generic_pkg is
     arg                     : UNRESOLVED_SIGNED;               -- signed
     constant left_index     : INTEGER;  -- left index (high index)
     constant right_index    : INTEGER                   := 0;  -- right index
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant ARG_LEFT : INTEGER := arg'length-1;
@@ -4440,8 +4440,8 @@ package body fixed_generic_pkg is
   function to_unsigned (
     arg                     : UNRESOLVED_ufixed;  -- ufixed point input
     constant size           : NATURAL;            -- length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_UNSIGNED is
   begin
     return to_uns(resize (arg            => arg,
@@ -4454,8 +4454,8 @@ package body fixed_generic_pkg is
   function to_unsigned (
     arg                     : UNRESOLVED_ufixed;    -- ufixed point input
     size_res                : UNRESOLVED_UNSIGNED;  -- length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_UNSIGNED is
   begin
     return to_unsigned (arg            => arg,
@@ -4467,8 +4467,8 @@ package body fixed_generic_pkg is
   function to_signed (
     arg                     : UNRESOLVED_sfixed;  -- sfixed point input
     constant size           : NATURAL;            -- length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_SIGNED is
   begin
     return to_s(resize (arg            => arg,
@@ -4481,8 +4481,8 @@ package body fixed_generic_pkg is
   function to_signed (
     arg                     : UNRESOLVED_sfixed;  -- sfixed point input
     size_res                : UNRESOLVED_SIGNED;  -- used for length of output
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_SIGNED is
   begin
     return to_signed (arg            => arg,
@@ -4553,8 +4553,8 @@ package body fixed_generic_pkg is
 
   function to_integer (
     arg                     : UNRESOLVED_ufixed;  -- fixed point input
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return NATURAL
   is
     constant left_index : INTEGER := arg'high;
@@ -4584,8 +4584,8 @@ package body fixed_generic_pkg is
 
   function to_integer (
     arg                     : UNRESOLVED_sfixed;  -- fixed point input
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return INTEGER
   is
     constant left_index  : INTEGER := arg'high;
@@ -4710,8 +4710,8 @@ package body fixed_generic_pkg is
     arg                     : UNRESOLVED_ufixed;            -- input
     constant left_index     : INTEGER;  -- integer portion
     constant right_index    : INTEGER;  -- size of fraction
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant arghigh : INTEGER := maximum (arg'high, arg'low);
@@ -4775,8 +4775,8 @@ package body fixed_generic_pkg is
     arg                     : UNRESOLVED_sfixed;          -- input
     constant left_index     : INTEGER;  -- integer portion
     constant right_index    : INTEGER;  -- size of fraction
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant arghigh : INTEGER := maximum (arg'high, arg'low);
@@ -4911,8 +4911,8 @@ package body fixed_generic_pkg is
   function to_ufixed (
     arg                     : NATURAL;            -- integer
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals
@@ -4933,8 +4933,8 @@ package body fixed_generic_pkg is
   function to_sfixed (
     arg                     : INTEGER;            -- integer
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals
@@ -4955,8 +4955,8 @@ package body fixed_generic_pkg is
   function to_ufixed (
     arg                     : REAL;     -- real
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)  -- # of guard bits
     return UNRESOLVED_ufixed
   is
@@ -4979,8 +4979,8 @@ package body fixed_generic_pkg is
   function to_sfixed (
     arg                     : REAL;     -- real
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style;
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style;
     constant guard_bits     : NATURAL                   := fixed_guard_bits)  -- # of guard bits
     return UNRESOLVED_sfixed
   is
@@ -5003,8 +5003,8 @@ package body fixed_generic_pkg is
   function to_ufixed (
     arg                     : UNRESOLVED_UNSIGNED;  -- unsigned
     size_res                : UNRESOLVED_ufixed;    -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals
@@ -5025,8 +5025,8 @@ package body fixed_generic_pkg is
   function to_sfixed (
     arg                     : UNRESOLVED_SIGNED;  -- signed
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals
@@ -5047,8 +5047,8 @@ package body fixed_generic_pkg is
   function resize (
     arg                     : UNRESOLVED_ufixed;  -- input
     size_res                : UNRESOLVED_ufixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_ufixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals
@@ -5069,8 +5069,8 @@ package body fixed_generic_pkg is
   function resize (
     arg                     : UNRESOLVED_sfixed;  -- input
     size_res                : UNRESOLVED_sfixed;  -- for size only
-    constant overflow_style : fixed_overflow_style_type := fixed_overflow_style;
-    constant round_style    : fixed_round_style_type    := fixed_round_style)
+    constant overflow_style : com_fixed_overflow_style_type := fixed_overflow_style;
+    constant round_style    : com_fixed_round_style_type    := fixed_round_style)
     return UNRESOLVED_sfixed
   is
     constant fw     : INTEGER := mine (size_res'low, size_res'low);  -- catch literals

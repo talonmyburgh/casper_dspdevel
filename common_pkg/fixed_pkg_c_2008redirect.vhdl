@@ -43,13 +43,13 @@
 
 library common_pkg_lib;
 library IEEE;
-use IEEE.fixed_float_types.all;
+use common_pkg_lib.common_fixed_float_types.all;
 --use common_pkg_lib.fixed_generic_pkg.all;
 
 package fixed_pkg is new common_pkg_lib.fixed_generic_pkg
   generic map (
-    fixed_round_style    => IEEE.fixed_float_types.fixed_round,
-    fixed_overflow_style => IEEE.fixed_float_types.fixed_saturate,
+    fixed_round_style    => common_pkg_lib.common_fixed_float_types.fixed_round,
+    fixed_overflow_style => common_pkg_lib.common_fixed_float_types.fixed_saturate,
     fixed_guard_bits     => 3,
     no_warning           => false
     );
