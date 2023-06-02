@@ -268,6 +268,8 @@ end % if technology UniBoard
 copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
 
 this_block.addFileToLibrary(vhdlfile,'xil_defaultlib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
@@ -276,6 +278,7 @@ this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vh
 this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_agilex_versal_cmult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([srcloc '/technology_select_pkg.vhd'],'technology_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
@@ -303,11 +306,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r_r.vhd'],'c
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
 this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_fft_lib');
-if dbl_wb_factor > 1
-  this_block.addFileToLibrary([srcloc   '/twiddlesPkg.vhd'],'r2sdf_fft_lib');
-else
-  this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'], 'r2sdf_fft_lib');
-end
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'], 'r2sdf_fft_lib');
 this_block.addFileToLibrary([srcloc   '/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');
