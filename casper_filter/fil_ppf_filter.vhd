@@ -118,7 +118,7 @@ begin
   generic map (
     g_representation      => "SIGNED",      
     g_lsb_w               => c_ppf_lsb_w,  
-    g_lsb_round           => TRUE,           
+    g_lsb_round           => ROUND,           
     g_lsb_round_clip      => FALSE,      
     g_msb_clip            => FALSE,            
     g_msb_clip_symmetric  => FALSE,  

@@ -41,9 +41,9 @@ BEGIN
   shift_proc : process(scale)
   begin
     if scale = '1' then
-        if g_representation ="SIGNED" and g_lsb_round = TRUE then
+        if g_representation ="SIGNED" and (g_lsb_round = ROUND or g_lsb_round = ROUNDINF) then
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= s_round(in_dat(g_in_dat_w - 1 DOWNTO 0), 1, g_lsb_round_clip, g_lsb_round);
-        elsif g_representation = "UNSIGNED" and g_lsb_round = TRUE then
+        elsif g_representation = "UNSIGNED" and (g_lsb_round = ROUND or g_lsb_round = ROUNDINF) then
             rem_dat(g_in_dat_w-2 DOWNTO 0) <= u_round(in_dat(g_in_dat_w - 1 DOWNTO 0), 1, g_lsb_round_clip);
         else NULL;
         end if;

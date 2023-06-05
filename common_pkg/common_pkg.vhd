@@ -472,7 +472,7 @@ PACKAGE common_pkg IS
 	PROCEDURE proc_common_dclk_generate_sclk(CONSTANT Pfactor : IN POSITIVE;
 	                                         SIGNAL dclk      : IN STD_LOGIC;
 	                                         SIGNAL sclk      : INOUT STD_LOGIC);
-
+	function stringround_to_enum_round (stringin : string) return t_rounding_mode;
 END common_pkg;
 
 PACKAGE BODY common_pkg IS
@@ -2678,4 +2678,15 @@ PACKAGE BODY common_pkg IS
 		WAIT;
 	END proc_common_dclk_generate_sclk;
 
+	function stringround_to_enum_round (constant stringin : string) return t_rounding_mode is
+	begin
+		-- use an ugly if because CASE expects string to always be the same length
+		if stringin = "ROUND" then
+			return ROUND;
+		elsif stringin = "ROUNDINF" then
+			return ROUNDINF;
+		else
+			return TRUNCATE;
+		end if;
+	end function stringround_to_enum_round;
 END common_pkg;
