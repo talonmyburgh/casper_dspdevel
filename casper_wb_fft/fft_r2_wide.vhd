@@ -291,7 +291,7 @@ begin
                     g_use_variant    => g_use_variant,
                     g_use_dsp        => g_use_dsp,
                     g_ovflw_behav    => g_ovflw_behav,
-                    g_use_round      => g_round,
+                    g_round          => g_round,
                     g_use_mult_round => g_use_mult_round,
                     g_ram_primitive  => g_ram_primitive,
                     g_twid_file_stem => g_twid_file_stem
@@ -340,7 +340,7 @@ begin
                 g_use_dsp     => g_use_dsp,
                 g_ovflw_behav => g_ovflw_behav,
                 g_use_mult_round=>g_use_mult_round,
-                g_use_round   => g_round
+                g_round       => g_round
             )
             port map(
                 clk        => clk,
@@ -416,7 +416,7 @@ begin
                 generic map(
                     g_representation      => "SIGNED",
                     g_lsb_w               => c_out_scale_w,
-                    g_lsb_round           => g_roundg_round,
+                    g_lsb_round           => g_round,
                     g_lsb_round_clip      => FALSE,
                     g_msb_clip            => c_clip,
                     g_msb_clip_symmetric  => FALSE,

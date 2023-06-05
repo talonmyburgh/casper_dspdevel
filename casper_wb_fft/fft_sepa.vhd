@@ -152,7 +152,7 @@ begin
         round_add : ENTITY casper_requantize_lib.common_round
             GENERIC MAP(
                 g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-                g_round           => TRUE, -- when TRUE round the input, else truncate the input
+                g_round           => ROUND, -- when TRUE round the input, else truncate the input
                 g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
                 g_pipeline_input  => 0, -- >= 0
                 g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
@@ -169,7 +169,7 @@ begin
         round_sub : ENTITY casper_requantize_lib.common_round
             GENERIC MAP(
                 g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-                g_round           => TRUE, -- when TRUE round the input, else truncate the input
+                g_round           => ROUND, -- when TRUE round the input, else truncate the input
                 g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
                 g_pipeline_input  => 0, -- >= 0
                 g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output

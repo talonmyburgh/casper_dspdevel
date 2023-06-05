@@ -190,12 +190,12 @@ begin
 		-- Overflow style is set to wrap, rounding can be specified by generic g_round
 		gen_comb : if c_round_lat = 0 generate
 			ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY FAILURE;
-			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w), c_out_dat_w, FALSE, g_round);
-			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w), c_out_dat_w, FALSE, g_round);
+			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w);
+			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w);
 		end generate;
 		gen_reg : if c_round_lat = 1 generate
-			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w), c_out_dat_w, FALSE, g_round) when rising_edge(clk);
-			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w), c_out_dat_w, FALSE, g_round) when rising_edge(clk);
+			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w) when rising_edge(clk);
+			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w) when rising_edge(clk);
 		end generate;
 	end generate;
 

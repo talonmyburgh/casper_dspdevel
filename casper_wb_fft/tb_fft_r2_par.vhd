@@ -340,7 +340,7 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_round => stringround_to_enum_round(g_use_round)
   )
   port map(
     clk        => dut_clk,
