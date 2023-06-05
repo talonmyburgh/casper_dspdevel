@@ -70,8 +70,8 @@ entity rTwoSDF is
 		g_variant       : string  := "4DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_round		    : string  := ROUND;   --! ROUND, ROUNDINF or TRUNCATE
-		g_use_mult_round: string  := "TRUNCATE";		--! Rounding behaviour "ROUND" or "TRUNCATE"
+		g_round		    : t_rounding_mode  := ROUND;    --! ROUND, ROUNDINF or TRUNCATE
+		g_use_mult_round: t_rounding_mode  := TRUNCATE; --! ROUND, ROUNDINF or TRUNCATE
 		g_twid_dat_w	: natural := 18;
 		g_max_addr_w	: natural := 9;
 		g_twid_file_stem: string  := c_twid_file_stem;
