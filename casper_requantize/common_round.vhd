@@ -39,7 +39,7 @@ ENTITY common_round IS
 
 	GENERIC(
 		g_representation  : STRING  := "SIGNED"; -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-		g_round           : BOOLEAN := TRUE; -- when TRUE round the input, else truncate the input
+		g_round           : t_rounding_mode  := ROUND;  -- = ROUND, ROUNDINF or TRUNCATE will default to TRUNCATE if invalid option used
 		g_round_clip      : BOOLEAN := FALSE; -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
 		g_pipeline_input  : NATURAL := 0; -- >= 0
 		g_pipeline_output : NATURAL := 1; -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
@@ -88,14 +88,10 @@ BEGIN
 	-- Decrease to out_dat width by c_remove_w number of LSbits
 	-- . rounding
 	gen_s : IF c_remove_w > 0 AND g_round = TRUE AND g_representation = "SIGNED" GENERATE
-		res_dat <= s_round(reg_dat, c_remove_w, g_round_clip);
+		res_dat <= s_round(reg_dat, c_remove_w, g_round_clip, g_round);
 	END GENERATE;
 	gen_u : IF c_remove_w > 0 AND g_round = TRUE AND g_representation = "UNSIGNED" GENERATE
 		res_dat <= u_round(reg_dat, c_remove_w, g_round_clip);
-	END GENERATE;
-	-- . truncating
-	gen_t : IF c_remove_w > 0 AND g_round = FALSE GENERATE
-		res_dat <= truncate(reg_dat, c_remove_w);
 	END GENERATE;
 
 	u_output_pipe : ENTITY common_components_lib.common_pipeline
