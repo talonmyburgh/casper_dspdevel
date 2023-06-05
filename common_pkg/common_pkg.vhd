@@ -2678,7 +2678,7 @@ PACKAGE BODY common_pkg IS
 		WAIT;
 	END proc_common_dclk_generate_sclk;
 
-	function stringround_to_enum_round (constant stringin : string) return t_rounding_mode is
+	function stringround_to_enum_round (stringin : string) return t_rounding_mode is
 	begin
 		-- use an ugly if because CASE expects string to always be the same length
 		if stringin = "ROUND" then
