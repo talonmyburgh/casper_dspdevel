@@ -87,10 +87,10 @@ BEGIN
 
 	-- Decrease to out_dat width by c_remove_w number of LSbits
 	-- . rounding
-	gen_s : IF c_remove_w > 0 AND g_round = TRUE AND g_representation = "SIGNED" GENERATE
+	gen_s : IF c_remove_w > 0 AND g_representation = "SIGNED" GENERATE
 		res_dat <= s_round(reg_dat, c_remove_w, g_round_clip, g_round);
 	END GENERATE;
-	gen_u : IF c_remove_w > 0 AND g_round = TRUE AND g_representation = "UNSIGNED" GENERATE
+	gen_u : IF c_remove_w > 0 AND g_representation = "UNSIGNED" GENERATE
 		res_dat <= u_round(reg_dat, c_remove_w, g_round_clip);
 	END GENERATE;
 

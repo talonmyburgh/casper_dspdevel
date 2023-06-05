@@ -347,7 +347,7 @@ entity wbpfb_unit_dev is
         g_use_variant        : string  := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp            : string  := "yes"; --! = "yes" or "no"
         g_ovflw_behav        : string  := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-        g_use_round          : string  := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+        g_round              : t_rounding_mode  := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
         g_fft_ram_primitive  : string  := "block"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
         g_twid_file_stem     : string  := c_twid_file_stem --! file stem for the twiddle coefficients                  
     );
@@ -524,7 +524,7 @@ begin
                     g_use_variant    => g_use_variant,
                     g_use_dsp        => g_use_dsp,
                     g_ovflw_behav    => g_ovflw_behav,
-                    g_use_round      => g_use_round,
+                    g_round          => g_round,
                     g_ram_primitive  => g_fft_ram_primitive,
                     g_twid_file_stem => g_twid_file_stem
                 )
@@ -561,7 +561,7 @@ begin
                     g_use_variant        => g_use_variant,
                     g_use_dsp            => g_use_dsp,
                     g_ovflw_behav        => g_ovflw_behav,
-                    g_use_round          => g_use_round,
+                    g_round              => g_round,
                     g_ram_primitive      => g_fft_ram_primitive,
                     g_twid_file_stem     => g_twid_file_stem
                 )
