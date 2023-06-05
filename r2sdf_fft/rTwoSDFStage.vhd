@@ -187,7 +187,7 @@ begin
 		generic map(
             g_use_dsp          => g_use_dsp,
             g_use_variant      => g_use_variant,
-			g_use_truncate     => g_use_mult_round,
+			g_round     	   => g_use_mult_round,
             g_stage            => g_stage,
             g_lat              => g_pipeline.mul_lat
 		)
