@@ -90,8 +90,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     g_use_variant       => "4DSP",
     g_use_dsp           => "yes",
     g_ovflw_behav       => g_ovflw_behav,
-    g_use_round         => g_use_round,
-    g_use_mult_round    => g_use_mult_round,
+    g_round             => stringround_to_enum_round(g_use_round),
+    g_use_mult_round    => stringround_to_enum_round(g_use_mult_round),
     g_ram_primitive     => "auto",
     g_twid_file_stem    => "UNUSED"
   )

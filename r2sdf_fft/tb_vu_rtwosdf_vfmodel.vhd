@@ -3,7 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all; 
 use ieee.math_real.all;
 library common_pkg_lib;
-use ieee.fixed_float_types.all;
+use common_pkg_lib.common_pkg.all;
+use common_pkg_lib.common_fixed_float_types.all;
 --use ieee.fixed_pkg.all;
 use common_pkg_lib.fixed_pkg.all;
 context vunit_lib.vunit_context;
@@ -35,6 +36,10 @@ entity tb_vu_trwosdf_vfmodel is
 end tb_vu_trwosdf_vfmodel;
 
 architecture tb_vu_trwosdf_vfmodel_arch of tb_vu_trwosdf_vfmodel is
+--TYPE t_rounding_mode is (TRUNCATE, ROUND, ROUNDINF);
+
+
+
 constant c_fftsize          : integer := 2**g_fftsize_log2;
 signal clk                  : std_logic;
 signal rst                  : std_logic;
@@ -70,8 +75,8 @@ BEGIN
             g_variant           => "4DSP",
             g_use_dsp           => "yes",
             g_ovflw_behav       => g_ovflw_behav,
-            g_use_round         => g_use_round,
-            g_use_mult_round    => g_use_mult_round,
+            g_round             => stringround_to_enum_round(g_use_round),
+            g_use_mult_round    => stringround_to_enum_round(g_use_mult_round),
             g_twid_dat_w        => g_twiddle_width,
             g_max_addr_w        => 10, -- Keep Default size to use Block Ram
             g_twid_file_stem    => "NONE", -- We don't simulate with Twiddle Files, so this should matter

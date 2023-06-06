@@ -38,7 +38,7 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="UseIPStaticLibs" Val="0"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="90"/>
+    <Option Name="WTXSimLaunchSim" Val="92"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -74,6 +74,13 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../common_pkg/fixed_float_types_c.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_pkg_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../common_pkg/fixed_pkg_c.vhd">
         <FileInfo>
           <Attr Name="Library" Val="common_pkg_lib"/>
@@ -82,7 +89,7 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../common_pkg/common_pkg.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="common_pkg_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -117,14 +124,14 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_multiplier/tech_agilex_versal_cmult.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_multiplier/tech_complex_mult.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -229,14 +236,14 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_ram/tech_memory_rom_r_r.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../casper_ram/tech_memory_rom_r.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -327,14 +334,14 @@
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../twiddlesPkg.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../rTwoWeights.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>

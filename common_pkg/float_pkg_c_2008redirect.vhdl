@@ -42,14 +42,14 @@
 
 library ieee;
 library common_pkg_lib;
-use IEEE.fixed_float_types.all;
+use common_pkg_lib.common_fixed_float_types.all;
 use common_pkg_lib.fixed_pkg.all;
 
 package float_pkg is new common_pkg_lib.float_generic_pkg
   generic map (
     float_exponent_width => 8,    -- float32'high
     float_fraction_width => 23,   -- -float32'low
-    float_round_style    => ieee.fixed_float_types.round_nearest,  -- round nearest algorithm
+    float_round_style    => common_pkg_lib.common_fixed_float_types.round_nearest,  -- round nearest algorithm
     float_denormalize    => true,  -- Use IEEE extended floating
     float_check_error    => true,  -- Turn on NAN and overflow processing
     float_guard_bits     => 3,     -- number of guard bits

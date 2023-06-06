@@ -26,21 +26,21 @@ use casper_ram_lib.common_ram_pkg.all;
 
 entity rTwoSDFStage is
 	generic(
-		g_nof_chan       : natural        := 0; 				--! Exponent of nr of subbands (0 means 1 subband)
-		g_stage          : natural        := 8; 				--! Stage number
-		g_nof_points	 : natural 		  := 32;				--! Number of points
-		g_wb_factor		 : natural 		  := 1;				    --! WB factor of a wideband FFT
-		g_wb_inst		 : natural 		  := 0; 				--! WB instance index. Altered for WB_FACTOR > 1
-		g_twid_dat_w     : natural		  := 18;				--! The coefficient data width
-		g_max_addr_w	 : natural		  := 10;				--! Address width above which to implement in block/ultra ram
-		g_use_variant    : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
-		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
-		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
-		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
-		g_use_mult_round : string         := "TRUNCATE";		--! Rounding behaviour "ROUND" or "TRUNCATE"
-		g_ram_primitive  : string		  := "block";			--! BRAM primitive for the Weights
-		g_twid_file_stem : string  		  := "UNUSED";			--! Path stem for the twiddle coefficient files
-		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
+		g_nof_chan       : natural        	:= 0; 				--! Exponent of nr of subbands (0 means 1 subband)
+		g_stage          : natural        	:= 8; 				--! Stage number
+		g_nof_points	 : natural 		  	:= 32;				--! Number of points
+		g_wb_factor		 : natural 		  	:= 1;				--! WB factor of a wideband FFT
+		g_wb_inst		 : natural 		  	:= 0; 				--! WB instance index. Altered for WB_FACTOR > 1
+		g_twid_dat_w     : natural		  	:= 18;				--! The coefficient data width
+		g_max_addr_w	 : natural		  	:= 10;				--! Address width above which to implement in block/ultra ram
+		g_use_variant    : string         	:= "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
+		g_use_dsp        : string         	:= "yes";			--! Use dsp for cmults
+		g_ovflw_behav	 : string		  	:= "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
+		g_round      	 : t_rounding_mode  := ROUND; 			--! ROUND, ROUNDINF or TRUNCATE
+		g_use_mult_round : t_rounding_mode  := TRUNCATE;		--! ROUND, ROUNDINF or TRUNCATE
+		g_ram_primitive  : string		  	:= "block";			--! BRAM primitive for the Weights
+		g_twid_file_stem : string  		  	:= "UNUSED";		--! Path stem for the twiddle coefficient files
+		g_pipeline       : t_fft_pipeline 	:= c_fft_pipeline	--! internal pipeline settings
 	);
 	port(
 		clk     		 : in  std_logic;        				--! Input clock
@@ -61,10 +61,6 @@ architecture str of rTwoSDFStage is
 	-- counter for ctrl_sel 
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
-
-	constant c_round	 	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_mult_trunc	: boolean := sel_a_b(g_use_mult_round ="ROUND", FALSE, TRUE);
-	constant c_clip		 	: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
 
 	constant c_coefs_file_stem : string := g_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
@@ -191,7 +187,7 @@ begin
 		generic map(
             g_use_dsp          => g_use_dsp,
             g_use_variant      => g_use_variant,
-			g_use_truncate     => c_mult_trunc,
+			g_round     	   => g_use_mult_round,
             g_stage            => g_stage,
             g_lat              => g_pipeline.mul_lat
 		)
@@ -213,8 +209,8 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
-			g_lsb_round_clip      => FALSE,	
+			g_lsb_round           => g_round,
+			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_re'LENGTH,
 			g_out_dat_w           => out_re'LENGTH
 		)
@@ -227,7 +223,7 @@ begin
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_im'LENGTH,
 			g_out_dat_w           => out_im'LENGTH

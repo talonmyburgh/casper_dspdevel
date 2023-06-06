@@ -46,8 +46,8 @@ entity fft_r2_bf_par is
 		-- multiplier settings
 		g_use_variant  	 : STRING     		:= "4DSP";
 		g_ovflw_behav  	 : string			:= "WRAP";
-		g_use_round	   	 : string			:= "ROUND";
-		g_use_mult_round : string           := "TRUNCATE";
+		g_round	   	 	 : t_rounding_mode	:= ROUND;
+		g_use_mult_round : t_rounding_mode  := TRUNCATE;
 		g_use_dsp      	 : STRING         	:= "yes"
 	);
 	port(
@@ -70,9 +70,7 @@ end entity fft_r2_bf_par;
 
 architecture str of fft_r2_bf_par is
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
-	constant c_mult_trunc	: boolean := sel_a_b(g_use_mult_round ="ROUND", FALSE, TRUE);
 	constant c_out_dat_w : natural := x_out_re'length; -- re and im have same width  
 
 	constant c_bf_in_a_zdly  : natural := 0; -- No delays in bf_stage, since they only apply to one in- or output
@@ -150,7 +148,7 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_x_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => sum_re'LENGTH,
 			g_out_dat_w           => sum_quant_re'LENGTH
@@ -165,7 +163,7 @@ begin
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => sum_im'LENGTH,
 			g_out_dat_w           => sum_quant_im'LENGTH
@@ -247,7 +245,7 @@ begin
 			g_use_dsp    	=> g_use_dsp,
 			g_use_variant	=> g_use_variant,
 			g_stage      	=> g_stage,
-			g_use_truncate  => c_mult_trunc,
+			g_round  		=> g_use_mult_round,
 			g_lat        	=> g_pipeline.mul_lat
 		)
 		port map(
@@ -278,7 +276,7 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_y_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round         => c_round,
+			g_lsb_round         => g_round,
 			g_lsb_round_clip    => FALSE,
 			g_in_dat_w          => mul_out_re'LENGTH,
 			g_out_dat_w         => mul_quant_re'LENGTH
@@ -293,7 +291,7 @@ begin
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round         => c_round,
+			g_lsb_round         => g_round,
 			g_lsb_round_clip    => FALSE,
 			g_in_dat_w          => mul_out_im'LENGTH,
 			g_out_dat_w         => mul_quant_im'LENGTH

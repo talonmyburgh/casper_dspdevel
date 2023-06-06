@@ -77,7 +77,7 @@ entity tb_rTwoSDF is
     g_use_uniNoise_file : boolean  := true;
     g_in_en             : natural  := 1;     -- 1 = always active, others = random control
     -- generics for rTwoSDF
-    g_use_mult_round    : string   := "ROUND";
+    g_use_mult_round    : t_rounding_mode   := ROUND;
     g_use_reorder       : boolean  := false;  -- tb supports both true and false
     g_nof_points        : natural  := 1024;
     g_in_dat_w          : natural  := 8;   

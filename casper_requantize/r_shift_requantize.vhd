@@ -9,7 +9,7 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY r_shift_requantize IS
   GENERIC (
-    g_lsb_round           : BOOLEAN := TRUE;      -- when true ROUND else TRUNCATE the input LSbits
+    g_lsb_round           : t_rounding_mode  := ROUND;  -- = ROUND, ROUNDINF or TRUNCATE
     g_lsb_round_clip      : BOOLEAN := FALSE;     -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding
     g_in_dat_w            : NATURAL := 17;        -- input data width
     g_out_dat_w           : NATURAL := 18         -- output data width
@@ -33,11 +33,7 @@ BEGIN
   shift_proc : process(scale, in_dat)
   begin
     if scale = '1' then
-        if g_lsb_round = TRUE then
-            res_dat <= RESIZE_SVEC(s_round(in_dat, 1, g_lsb_round_clip), g_in_dat_w);
-        else
-            res_dat <= RESIZE_SVEC(truncate(in_dat, 1), g_in_dat_w);
-        end if;
+        res_dat <= RESIZE_SVEC(s_round(in_dat, 1, g_lsb_round_clip, g_lsb_round), g_in_dat_w);
     else
         res_dat <= in_dat;
     end if;

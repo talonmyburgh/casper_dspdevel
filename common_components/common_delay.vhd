@@ -25,7 +25,9 @@
 
 library ieee;
 use IEEE.STD_LOGIC_1164.all;
-
+use IEEE.numeric_std.all;
+library common_pkg_lib;
+use common_pkg_lib.common_pkg.all;
 entity common_delay is
 	generic(
 		g_dat_w : NATURAL := 8;         --! need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
@@ -45,15 +47,23 @@ architecture rtl of common_delay is
 	-- delay, in this way the t_dly_arr type can support all g_depth >= 0
 	type t_dly_arr is array (0 to g_depth) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
 
-	signal shift_reg : t_dly_arr := (others => (others => '0'));
-
+	
+    type t_mem_arr is array (0 to g_depth-2) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
+    --signal shift_reg : t_dly_arr := (others => (others => '0'));
 begin
 
-	shift_reg(0) <= in_dat;
-
-	out_dat <= shift_reg(g_depth);
-
-	gen_reg : if g_depth > 0 generate
+    gen_zero : if g_depth = 0 generate 
+    signal shift_reg : t_dly_arr := (others => (others => '0'));
+    begin
+        shift_reg(0) <= in_dat;
+	    out_dat <= shift_reg(g_depth);
+	end generate;
+	gen_regSR : if g_depth > 0 and g_depth<128 generate -- Use a shift register implementation
+        signal shift_reg : t_dly_arr := (others => (others => '0'));
+    begin
+    
+		shift_reg(0) <= in_dat;
+	    out_dat <= shift_reg(g_depth);
 		p_clk : process(clk)
 		begin
 			if rising_edge(clk) then
@@ -63,5 +73,33 @@ begin
 			end if;
 		end process;
 	end generate;
+	gen_regMEM : if g_depth >= 128 generate -- Use a Memory implementation
+	--signal mem_addr_rd : unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(g_depth-2,ceil_log2(g_depth-1));
+	signal mem_addr_wr : unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(0,ceil_log2(g_depth-1));
+	signal memory : t_mem_arr := (others => (others => '0'));
+    attribute ram_style: string;
+    attribute ram_style of memory: signal is "block";
+	signal out_datmem  : STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
+    begin
+        out_dat <= out_datmem;
+        --assert out_datmem = shift_reg(g_depth) report "non matching data" severity failure;
+		p_clk : process(clk)
+		begin
+			if rising_edge(clk) then
+			    
+				if in_val = '1' then
+				    out_datmem <= memory(to_integer(mem_addr_wr));
+					memory(to_integer(mem_addr_wr)) <= in_dat;
+					--mem_addr_rd <= mem_addr_wr;
+					if mem_addr_wr=(g_depth-2) then
+					   mem_addr_wr <= to_unsigned(0,mem_addr_wr'length);
+					else
+					   mem_addr_wr <= mem_addr_wr + 1;
+					end if;
 
+					--shift_reg(1 to g_depth) <= shift_reg(0 to g_depth - 1);
+				end if;
+			end if;
+		end process;
+	end generate;
 end rtl;
