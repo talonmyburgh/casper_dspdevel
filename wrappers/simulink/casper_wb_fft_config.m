@@ -239,7 +239,7 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
-  this_block.addGeneric('use_round','String',use_round);
+  this_block.addGeneric('use_round','natural',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
   
 
