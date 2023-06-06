@@ -360,10 +360,12 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
             i=i+1;
             chararr(i,1)=sprintf(outimchar,k,j);
             i=i+1;
-            if (j ~= wbfctr-1)
+            if (j ~= wbfctr-1 | k ~= nof_wb_streams-1)
                 chararr(i,1)=sprintf(outrechar,k,j);
+                fprintf("Not finished, wb: %d, str: %d",j,k);
             else
                 chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
+                fprintf("Finished, wb: %d, str: %d",j,k);
             end
             i=i+1;
         end
