@@ -310,7 +310,7 @@ end
   this_block.addGeneric('g_use_variant','string',variant);
   this_block.addGeneric('g_use_dsp','string',use_dsp);
   this_block.addGeneric('g_ovflw_behav','string',fft_ovflw_behav);
-  this_block.addGeneric('g_use_round','string',fft_use_round);
+  this_block.addGeneric('g_use_round','natural',fft_use_round);
   this_block.addGeneric('g_fft_ram_primitive','string',fft_ram_primitive);
 
   % Add addtional source files as needed.

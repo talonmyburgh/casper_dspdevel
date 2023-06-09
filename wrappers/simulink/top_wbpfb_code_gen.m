@@ -59,7 +59,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_variant       : string  		     := ""4DSP"";       -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
-    "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
+    "    g_use_round         : natural           := 1;  -- = 0, 1, 2 - indices corresponding to the rounding modes in the common_pkg_lib"
     "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
@@ -143,7 +143,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_variant       : string  		     := ""4DSP"";       -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
-    "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
+    "    g_use_round         : natural           := 1;  -- = 0, 1, 2 - indices corresponding to the rounding modes in the common_pkg_lib"
     "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
@@ -167,6 +167,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     lnsafterarchopen_w_xtradat = [");"
         "end wbpfb_unit_top;"
         "architecture RTL of wbpfb_unit_top is"
+        "constant round_mode : t_rounding_mode := t_rounding_mode'val(g_use_round);"
         "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                                  "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
@@ -186,7 +187,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
-    "   g_use_round          => g_use_round,"
+    "   g_round              => round_mode,"
     "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
@@ -234,6 +235,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     lnsafterarchopen_w_o_xtradat = [");"
     "end wbpfb_unit_top;"
     "architecture RTL of wbpfb_unit_top is"
+    "constant round_mode : t_rounding_mode := t_rounding_mode'val(g_use_round);"
     "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                              "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
@@ -253,7 +255,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
-    "   g_use_round          => g_use_round,"
+    "   g_round              => round_mode,"
     "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
@@ -358,10 +360,12 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
             i=i+1;
             chararr(i,1)=sprintf(outimchar,k,j);
             i=i+1;
-            if (j ~= wbfctr-1)
+            if (j ~= wbfctr-1 | k ~= nof_wb_streams-1)
                 chararr(i,1)=sprintf(outrechar,k,j);
+                fprintf("Not finished, wb: %d, str: %d",j,k);
             else
                 chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
+                fprintf("Finished, wb: %d, str: %d",j,k);
             end
             i=i+1;
         end
