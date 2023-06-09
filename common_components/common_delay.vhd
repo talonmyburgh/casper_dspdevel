@@ -48,7 +48,7 @@ architecture rtl of common_delay is
 	type t_dly_arr is array (0 to g_depth) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
 
 	
-    type t_mem_arr is array (0 to g_depth-2) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
+    
     --signal shift_reg : t_dly_arr := (others => (others => '0'));
 begin
 
@@ -58,7 +58,7 @@ begin
         shift_reg(0) <= in_dat;
 	    out_dat <= shift_reg(g_depth);
 	end generate;
-	gen_regSR : if g_depth > 0 and g_depth<128 generate -- Use a shift register implementation
+	gen_regSR : if g_depth > 0 and g_depth<140 generate -- Use a shift register implementation
         signal shift_reg : t_dly_arr := (others => (others => '0'));
     begin
     
@@ -73,28 +73,47 @@ begin
 			end if;
 		end process;
 	end generate;
-	gen_regMEM : if g_depth >= 128 generate -- Use a Memory implementation
+	gen_regMEM : if g_depth >= 140 generate -- Use a Memory implementation
 	--signal mem_addr_rd : unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(g_depth-2,ceil_log2(g_depth-1));
-	signal mem_addr_wr : unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(0,ceil_log2(g_depth-1));
-	signal memory : t_mem_arr := (others => (others => '0'));
+	constant c_slice_input_regs 	: integer := 2;  -- note these are non-generic you'll need to change the code below if you change these
+	constant c_slice_output_regs 	: integer := 2;
+	constant c_mem_depth       		: integer := g_depth - (c_slice_input_regs+c_slice_output_regs) -1;
+	type t_mem_arr is array (0 to c_mem_depth-1) of STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
+	signal mem_addr_wr 				: unsigned(ceil_log2(c_mem_depth)-1 downto 0) := to_unsigned(0,ceil_log2(c_mem_depth));
+	signal mem_addr_wr_d1 			: unsigned(ceil_log2(c_mem_depth)-1 downto 0) := to_unsigned(0,ceil_log2(c_mem_depth));
+	signal mem_addr_wr_d2 			: unsigned(ceil_log2(c_mem_depth)-1 downto 0) := to_unsigned(0,ceil_log2(c_mem_depth));
+	signal input_data				: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
+	signal input_data_d1			: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0);
+
+	signal memory 					: t_mem_arr := (others => (others => '0'));
     attribute ram_style: string;
     attribute ram_style of memory: signal is "block";
 	signal out_datmem  : STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
+	signal out_datmem_d1  : STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
+
+
     begin
-        out_dat <= out_datmem;
+        
         --assert out_datmem = shift_reg(g_depth) report "non matching data" severity failure;
 		p_clk : process(clk)
 		begin
 			if rising_edge(clk) then
-			    
+
 				if in_val = '1' then
-				    out_datmem <= memory(to_integer(mem_addr_wr));
-					memory(to_integer(mem_addr_wr)) <= in_dat;
+					mem_addr_wr_d1 	<= mem_addr_wr;
+					mem_addr_wr_d2 	<= mem_addr_wr_d1;
+
+				    out_datmem 		<= memory(to_integer(mem_addr_wr_d2));
+					out_datmem_d1   <= out_datmem;
+					out_dat 		<= out_datmem_d1;
+					input_data		<= in_dat;
+					input_data_d1	<= input_data;
+					memory(to_integer(mem_addr_wr_d2)) <= input_data_d1;
 					--mem_addr_rd <= mem_addr_wr;
-					if mem_addr_wr=(g_depth-2) then
-					   mem_addr_wr <= to_unsigned(0,mem_addr_wr'length);
+					if mem_addr_wr=(c_mem_depth-1) then
+					   mem_addr_wr 	<= to_unsigned(0,mem_addr_wr'length);
 					else
-					   mem_addr_wr <= mem_addr_wr + 1;
+					   mem_addr_wr 	<= mem_addr_wr + 1;
 					end if;
 
 					--shift_reg(1 to g_depth) <= shift_reg(0 to g_depth - 1);
