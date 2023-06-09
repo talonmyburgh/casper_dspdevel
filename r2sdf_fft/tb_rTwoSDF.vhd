@@ -134,6 +134,8 @@ architecture tb of tb_rTwoSDF is
     signal in_re   : std_logic_vector(g_in_dat_w - 1 downto 0);
     signal in_im   : std_logic_vector(g_in_dat_w - 1 downto 0);
     signal in_sync : std_logic := '0';
+    signal trigger : std_logic := '0';
+    signal triggerff : std_logic := '0';
     signal in_val  : std_logic := '0';
 
     signal out_re   : std_logic_vector(g_out_dat_w - 1 downto 0);
@@ -173,9 +175,22 @@ begin
     o_rst    <= rst;
     o_tb_end <= tb_end;
 
+    trigger <= '0', '1' after c_clk_period * 22;
     enable <= '0', '1' after c_clk_period * 23;
     random <= func_common_random(random) when rising_edge(clk);
     in_en  <= '1' when g_in_en = 1 else random(random'HIGH);
+
+    process(clk)
+        begin
+            if rising_edge(clk) then
+                triggerff <= trigger;
+                if (trigger = '1') and (triggerff = '0') then
+                    in_sync <= '1';
+                else
+                    in_sync <= '0';
+                end if;
+            end if;
+        end process;
 
     p_read_input_file : process
         file v_input          : TEXT open READ_MODE is c_inputFile; -- this is LRM 1076-1987 style and implies that only simulator start and quit can open and close the file
@@ -223,14 +238,12 @@ begin
         if rst = '1' then
             in_re   <= (others => '0');
             in_im   <= (others => '0');
-            in_sync <= '1';
             in_val  <= '0';
 
             in_index  <= 0;
             in_repeat <= 0;
         elsif rising_edge(clk) then
 
-            in_sync <= '0';
             in_val  <= '0';
 
             -- start stimuli some arbitrary time after rst release to ensure that the proper behaviour of the DUT does not depend on that time
@@ -247,7 +260,6 @@ begin
                     if in_repeat < c_repeat then
                         in_re   <= std_logic_vector(to_signed(in_file_data(in_index, 1), g_in_dat_w));
                         in_im   <= std_logic_vector(to_signed(in_file_data(in_index, 2), g_in_dat_w));
-                        in_sync <= std_logic(in_file_sync(in_index));
                         in_val  <= std_logic(in_file_val(in_index));
                     end if;
 

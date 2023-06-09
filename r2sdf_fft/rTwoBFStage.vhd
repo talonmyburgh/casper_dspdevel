@@ -179,7 +179,7 @@ begin
             out_bit => bf_val_dly
 		);
 	
-	-- sync always comes out of entity one clk cycle before dv	
+	-- sync always comes out of entity one clk cycle before dv in synchronous operation	
 	u_stage_sync : entity common_components_lib.common_bit_delay
         generic map(
             g_depth => c_feedback_zdly * (2**g_nof_chan)
@@ -189,7 +189,7 @@ begin
             rst     => rst,
             in_clr  => '0',
             in_bit  => in_sync,
-            in_val  => in_val,
+            in_val  => '1', --synchronous operation
             out_bit => out_sync
         );
 

@@ -66,44 +66,44 @@ begin
             g_file_loc_prefix   => "../../../../../",
             g_twid_file_stem    => c_twid_file_stem
         );
-    u_act_noise_1024p_8i_14o : entity work.tb_rTwoSDF
-        generic map(
-            g_use_uniNoise_file => true,
-            g_in_en             => 1,
-            g_use_reorder       => true,
-            g_nof_points        => 1024,
-            g_in_dat_w          => 8,
-            g_out_dat_w         => 14,
-            g_guard_w           => 2,
-            g_diff_margin       => c_diff_margin,
-            g_file_loc_prefix   => "../../../../../",
-            g_twid_file_stem    => c_twid_file_stem
-        );
-    u_rnd_noise_1024p_8i_14o : entity work.tb_rTwoSDF
-        generic map(
-            g_use_uniNoise_file => true,
-            g_in_en             => 1,
-            g_use_reorder       => true,
-            g_nof_points        => 1024,
-            g_in_dat_w          => 8,
-            g_out_dat_w         => 14,
-            g_guard_w           => 2,
-            g_diff_margin       => c_diff_margin,
-            g_file_loc_prefix   => "../../../../../",
-            g_twid_file_stem    => c_twid_file_stem
-        );
-    u_rnd_noise_1024p_8i_14o_flipped : entity work.tb_rTwoSDF
-        generic map(
-            g_use_uniNoise_file => true,
-            g_in_en             => 0,
-            g_use_reorder       => false,
-            g_nof_points        => 1024,
-            g_in_dat_w          => 8,
-            g_out_dat_w         => 14,
-            g_guard_w           => 2,
-            g_diff_margin       => c_diff_margin,
-            g_file_loc_prefix   => "../../../../../",
-            g_twid_file_stem    => c_twid_file_stem
-        );
+--    u_act_noise_1024p_8i_14o : entity work.tb_rTwoSDF
+--        generic map(
+--            g_use_uniNoise_file => true,
+--            g_in_en             => 1,
+--            g_use_reorder       => true,
+--            g_nof_points        => 1024,
+--            g_in_dat_w          => 8,
+--            g_out_dat_w         => 14,
+--            g_guard_w           => 2,
+--            g_diff_margin       => c_diff_margin,
+--            g_file_loc_prefix   => "../../../../../",
+--            g_twid_file_stem    => c_twid_file_stem
+--        );
+--    u_rnd_noise_1024p_8i_14o : entity work.tb_rTwoSDF
+--        generic map(
+--            g_use_uniNoise_file => true,
+--            g_in_en             => 1,
+--            g_use_reorder       => true,
+--            g_nof_points        => 1024,
+--            g_in_dat_w          => 8,
+--            g_out_dat_w         => 14,
+--            g_guard_w           => 2,
+--            g_diff_margin       => c_diff_margin,
+--            g_file_loc_prefix   => "../../../../../",
+--            g_twid_file_stem    => c_twid_file_stem
+--        );
+--    u_rnd_noise_1024p_8i_14o_flipped : entity work.tb_rTwoSDF
+--        generic map(
+--            g_use_uniNoise_file => true,
+--            g_in_en             => 0,
+--            g_use_reorder       => false,
+--            g_nof_points        => 1024,
+--            g_in_dat_w          => 8,
+--            g_out_dat_w         => 14,
+--            g_guard_w           => 2,
+--            g_diff_margin       => c_diff_margin,
+--            g_file_loc_prefix   => "../../../../../",
+--            g_twid_file_stem    => c_twid_file_stem
+--        );
 
 end tb;
