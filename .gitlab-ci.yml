@@ -7,6 +7,7 @@ stages:          # List of stages for jobs, and their order of execution
   - VunitSim
   - QuestaSim
   - VivadoSynthesis
+  - VivadoSynthesis
 casper_accumulators_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
   tags: 
@@ -707,48 +708,32 @@ Questa_casper_wbpfb:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/reports/*.xml
     reports:
       junit: $GIT_CLONE_PATH/reports/*.xml
-VivadoSynthesisWBFFT:
-  variables:
-    GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/vivado/casper_dspdevel
-    GIT_SUBMODULE_STRATEGY: recursive
-  stage: VivadoSynthesis
-  image : vivado:2022.2
+AllowQuesta:
+  stage: VivadoSynthesis_WBFFT
+  image : Vivado:2022.2
   needs: []
   tags:
     - Vivado
   script :
     - echo Starting Vivado Synthesis WBFFT
-    # Fix any packages out of date, and install the missing libtinfo5
-    - apt update
-    - apt upgrade -y
-    - apt install -y libtinfo5 sudo
-    - useradd -m ci
-    - cd /tmp
-    - git clone https://github.com/Xilinx/XilinxTclStore.git
-    - chown -R ci $GIT_CLONE_PATH
-    - |     
-      sudo -H -i -u ci /usr/bin/bash -e -x << EOS
-      cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
-      export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
-      export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
-      export XILINX_LOCAL_USER_DATA=NO
-      rm -f *.jou
-      rm -f *.log
-      rm -f synth_output/post_synth.dcp
-      source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
-      LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1 vivado -mode batch -source ngVLA_wbfft_test.tcl
-      EOS
-  after_script:
-    # Set files back to root
-    - chown -R root.root $GIT_CLONE_PATH
+    - cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
+    - rm *.jou
+    - rm *.log
+    - rm synth_output/post_synth.dcp
+    - vivado -mode batch -source ngVLA_wbfft_test.tcl
+    - |
+      if [[ -f synth_output/post_synth.dcp ]]; then 
+        "Synthesis completed";
+        exit 0;
+      else
+        "Synthesis failed!";
+        exit 1;
+      fi;
+
   when: manual
   artifacts:
     when: always
     paths:
       - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/*.jou
       - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/*.log
-      - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/hs_err*
-      - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/report.xml
       - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/synth_output/post_synth.dcp
-    reports:
-      junit: $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/report.xml
