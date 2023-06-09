@@ -708,8 +708,8 @@ Questa_casper_wbpfb:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/reports/*.xml
     reports:
       junit: $GIT_CLONE_PATH/reports/*.xml
-AllowQuesta:
-  stage: VivadoSynthesis_WBFFT
+VivadoSynthesisWBFFT:
+  stage: VivadoSynthesis
   image : Vivado:2022.2
   needs: []
   tags:
