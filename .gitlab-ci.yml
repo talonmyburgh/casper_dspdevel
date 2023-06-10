@@ -719,6 +719,7 @@ VivadoSynthesisWBFFT:
     - rm -f *.jou
     - rm -f *.log
     - rm -f synth_output/post_synth.dcp
+    - source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
     - vivado -mode batch -source ngVLA_wbfft_test.tcl
     - |
       if [[ -f synth_output/post_synth.dcp ]]; then 
