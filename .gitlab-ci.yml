@@ -709,6 +709,9 @@ Questa_casper_wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/reports/*.xml
 VivadoSynthesisWBFFT:
+  variables:
+    GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/vivado/casper_dspdevel
+    GIT_SUBMODULE_STRATEGY: recursive
   stage: VivadoSynthesis
   image : vivado:2022.2
   needs: []
