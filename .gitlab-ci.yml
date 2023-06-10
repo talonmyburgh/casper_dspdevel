@@ -725,7 +725,7 @@ VivadoSynthesisWBFFT:
     - git clone https://github.com/Xilinx/XilinxTclStore.git
     - chown -R ci $GIT_CLONE_PATH
     - |     
-      sudo -H -i -u ci sh -e -x << EOS
+      sudo -H -i -u ci /usr/bin/bash -e -x << EOS
       cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
       export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
       export XILINX_LOCAL_USER_DATA=NO
