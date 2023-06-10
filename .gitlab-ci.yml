@@ -730,6 +730,7 @@ VivadoSynthesisWBFFT:
     - |     
       sudo -H -i -u ci /usr/bin/bash -e -x << EOS
       cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
+      export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
       export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
       export XILINX_LOCAL_USER_DATA=NO
       rm -f *.jou
