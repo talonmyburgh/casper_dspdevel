@@ -735,4 +735,4 @@ VivadoSynthesisWBFFT:
       - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/report.xml
       - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/synth_output/post_synth.dcp
     reports:
-      - $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/report.xml
+      junit: $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj/report.xml
