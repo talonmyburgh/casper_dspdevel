@@ -715,16 +715,25 @@ VivadoSynthesisWBFFT:
     - Vivado
   script :
     - echo Starting Vivado Synthesis WBFFT
+    # Fix any packages out of date, and install the missing libtinfo5
+    - apt update
+    - apt upgrade -y
+    - apt install -y libtinfo5 
+    - useradd -m ci
     - cd /tmp
     - git clone https://github.com/Xilinx/XilinxTclStore.git
-    - export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
-    - export XILINX_LOCAL_USER_DATA=NO
-    - cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
-    - rm -f *.jou
-    - rm -f *.log
-    - rm -f synth_output/post_synth.dcp
-    - source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
-    - vivado -mode batch -source ngVLA_wbfft_test.tcl
+    - chown -R ci $GIT_CLONE_PATH
+    - |     
+      sudo -H -i -u ci sh -e -x << EOS
+      cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
+      export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
+      export XILINX_LOCAL_USER_DATA=NO
+      rm -f *.jou
+      rm -f *.log
+      rm -f synth_output/post_synth.dcp
+      source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
+      vivado -mode batch -source ngVLA_wbfft_test.tcl
+      EOS
 
   when: manual
   artifacts:
