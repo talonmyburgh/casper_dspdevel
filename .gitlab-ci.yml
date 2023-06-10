@@ -1,6 +1,6 @@
 image: ghdl/vunit:mcode-master
 variables:
-  GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/casper_dspdevel
+  GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/sim/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
   
 stages:          # List of stages for jobs, and their order of execution
@@ -736,9 +736,8 @@ VivadoSynthesisWBFFT:
       rm -f *.log
       rm -f synth_output/post_synth.dcp
       source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
-      vivado -mode batch -source ngVLA_wbfft_test.tcl
+      LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1 vivado -mode batch -source ngVLA_wbfft_test.tcl
       EOS
-
   when: manual
   artifacts:
     when: always
