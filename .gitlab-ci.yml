@@ -720,10 +720,10 @@ VivadoSynthesisWBFFT:
   script :
     - echo Starting Vivado Synthesis WBFFT
     # Fix any packages out of date, and install the missing libtinfo5
-    - apt update
-    - apt upgrade -y
-    - apt install -y libtinfo5 sudo
-    - useradd -m ci
+    #- apt update
+    #- apt upgrade -y
+    #- apt install -y libtinfo5 sudo
+    #- useradd -m ci
     - cd /tmp
     - git clone https://github.com/Xilinx/XilinxTclStore.git
     - chown -R ci $GIT_CLONE_PATH
