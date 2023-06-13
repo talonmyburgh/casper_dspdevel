@@ -5,6 +5,7 @@ import numpy as np
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
+vu.add_vhdl_builtins()
 script_dir = dirname(__file__)
 
 # XPM Library compile
@@ -28,6 +29,9 @@ casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_
 
 # Create library 'common_pkg_lib'
 common_pkg_lib = vu.add_library("common_pkg_lib")
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 
 # Create library 'ip_xpm_ram_lib'
@@ -100,9 +104,12 @@ latencies = [2,8]
 #         name = db_en_plus_config_name,
 #         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
 #     )
+testnum = 1
 for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
     # db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    #db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_prog_dp_config_name = "Testnum%d"%(testnum)
+    testnum = testnum + 1
     # DELAY_BRAM_PROG_TB.add_config(
     #     name = db_prog_config_name,
     #     generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)

@@ -149,11 +149,12 @@ def run(argv):
                 twids_re[twids_re > max_pos] = max_pos
                 twids_im[twids_im > max_pos] = max_pos
                 if sdf.gen_files:
-                    t_outfilename = sdf.outfileprefix + + ("_%dp" % (sdf.nof_points//sdf.wb_factor)) + ("_%db" % (sdf.coef_w)) + ("_%dwb" % (sdf.wb_factor)) + ("_%dwbinst" % (w)) +("_%dstg" % (p))  + ".mif"
+                    t_outfilename = sdf.outfileprefix + ("_%dp" % (sdf.nof_points//sdf.wb_factor)) + ("_%db" % (sdf.coef_w)) + ("_%dwb" % (sdf.wb_factor)) + ("_%dwbinst" % (w)) +("_%dstg" % (p))  + ".mif"
+                    depth_temp = twids_re.size*2
                     with open(t_outfilename,'w+') as fp:
                         s = 'WIDTH=%d;\n' % sdf.coef_w
                         fp.write(s)
-                        s = 'DEPTH=%d;\n' % sdf.twids.size
+                        s = 'DEPTH=%d;\n' % depth_temp
                         fp.write(s)
                         s = 'ADDRESS_RADIX=HEX;\n'
                         fp.write(s)

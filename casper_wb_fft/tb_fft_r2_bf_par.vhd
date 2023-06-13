@@ -41,6 +41,7 @@ use r2sdf_fft_lib.rTwoSDFPkg.all;
 
 entity tb_fft_r2_bf_par is
   generic( 
+    g_twiddle_width : natural := 18;
     g_stage       : natural := 4;
     g_element     : natural := 2
   );
@@ -97,8 +98,8 @@ architecture tb of tb_fft_r2_bf_par is
   signal ref_y_prod_re    : std_logic_vector(2*c_in_dat_w-1 downto 0);  
   signal ref_y_prod_im    : std_logic_vector(2*c_in_dat_w-1 downto 0);  
   
-  signal weight_re        : wTyp;
-  signal weight_im        : wTyp;
+	signal weight_re   			: signed(g_twiddle_width-1 downto 0);
+	signal weight_im   			: signed(g_twiddle_width-1 downto 0);
   
 begin
 
@@ -161,8 +162,10 @@ begin
   -- device under test
   u_dut : entity work.fft_r2_bf_par
   generic map (
-    g_stage       => g_stage,            
-    g_element     => g_element
+    g_stage       => g_stage,
+             
+    g_element     => g_element,
+    g_twiddle_width => g_twiddle_width   
   )
   port map (
     clk      => clk, 
@@ -182,8 +185,8 @@ begin
   );
  
   -- verification 
-  weight_re <= wRe(wMap(g_element, g_stage));  
-  weight_im <= wIm(wMap(g_element, g_stage));
+	weight_re <= gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,false,true);
+	weight_im <= gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,false,false);
   
   p_verify : process  
     variable v_ref_y_out_re_dif : std_logic_vector(c_in_dat_w-1 downto 0);
@@ -198,8 +201,8 @@ begin
     v_ref_y_out_re_dif := SUB_SVEC(in_sosi_arr(0).re(c_in_dat_w-1 downto 0), in_sosi_arr(1).re(c_in_dat_w-1 downto 0), ref_x_out_re'length);
     v_ref_y_out_im_dif := SUB_SVEC(in_sosi_arr(0).im(c_in_dat_w-1 downto 0), in_sosi_arr(1).im(c_in_dat_w-1 downto 0), ref_x_out_im'length);
     
-    v_ref_y_prod_re    := func_complex_multiply(v_ref_y_out_re_dif, v_ref_y_out_im_dif, weight_re, weight_im, c_conjugate, "RE", ref_y_prod_re'length);
-    v_ref_y_prod_im    := func_complex_multiply(v_ref_y_out_re_dif, v_ref_y_out_im_dif, weight_re, weight_im, c_conjugate, "IM", ref_y_prod_im'length);
+    v_ref_y_prod_re    := func_complex_multiply(v_ref_y_out_re_dif, v_ref_y_out_im_dif, std_logic_vector(weight_re), std_logic_vector(weight_im), c_conjugate, "RE", ref_y_prod_re'length);
+    v_ref_y_prod_im    := func_complex_multiply(v_ref_y_out_re_dif, v_ref_y_out_im_dif, std_logic_vector(weight_re), std_logic_vector(weight_im), c_conjugate, "IM", ref_y_prod_im'length);
    
     ref_y_out_re       <= truncate_and_resize_svec(v_ref_y_prod_re, c_round_w, ref_y_out_re'length);
     ref_y_out_im       <= truncate_and_resize_svec(v_ref_y_prod_im, c_round_w, ref_y_out_im'length);

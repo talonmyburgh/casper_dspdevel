@@ -70,7 +70,8 @@ entity rTwoSDF is
 		g_variant       : string  := "4DSP"; --! Use 3dsp or 4dsp for multiplication
 		g_use_dsp       : string  := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
 		g_ovflw_behav   : string  := "WRAP";   --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-		g_use_round     : string  := "ROUND";   --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+		g_round		    : t_rounding_mode  := ROUND;    --! ROUND, ROUNDINF or TRUNCATE
+		g_use_mult_round: t_rounding_mode  := TRUNCATE; --! ROUND, ROUNDINF or TRUNCATE
 		g_twid_dat_w	: natural := 18;
 		g_max_addr_w	: natural := 9;
 		g_twid_file_stem: string  := c_twid_file_stem;
@@ -102,7 +103,6 @@ end entity rTwoSDF;
 
 architecture str of rTwoSDF is
 
-	constant c_round		: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip			: boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
 	constant c_nof_stages   : natural := ceil_log2(g_nof_points);
 
@@ -154,7 +154,8 @@ begin
 				g_use_variant    => g_variant,
 				g_use_dsp        => g_use_dsp,
 				g_ovflw_behav	 => g_ovflw_behav,
-				g_use_round		 => g_use_round, 
+				g_round		 	 => g_round, 
+				g_use_mult_round => g_use_mult_round,
 				g_ram_primitive	 => g_ram_primitive,
 				g_twid_file_stem => g_twid_file_stem,
 				g_pipeline       => pipeline
@@ -214,7 +215,7 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,
@@ -234,7 +235,7 @@ begin
 		generic map(
 			g_representation      => "SIGNED",
 			g_lsb_w               => c_out_scale_w,
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_msb_clip            => c_clip,
 			g_msb_clip_symmetric  => FALSE,

@@ -52,20 +52,20 @@ USE common_pkg_lib.common_pkg.ALL;
 
 ENTITY common_requantize IS
   GENERIC (
-    g_representation      : STRING  := "SIGNED";  -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
-    g_lsb_w               : INTEGER := 4;         -- when > 0, number of LSbits to remove from in_dat
-                                                  -- when < 0, number of LSBits to insert as a gain before resize to out_dat'LENGTH
-                                                  -- when 0 then no effect
-    g_lsb_round           : BOOLEAN := TRUE;      -- when true ROUND else TRUNCATE the input LSbits
-    g_lsb_round_clip      : BOOLEAN := FALSE;     -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding
-    g_msb_clip            : BOOLEAN := TRUE;      -- when true CLIP else WRAP the input MSbits
-    g_msb_clip_symmetric  : BOOLEAN := FALSE;     -- when TRUE clip signed symmetric to +c_smax and -c_smax, else to +c_smax and c_smin_symm
-                                                  -- for wrapping when g_msb_clip=FALSE the g_msb_clip_symmetric is ignored, so signed wrapping is done asymmetric
-    g_gain_w              : NATURAL := 0;         -- do not use, must be 0, use negative g_lsb_w instead
-    g_pipeline_remove_lsb : NATURAL := 0;         -- >= 0
-    g_pipeline_remove_msb : NATURAL := 0;         -- >= 0, use g_pipeline_remove_lsb=0 and g_pipeline_remove_msb=0 for combinatorial output
-    g_in_dat_w            : NATURAL := 36;        -- input data width
-    g_out_dat_w           : NATURAL := 18         -- output data width
+    g_representation      : STRING  := "SIGNED";        -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
+    g_lsb_w               : INTEGER := 4;               -- when > 0, number of LSbits to remove from in_dat
+                                                        -- when < 0, number of LSBits to insert as a gain before resize to out_dat'LENGTH
+                                                        -- when 0 then no effect
+    g_lsb_round           : t_rounding_mode  := ROUND;  -- = ROUND, ROUNDINF or TRUNCATE will default to TRUNCATE if invalid option used
+    g_lsb_round_clip      : BOOLEAN := FALSE;           -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding
+    g_msb_clip            : BOOLEAN := TRUE;            -- when true CLIP else WRAP the input MSbits
+    g_msb_clip_symmetric  : BOOLEAN := FALSE;           -- when TRUE clip signed symmetric to +c_smax and -c_smax, else to +c_smax and c_smin_symm
+                                                        -- for wrapping when g_msb_clip=FALSE the g_msb_clip_symmetric is ignored, so signed wrapping is done asymmetric
+    g_gain_w              : NATURAL := 0;               -- do not use, must be 0, use negative g_lsb_w instead
+    g_pipeline_remove_lsb : NATURAL := 0;               -- >= 0
+    g_pipeline_remove_msb : NATURAL := 0;               -- >= 0, use g_pipeline_remove_lsb=0 and g_pipeline_remove_msb=0 for combinatorial output
+    g_in_dat_w            : NATURAL := 36;              -- input data width
+    g_out_dat_w           : NATURAL := 18               -- output data width
   );
   PORT (
     clk        : IN  STD_LOGIC;

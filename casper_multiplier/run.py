@@ -5,7 +5,7 @@ import glob
 from os.path import dirname
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
-
+vu.add_vhdl_builtins()
 # Function for mult range calculations
 def get_ranges(dat_w,margin):
     min_val = -(2**(dat_w-1))
@@ -32,6 +32,7 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
         adder_pipeline : {0,1}
         product_pipeline : {0,1}
     """
+    testnum = 1
     if not conjugate_b:
         for i_d_w in in_dat_w:
             margin = 16
@@ -41,6 +42,8 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
                 value_range_string = ", a_val = [%d, %d] , b_val = [%d, %d]" % (a_v_min, a_v_max,b_v_min,b_v_max)
                 config_name = "i_d_w=%i, o_d_w=%i, inp_pipeline=%i, out_pipeline=%i, prod_pipe=%i" % (i_d_w, 2 * i_d_w + 1, inp_pipeline, out_pipeline, product_pipeline) +\
                                 value_range_string
+                config_name = "TestNum%d"%(testnum)
+                testnum=testnum+1
                 obj.add_config(
                     name = config_name,
                     generics=dict(g_in_dat_w=i_d_w, g_out_dat_w=2*i_d_w + 1, g_pipeline_input=inp_pipeline, g_pipeline_product=product_pipeline,
@@ -52,6 +55,8 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
             ab_value_ranges = get_ranges(i_d_w,margin)
             a_v_min, a_v_max, b_v_min, b_v_max = choice(ab_value_ranges)
             config_name = "i_d_w=%i, o_d_w=%i, conj_b=%i, inp_pipeline=%i, out_pipeline=%i, add_pipe=%i, prod_pipe=%i" % (i_d_w, 2 * i_d_w + 1, conj_b, inp_pipeline, out_pipeline, adder_pipeline, product_pipeline)
+            config_name = "ConjTest%d"%(testnum)
+            testnum=testnum+1
             obj.add_config(
                 name = config_name,
                 generics=dict(g_in_dat_w=i_d_w, g_out_dat_w=2*i_d_w + 1, g_conjugate_b=conj_b, g_pipeline_input=inp_pipeline, g_pipeline_product=product_pipeline, g_pipeline_adder=adder_pipeline,

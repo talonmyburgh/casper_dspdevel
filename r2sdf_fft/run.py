@@ -1,8 +1,18 @@
-from vunit import VUnit
+from vunit import VUnit, VUnitCLI
 from os.path import join, abspath, split
-
+from vunit.sim_if.factory import SIMULATOR_FACTORY
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv()
+
+
+cli = VUnitCLI()
+cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle Tests')
+cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
+args = cli.parse_args()
+vu = VUnit.from_args(args = args)
+#vu = VUnit.from_argv(argv = args,)
+vu.add_vhdl_builtins()
+vu.add_random()
+
 script_dir,_ = split(abspath(__file__))
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
@@ -58,6 +68,21 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+# the latest version (4.0.0) of GHDL doesn't like the hacked up vhdl 93 fixed library so we'll use the real one but compile if for common_pkg
+# Questa simulator will still use the hacked up one so we have some verification it works as expected since the hacked one is uses in Vivado sim and synth
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
+   #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg_2008redirect.vhdl"))
+    #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg-body_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_generic_pkg_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c_2008redirect.vhdl"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c_2008redirect.vhdl"))
+else:
+    # use the "hacked" up VHDL93 version in other simulators 
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+    common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))    
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))
@@ -74,6 +99,7 @@ casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_co
 # CASPER MUlTIPLIER Library
 casper_multiplier_lib = vu.add_library("casper_multiplier_lib")
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_mult_component.vhd"))
+casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_agilex_versal_cmult.vhd"))
 tech_complex_mult = casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/tech_complex_mult.vhd"))
 casper_multiplier_lib.add_source_file(join(script_dir, "../casper_multiplier/common_complex_mult.vhd"))
 tech_complex_mult.add_dependency_on(ip_cmult_3dsp)
@@ -123,6 +149,17 @@ r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoSDF.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_rTwoOrder.vhd"))
 r2sdf_fft_lib.add_source_file(join(script_dir,"tb_tb_vu_rTwoSDF.vhd"))
 
+
+# Setup the Twiddle Testbench by calling it's python function
+if args.twid:
+    r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_twiddlepkg.vhd"))
+    from r2sdf_fft_py import tb_twiddle_package_setup
+    tb_twiddle_package_setup(r2sdf_fft_lib)
+if args.bitaccurate:
+    r2sdf_fft_lib.add_source_file(join(script_dir,"tb_vu_rtwosdf_vfmodel.vhd"))
+    from r2sdf_fft_py import tb_vu_trwosdf_vfmodel_setup
+    tb_vu_trwosdf_vfmodel_setup(r2sdf_fft_lib)
+
 TB_GENERATED = r2sdf_fft_lib.test_bench("tb_tb_vu_rTwoSDF")
 TB_GENERATED.add_config(
     name = "u_act_impulse_16p_16i_16o",
@@ -139,5 +176,9 @@ TB_GENERATED.add_config(
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
+#vu.set_sim_option("ghdl.elab_e", True)
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
+vu.set_sim_option("ghdl.sim_flags",["--max-stack-alloc=4096"])
+# Don't optimize in Modelsim/Questa GUI mode
+vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()

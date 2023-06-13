@@ -53,7 +53,7 @@ END tech_fifo_dc_mixed_widths;
 ARCHITECTURE str OF tech_fifo_dc_mixed_widths IS
 
 BEGIN
-	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
+	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE  -- Xilinx
 		u0 : component ip_xilinx_fifo_dc_mixed_widths
 			generic map(
 				g_nof_words      => g_nof_words,
@@ -76,7 +76,7 @@ BEGIN
 			);
 	END GENERATE;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default=c_tech_agilex GENERATE  -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_fifo_dc_mixed_widths
 			GENERIC MAP(g_nof_words, g_wrdat_w, g_rddat_w)
 			PORT MAP(aclr, data, rdclk, rdreq, wrclk, wrreq, q, rdempty, rdusedw, wrfull, wrusedw);

@@ -286,9 +286,10 @@ architecture tb of tb_wbpfb_unit_wide is
   signal exp_fil_im_scope       : integer;
 
   -- Filter output
+  type t_fil_out_data is array (g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) of std_logic_vector(g_wpfb.fil_out_dat_w-1 downto 0);
   signal fil_sosi_arr           : t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_re_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_im_arr             : t_fil_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_re_arr             : t_fil_out_data;
+  signal fil_im_arr             : t_fil_out_data;
   signal fil_re_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_im_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_val                : std_logic:= '0';  -- for parallel output
@@ -301,8 +302,9 @@ architecture tb of tb_wbpfb_unit_wide is
   
   -- Output
   signal out_sosi_arr           : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others=>c_fft_sosi_rst_out);
-  signal out_re_arr             : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  type t_fft_out_data is array (g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) of std_logic_vector(g_wpfb.fft_out_dat_w-1 downto 0);
+  signal out_re_arr             : t_fft_out_data;
+  signal out_im_arr             : t_fft_out_data;
   signal out_re_data            : std_logic_vector(g_wpfb.wb_factor*c_out_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal out_im_data            : std_logic_vector(g_wpfb.wb_factor*c_out_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal out_val                : std_logic:= '0';  -- for parallel output

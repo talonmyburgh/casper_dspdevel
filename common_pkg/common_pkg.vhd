@@ -32,6 +32,8 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE IEEE.MATH_REAL.ALL;
+use work.common_fixed_float_types.all;
+use work.fixed_pkg.all;
 
 PACKAGE common_pkg IS
 
@@ -116,11 +118,17 @@ PACKAGE common_pkg IS
 	TYPE t_slv_32_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	TYPE t_slv_44_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(43 DOWNTO 0);
 	TYPE t_slv_48_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(47 DOWNTO 0);
+	TYPE t_signed_48_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(47 DOWNTO 0);
 	TYPE t_slv_64_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(63 DOWNTO 0);
+	TYPE t_signed_96_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(95 DOWNTO 0);
 	TYPE t_slv_128_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(127 DOWNTO 0);
 	TYPE t_slv_256_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(255 DOWNTO 0);
 	TYPE t_slv_512_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(511 DOWNTO 0);
 	TYPE t_slv_1024_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(1023 DOWNTO 0);
+	--type t_unsigned_array is array(natural range <>)    of unsigned;
+	--type t_slv_array is array(natural range <>)         of std_logic_vector;
+	--type t_signed_array is array(natural range <>)      of signed;
+	TYPE t_rounding_mode is (TRUNCATE, ROUND, ROUNDINF);
 
 	CONSTANT c_boolean_arr     : t_boolean_arr     := (TRUE, FALSE); -- array all possible values that can be iterated over
 	CONSTANT c_nat_boolean_arr : t_nat_boolean_arr := (TRUE, FALSE); -- array all possible values that can be iterated over
@@ -389,7 +397,8 @@ PACKAGE common_pkg IS
 	FUNCTION truncate_or_resize_uvec(vec : STD_LOGIC_VECTOR; b : BOOLEAN; w : NATURAL) RETURN STD_LOGIC_VECTOR; -- when b=TRUE then truncate to width w, else resize to width w
 	FUNCTION truncate_or_resize_svec(vec : STD_LOGIC_VECTOR; b : BOOLEAN; w : NATURAL) RETURN STD_LOGIC_VECTOR; -- idem for signed values
 
-	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
+    FUNCTION s_round_inf(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
+	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN; round_style : t_rounding_mode) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
 	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n
 	FUNCTION s_round_up(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- idem but round up to +infinity (s_round_up = u_round)
 	FUNCTION s_round_up(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR; -- idem but round up to +infinity (s_round_up = u_round)
@@ -463,7 +472,7 @@ PACKAGE common_pkg IS
 	PROCEDURE proc_common_dclk_generate_sclk(CONSTANT Pfactor : IN POSITIVE;
 	                                         SIGNAL dclk      : IN STD_LOGIC;
 	                                         SIGNAL sclk      : INOUT STD_LOGIC);
-
+	function stringround_to_enum_round (stringin : string) return t_rounding_mode;
 END common_pkg;
 
 PACKAGE BODY common_pkg IS
@@ -2111,9 +2120,34 @@ PACKAGE BODY common_pkg IS
 	--   wires (NOP, no operation).
 	-- . Both have the same implementation but different c_max and c_clip values.
 	-- . Round up for unsigned so +2.5 becomes 3
-	-- . Round away from zero for signed so round up for positive and round down for negative, so +2.5 becomes 3 and -2.5 becomes -3.
-	-- . Round away from zero is also used by round() in Matlab, Python, TCL
-	-- . Rounding up implies adding 0.5 and then truncation, use clip = TRUE to
+	
+	--   Round away from zero was previously implemented here, but for DSP applications
+	--   Round Away from zero can cause a noticable dc bias when using large FFTs and/or doing correlation.
+	--   A more appopriate rounding logic is to use round to nearest even for DSP
+	-- 
+  -- Generates rounding logic when there is bits to round off
+  -- Round nearest Even does the following assuming two fractional bits and two integer bits
+  -- with an output of no fractional and two integer bits.
+  -- #     Binary    Round out
+  -- -1.75  "10.01"     -2   "10"
+  -- -1.5   "10.10"     -2   "10"
+  -- -1.25  "10.11"     -1   "11"
+  -- -1.00  "11.00"     -1   "11"
+  -- -0.75  "11.01"     -1   "11"
+  -- -0.5   "11.10"      0   "00"
+  -- -0.25  "11.11"      0   "00"
+  --  0.00  "00.00"      0   "00"
+  --  0.25  "00.01"      0   "00"
+  --  0.50  "00.10"      0   "00"
+  --  0.75  "00.11"      1   "01"
+  --  1.00  "01.00"      1   "01"
+  --  1.25  "01.01"      1   "01"
+  --  1.5   "01.10"      2   "10"
+  --  1.75  "01.11"      2   "10"
+
+
+
+	-- . Rounding can cause an increase to the integer part, use clip = TRUE to
 	--   clip the potential overflow due to adding 0.5 to +max.
 	-- . For negative values overflow due to rounding can not occur, because c_half-1 >= 0 for n>0
 	-- . If the input comes from a product and is rounded to the input width then
@@ -2121,38 +2155,61 @@ PACKAGE BODY common_pkg IS
 	--   maximum product is 15*15=225 <= 255-8, and for signed 4b*4b=8b->4b the
 	--   maximum product is -8*-8=+64 <= 127-8, so wrapping due to rounding
 	--   overflow will never occur.
+	
+	FUNCTION s_round_inf(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR IS
+        -- Use SIGNED to avoid NATURAL (32 bit range) overflow error
+        CONSTANT c_in_w  : NATURAL                      := vec'LENGTH;
+        CONSTANT c_out_w : NATURAL                      := vec'LENGTH - n;
+        CONSTANT c_one   : SIGNED(c_in_w - 1 DOWNTO 0)  := TO_SIGNED(1, c_in_w);
+        CONSTANT c_half  : SIGNED(c_in_w - 1 DOWNTO 0)  := SHIFT_LEFT(c_one, n - 1); -- = 2**(n-1)
+        CONSTANT c_max   : SIGNED(c_in_w - 1 DOWNTO 0)  := SIGNED('0' & c_slv1(c_in_w - 2 DOWNTO 0)) - c_half; -- = 2**(c_in_w-1)-1 - c_half  
+        CONSTANT c_clip  : SIGNED(c_out_w - 1 DOWNTO 0) := SIGNED('0' & c_slv1(c_out_w - 2 DOWNTO 0)); -- = 2**(c_out_w-1)-1
+        VARIABLE v_in    : SIGNED(c_in_w - 1 DOWNTO 0);
+        VARIABLE v_out   : SIGNED(c_out_w - 1 DOWNTO 0);
+    BEGIN
+        v_in := SIGNED(vec);
+        IF n > 0 THEN
+            IF clip AND v_in > c_max THEN
+                v_out := c_clip;        -- Round clip to maximum positive to avoid wrap to negative
+            ELSE
+                IF vec(vec'HIGH) = '0' THEN
+                    v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half + 0, n), c_out_w); -- Round up for positive
+                ELSE
+                    v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half - 1, n), c_out_w); -- Round down for negative
+                END IF;
+            END IF;
+        ELSE
+            v_out := RESIZE_NUM(v_in, c_out_w); -- NOP
+        END IF;
+        RETURN STD_LOGIC_VECTOR(v_out);
+    END;
 
-	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR IS
-		-- Use SIGNED to avoid NATURAL (32 bit range) overflow error
-		CONSTANT c_in_w  : NATURAL                      := vec'LENGTH;
-		CONSTANT c_out_w : NATURAL                      := vec'LENGTH - n;
-		CONSTANT c_one   : SIGNED(c_in_w - 1 DOWNTO 0)  := TO_SIGNED(1, c_in_w);
-		CONSTANT c_half  : SIGNED(c_in_w - 1 DOWNTO 0)  := SHIFT_LEFT(c_one, n - 1); -- = 2**(n-1)
-		CONSTANT c_max   : SIGNED(c_in_w - 1 DOWNTO 0)  := SIGNED('0' & c_slv1(c_in_w - 2 DOWNTO 0)) - c_half; -- = 2**(c_in_w-1)-1 - c_half  
-		CONSTANT c_clip  : SIGNED(c_out_w - 1 DOWNTO 0) := SIGNED('0' & c_slv1(c_out_w - 2 DOWNTO 0)); -- = 2**(c_out_w-1)-1
-		VARIABLE v_in    : SIGNED(c_in_w - 1 DOWNTO 0);
-		VARIABLE v_out   : SIGNED(c_out_w - 1 DOWNTO 0);
-	BEGIN
-		v_in := SIGNED(vec);
-		IF n > 0 THEN
-			IF clip = TRUE AND v_in > c_max THEN
-				v_out := c_clip;        -- Round clip to maximum positive to avoid wrap to negative
-			ELSE
-				IF vec(vec'HIGH) = '0' THEN
-					v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half + 0, n), c_out_w); -- Round up for positive
-				ELSE
-					v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half - 1, n), c_out_w); -- Round down for negative
-				END IF;
-			END IF;
-		ELSE
-			v_out := RESIZE_NUM(v_in, c_out_w); -- NOP
-		END IF;
-		RETURN STD_LOGIC_VECTOR(v_out);
-	END;
+	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN; round_style : t_rounding_mode) RETURN STD_LOGIC_VECTOR IS
+        -- Use SIGNED to avoid NATURAL (32 bit range) overflow error
+        CONSTANT c_out_w           : NATURAL := vec'LENGTH - n;
+        variable input_data_fixed  : sfixed(c_out_w - 1 downto (-n)); -- we will use Fixed Point Lib in VHDL 2008 to do the calcs
+        variable output_data_fixed : sfixed(c_out_w - 1 downto 0);
+    BEGIN
+        input_data_fixed := sfixed(signed(vec));
+        --even rounding specified
+        if round_style = ROUND then
+            if clip then
+                output_data_fixed := resize(arg => input_data_fixed, size_res => output_data_fixed, overflow_style => fixed_saturate, round_style => fixed_round);
+            else
+                output_data_fixed := resize(arg => input_data_fixed, size_res => output_data_fixed, overflow_style => fixed_wrap, round_style => fixed_round);
+            end if;
+        --infinite rounding specified
+        elsif round_style = ROUNDINF then
+            RETURN s_round_inf(vec => vec, n => n, clip => clip);
+		else
+			RETURN truncate(vec, n);
+        end if;
+        RETURN to_slv(output_data_fixed);
+    END;
 
 	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR IS
 	BEGIN
-		RETURN s_round(vec, n, FALSE);  -- no round clip
+		RETURN s_round(vec, n, FALSE, ROUND);  -- no even-round clip
 	END;
 
 	-- An alternative is to always round up, also for negative numbers (i.e. s_round_up = u_round).
@@ -2180,7 +2237,7 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		v_in := UNSIGNED(vec);
 		IF n > 0 THEN
-			IF clip = TRUE AND v_in > c_max THEN
+			IF clip AND v_in > c_max THEN
 				v_out := c_clip;        -- Round clip to +max to avoid wrap to 0
 			ELSE
 				v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half, n), c_out_w); -- Round up
@@ -2621,4 +2678,15 @@ PACKAGE BODY common_pkg IS
 		WAIT;
 	END proc_common_dclk_generate_sclk;
 
+	function stringround_to_enum_round (stringin : string) return t_rounding_mode is
+	begin
+		-- use an ugly if because CASE expects string to always be the same length
+		if stringin = "ROUND" then
+			return ROUND;
+		elsif stringin = "ROUNDINF" then
+			return ROUNDINF;
+		else
+			return TRUNCATE;
+		end if;
+	end function stringround_to_enum_round;
 END common_pkg;

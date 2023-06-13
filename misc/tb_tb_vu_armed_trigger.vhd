@@ -5,8 +5,8 @@ context vunit_lib.vunit_context;
 
 ENTITY tb_tb_vu_armed_trigger IS
 	GENERIC(
-        g_dat_w : NATURAL;
-        g_dat_val : INTEGER;
+        --g_dat_w : NATURAL;
+        --g_dat_val : INTEGER;
 		runner_cfg : string
 	);
 END tb_tb_vu_armed_trigger;

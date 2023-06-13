@@ -26,20 +26,21 @@ use casper_ram_lib.common_ram_pkg.all;
 
 entity rTwoSDFStage is
 	generic(
-		g_nof_chan       : natural        := 0; 				--! Exponent of nr of subbands (0 means 1 subband)
-		g_stage          : natural        := 8; 				--! Stage number
-		g_nof_points	 : natural 		  := 32;				--! Number of points
-		g_wb_factor		 : natural 		  := 1;				    --! WB factor of a wideband FFT
-		g_wb_inst		 : natural 		  := 0; 				--! WB instance index. Altered for WB_FACTOR > 1
-		g_twid_dat_w     : natural		  := 18;				--! The coefficient data width
-		g_max_addr_w	 : natural		  := 10;				--! Address width above which to implement in block/ultra ram
-		g_use_variant    : string         := "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
-		g_use_dsp        : string         := "yes";				--! Use dsp for cmults
-		g_ovflw_behav	 : string		  := "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
-		g_use_round		 : string		  := "ROUND";			--! Rounding behaviour "ROUND" or "TRUNCATE"
-		g_ram_primitive  : string		  := "block";			--! BRAM primitive for the Weights
-		g_twid_file_stem : string  		  := "UNUSED";			--! Path stem for the twiddle coefficient files
-		g_pipeline       : t_fft_pipeline := c_fft_pipeline		--! internal pipeline settings
+		g_nof_chan       : natural        	:= 0; 				--! Exponent of nr of subbands (0 means 1 subband)
+		g_stage          : natural        	:= 8; 				--! Stage number
+		g_nof_points	 : natural 		  	:= 32;				--! Number of points
+		g_wb_factor		 : natural 		  	:= 1;				--! WB factor of a wideband FFT
+		g_wb_inst		 : natural 		  	:= 0; 				--! WB instance index. Altered for WB_FACTOR > 1
+		g_twid_dat_w     : natural		  	:= 18;				--! The coefficient data width
+		g_max_addr_w	 : natural		  	:= 10;				--! Address width above which to implement in block/ultra ram
+		g_use_variant    : string         	:= "4DSP";			--! Cmult variant to use "3DSP" or "4DSP"
+		g_use_dsp        : string         	:= "yes";			--! Use dsp for cmults
+		g_ovflw_behav	 : string		  	:= "WRAP";			--! Clip behaviour "WRAP" or "SATURATE"
+		g_round      	 : t_rounding_mode  := ROUND; 			--! ROUND, ROUNDINF or TRUNCATE
+		g_use_mult_round : t_rounding_mode  := TRUNCATE;		--! ROUND, ROUNDINF or TRUNCATE
+		g_ram_primitive  : string		  	:= "block";			--! BRAM primitive for the Weights
+		g_twid_file_stem : string  		  	:= "UNUSED";		--! Path stem for the twiddle coefficient files
+		g_pipeline       : t_fft_pipeline 	:= c_fft_pipeline	--! internal pipeline settings
 	);
 	port(
 		clk     		 : in  std_logic;        				--! Input clock
@@ -61,9 +62,6 @@ architecture str of rTwoSDFStage is
 	constant c_cnt_lat  : integer := 1;
 	constant c_cnt_init : integer := 0;
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
-	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
-
 	constant c_coefs_file_stem : string := g_twid_file_stem & "_" & integer'image(g_nof_points) & "p_" & integer'image(g_twid_dat_w) & "b_" & integer'image(g_wb_factor) & "wb" ;
 
 	signal ctrl_sel : std_logic_vector(g_stage + g_nof_chan downto 1);
@@ -82,6 +80,11 @@ architecture str of rTwoSDFStage is
 	signal bf_im  : std_logic_vector(in_im'range);
 	signal bf_sel : std_logic;
 	signal bf_val : std_logic;
+
+	signal bf_re_tomult  : std_logic_vector(in_re'range);
+	signal bf_im_tomult  : std_logic_vector(in_im'range);
+	signal bf_sel_tomult : std_logic;
+	signal bf_val_tomult : std_logic;
 
 	signal weight_addr : std_logic_vector(g_stage - 1 downto 1);
 
@@ -163,6 +166,19 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
+		-- When the Twiddle memory is delay 2 (which it should be for timing) we need to delay every thing else.
+		tgen_comb : if c_ram.latency<=1 generate
+			bf_re_tomult <= bf_re;
+			bf_im_tomult <= bf_im;
+			bf_val_tomult<= bf_val;
+			bf_sel_tomult<= bf_sel;
+		end generate;
+		tgen_reg : if c_ram.latency=2 generate
+			bf_re_tomult <= bf_re when rising_edge(clk);
+			bf_im_tomult <= bf_im when rising_edge(clk);
+			bf_val_tomult<= bf_val when rising_edge(clk);
+			bf_sel_tomult<= bf_sel when rising_edge(clk);
+		end generate;
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
@@ -170,7 +186,8 @@ begin
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
             g_use_dsp          => g_use_dsp,
-            g_use_variant    => g_use_variant,
+            g_use_variant      => g_use_variant,
+			g_round     	   => g_use_mult_round,
             g_stage            => g_stage,
             g_lat              => g_pipeline.mul_lat
 		)
@@ -179,10 +196,10 @@ begin
 			rst       => rst,
 			weight_re => weight_re,
 			weight_im => weight_im,
-			in_re     => bf_re,
-			in_im     => bf_im,
-			in_val    => bf_val,
-			in_sel    => bf_sel,
+			in_re     => bf_re_tomult,
+			in_im     => bf_im_tomult,
+			in_val    => bf_val_tomult,
+			in_sel    => bf_sel_tomult,
 			out_re    => mul_out_re,
 			out_im    => mul_out_im,
 			out_val   => mul_out_val
@@ -192,8 +209,8 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
-			g_lsb_round_clip      => FALSE,	
+			g_lsb_round           => g_round,
+			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_re'LENGTH,
 			g_out_dat_w           => out_re'LENGTH
 		)
@@ -206,7 +223,7 @@ begin
 		);
 	u_requantize_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_im'LENGTH,
 			g_out_dat_w           => out_im'LENGTH

@@ -3,6 +3,7 @@ from os.path import dirname, join
 
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
+vu.add_vhdl_builtins()
 script_dir = dirname(__file__)
 
 # XPM Library compile
@@ -40,6 +41,9 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_lfsr_sequences_pkg.vhd"))
