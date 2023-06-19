@@ -123,7 +123,7 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal buf_rd_val, buf_rd_val_d1                : std_logic;
 
     -- separate ports
-    signal sep_in_dat              : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_in_dat                            : std_logic_vector(c_dat_w - 1 downto 0);
     signal sep_in_val, sep_in_sync, sep_out_sync : std_logic;
 
     signal sep_out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
@@ -547,8 +547,8 @@ begin
     gen_not_in_place_reorder : if g_in_place = false generate
         out_val <= sep_out_val_i;
     end generate;
-    
+
     out_sync <= sep_out_sync;
-    out_dat <= sep_out_dat_i;
+    out_dat  <= sep_out_dat_i;
 end rtl;
 
