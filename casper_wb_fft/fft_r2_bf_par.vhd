@@ -58,12 +58,14 @@ entity fft_r2_bf_par is
 		x_in_im  : in  std_logic_vector;
 		y_in_re  : in  std_logic_vector;
 		y_in_im  : in  std_logic_vector;
+		in_sync  : in  std_logic;
 		in_val   : in  std_logic;
 		x_out_re : out std_logic_vector;
 		x_out_im : out std_logic_vector;
 		y_out_re : out std_logic_vector;
 		y_out_im : out std_logic_vector;
 		ovflw	 : out std_logic;
+		out_sync : out std_logic;
 		out_val  : out std_logic
 	);
 end entity fft_r2_bf_par;
@@ -110,6 +112,7 @@ begin
 	------------------------------------------------------------------------------
 	-- complex butterfly
 	------------------------------------------------------------------------------
+	-- fastest path here is combinatorial
 	u_bf_re : entity r2sdf_fft_lib.rTwoBF
 		generic map(
 			g_in_a_zdly  => c_bf_in_a_zdly,
@@ -175,6 +178,23 @@ begin
 			in_dat  			  => sum_im,
 			out_dat 			  => sum_quant_im
 		);
+	
+	------------------------------------------------------------------------------
+	-- Delay sync for sum/diff pipelining
+	------------------------------------------------------------------------------
+    u_sumdiff_sync_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => g_depth
+        )
+        port map(
+            clk     => clk,
+            rst     => rst,
+            in_clr  => in_clr,
+            in_bit  => in_bit,
+            in_val  => in_val,
+            out_bit => out_bit
+        );
+    
 
 	------------------------------------------------------------------------------
 	-- Butterfly output pipelining: the sum output (output C)
@@ -242,11 +262,11 @@ begin
 	------------------------------------------------------------------------------
 	u_TwiddleMult : entity r2sdf_fft_lib.rTwoWMul
 		generic map(
-			g_use_dsp    	=> g_use_dsp,
-			g_use_variant	=> g_use_variant,
-			g_stage      	=> g_stage,
-			g_round  		=> g_use_mult_round,
-			g_lat        	=> g_pipeline.mul_lat
+            g_use_dsp        => g_use_dsp,
+            g_use_variant    => g_use_variant,
+            g_round          => g_use_mult_round,
+            g_stage          => g_stage,
+            g_lat            => g_pipeline.mul_lat
 		)
 		port map(
 			clk       	 	=> clk,

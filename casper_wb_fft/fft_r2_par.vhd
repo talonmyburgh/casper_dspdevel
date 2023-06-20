@@ -56,10 +56,12 @@ entity fft_r2_par is
         in_re_arr  : in  t_slv_44_arr(g_fft.nof_points - 1 downto 0);--(g_fft.stage_dat_w-1 downto 0); --! Input real data (nof_points wide)
         in_im_arr  : in  t_slv_44_arr(g_fft.nof_points - 1 downto 0);--g_fft.stage_dat_w-1 downto 0); --! Input imag data (nof_points wide)
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long shiftreg
+        in_sync    : in  std_logic := '0'; --! Input sync signal
         in_val     : in  std_logic := '1'; --! In data valid
         out_re_arr : out t_slv_64_arr(g_fft.nof_points - 1 downto 0); --! Output real data (nof_points wide)
         out_im_arr : out t_slv_64_arr(g_fft.nof_points - 1 downto 0); --! Output imag data (nof_points wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long ovflw register
+        out_sync   : out std_logic; --! Ouput sync signal
         out_val    : out std_logic      --! Out data valid
     );
 end entity fft_r2_par;
