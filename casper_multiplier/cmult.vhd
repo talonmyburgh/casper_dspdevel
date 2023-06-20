@@ -1,4 +1,4 @@
-library ieee, common_pkg_lib;
+library ieee, common_pkg_lib, casper_multiplier_lib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
@@ -63,7 +63,7 @@ begin
     ------------------------------------------------------
     -- Feed into common_complex_mult
     ------------------------------------------------------
-    common_complex_mult_inst : entity work.common_complex_mult
+    common_complex_mult_inst : entity casper_multiplier_lib.common_complex_mult
         generic map(
             g_use_ip           => g_use_ip,
             g_use_variant      => c_use_variant,
