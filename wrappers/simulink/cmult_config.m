@@ -73,7 +73,7 @@ function cmult_config(this_block)
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
   
-  out_val_port.setType('Ufix_1_0');
+  out_val_port.setType('Bool');
   out_val_port.useHDLVector(false);
   
   % -----------------------------
@@ -83,6 +83,7 @@ function cmult_config(this_block)
     if (rst_port.width ~= 1)
       this_block.setError('Input data type for port "rst" must have width=1.');
     end
+    rst_port.setType('Bool');
     rst_port.useHDLVector(false);
 
     if in_a_port.getWidth ~= 2*str2double(in_a_bw)
@@ -94,6 +95,7 @@ function cmult_config(this_block)
     if (in_val_port.width ~= 1)
       this_block.setError('Input data type for port "in_val" must have width=1.');
     end
+    in_val_port.setType('Bool');
     in_val_port.useHDLVector(false);
     
   end  % if(inputTypesKnown)
