@@ -68,7 +68,7 @@ function cmult_config(this_block)
 
   this_block.addSimulinkOutport('out_ab');
   out_ab_port = this_block.port('out_ab');
-  out_ab_port.setType(sprintf('Fix_%d_%d',2*str2double(out_ab_bw), 2*str2double(out_ab_bp)));
+  out_ab_port.setType(sprintf('Ufix_%d_0',2*str2double(out_ab_bw)));
   
   this_block.addSimulinkOutport('out_val');
   out_val_port = this_block.port('out_val');
@@ -129,7 +129,7 @@ function cmult_config(this_block)
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'xil_defaultlib');
-  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_agilex_versal_cmult.vhd'],'casper_multiplier_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_agilex_versal_cmult.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
