@@ -39,7 +39,7 @@ function cmult_config(this_block)
   cmult_blk = this_block.blockName;
   cmult_parent = get_param(cmult_blk,'Parent');
   %Extract block parameters
-  is_async = checkbox2bool(get_param(cmult_parent, 'is_async'))
+  is_async = checkbox2bool(get_param(cmult_parent, 'is_async'));
   in_a_bw = get_param(cmult_parent, 'in_a_bw');
   in_b_bw = get_param(cmult_parent, 'in_b_bw');
   out_ab_bw = get_param(cmult_parent, 'out_ab_bw');
