@@ -39,6 +39,7 @@ function cmult_config(this_block)
   cmult_blk = this_block.blockName;
   cmult_parent = get_param(cmult_blk,'Parent');
   %Extract block parameters
+  is_async = checkbox2bool(get_param(cmult_parent, 'is_async'))
   in_a_bw = get_param(cmult_parent, 'in_a_bw');
   in_b_bw = get_param(cmult_parent, 'in_b_bw');
   out_ab_bw = get_param(cmult_parent, 'out_ab_bw');
@@ -55,48 +56,50 @@ function cmult_config(this_block)
   use_ip = checkbox2bool(get_param(cmult_parent, 'use_ip'));
   use_dsp = checkbox2bool(get_param(cmult_parent, 'use_dsp'));
   
-  this_block.addSimulinkInport('rst');
-  rst_port = this_block.port('rst');
-  
   this_block.addSimulinkInport('in_a');
   in_a_port = this_block.port('in_a');
   this_block.addSimulinkInport('in_b');
   in_b_port = this_block.port('in_b');
-  
-  this_block.addSimulinkInport('in_val');
-  in_val_port = this_block.port('in_val');
+
+  if ~is_async
+    this_block.addSimulinkInport('rst');
+    rst_port = this_block.port('rst');
+    
+    this_block.addSimulinkInport('in_val');
+    in_val_port = this_block.port('in_val');
+
+    this_block.addSimulinkOutport('out_val');
+    out_val_port = this_block.port('out_val');
+    out_val_port.setType('Bool');
+    out_val_port.useHDLVector(false);
+  end
 
   this_block.addSimulinkOutport('out_ab');
   out_ab_port = this_block.port('out_ab');
   out_ab_port.setType(sprintf('Ufix_%d_0',2*str2double(out_ab_bw)));
   
-  this_block.addSimulinkOutport('out_val');
-  out_val_port = this_block.port('out_val');
-  
-  out_val_port.setType('Bool');
-  out_val_port.useHDLVector(false);
-  
   % -----------------------------
   if (this_block.inputTypesKnown)
     % do input type checking, dynamic output type and generic setup in this code block.
+    if ~is_async
+      if (rst_port.width ~= 1)
+        this_block.setError('Input data type for port "rst" must have width=1.');
+      end
+      rst_port.setType('Bool');
+      rst_port.useHDLVector(false);
 
-    if (rst_port.width ~= 1)
-      this_block.setError('Input data type for port "rst" must have width=1.');
+      if (in_val_port.width ~= 1)
+        this_block.setError('Input data type for port "in_val" must have width=1.');
+      end
+      in_val_port.setType('Bool');
+      in_val_port.useHDLVector(false);
     end
-    rst_port.setType('Bool');
-    rst_port.useHDLVector(false);
-
     if in_a_port.getWidth ~= 2*str2double(in_a_bw)
       this_block.setError(sprintf('Input data width for port "in_a" must be %d.',2*str2double(in_a_bw)));
     end
     if in_b_port.getWidth ~= 2*str2double(in_b_bw)
       this_block.setError(sprintf('Input data width for port "in_b" must be %d.',2*str2double(in_b_bw)));
     end
-    if (in_val_port.width ~= 1)
-      this_block.setError('Input data type for port "in_val" must have width=1.');
-    end
-    in_val_port.setType('Bool');
-    in_val_port.useHDLVector(false);
     
   end  % if(inputTypesKnown)
   % -----------------------------

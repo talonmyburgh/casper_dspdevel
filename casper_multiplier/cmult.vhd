@@ -23,7 +23,7 @@ entity cmult is
     port(
         clk     : in  std_logic;
         ce      : in  std_logic;
-        rst     : in  std_logic;
+        rst     : in  std_logic := '0';
         in_a    : in  std_logic_vector(2 * g_a_bw - 1 downto 0);
         in_b    : in  std_logic_vector(2 * g_b_bw - 1 downto 0);
         in_val  : in  std_logic := '1';
