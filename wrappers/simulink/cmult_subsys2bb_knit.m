@@ -19,7 +19,7 @@ function cmult_subsys2bb_knit()
     out_val = find(contains(outprts,'out_val'));
 
     bbports = get_param(cmult_bb,'PortHandles');
-    if(~is_async)
+    if(is_async)
         if(isempty(rst) && isempty(in_val) && isempty(out_val))
             rst_str = [subsysblk '/rst'];
             in_val_str = [subsysblk '/in_val'];

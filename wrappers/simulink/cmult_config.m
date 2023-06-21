@@ -61,27 +61,29 @@ function cmult_config(this_block)
   this_block.addSimulinkInport('in_b');
   in_b_port = this_block.port('in_b');
 
-  if ~is_async
+  if is_async
     this_block.addSimulinkInport('rst');
     rst_port = this_block.port('rst');
     
     this_block.addSimulinkInport('in_val');
     in_val_port = this_block.port('in_val');
-
-    this_block.addSimulinkOutport('out_val');
-    out_val_port = this_block.port('out_val');
-    out_val_port.setType('Bool');
-    out_val_port.useHDLVector(false);
   end
 
   this_block.addSimulinkOutport('out_ab');
   out_ab_port = this_block.port('out_ab');
   out_ab_port.setType(sprintf('Ufix_%d_0',2*str2double(out_ab_bw)));
+
+  if is_async
+    this_block.addSimulinkOutport('out_val');
+    out_val_port = this_block.port('out_val');
+    out_val_port.setType('Bool');
+    out_val_port.useHDLVector(false);
+  end
   
   % -----------------------------
   if (this_block.inputTypesKnown)
     % do input type checking, dynamic output type and generic setup in this code block.
-    if ~is_async
+    if is_async
       if (rst_port.width ~= 1)
         this_block.setError('Input data type for port "rst" must have width=1.');
       end
