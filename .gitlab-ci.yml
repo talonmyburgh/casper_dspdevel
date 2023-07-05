@@ -359,6 +359,7 @@ wbpfb:   # This job runs in the test stage.
 wbpfb_nvc:   # This job runs in the test stage.
   stage: NVCSim    # It only starts when the job in the build stage completes successfully.
   image: ghcr.io/vunit/dev/nvc:latest
+  needs: []
   tags: 
     - ghdl
   script:
