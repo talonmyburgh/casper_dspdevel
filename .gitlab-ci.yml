@@ -5,6 +5,7 @@ variables:
   
 stages:          # List of stages for jobs, and their order of execution
   - VunitSim
+  - NVCSim
   - QuestaSim
   - VivadoSynthesis
   - VivadoSynthesis
@@ -354,6 +355,27 @@ wbpfb:   # This job runs in the test stage.
       - $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
+
+wbpfb_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  image: ghcr.io/vunit/dev/nvc:latest
+  tags: 
+    - ghdl
+  script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
+    - python3 -m pip install -U tox colorama coverage vunit-hdl --progress-bar off
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
+
 
 AllowQuesta:
   stage: QuestaSim
