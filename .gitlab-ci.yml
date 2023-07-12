@@ -375,6 +375,29 @@ wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
 
+casper_adders_test_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  image: ghcr.io/vunit/dev/nvc:latest
+  when: manual
+  needs: []
+  tags: 
+    - ghdl
+  script:
+    - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install numpy --progress-bar off
+    - python3 -m pip install -U tox colorama coverage vunit-hdl --progress-bar off
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - export VUNIT_VHDL_STANDARD=2002
+    - /usr/bin/python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_adder/casper_adder_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_adder/casper_adder_report.xml
+
 wbpfb_nvc:   # This job runs in the test stage.
   stage: NVCSim    # It only starts when the job in the build stage completes successfully.
   image: ghcr.io/vunit/dev/nvc:latest
@@ -383,9 +406,6 @@ wbpfb_nvc:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
-    - mv /usr/local/bin/nvc /usr/local/bin/nvc-real
-    - echo -e '#!/bin/bash \n/usr/local/bin/nvc-real -M128m $@'>/usr/local/bin/nvc
-    - chmod +x /usr/local/bin/nvc
     - python3 -m pip install pytest --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - python3 -m pip install -U tox colorama coverage vunit-hdl --progress-bar off
