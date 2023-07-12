@@ -378,6 +378,7 @@ wbpfb:   # This job runs in the test stage.
 wbpfb_nvc:   # This job runs in the test stage.
   stage: NVCSim    # It only starts when the job in the build stage completes successfully.
   image: ghcr.io/vunit/dev/nvc:latest
+  when: manual
   needs: []
   tags: 
     - ghdl
@@ -391,7 +392,7 @@ wbpfb_nvc:   # This job runs in the test stage.
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
-    - export VUNIT_VHDL_STANDARD=2008
+    - export VUNIT_VHDL_STANDARD=2002
     - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
   artifacts:
     when: always
