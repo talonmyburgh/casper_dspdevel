@@ -363,6 +363,8 @@ wbpfb_nvc:   # This job runs in the test stage.
   tags: 
     - ghdl
   script:
+    - mv /usr/local/bin/nvc /usr/local/bin/nvc-real
+    - alias nvc="nvc-real -M128m"
     - python3 -m pip install pytest --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - python3 -m pip install -U tox colorama coverage vunit-hdl --progress-bar off
