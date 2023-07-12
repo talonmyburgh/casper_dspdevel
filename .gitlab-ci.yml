@@ -1,4 +1,4 @@
-image: ghdl/vunit:mcode-master
+image: ghdl/vunit:llvm-master
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/sim/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
@@ -11,6 +11,7 @@ stages:          # List of stages for jobs, and their order of execution
   - VivadoSynthesis
 casper_accumulators_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -30,6 +31,7 @@ casper_accumulators_test:   # This job runs in the test stage.
       
 casper_adders_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -48,6 +50,7 @@ casper_adders_test:   # This job runs in the test stage.
 
 counter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -66,6 +69,7 @@ counter:   # This job runs in the test stage.
 
 delay:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -85,6 +89,7 @@ delay:   # This job runs in the test stage.
 
 filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -103,6 +108,7 @@ filter:   # This job runs in the test stage.
 
 flow_control:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -121,6 +127,7 @@ flow_control:   # This job runs in the test stage.
 
 misc:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -139,6 +146,7 @@ misc:   # This job runs in the test stage.
 
 multiplexer:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -157,6 +165,7 @@ multiplexer:   # This job runs in the test stage.
 
 multiplier:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -175,6 +184,7 @@ multiplier:   # This job runs in the test stage.
 
 fifo:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -193,6 +203,7 @@ fifo:   # This job runs in the test stage.
 
 ram:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -211,6 +222,7 @@ ram:   # This job runs in the test stage.
 
 rtwosdf_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -229,6 +241,7 @@ rtwosdf_fft:   # This job runs in the test stage.
 
 rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -248,6 +261,7 @@ rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
 
 pipe_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -267,6 +281,7 @@ pipe_fft:   # This job runs in the test stage.
 
 par_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -285,6 +300,7 @@ par_fft:   # This job runs in the test stage.
 
 wide_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -304,6 +320,7 @@ wide_fft:   # This job runs in the test stage.
 
 single_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -322,6 +339,7 @@ single_filter:   # This job runs in the test stage.
 
 wide_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
@@ -340,6 +358,7 @@ wide_filter:   # This job runs in the test stage.
 
 wbpfb:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
