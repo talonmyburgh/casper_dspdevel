@@ -369,8 +369,7 @@ TB_GENERATED.add_config(
 
 # Run vunit function
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "-Wno-hide"])
-vu.set_compile_option("nvc.a_flags",["--relaxed"])
-vu.set_compile_option("nvc.elab_flags",["--relaxed -M 64m"])
+vu.set_compile_option("nvc.a_flags",["--relaxed -M 64m"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable","--max-stack-alloc=4096"])
 vu.set_sim_option("disable_ieee_warnings",True)
