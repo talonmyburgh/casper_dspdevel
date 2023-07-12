@@ -392,7 +392,7 @@ casper_adders_test_nvc:   # This job runs in the test stage.
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
-    - export VUNIT_VHDL_STANDARD=2002
+    - export VUNIT_VHDL_STANDARD=2008
     - /usr/bin/python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
   artifacts:
     when: always
@@ -418,7 +418,7 @@ wbpfb_nvc:   # This job runs in the test stage.
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
-    - export VUNIT_VHDL_STANDARD=2002
+    - export VUNIT_VHDL_STANDARD=2008
     - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
   artifacts:
     when: always
