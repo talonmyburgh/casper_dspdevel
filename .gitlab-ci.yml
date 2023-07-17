@@ -375,6 +375,25 @@ wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
 
+multiplier_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
+  tags: 
+    - ghdl
+  script:
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - export VUNIT_SIMULATOR=nvc;export VUNIT_NVC_PATH=/usr/local/bin
+    - /usr/bin/python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_multiplier/casper_multiplier_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_multiplier/casper_multiplier_report.xml
 casper_adders_test_nvc:   # This job runs in the test stage.
   stage: NVCSim    # It only starts when the job in the build stage completes successfully.
   #image: ghcr.io/vunit/dev/nvc:latest
