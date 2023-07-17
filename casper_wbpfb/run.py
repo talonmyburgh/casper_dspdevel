@@ -79,7 +79,7 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
-if SIMULATOR_FACTORY.select_simulator().name == "ghdl":
+if SIMULATOR_FACTORY.select_simulator().name == "ghdl" or SIMULATOR_FACTORY.select_simulator().name == "nvc":
     #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c_2008redirect.vhdl"))
     #common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg-body_2008redirect.vhdl"))
     common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_generic_pkg_2008redirect.vhdl"))
@@ -373,7 +373,7 @@ vu.set_compile_option("nvc.a_flags",["--relaxed"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable","--max-stack-alloc=4096"])
 vu.set_sim_option("nvc.heap_size", "128m")
-#vu.set_sim_option("nvc.elab_flags", ["-M64m"])
+vu.set_sim_option("nvc.global_flags", ["-M128m"])
 vu.set_sim_option("disable_ieee_warnings",True)
 vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()
