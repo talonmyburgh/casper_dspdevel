@@ -1,4 +1,4 @@
-image: localhost/gitlabvunit:latest
+image: gcr.io/hdl-containers/sim/scipy:latest
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/sim/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
