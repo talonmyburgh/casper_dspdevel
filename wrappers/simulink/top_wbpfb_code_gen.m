@@ -362,10 +362,8 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
             i=i+1;
             if (j ~= wbfctr-1 | k ~= nof_wb_streams-1)
                 chararr(i,1)=sprintf(outrechar,k,j);
-                fprintf("Not finished, wb: %d, str: %d",j,k);
             else
                 chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
-                fprintf("Finished, wb: %d, str: %d",j,k);
             end
             i=i+1;
         end
@@ -381,9 +379,9 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
     omap_re_c = "out_re_str%d_wb%d <= out_fft_sosi_arr(%d).re;";
     omap_im_c = "out_im_str%d_wb%d <= out_fft_sosi_arr(%d).im;";
     l = 1;
+    arr_index = 0;
     for n=0:1:nof_wb_streams-1
         for m=0:1:wbfctr-1
-            arr_index = (n+1)*m;
             achararr(l,1)=sprintf(imap_re_c,arr_index,n,m);
             l=l+1;
             achararr(l,1)=sprintf(imap_im_c,arr_index,n,m);
@@ -396,6 +394,7 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
             l=l+1;
             achararr(l,1)=sprintf(omap_im_c,n,m,arr_index);
             l=l+1;
+            arr_index = arr_index + 1;
         end
     end
 end
