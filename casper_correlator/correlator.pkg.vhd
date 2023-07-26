@@ -15,8 +15,9 @@ package correlator_pkg is
     
     TYPE s_cross_mult_din is ARRAY (0 TO c_cross_mult_nof_input_streams - 1) OF std_logic_vector((c_cross_mult_aggregation_per_stream * c_cross_mult_input_cbit_width) - 1 downto 0);
     TYPE s_cross_mult_out_bus_expand is ARRAY (0 TO (c_cross_mult_total_streams) - 1) OF std_logic_vector(c_cross_mult_input_cbit_width - 1 downto 0);
-    TYPE s_cross_mult_out_c_to_ri is ARRAY (0 TO (c_cross_mult_total_streams * 2) - 1) OF std_logic_vector(c_cross_mult_input_cbit_width - 1 downto 0);
+    TYPE s_cross_mult_cmult_in is ARRAY(0 TO (c_cross_mult_nof_cmults - 1)) OF std_logic_vector(c_cross_mult_input_cbit_width - 1 downto 0);
     TYPE s_cross_mult_out is ARRAY (0 TO c_cross_mult_nof_output_streams - 1) OF std_logic_vector((c_cross_mult_aggregation_per_stream * c_cross_mult_output_cbit_width) - 1 downto 0);
+    TYPE s_cross_mult_cmult_out is ARRAY (0 TO c_cross_mult_nof_cmults - 1) OF std_logic_vector(c_cross_mult_output_cbit_width - 1 DOWNTO 0);
     TYPE s_cmult_inpt is ARRAY(0 TO 1) OF INTEGER RANGE 0 TO c_cross_mult_total_streams - 1;
     TYPE s_cmult_map is ARRAY(0 TO c_cross_mult_nof_cmults - 1) OF s_cmult_inpt;
     
