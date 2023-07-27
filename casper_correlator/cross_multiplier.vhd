@@ -55,7 +55,7 @@ architecture RTL of cross_multiplier is
 begin
     gen_bus_expand : FOR i IN 0 TO c_cross_mult_nof_input_streams - 1 GENERATE -- FOR each stream
         gen_expand : FOR j IN 0 TO c_cross_mult_aggregation_per_stream - 1 GENERATE --SPLIT the aggregation
-            s_out_bus_expand(i) <= din(i)((j + 1) * c_cross_mult_input_cbit_width - 1 DOWNTO j * c_cross_mult_input_cbit_width);
+            s_out_bus_expand(2*i + j) <= din(i)((j + 1) * c_cross_mult_input_cbit_width - 1 DOWNTO j * c_cross_mult_input_cbit_width);
         END GENERATE;
     END GENERATE;
 
@@ -97,4 +97,5 @@ begin
                 s_out(n)((p+1)*c_cross_mult_output_cbit_width - 1 DOWNTO p*c_cross_mult_output_cbit_width) <= s_out_cmults(2*n + p)(c_cross_mult_output_cbit_width -1 DOWNTO 0);
         END GENERATE;
     END GENERATE;
+    dout <= s_out;
 end architecture RTL;
