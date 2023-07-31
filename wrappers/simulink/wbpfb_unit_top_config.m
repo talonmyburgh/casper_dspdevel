@@ -115,15 +115,15 @@ vhdlfile = top_wbpfb_code_gen(dbl_wb_factor, dbl_nof_wb_streams, double_t_d_w, d
 %inport declarations
 this_block.addSimulinkInport('rst');
 in_rst_port = this_block.port('rst');
-in_rst_port.setType('Ufix_1_0');
+in_rst_port.setType('Bool');
 in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
-in_sync_port.setType('Ufix_1_0');
+in_sync_port.setType('Bool');
 in_sync_port.useHDLVector(false);
 this_block.addSimulinkInport('in_valid');
 in_valid_port = this_block.port('in_valid');
-in_valid_port.setType('Ufix_1_0');
+in_valid_port.setType('Bool');
 in_valid_port.useHDLVector(false);
 this_block.addSimulinkInport('shiftreg');
 in_shiftreg_port = this_block.port('shiftreg');
@@ -138,12 +138,12 @@ if xtra_dat_sigs
 
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
-  in_sop_port.setType('Ufix_1_0');
+  in_sop_port.setType('Bool');
   in_sop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
-  in_eop_port.setType('Ufix_1_0');
+  in_eop_port.setType('Bool');
   in_eop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_empty');
@@ -177,19 +177,19 @@ end
 % outport declarations
 this_block.addSimulinkOutport('fil_sync');
 fil_sync_port = this_block.port('fil_sync');
-fil_sync_port.setType('Ufix_1_0');
+fil_sync_port.setType('Bool');
 fil_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_sync');
 out_sync_port = this_block.port('out_sync');
-out_sync_port.setType('Ufix_1_0');
+out_sync_port.setType('Bool');
 out_sync_port.useHDLVector(false);
 this_block.addSimulinkOutport('fil_valid');
 fil_valid_port = this_block.port('fil_valid');
-fil_valid_port.setType('Ufix_1_0');
+fil_valid_port.setType('Bool');
 fil_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('out_valid');
 out_valid_port = this_block.port('out_valid');
-out_valid_port.setType('Ufix_1_0');
+out_valid_port.setType('Bool');
 out_valid_port.useHDLVector(false);
 this_block.addSimulinkOutport('ovflw');
 out_ovflw_port = this_block.port('ovflw');
