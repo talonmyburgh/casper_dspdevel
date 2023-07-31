@@ -92,8 +92,23 @@ architecture rtl of fft_sepa is
         out_dat     : std_logic_vector(c_c_data_w - 1 downto 0); -- Registered output value
         out_val     : std_logic;        -- Registered data valid signal  
     end record;
+    
+    constant c_reg_type : reg_type := (
+        switch      => '0',        -- Register used to toggle between A & B definitionn
+        val_dly     => (others=>'0'), -- Register that delays the incoming valid signal
+        xn_m_reg    => (others=>'0'), -- Register to hold the X(N-m) value for one cycle
+        xm_reg      => (others=>'0'), -- Register to hold the X(m) value for one cycle
+        add_1_reg_a => (others=>'0'), -- Input register A for the adder
+        add_1_reg_b => (others=>'0'), -- Input register B for the adder
+        add_2_reg_a => (others=>'0'), -- Input register A for the subtractor
+        add_2_reg_b => (others=>'0'), -- Input register B for the subtractor
+        adder_1_dir => '0',        -- Direction for the adder block
+        adder_2_dir => '0',        -- Direction for the adder block
+        out_dat     => (others=>'0'), -- Registered output value
+        out_val     => '0'        -- Registered data valid signal 
+    );
 
-    signal r, rin     : reg_type;
+    signal r, rin     : reg_type := c_reg_type;
     signal sub_result : std_logic_vector(c_data_w downto 0); -- Result of the subtractor   
     signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder   
 

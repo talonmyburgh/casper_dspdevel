@@ -160,7 +160,7 @@ ENTITY dp_block_gen_valid_arr IS
     snk_in      : IN  t_fft_sosi_out;  -- = snk_in_arr(0)
     snk_in_arr  : IN  t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
     -- Streaming source
-    src_out_arr : OUT t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
+    src_out_arr : OUT t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0) := (others => c_fft_sosi_rst_out);
     -- Control
     enable      : IN  STD_LOGIC := '1'  -- can connect via MM or could also connect to a src_in.xon
   );
@@ -183,8 +183,6 @@ ARCHITECTURE rtl OF dp_block_gen_valid_arr IS
     RETURN TRUE;
   END parameter_asserts;
   
-  CONSTANT c_parameters_ok : BOOLEAN := parameter_asserts(g_check_input_sync, g_nof_pages_bsn);
-  
   TYPE t_state IS (s_sop, s_data, s_eop);
 
   TYPE t_reg IS RECORD  -- local registers
@@ -204,8 +202,8 @@ ARCHITECTURE rtl OF dp_block_gen_valid_arr IS
   SIGNAL nxt_src_out_arr : t_fft_sosi_arr_out(g_nof_streams-1 DOWNTO 0);
     
   -- Define the local registers in t_reg record
-  SIGNAL r         : t_reg;
-  SIGNAL nxt_r     : t_reg;
+  SIGNAL r         : t_reg := c_reg_rst;
+  SIGNAL nxt_r     : t_reg := c_reg_rst;
   
 BEGIN
   

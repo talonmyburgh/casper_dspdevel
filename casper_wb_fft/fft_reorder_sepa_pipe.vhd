@@ -148,8 +148,16 @@ architecture rtl of fft_reorder_sepa_pipe is
 		count_chan : natural;           -- Counter that holds the number of channels for reading. 
 		state      : state_type;        -- The state machine. 
 	end record;
+	
+	constant c_reg_type : reg_type := (
+	       rd_en => '0',
+	       switch => '0',
+	       count_up => 0,
+	       count_down => 0,
+	       count_chan => 0,
+	       state => s_idle);
 
-	signal r, rin : reg_type;
+	signal r, rin : reg_type := c_reg_type;
 
 begin
     u_adr_chan_cnt : entity casper_counter_lib.common_counter
