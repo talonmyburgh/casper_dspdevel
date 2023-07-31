@@ -356,7 +356,7 @@ entity wbpfb_unit_dev is
         clk          : in  std_logic                                                                := '0';
         ce           : in  std_logic                                                                := '1';
         shiftreg     : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0)              := (others => '1'); --! Shift register
-        in_sosi_arr  : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fil_sosi_rst_in);
+        in_sosi_arr  : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
         fil_sosi_arr : out t_fil_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
         ovflw        : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0); --! Ovflw register
         out_sosi_arr : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)
@@ -403,17 +403,17 @@ architecture str of wbpfb_unit_dev is
 
 
     signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fil_in_val  : std_logic;
+    signal fil_in_val  : std_logic := '0';
     signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => (others => '0'));
-    signal fil_out_val : std_logic;
+    signal fil_out_val : std_logic := '0';
 
     signal fft_in_re_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fft_in_im_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_in_val    : std_logic;
+    signal fft_in_val    : std_logic := '0';
 
     signal fft_out_re_arr      : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);--(g_wpfb.fft_out_dat_w-1 downto 0);
     signal fft_out_im_arr      : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);--(g_wpfb.fft_out_dat_w-1 downto 0);
-    signal fft_out_val_arr     : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_val_arr     : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
 
     signal fft_out_sosi     : t_fft_sosi_out;
     signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
@@ -424,7 +424,7 @@ architecture str of wbpfb_unit_dev is
         in_sosi_arr : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     end record;
 
-    signal r, rin : reg_type;
+    signal r, rin : reg_type := (others => (others => c_fil_sosi_rst_in)); 
 
 begin
 
@@ -626,4 +626,3 @@ begin
     out_sosi_arr <= pfb_out_sosi_arr;
 
 end str;
-
