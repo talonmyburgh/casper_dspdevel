@@ -4,8 +4,8 @@
 from vunit import VUnit
 import numpy as np
 import itertools
+import glob
 from os.path import dirname, join, abspath
-import random
 
 def mapping(aggre, inpts):
     mult_map = {}
@@ -22,12 +22,11 @@ def mapping(aggre, inpts):
 def cross_mult(c_val_dict):
     ans_dict = {}
     for test, val in c_val_dict.items():
-        inpts, aggre = val.shape
-        nof_cmults = aggre * int(((inpts +1)*inpts)/2)
+        aggregations = int(test[1])
+        streams = int(test[0])
+        nof_cmults = aggregations * int(((streams +1)*streams)/2)
         answers = np.zeros(nof_cmults,dtype=np.complex64)
-        mult_map = mapping(aggre,inpts)
-        print(mult_map)
-        val = val.flatten(order='F')
+        mult_map = mapping(aggregations,streams)
         for ans in range(nof_cmults):
             a = val[mult_map[ans][0]]
             b = np.conj(val[mult_map[ans][1]])
@@ -45,7 +44,6 @@ def turn_cint_to_int(number:complex):
     return int(binary, 2)
 
 def split_int_gen_complexint(number, bitwidth):
-    print("receieved number: ",number)
     binary = bin(number & (2**bitwidth-1))[2:].zfill(bitwidth)
     first_half = binary[:bitwidth//2]
     second_half = binary[bitwidth//2:]
@@ -91,29 +89,36 @@ ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/*.vhd")
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
 ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
 
-# Create library 'casper_flow_control_lib'
-casper_flow_control_lib = vu.add_library("casper_flow_control_lib")
-casper_flow_control_lib.add_source_files(join(script_dir, "./*.vhd"))
+# CASPER MULTIPLIER Library
+casper_multiplier_lib = vu.add_library("casper_multiplier_lib", allow_duplicate=True)
+casper_multiplier_lib.add_source_files(script_dir + "/../casper_multiplier/*.vhd")
+
+# CASPER CORRELATOR Library
+casper_correlator_lib = vu.add_library("casper_correlator_lib",allow_duplicate=True)
+casper_correlator_lib.add_source_files(join(script_dir,'*.vhd'))
+
+TB_GENERATED = casper_correlator_lib.test_bench("tb_tb_vu_cross_multiplier")
 
 # aggregations = np.random.randint(1 , 6, 1)
 # streams = np.random.randint(1, 10, 1)
 aggregations = np.array([2])
-streams = np.array([2])
-inpt_bitwidths = int(np.random.randint(4, 8, 1))
-# outputs = int(((streams +1)*streams)/2)
-# nof_cmults = outputs * aggregations
+streams = np.array([3])
+# inpt_bitwidths = int(np.random.randint(4, 8, 1))
+inpt_bitwidths = np.array([5])
 
 value_dict = {}
 #Here we generate the test values. Note that these values are all taken as complex where real and imag are join (i.e. 85 = 5+5j)
-for s, a in itertools.product(streams, aggregations):
-    print(f"""
-        Generating test for values:
-        bitwidth = {inpt_bitwidths}
-        nof streams = {s}
-        nof aggregations = {a}""")
-    max_val = int(2**inpt_bitwidths -1)
-    min_val = int(-2**inpt_bitwidths)
-    value_dict[f"{s}{a}"] = np.random.randint(min_val, max_val, size=(s,a))
+# for s, a in itertools.product(streams, aggregations):
+#     print(f"""
+#         Generating test for values:
+#         bitwidth = {inpt_bitwidths}
+#         nof streams = {s}
+#         nof aggregations = {a}""")
+#     max_val = int(2**inpt_bitwidths -1)
+#     min_val = int(-2**inpt_bitwidths)
+#     value_dict[f"{s}{a}"] = np.random.randint(min_val, max_val, size=(s,a))
+
+value_dict['32'] =np.array([[5,28],[-30,17],[-13,25]])
 
 generics_dict = {}
 #Turn this into strings so they can be passed to generic g_values
@@ -128,27 +133,39 @@ for key,val in value_dict.items():
         strval += col_str + "; " if s < rows - 1 else col_str
     generics_dict[key] = strval
 
+print(generics_dict)
 #Here we must construct the complex values for testing
 c_dict = {}
 for key,val in value_dict.items():
-    row, col = val.shape
-    new_val = np.zeros(val.shape, dtype=np.complex64)
-    for r in range(row):
-        for c in range(col):
-            new_val[r,c] = split_int_gen_complexint(int(val[r,c]),int(inpt_bitwidths))
-    c_dict[key] = new_val
-print(c_dict)
+    print(val)
+    values = val.flatten(order = 'F') #now we've flattened across aggregations which is how the module works and what the mapping expects
+    print(values)
+    c_val = np.zeros(values.shape, dtype=np.complex64)
+    for i,v in enumerate(values):
+        c_val[i] =  split_int_gen_complexint(int(v),int(inpt_bitwidths))
+    c_dict[key] = c_val
 
+print(c_dict)
 cross_mult_result = cross_mult(c_dict)
-print(cross_mult_result)
 result_dict = {}
 for test, val in cross_mult_result.items():
-    print(val)
+    stream = int(test[0])
+    aggre = int(test[1])
     int_val = np.zeros(val.shape,dtype=np.int64)
     for i,v in enumerate(val):
-        print(i)
-        print(v)
         int_val[i] = turn_cint_to_int(v)
-    result_dict[test] = int_val
+    result_dict[test] = int_val.reshape(int_val.size//aggre,aggre)
 
-print(result_dict)
+generics_result = {}
+#convert result dict to set of strings for generics:
+for key, result in result_dict.items():
+    streams, aggre = result.shape
+    strval = ""
+    for s in range(streams):
+        col_str = ""
+        for a in range(aggre):
+            col_str = ', '.join(map(str, result[s,:]))
+        strval += col_str + "; " if s < streams - 1 else col_str
+    generics_result[key] = strval
+print(generics_result)
+

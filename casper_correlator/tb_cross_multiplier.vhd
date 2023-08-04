@@ -11,7 +11,8 @@ USE work.correlator_pkg.all;
 
 entity tb_cross_multiplier is
     generic(
-        g_values : t_integer_matrix(0 TO c_cross_mult_nof_input_streams - 1,0 TO c_cross_mult_aggregation_per_stream - 1):=((85, 51),(85, 51))
+        g_values : t_integer_matrix(0 TO c_cross_mult_nof_input_streams - 1,0 TO c_cross_mult_aggregation_per_stream - 1):=((5, 28),(-30, 17), (-13, 25));
+        g_results : t_integer_matrix (0 TO c_cross_mult_nof_output_streams - 1, 0 TO c_cross_mult_aggregation_per_stream -1) := ((50, 335),(20,50),(70,8),(10,60),(15,26),(79,20))
     );
     port(
         o_clk       : out std_logic;
@@ -35,17 +36,30 @@ architecture rtl of tb_cross_multiplier is
     SIGNAL tb_end : STD_LOGIC        := '0';
     SIGNAL din    : s_cross_mult_din := (others => (others => '0'));
     SIGNAL dout   : s_cross_mult_out := (others => (others => '0'));
+    SIGNAL exp_dout : s_cross_mult_out := (others => (others => '0'));
 
-    function populate_din(nof_aggregation : NATURAL; nof_streams : NATURAL)
+    function populate_din
     return s_cross_mult_din IS
         VARIABLE pop_input : s_cross_mult_din;
     BEGIN
         FOR i IN 0 TO c_cross_mult_nof_input_streams - 1 LOOP
             FOR j IN 0 TO c_cross_mult_aggregation_per_stream - 1 LOOP
-                pop_input(i)((j+1)*c_cross_mult_input_cbit_width -1 DOWNTO j*c_cross_mult_input_cbit_width) := TO_SVEC(g_values(i,j),c_cross_mult_input_cbit_width);
+                pop_input(i)((j+1)*c_cross_mult_input_cbit_width -1 DOWNTO j*c_cross_mult_input_cbit_width) := TO_SVEC(g_values(i,c_cross_mult_aggregation_per_stream-j-1),c_cross_mult_input_cbit_width);
             END LOOP;
         END LOOP;
         RETURN pop_input;
+    END FUNCTION;
+    
+    function populate_exp_dout
+    return s_cross_mult_out IS
+        VARIABLE pop_output : s_cross_mult_out;
+    BEGIN
+        FOR i IN 0 TO c_cross_mult_nof_output_streams - 1 LOOP
+            FOR j IN 0 TO c_cross_mult_aggregation_per_stream - 1 LOOP
+                pop_output(i)((j+1)*c_cross_mult_output_cbit_width -1 DOWNTO j*c_cross_mult_output_cbit_width) := TO_SVEC(g_results(i,j),c_cross_mult_output_cbit_width);
+            END LOOP;
+        END LOOP;
+        RETURN pop_output;
     END FUNCTION;
 
 begin
@@ -64,9 +78,11 @@ begin
     BEGIN
         WAIT UNTIL rising_edge(clk);
         WAIT FOR 5 * clk_period;
-        din <= populate_din(c_cross_mult_aggregation_per_stream, c_cross_mult_nof_input_streams);
+        din <= populate_din;
+        exp_dout <= populate_exp_dout;
         ce <= '1';
-        WAIT FOR 10*clk_period;
+        WAIT FOR (c_pipeline_input + c_pipeline_product + c_pipeline_adder + c_pipeline_round + c_pipeline_output)*clk_period;
+        
         
         o_test_msg <= v_test_msg;
         o_test_pass <= v_test_pass;

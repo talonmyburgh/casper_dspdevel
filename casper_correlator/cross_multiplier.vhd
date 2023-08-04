@@ -1,4 +1,4 @@
-library ieee, common_pkg_lib, casper_misc_lib, casper_multiplier_lib;
+library ieee, common_pkg_lib, casper_multiplier_lib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
@@ -53,9 +53,10 @@ architecture RTL of cross_multiplier is
     signal s_cmult_input_map : s_cmult_map := gen_inpt_to_mult_mapping(c_cross_mult_aggregation_per_stream, c_cross_mult_nof_input_streams);
 
 begin
-    gen_bus_expand : FOR i IN 0 TO c_cross_mult_nof_input_streams - 1 GENERATE -- FOR each stream
-        gen_expand : FOR j IN 0 TO c_cross_mult_aggregation_per_stream - 1 GENERATE --SPLIT the aggregation
-            s_out_bus_expand(2*i + j) <= din(i)((j + 1) * c_cross_mult_input_cbit_width - 1 DOWNTO j * c_cross_mult_input_cbit_width);
+    
+    gen_expand : FOR j IN 0 TO c_cross_mult_aggregation_per_stream - 1 GENERATE --SPLIT the aggregation
+        gen_bus_expand : FOR i IN 0 TO c_cross_mult_nof_input_streams - 1 GENERATE -- FOR each stream
+            s_out_bus_expand(c_cross_mult_nof_input_streams*j + i) <= din(i)((j + 1) * c_cross_mult_input_cbit_width - 1 DOWNTO j * c_cross_mult_input_cbit_width);
         END GENERATE;
     END GENERATE;
 
