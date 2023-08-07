@@ -367,6 +367,8 @@ architecture str of wbpfb_unit_dev is
 
     constant c_nof_channels : natural := 2 ** g_wpfb.nof_chan;
 
+    constant c_nof_stages : natural := ceil_log2(g_wpfb.nof_points);
+
     constant c_nof_data_per_block  : natural := c_nof_channels * g_wpfb.nof_points;
     constant c_nof_valid_per_block : natural := c_nof_data_per_block / g_wpfb.wb_factor;
 
@@ -399,9 +401,11 @@ architecture str of wbpfb_unit_dev is
                                g_wpfb.pipe_reo_in_place);
     -- Parameters for the (wideband) poly phase filter. 
 
-    type t_ovflw_array is ARRAY (INTEGER RANGE <>) OF std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0);
+    type t_ovflw_array is ARRAY (INTEGER RANGE <>) OF std_logic_vector(c_nof_stages - 1 DOWNTO 0);
+    type t_ovflw_array_trans is ARRAY (INTEGER RANGE <>) OF std_logic_vector(g_wpfb.nof_wb_streams - 1 DOWNTO 0);
 
-    signal ovflw_array : t_ovflw_array(g_wpfb.nof_wb_streams - 1 DOWNTO 0) := (others => (others => '0'));
+    signal ovflw_array : t_ovflw_array(g_wpfb.nof_wb_streams - 1 DOWNTO 0);
+    signal trans_ovflw_array : t_ovflw_array_trans(c_nof_stages - 1 DOWNTO 0);
 
     signal fil_in_arr  : t_fil_slv_arr_in(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fil_in_val  : std_logic                                                                                := '0';
@@ -539,7 +543,7 @@ begin
                     in_val     => fft_in_val,
                     out_re_arr => fft_out_re_arr((S + 1) * g_wpfb.wb_factor - 1 downto S * g_wpfb.wb_factor),
                     out_im_arr => fft_out_im_arr((S + 1) * g_wpfb.wb_factor - 1 downto S * g_wpfb.wb_factor),
-                    ovflw      => ovflw_array(S),
+                    ovflw      => ovflw_array(S)(c_nof_stages - 1 DOWNTO 0),
                     out_val    => fft_out_val_arr(S)
                 );
         end generate;
@@ -576,7 +580,7 @@ begin
                     in_val   => fft_in_val,
                     out_re   => temp_re,
                     out_im   => temp_im,
-                    ovflw    => ovflw_array(S),
+                    ovflw    => ovflw_array(S)(c_nof_stages - 1 DOWNTO 0),
                     out_val  => fft_out_val_arr(S)
                 );
             fft_out_re_arr(S) <= RESIZE_SVEC(temp_re, 64);
@@ -588,8 +592,11 @@ begin
     ---------------------------------------------------------------
     -- COLLAPSE OVERFLOW ARRAY
     ---------------------------------------------------------------
-    gen_collapse_per_stage_ovflw_array : for W IN g_wpfb.wb_factor - 1 DOWNTO 0 generate
-        ovflw(W) <= sel_a_b(TO_UINT(ovflw_array(0 TO g_wpfb.nof_wb_streams - 1)(W)) = 0, '0', '1');
+    gen_collapse_per_stage_ovflw_array : FOR I IN c_nof_stages - 1 DOWNTO 0 GENERATE
+        gen_transpose_ovflw_array : FOR J IN g_wpfb.nof_wb_streams - 1 DOWNTO 0 GENERATE
+            trans_ovflw_array(I)(J) <= ovflw_array(J)(I);
+        END GENERATE;
+        ovflw(I) <= sel_a_b(TO_UINT(trans_ovflw_array(I)) = 0, '0', '1');
     end generate;
 
     ---------------------------------------------------------------
