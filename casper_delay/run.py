@@ -81,6 +81,7 @@ casper_misc_lib.add_source_files(join(script_dir, "../misc/concat.vhd"))
 casper_delay_lib = vu.add_library("casper_delay_lib")
 casper_delay_lib.add_source_files(join(script_dir, "./*.vhd"))
 
+DELAY_SIMPLE_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_simple")
 DELAY_BRAM_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
 DELAY_BRAM_EN_PLUS_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_en_plus")
 DELAY_BRAM_PROG_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog")
@@ -91,6 +92,13 @@ delay_arr = [4, 10, 50]
 bram_latencies = [1, 2]
 dat_widths = [4, 18, 32]
 latencies = [2,8]
+
+for delay, dat_w in product(delay_arr, dat_widths):
+    db_config_name = "DELAY_SIMPLE: delay=%s, dat_w=%s" %(delay, dat_w)
+    DELAY_SIMPLE_TB.add_config(
+        name = db_config_name,
+        generics=dict(g_delay=delay, g_vec_w = dat_w)
+    )
 
 # for delay, latency, dat_w in product(delay_arr, bram_latencies, dat_widths):
 #     db_config_name = "DELAY_BRAM: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
