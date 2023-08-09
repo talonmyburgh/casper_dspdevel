@@ -2,7 +2,7 @@ from vunit import VUnit
 from itertools import product
 from random import sample, choice
 import glob
-from os.path import dirname
+from os.path import dirname, abspath
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 vu.add_vhdl_builtins()
@@ -63,7 +63,7 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
                 g_pipeline_output=out_pipeline, g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
 
-script_dir = dirname(__file__)
+script_dir = abspath(dirname(__file__))
 
 # CASPER MUlTIPLIER Library
 casper_multiplier_lib = vu.add_library("casper_multiplier_lib", allow_duplicate=True)

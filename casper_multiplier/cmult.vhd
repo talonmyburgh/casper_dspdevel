@@ -117,6 +117,6 @@ begin
         end generate;
     END GENERATE;
 
-    out_ab(2 * g_ab_bw - 1 DOWNTO 0) <= s_round_re(g_ab_bw - 1 DOWNTO 0) & s_round_im(g_ab_bw - 1 DOWNTO 0);
+    out_ab(2 * g_ab_bw - 1 DOWNTO 0) <= std_logic_vector(unsigned(s_round_re(g_ab_bw - 1 DOWNTO 0)) & unsigned(s_round_im(g_ab_bw - 1 DOWNTO 0)));
 end architecture Behaviour;
 

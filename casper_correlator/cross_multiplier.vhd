@@ -30,26 +30,7 @@ architecture RTL of cross_multiplier is
     signal s_out_cmults     : s_cross_mult_cmult_out      := (others => (others => '0'));
     signal s_a_cmult_in, s_b_cmult_in  : s_cross_mult_cmult_in := (others => (others => '0'));
     signal s_out : s_cross_mult_out := (others=>(others=>'0'));
-
-    function gen_inpt_to_mult_mapping(nof_aggregation : NATURAL; nof_streams : NATURAL)
-    return s_cmult_map is
-        variable mapping : s_cmult_map;
-        variable mult    : INTEGER := 0;
-        variable aa      : INTEGER := 0;
-    begin
-        mult := 0;
-        FOR a IN 0 TO nof_aggregation - 1 LOOP
-            aa := a * nof_streams;
-            FOR s IN aa TO (aa + nof_streams - 1) LOOP
-                FOR ss IN s TO (aa + nof_streams - 1) LOOP
-                    mapping(mult) := (s, ss);
-                    mult          := mult + 1;
-                END LOOP;
-            END LOOP;
-        END LOOP;
-        return mapping;
-    end function gen_inpt_to_mult_mapping;
-
+    
     signal s_cmult_input_map : s_cmult_map := gen_inpt_to_mult_mapping(c_cross_mult_aggregation_per_stream, c_cross_mult_nof_input_streams);
 
 begin
