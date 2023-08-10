@@ -19,6 +19,8 @@ entity cross_multiplier is
     port(
         clk  : in  std_logic;
         ce   : in  std_logic;
+        sync_in : in std_logic;
+        sync_out : out std_logic;
         din  : in  s_cross_mult_din;
         dout : out s_cross_mult_out
     );
