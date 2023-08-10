@@ -39,7 +39,7 @@ def cross_mult(c_val_dict):
         for ans in range(nof_cmults):
             a = val[mult_map[ans][0]]
             b = np.conj(val[mult_map[ans][1]])
-            answers[ans] = val[mult_map[ans][0]] * np.conj(val[mult_map[ans][1]])
+            answers[ans] = a * b
         ans_dict[test] = answers
     return ans_dict
 
@@ -83,11 +83,8 @@ vu = VUnit.from_argv()
 vu.add_vhdl_builtins()
 script_dir =  abspath(dirname(__file__))
 
-aggregations = np.random.randint(2 , 4, 1)
-streams = np.random.randint(2, 14, 1)
-# aggregations = np.array([2])
-# streams = np.array([3])
-# inpt_bitwidths = np.array([4])
+aggregations = np.random.randint(2 , 8, 1)
+streams = np.random.randint(2, 20, 1)
 inpt_bitwidths = int(np.random.randint(2, 10, 1))
 
 package_vals = [f'  CONSTANT c_cross_mult_nof_input_streams : NATURAL := {int(streams)};\n',
@@ -148,19 +145,21 @@ for s, a in itertools.product(streams, aggregations):
 generics_dict = {}
 #Turn this into strings so they can be passed to generic g_values
 for key,val in value_dict.items():
-    strval = ', '.join(map(str, val.flatten()))
+    strval = ', '.join(map(str, val.flatten(order = 'F')))
     generics_dict[key] = strval
 
 #Here we must construct the complex values for testing
 c_dict = {}
 for key,val in value_dict.items():
     values = val.flatten(order = 'F') #now we've flattened across aggregations which is how the module works and what the mapping expects
+    # print(values)
     c_val = np.zeros(values.shape, dtype=np.complex64)
     for i,v in enumerate(values):
         c_val[i] =  split_int_gen_complexint(int(v),2*int(inpt_bitwidths))
     c_dict[key] = c_val
 
 cross_mult_result = cross_mult(c_dict)
+
 result_dict = {}
 for test, val in cross_mult_result.items():
     tests = test.split(':')
@@ -169,12 +168,12 @@ for test, val in cross_mult_result.items():
     int_val = np.zeros(val.shape,dtype=np.int64)
     for i,v in enumerate(val):
         int_val[i] = turn_cint_to_int(v ,2*int(inpt_bitwidths) + 1)
-    result_dict[test] = int_val.reshape(int_val.size//aggre,aggre)
+    result_dict[test] = int_val#.reshape(int_val.size//aggre,aggre,order='F')
 
 generics_result = {}
 #convert result dict to set of strings for generics:
 for key, result in result_dict.items():
-    strval = ', '.join(map(str, result.flatten()))
+    strval = ', '.join(map(str, result))#.flatten()))
     generics_result[key] = strval
 
 for key, val in generics_dict.items():
@@ -189,10 +188,6 @@ for key, val in generics_dict.items():
             'g_results' : generics_result[key]
         }
     )
-
-print(generics_dict)
-
-print(generics_result)
 
 # RUN
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-Wno-hide"])
