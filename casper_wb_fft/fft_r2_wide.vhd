@@ -91,10 +91,12 @@ entity fft_r2_wide is
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
         in_re_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
         in_im_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
+        in_sync    : in std_logic := '0'; --! Input sync pulse
         in_val     : in  std_logic := '1'; --! In data valid
         out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
         out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Overflow register
+        out_sync   : out std_logic;      --! Ouput sync pulse
         out_val    : out std_logic      --! Out data valid
     );
 end entity fft_r2_wide;
@@ -220,10 +222,12 @@ begin
                 shiftreg => shiftreg,   -- full length shiftreg here since stages = log2(pts)
                 in_re    => in_re_arr(0)(g_fft.in_dat_w - 1 downto 0),
                 in_im    => in_im_arr(0)(g_fft.in_dat_w - 1 downto 0),
+                in_sync => in_sync,
                 in_val   => in_val,
                 out_re   => fft_pipe_out_re,
                 out_im   => fft_pipe_out_im,
                 ovflw    => ovflw,
+                out_sync => out_sync,
                 out_val  => out_val
             );
 
@@ -373,9 +377,11 @@ begin
                     rst        => rst,
                     in_re_arr  => fft_out_re_arr,
                     in_im_arr  => fft_out_im_arr,
+                    in_sync => in_sync,
                     in_val     => fft_out_val,
                     out_re_arr => sep_out_re_arr,
                     out_im_arr => sep_out_im_arr,
+                    out_sync => out_sync,
                     out_val    => sep_out_val
                 );
         end generate;

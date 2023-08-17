@@ -66,6 +66,8 @@ architecture tb of tb_fft_reorder_sepa_pipe is
   signal tb_end    : std_logic := '0';
   signal rst       : std_logic;
   signal clk       : std_logic := '1'; 
+  
+  signal in_sync, trigger, triggerff : std_logic := '0';
 
   signal ram_bg_data_mosi : t_mem_mosi; 
   signal reg_bg_ctrl_mosi : t_mem_mosi;  
@@ -88,6 +90,20 @@ architecture tb of tb_fft_reorder_sepa_pipe is
   signal buf_output_im    : t_input_buf_arr(c_nof_channels*c_nof_points-1 downto 0);  
 
 BEGIN
+    ---------------------------------------------------------------
+    -- SYNC PROCESS
+    ---------------------------------------------------------------
+    sync_proc : process(clk)
+    begin
+        if rising_edge(clk) then
+            triggerff <= trigger;
+            if (trigger = '1') and (triggerff = '0') then
+                in_sync <= '1';
+            else
+                in_sync <= '0';
+            end if;
+        end if;
+    end process;  
 
   clk <= (not clk) or tb_end after c_clk_period/2;
   rst <= '1', '0' after c_clk_period*3;
@@ -99,7 +115,9 @@ BEGIN
     
     -- Wait until reset is done
     proc_common_wait_until_high(clk, rst);
-    proc_common_wait_some_cycles(clk, 10);
+    proc_common_wait_some_cycles(clk, 9);
+    trigger <= '1';
+    proc_common_wait_some_cycles(clk, 1);
    
     -- Set and enable the waveform generators. All generators are controlled by the same registers
     proc_mem_mm_bus_wr(1, c_nof_samples_in_packet,   clk, reg_bg_ctrl_mosi);  -- Set the number of samples per block
@@ -156,8 +174,10 @@ BEGIN
     clk     => clk,
     rst     => rst,
     in_dat  => in_dat,
+    in_sync => in_sync,
     in_val  => in_sosi_arr(0).valid,
     out_dat => out_dat,
+    out_sync => open,
     out_val => out_val
   );
   

@@ -22,11 +22,12 @@
 --------------------------------------------------------------------------------
 
 --! Libraries: IEEE, common_pkg_lib, casper_counter_lib, casper_ram_lib
-library ieee, common_pkg_lib, casper_counter_lib, casper_ram_lib;
+library ieee, common_pkg_lib, casper_counter_lib, casper_ram_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use common_pkg_lib.common_pkg.all;
 use casper_ram_lib.common_ram_pkg.all;
+use common_components_lib.common_bit_delay;
 
 --! @dot 
 --! digraph rTwoOrder {
@@ -61,9 +62,11 @@ entity rTwoOrder is
 		clk     : in  std_logic;        --! Input clock source
 		ce      : in  std_logic := '1'; --! Clock enable
 		rst     : in  std_logic;        --! Reset signal
+		in_sync : in  std_logic := '0'; --! Input sync pulse
 		in_dat  : in  std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Input data signal
 		in_val  : in  std_logic;        --! In val (for delay)
 		out_dat : out std_logic_vector(g_dat_w - 1 DOWNTO 0); --! Output data
+		out_sync: out std_logic;        --! Output sync pulse
 		out_val : out std_logic         --! Out value valid
 	);
 end entity rTwoOrder;
@@ -76,6 +79,8 @@ architecture rtl of rTwoOrder is
 	constant c_adr_points_w : natural := ceil_log2(g_nof_points);
 	constant c_adr_chan_w   : natural := g_nof_chan;
 	constant c_adr_tot_w    : natural := c_adr_points_w + c_adr_chan_w;
+	constant c_count_lat    : natural := 1;
+	constant c_ram_read_lat : natural := 1;
 
 	signal adr_points_cnt : std_logic_vector(c_adr_points_w - 1 downto 0);
 	signal adr_chan_cnt   : std_logic_vector(c_adr_chan_w - 1 downto 0);
@@ -135,12 +140,12 @@ begin
 
 	u_adr_point_cnt : entity casper_counter_lib.common_counter
 		generic map(
-			g_latency => 1,
+			g_latency => c_count_lat,
 			g_init    => 0,
 			g_width   => ceil_log2(g_nof_points)
 		)
 		PORT MAP(
-			rst    => rst,
+			rst    => in_sync,  --counters are reset by sync pulse
 			clk    => clk,
 			cnt_en => cnt_ena,
 			count  => adr_points_cnt
@@ -156,13 +161,13 @@ begin
 
 	u_adr_chan_cnt : entity casper_counter_lib.common_counter
 		generic map(
-			g_latency => 1,
+			g_latency => c_count_lat,
 			g_init    => 0,
 			g_width   => g_nof_chan
 		)
 		PORT MAP(
 			clken  => ce,
-			rst    => rst,
+			rst    => in_sync,
 			clk    => clk,
 			cnt_en => in_val,
 			count  => adr_chan_cnt
@@ -175,7 +180,7 @@ begin
 			g_page_sz       => c_page_size,
 			g_wr_start_page => 0,
 			g_rd_start_page => 1,
-			g_rd_latency    => 1,
+			g_rd_latency    => c_ram_read_lat,
 			g_ram_primitive => g_ram_primitive
 		)
 		PORT MAP(
@@ -192,4 +197,21 @@ begin
 			rd_dat       => rd_dat,
 			rd_val       => rd_val
 		);
+		
+	--Delay sync out
+	u_delay_sync : entity common_components_lib.common_bit_delay
+	    generic map(
+	        g_depth => c_count_lat + c_ram_read_lat
+	    )
+	    port map(
+	        clk     => clk,
+	        rst     => rst,
+	        in_clr  => '0',
+	        in_bit  => in_sync,
+	        in_val  => '1',
+	        out_bit => out_sync
+	    );
+	
+	
+	    
 end rtl;

@@ -36,6 +36,7 @@ entity rTwoBFStage is
 	port(
 		clk     : in  std_logic;        --! Input clock source
 		rst     : in  std_logic;        --! Reset signal
+		in_sync : in  std_logic := '0'; --! Input Sync signal
 		in_re   : in  std_logic_vector; --! Real input
 		in_im   : in  std_logic_vector; --! Imaginary input
 		in_val  : in  std_logic;        --! Accept input value (for delay)
@@ -44,6 +45,7 @@ entity rTwoBFStage is
 		out_im  : out std_logic_vector; --! Imaginary output
 		ovflw   : out std_logic;		--! Overflow detected in butterfly add/sub
 		out_val : out std_logic;        --! Output value valid signal
+		out_sync: out std_logic;        --! Output sync signal
 		out_sel : out std_logic         --! Select output
 	);
 end entity rTwoBFStage;
@@ -176,6 +178,20 @@ begin
             in_val  => bf_val,
             out_bit => bf_val_dly
 		);
+	
+	-- sync always comes out of entity one clk cycle before dv in synchronous operation	
+	u_stage_sync : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => c_feedback_zdly * (2**g_nof_chan)
+        )
+        port map(
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => in_sync,
+            in_val  => '1', --synchronous operation
+            out_bit => out_sync
+        );
 
 	-- after the z^(-1) stage delay the bf_val_dly goes high and remains high and acts as an enable for in_val to out_val
 	stage_val <= in_val and bf_val_dly;

@@ -44,292 +44,330 @@ use common_pkg_lib.common_pkg.all;
 use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_sepa_wide is
-	generic(
-		g_fft 			: t_fft  := c_fft;          -- generics for the FFT
-		g_alt_output    : boolean := FALSE;
-		g_ram_primitive : string := "auto"
-	);
-	port(
-		clken      : in  std_logic;
-		clk        : in  std_logic;
-		rst        : in  std_logic := '0';
-		-- The Generic in g_fft is controlling for input/output width, as long as the stage_dat_w is less than 44, this is a work around for bad VHDL2008 support in xsim
-		in_re_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0); 
-		in_im_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
-		in_val     : in  std_logic := '1';
-		out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
-		out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
-		out_val    : out std_logic
-	);
+    generic(
+        g_fft           : t_fft   := c_fft; -- generics for the FFT
+        g_alt_output    : boolean := FALSE;
+        g_ram_primitive : string  := "auto"
+    );
+    port(
+        clken      : in  std_logic;
+        clk        : in  std_logic;
+        rst        : in  std_logic := '0';
+        -- The Generic in g_fft is controlling for input/output width, as long as the stage_dat_w is less than 44, this is a work around for bad VHDL2008 support in xsim
+        in_re_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0); 
+        in_im_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
+        in_sync    : in  std_logic;     -- input sync pulse
+        in_val     : in  std_logic := '1';
+        out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
+        out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
+        out_sync   : out std_logic;     -- output sync pulse
+        out_val    : out std_logic
+    );
 
 end entity fft_sepa_wide;
 
 architecture rtl of fft_sepa_wide is
 
-	constant c_pipeline_output : natural := 0; -- no need for extra pipeline output, because output is already registered
+    constant c_pipeline_output : natural := 0; -- no need for extra pipeline output, because output is already registered
 
-	constant c_page_size   : natural := g_fft.nof_points / g_fft.wb_factor; -- Size of the memories
-	constant c_nof_pages   : natural := 2; -- The number of pages in each ram. 
-	constant c_dat_w       : natural := c_nof_complex * g_fft.stage_dat_w; -- Data width for the internal vectors where real and imag are combined. 
-	constant c_adr_w       : natural := ceil_log2(c_page_size); -- Address width of the rams
-	constant c_nof_streams : natural := 2; -- Number of inputstreams for the zip units
+    constant c_page_size   : natural := g_fft.nof_points / g_fft.wb_factor; -- Size of the memories
+    constant c_nof_pages   : natural := 2; -- The number of pages in each ram. 
+    constant c_dat_w       : natural := c_nof_complex * g_fft.stage_dat_w; -- Data width for the internal vectors where real and imag are combined. 
+    constant c_adr_w       : natural := ceil_log2(c_page_size); -- Address width of the rams
+    constant c_nof_streams : natural := 2; -- Number of inputstreams for the zip units
 
-	type t_dat_arr is array (integer range <>) of std_logic_vector(c_dat_w - 1 downto 0);
-	type t_rd_adr_arr is array (integer range <>) of std_logic_vector(c_adr_w - 1 downto 0);
-	type t_zip_in_matrix is array (integer range <>) of t_slv_64_arr(1 downto 0); -- Every Zip unit has two inputs. 
+    constant c_read_lat : natural := 1; --RAM read latency
 
-	signal next_page : std_logic;       -- Active high signal to force a page-swap in the memories
-	signal wr_en     : std_logic;       -- The write enable signal for the memories
-	signal wr_adr    : std_logic_vector(c_adr_w - 1 downto 0); -- The write address
-	signal wr_dat    : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data to be written to memory
+    type t_dat_arr is array (integer range <>) of std_logic_vector(c_dat_w - 1 downto 0);
+    type t_rd_adr_arr is array (integer range <>) of std_logic_vector(c_adr_w - 1 downto 0);
+    type t_zip_in_matrix is array (integer range <>) of t_slv_64_arr(1 downto 0); -- Every Zip unit has two inputs. 
 
-	signal rd_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data that is read from memory
-	signal rd_adr_arr : t_rd_adr_arr(1 downto 0); -- There are two different read addresses. 
+    signal next_page     : std_logic;   -- Active high signal to force a page-swap in the memories
+    signal wr_en         : std_logic;   -- The write enable signal for the memories
+    signal wr_adr        : std_logic_vector(c_adr_w - 1 downto 0); -- The write address
+    signal wr_dat        : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data to be written to memory
+    signal zip_sync      : std_logic;   -- Signal for sync out of the zip module
+    signal fft_sepa_sync : std_logic;   -- Signal for sync out of the fft_sepa module
 
-	signal zip_in_matrix   : t_zip_in_matrix(g_fft.wb_factor - 1 downto 0); -- Matrix that contains the inputs for zip units
-	signal zip_in_val      : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector that holds the data input valids for the zip units
-	signal zip_out_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the outputs of all zip units. 
-	signal zip_out_val     : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector that holds the output valids of the zip units
+    signal rd_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data that is read from memory
+    signal rd_adr_arr : t_rd_adr_arr(1 downto 0); -- There are two different read addresses. 
 
-	signal sep_out_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the outputs of the separation blocks
-	signal sep_out_val_vec : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector containing the datavalids from the separation blocks
-	signal out_dat_arr     : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the ouput values, where real and imag are concatenated 
+    signal zip_in_matrix   : t_zip_in_matrix(g_fft.wb_factor - 1 downto 0); -- Matrix that contains the inputs for zip units
+    signal zip_in_val      : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector that holds the data input valids for the zip units
+    signal zip_out_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the outputs of all zip units. 
+    signal zip_out_val     : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector that holds the output valids of the zip units
 
-	type state_type is (s_idle, s_read);
-	type reg_type is record
-		switch     : std_logic;         -- Toggle register used for separate functionalilty
-		count_up   : natural range 0 to c_page_size; -- An upwards counter for read addressing
-		count_down : natural range 0 to c_page_size; -- A downwards counter for read addressing
-		val_odd    : std_logic;         -- Register that drives the in_valid of the odd zip units
-		val_even   : std_logic;         -- Register that drives the in_valid of the even zip units
-		state      : state_type;        -- The state machine. 
-	end record;
+    signal sep_out_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the outputs of the separation blocks
+    signal sep_out_val_vec : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector containing the datavalids from the separation blocks
+    signal out_dat_arr     : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the ouput values, where real and imag are concatenated 
 
-	signal r, rin : reg_type;
+    type state_type is (s_idle, s_read);
+    type reg_type is record
+        switch     : std_logic;         -- Toggle register used for separate functionalilty
+        count_up   : natural range 0 to c_page_size; -- An upwards counter for read addressing
+        count_down : natural range 0 to c_page_size; -- A downwards counter for read addressing
+        val_odd    : std_logic;         -- Register that drives the in_valid of the odd zip units
+        val_even   : std_logic;         -- Register that drives the in_valid of the even zip units
+        state      : state_type;        -- The state machine. 
+    end record;
+
+    signal r, rin : reg_type;
 
 begin
 
-	---------------------------------------------------------------
-	-- DUAL PAGED RAMS
-	---------------------------------------------------------------
-	-- Prepare the data for the dual paged memory. Real and imaginary part are concatenated into one vector. 
-	gen_prep_write_data : for I in 0 to g_fft.wb_factor - 1 generate
-		wr_dat(I) <= in_im_arr(I)(g_fft.stage_dat_w - 1 downto 0) & in_re_arr(I)(g_fft.stage_dat_w - 1 downto 0);
-	end generate;
+    ---------------------------------------------------------------
+    -- DUAL PAGED RAMS
+    ---------------------------------------------------------------
+    -- Prepare the data for the dual paged memory. Real and imaginary part are concatenated into one vector. 
+    gen_prep_write_data : for I in 0 to g_fft.wb_factor - 1 generate
+        wr_dat(I) <= in_im_arr(I)(g_fft.stage_dat_w - 1 downto 0) & in_re_arr(I)(g_fft.stage_dat_w - 1 downto 0);
+    end generate;
 
-	-- Prepare the write control signals for the memories. 
-	wr_en     <= in_val;
-	next_page <= '1' when unsigned(wr_adr) = c_page_size - 1 and wr_en = '1' else '0';
+    -- Prepare the write control signals for the memories. 
+    wr_en     <= in_val;
+    next_page <= '1' when unsigned(wr_adr) = c_page_size - 1 and wr_en = '1' else '0';
 
-	-- Counter will generate the write address  
-	u_wr_adr_cnt : entity casper_counter_lib.common_counter
-		generic map(
-			g_latency => 1,
-			g_init    => 0,
-			g_width   => c_adr_w
-		)
-		port map(
-			rst    => rst,
-			clk    => clk,
-			cnt_en => in_val,
-			count  => wr_adr
-		);
+    -- Counter will generate the write address  
+    u_wr_adr_cnt : entity casper_counter_lib.common_counter
+        generic map(
+            g_latency => 1,
+            g_init    => 0,
+            g_width   => c_adr_w
+        )
+        port map(
+            rst    => in_sync,
+            clk    => clk,
+            cnt_en => in_val,
+            count  => wr_adr
+        );
 
-	-- Instantiation of the rams. 
-	gen_dual_paged_rams : for I in g_fft.wb_factor - 1 downto 0 generate
-		u_buff : entity casper_ram_lib.common_paged_ram_r_w
-			generic map(
-				g_str           => "use_adr",
-				g_data_w        => c_dat_w,
-				g_nof_pages     => c_nof_pages,
-				g_page_sz       => c_page_size,
-				g_wr_start_page => 0,
-				g_rd_start_page => 1,
-				g_rd_latency    => 1,
-				g_ram_primitive => g_ram_primitive
-			)
-			port map(
-				rst          => rst,
-				clk          => clk,
-				wr_next_page => next_page,
-				wr_adr       => wr_adr,
-				wr_en        => wr_en,
-				wr_dat       => wr_dat(I),
-				rd_next_page => next_page,
-				rd_adr       => rd_adr_arr(I / (g_fft.wb_factor / 2)),
-				rd_en        => '1',
-				rd_dat       => rd_dat_arr(I),
-				rd_val       => open
-			);
-	end generate;
+    -- Instantiation of the rams. 
+    gen_dual_paged_rams : for I in g_fft.wb_factor - 1 downto 0 generate
+        u_buff : entity casper_ram_lib.common_paged_ram_r_w
+            generic map(
+                g_str           => "use_adr",
+                g_data_w        => c_dat_w,
+                g_nof_pages     => c_nof_pages,
+                g_page_sz       => c_page_size,
+                g_wr_start_page => 0,
+                g_rd_start_page => 1,
+                g_rd_latency    => c_read_lat,
+                g_ram_primitive => g_ram_primitive
+            )
+            port map(
+                rst          => rst,
+                clk          => clk,
+                wr_next_page => next_page,
+                wr_adr       => wr_adr,
+                wr_en        => wr_en,
+                wr_dat       => wr_dat(I),
+                rd_next_page => next_page,
+                rd_adr       => rd_adr_arr(I / (g_fft.wb_factor / 2)),
+                rd_en        => '1',
+                rd_dat       => rd_dat_arr(I),
+                rd_val       => open
+            );
+    end generate;
 
-	-- Compose the read-addresses for the memories. 
-	-- The first address toggles between the value of count_up and the value of count_up + offset. 
-	-- The second address toggles between the value of count_down and the value of count_down + offset.  
-	-- Note that the RESIZE_UVEC function generates the modulo(N) addressing.(The MSB is thrown away).  
-	rd_adr_arr(0) <= RESIZE_UVEC(TO_UVEC(r.count_up, c_adr_w + 1), c_adr_w) when r.switch = '0' else RESIZE_UVEC(TO_UVEC(r.count_up + c_page_size / 2, c_adr_w + 1), c_adr_w);
-	rd_adr_arr(1) <= RESIZE_UVEC(TO_UVEC(r.count_down, c_adr_w + 1), c_adr_w) when r.switch = '0' else RESIZE_UVEC(TO_UVEC(r.count_down + c_page_size / 2, c_adr_w + 1), c_adr_w);
+    -- Compose the read-addresses for the memories. 
+    -- The first address toggles between the value of count_up and the value of count_up + offset. 
+    -- The second address toggles between the value of count_down and the value of count_down + offset.  
+    -- Note that the RESIZE_UVEC function generates the modulo(N) addressing.(The MSB is thrown away).  
+    rd_adr_arr(0) <= RESIZE_UVEC(TO_UVEC(r.count_up, c_adr_w + 1), c_adr_w) when r.switch = '0' else RESIZE_UVEC(TO_UVEC(r.count_up + c_page_size / 2, c_adr_w + 1), c_adr_w);
+    rd_adr_arr(1) <= RESIZE_UVEC(TO_UVEC(r.count_down, c_adr_w + 1), c_adr_w) when r.switch = '0' else RESIZE_UVEC(TO_UVEC(r.count_down + c_page_size / 2, c_adr_w + 1), c_adr_w);
 
-	---------------------------------------------------------------
-	-- ZIP UNITS AND SEPARATORS
-	---------------------------------------------------------------
-	-- Compose the input matrix for the zip units. Each zip unit receives the
-	-- data of two different memories at the same time in order to allign the data 
-	-- properly (in serial) for the separation units. Every zip unit receives data 
-	-- once every two clock cylces. 
-	gen_compose_zip_matrix : for I in g_fft.wb_factor / 2 - 1 downto 0 generate
-		zip_in_matrix(2 * I)(0)(c_dat_w - 1 downto 0)     <= rd_dat_arr(I);
-		zip_in_matrix(2 * I)(1)(c_dat_w - 1 downto 0)     <= rd_dat_arr((g_fft.wb_factor - I) rem g_fft.wb_factor) when r.count_up = 0 else rd_dat_arr(g_fft.wb_factor - 1 - I);
-		zip_in_matrix(2 * I + 1)(0)(c_dat_w - 1 downto 0) <= rd_dat_arr(I);
-		zip_in_matrix(2 * I + 1)(1)(c_dat_w - 1 downto 0) <= rd_dat_arr(g_fft.wb_factor - 1 - I);
-		zip_in_val(2 * I)                                 <= r.val_even;
-		zip_in_val(2 * I + 1)                             <= r.val_odd;
-	end generate;
+    ---------------------------------------------------------------
+    -- Sync pulse account for ram and zip module
+    ---------------------------------------------------------------
+    pre_fft_sepa_sync_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => c_read_lat + 1   --delay for the bram read and 1 for zip module
+        )
+        port map(
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => in_sync,
+            in_val  => '1',
+            out_bit => zip_sync
+        );
 
-	-- The instantiation of the zip units and the separation units. 
-	-- The output of the zip units is connected to the input of the 
-	-- adjacent separate unit. 
-	gen_separators : for I in g_fft.wb_factor - 1 downto 0 generate
-		u_zipper : entity casper_multiplexer_lib.common_zip
-			generic map(
-				g_nof_streams => c_nof_streams,
-				g_dat_w       => c_dat_w
-			)
-			port map(
-				rst        => rst,
-				clk        => clk,
-				in_val     => zip_in_val(I),
-				in_dat_arr => zip_in_matrix(I),
-				out_val    => zip_out_val(I),
-				out_dat    => zip_out_dat_arr(I)
-			);
+    ---------------------------------------------------------------
+    -- ZIP UNITS AND SEPARATORS
+    ---------------------------------------------------------------
+    -- Compose the input matrix for the zip units. Each zip unit receives the
+    -- data of two different memories at the same time in order to allign the data 
+    -- properly (in serial) for the separation units. Every zip unit receives data 
+    -- once every two clock cylces. 
+    gen_compose_zip_matrix : for I in g_fft.wb_factor / 2 - 1 downto 0 generate
+        zip_in_matrix(2 * I)(0)(c_dat_w - 1 downto 0)     <= rd_dat_arr(I);
+        zip_in_matrix(2 * I)(1)(c_dat_w - 1 downto 0)     <= rd_dat_arr((g_fft.wb_factor - I) rem g_fft.wb_factor) when r.count_up = 0 else rd_dat_arr(g_fft.wb_factor - 1 - I);
+        zip_in_matrix(2 * I + 1)(0)(c_dat_w - 1 downto 0) <= rd_dat_arr(I);
+        zip_in_matrix(2 * I + 1)(1)(c_dat_w - 1 downto 0) <= rd_dat_arr(g_fft.wb_factor - 1 - I);
+        zip_in_val(2 * I)                                 <= r.val_even;
+        zip_in_val(2 * I + 1)                             <= r.val_odd;
+    end generate;
 
-		u_separate : entity work.fft_sepa
-		    generic map(
-		        g_alt_output => g_alt_output
-		    )
-			port map(
+    -- The instantiation of the zip units and the separation units. 
+    -- The output of the zip units is connected to the input of the 
+    -- adjacent separate unit. 
+    gen_separators : for I in g_fft.wb_factor - 1 downto 0 generate
+        u_zipper : entity casper_multiplexer_lib.common_zip
+            generic map(
+                g_nof_streams => c_nof_streams,
+                g_dat_w       => c_dat_w
+            )
+            port map(
+                rst        => rst,
+                clk        => clk,
+                in_val     => zip_in_val(I),
+                in_dat_arr => zip_in_matrix(I),
+                out_val    => zip_out_val(I),
+                out_dat    => zip_out_dat_arr(I)
+            );
+
+        u_separate : entity work.fft_sepa
+            generic map(
+                g_alt_output => g_alt_output
+            )
+            port map(
+                clk      => clk,
+                clken    => clken,
+                rst      => rst,
+                in_dat   => zip_out_dat_arr(I),
+                in_sync  => zip_sync,
+                in_val   => zip_out_val(I),
+                out_dat  => sep_out_dat_arr(I),
+                out_sync => fft_sepa_sync,
+                out_val  => sep_out_val_vec(I)
+            );
+    end generate;
+
+    ---------------------------------------------------------------
+    -- READ MEMORIES PROCESS
+    ---------------------------------------------------------------
+    -- This process creates the read addresses for the dual page memories and 
+    -- the fellow toggle signals. It also controls the starting and stopping 
+    -- of the data stream. 
+    comb : process(r, rst, next_page)
+        variable v : reg_type;
+    begin
+        v := r;
+
+        case r.state is
+            when s_idle =>
+                v.switch     := '0';
+                v.val_odd    := '0';
+                v.val_even   := '0';
+                v.count_up   := 0;
+                v.count_down := c_page_size;
+                if (next_page = '1') then -- Check if next page is asserted, meaning first page is written)
+                    v.state := s_read;
+                end if;
+
+            when s_read =>
+                if (r.switch = '0') then -- Toggle the switch register from 0 to 1
+                    v.switch := '1';
+                end if;
+
+                if (r.switch = '1') then -- Toggle the switch register from 1 to 0
+                    v.switch     := '0';
+                    v.count_up   := r.count_up + 1; -- Increment the upwards counter 
+                    v.count_down := r.count_down - 1; -- Decrease the downwards counter
+                end if;
+
+                if (next_page = '1') then -- Both counters are reset on page turn. 
+                    v.count_up   := 0;
+                    v.count_down := c_page_size;
+                elsif (v.count_up = c_page_size / 2) then -- Pagereading is done, but there is not yet new data available (Note that the value of variable v is checked here) 
+                    v.state := s_idle;  -- then go back to idle. 
+                end if;
+
+                v.val_odd  := r.switch; -- Assignment of the odd and even markers
+                v.val_even := not (r.switch);
+
+            when others =>
+                v.state := s_idle;
+
+        end case;
+
+        if (rst = '1') then
+            v.switch     := '0';
+            v.count_up   := 0;
+            v.count_down := 0;
+            v.val_odd    := '0';
+            v.val_even   := '0';
+            v.state      := s_idle;
+        end if;
+
+        rin <= v;
+
+    end process comb;
+
+    regs : process(clk)
+    begin
+        if rising_edge(clk) then
+            r <= rin;
+        end if;
+    end process;
+
+    ---------------------------------------------------------------
+    -- OUTPUT STAGE: ALIGNMENT AND PIPELINE STAGES
+    ---------------------------------------------------------------
+    gen_align_and_pipeline_stages : for I in g_fft.wb_factor / 2 - 1 downto 0 generate
+        u_output_pipeline_align : entity common_components_lib.common_pipeline
+            generic map(
+                g_pipeline  => c_pipeline_output + 1, -- Pipeline + one stage for allignment
+                g_in_dat_w  => c_dat_w,
+                g_out_dat_w => c_dat_w
+            )
+            port map(
                 clk     => clk,
-                clken   => clken,
-                rst     => rst,
-                in_dat  => zip_out_dat_arr(I),
-                in_val  => zip_out_val(I),
-                out_dat => sep_out_dat_arr(I),
-                out_val => sep_out_val_vec(I)
-			);
-	end generate;
+                in_dat  => sep_out_dat_arr(2 * I),
+                out_dat => out_dat_arr(2 * I)
+            );
 
-	---------------------------------------------------------------
-	-- READ MEMORIES PROCESS
-	---------------------------------------------------------------
-	-- This process creates the read addresses for the dual page memories and 
-	-- the fellow toggle signals. It also controls the starting and stopping 
-	-- of the data stream. 
-	comb : process(r, rst, next_page)
-		variable v : reg_type;
-	begin
-		v := r;
+        u_output_pipeline : entity common_components_lib.common_pipeline
+            generic map(
+                g_pipeline  => c_pipeline_output, -- Only pipeline stage
+                g_in_dat_w  => c_dat_w,
+                g_out_dat_w => c_dat_w
+            )
+            port map(
+                clk     => clk,
+                in_dat  => sep_out_dat_arr(2 * I + 1),
+                out_dat => out_dat_arr(2 * I + 1)
+            );
+    end generate;
 
-		case r.state is
-			when s_idle =>
-				v.switch     := '0';
-				v.val_odd    := '0';
-				v.val_even   := '0';
-				v.count_up   := 0;
-				v.count_down := c_page_size;
-				if (next_page = '1') then -- Check if next page is asserted, meaning first page is written)
-					v.state := s_read;
-				end if;
+    u_out_val_pipeline : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => c_pipeline_output
+        )
+        port map(
+            clk     => clk,
+            in_dat  => sep_out_val_vec(1),
+            out_dat => out_val
+        );
 
-			when s_read =>
-				if (r.switch = '0') then -- Toggle the switch register from 0 to 1
-					v.switch := '1';
-				end if;
+    -- Split the concatenated array into a real and imaginary array for the output
+    gen_output_arrays : for I in g_fft.wb_factor - 1 downto 0 generate
+        out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), 64); --g_fft.stage_dat_w);
+        out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), 64); --g_fft.stage_dat_w);
+    end generate;
 
-				if (r.switch = '1') then -- Toggle the switch register from 1 to 0
-					v.switch     := '0';
-					v.count_up   := r.count_up + 1; -- Increment the upwards counter 
-					v.count_down := r.count_down - 1; -- Decrease the downwards counter
-				end if;
-
-				if (next_page = '1') then -- Both counters are reset on page turn. 
-					v.count_up   := 0;
-					v.count_down := c_page_size;
-				elsif (v.count_up = c_page_size / 2) then -- Pagereading is done, but there is not yet new data available (Note that the value of variable v is checked here) 
-					v.state := s_idle;  -- then go back to idle. 
-				end if;
-
-				v.val_odd  := r.switch; -- Assignment of the odd and even markers
-				v.val_even := not (r.switch);
-
-			when others =>
-				v.state := s_idle;
-
-		end case;
-
-		if (rst = '1') then
-			v.switch     := '0';
-			v.count_up   := 0;
-			v.count_down := 0;
-			v.val_odd    := '0';
-			v.val_even   := '0';
-			v.state      := s_idle;
-		end if;
-
-		rin <= v;
-
-	end process comb;
-
-	regs : process(clk)
-	begin
-		if rising_edge(clk) then
-			r <= rin;
-		end if;
-	end process;
-
-	---------------------------------------------------------------
-	-- OUTPUT STAGE: ALIGNMENT AND PIPELINE STAGES
-	---------------------------------------------------------------
-	gen_align_and_pipeline_stages : for I in g_fft.wb_factor / 2 - 1 downto 0 generate
-		u_output_pipeline_align : entity common_components_lib.common_pipeline
-			generic map(
-				g_pipeline  => c_pipeline_output + 1, -- Pipeline + one stage for allignment
-				g_in_dat_w  => c_dat_w,
-				g_out_dat_w => c_dat_w
-			)
-			port map(
-				clk     => clk,
-				in_dat  => sep_out_dat_arr(2 * I),
-				out_dat => out_dat_arr(2 * I)
-			);
-
-		u_output_pipeline : entity common_components_lib.common_pipeline
-			generic map(
-				g_pipeline  => c_pipeline_output, -- Only pipeline stage
-				g_in_dat_w  => c_dat_w,
-				g_out_dat_w => c_dat_w
-			)
-			port map(
-				clk     => clk,
-				in_dat  => sep_out_dat_arr(2 * I + 1),
-				out_dat => out_dat_arr(2 * I + 1)
-			);
-	end generate;
-
-	u_out_val_pipeline : entity common_components_lib.common_pipeline_sl
-		generic map(
-			g_pipeline => c_pipeline_output
-		)
-		port map(
-			clk     => clk,
-			in_dat  => sep_out_val_vec(1),
-			out_dat => out_val
-		);
-
-	-- Split the concatenated array into a real and imaginary array for the output
-	gen_output_arrays : for I in g_fft.wb_factor - 1 downto 0 generate
-		out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), 64); --g_fft.stage_dat_w);
-		out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), 64); --g_fft.stage_dat_w);
-	end generate;
+    -- Output of fft_sepa sync pipeline by minimum path
+    out_sync_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => c_pipeline_output
+        )
+        port map(
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => fft_sepa_sync,
+            in_val  => '1',
+            out_bit => out_sync
+        );
 
 end rtl;

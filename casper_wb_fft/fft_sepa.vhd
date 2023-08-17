@@ -50,9 +50,10 @@
 --   . floor(x/2) : mean(-2 -1 -1  0  0  1  1) = -2/8 = -0.25 = -2^(N-1)/2 / 2^N
 --   So the DC offset due to truncation is -0.25 LSbit, independent of N.
 
-library IEEE, common_pkg_lib, casper_adder_lib, casper_requantize_lib;
+library IEEE, common_pkg_lib, common_components_lib, casper_adder_lib, casper_requantize_lib;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
+use common_components_lib.common_bit_delay;
 use common_pkg_lib.common_pkg.ALL;
 
 entity fft_sepa is
@@ -64,8 +65,10 @@ entity fft_sepa is
         clken   : in  std_logic;
         rst     : in  std_logic;
         in_dat  : in  std_logic_vector;
+        in_sync : in std_logic;
         in_val  : in  std_logic;
         out_dat : out std_logic_vector;
+        out_sync: out std_logic;
         out_val : out std_logic
     );
 end entity fft_sepa;
@@ -110,7 +113,9 @@ architecture rtl of fft_sepa is
 
     signal r, rin     : reg_type := c_reg_type;
     signal sub_result : std_logic_vector(c_data_w downto 0); -- Result of the subtractor   
-    signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder   
+    signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder
+    
+    signal add_sync : std_logic := '0';   
 
     signal sub_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the subtractor   
     signal add_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the adder
@@ -120,6 +125,19 @@ begin
     ---------------------------------------------------------------
     -- ADDER AND SUBTRACTOR
     ---------------------------------------------------------------
+    adder_sync_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => 1 --same as the length of the pipeline output for adder/sub
+        )
+        port map(
+            clk     => clk,
+            rst     => rst,
+            in_clr  => '0',
+            in_bit  => in_sync,
+            in_val  => '1',
+            out_bit => add_sync
+        );
+    
     adder_1 : entity casper_adder_lib.common_add_sub
         generic map(
             g_direction       => "BOTH",
@@ -160,8 +178,11 @@ begin
         -- truncate the one LSbit
         add_result_q <= add_result(c_data_w downto 1);
         sub_result_q <= sub_result(c_data_w downto 1);
+        out_sync <= add_sync;
     end generate;
 
+    --Could possibly be a timing issue in the future, may want to pipeline the output
+    --If so, don't forget to delay the sync pulse accordingly. 
     gen_sepa_round : IF c_sepa_round GENERATE
         -- round the one LSbit
         round_add : ENTITY casper_requantize_lib.common_round
@@ -196,6 +217,18 @@ begin
                 clken   => clken,
                 in_dat  => sub_result,
                 out_dat => sub_result_q
+            );
+        u_rnd_delay_sync : entity common_components_lib.common_bit_delay
+            generic map(
+                g_depth => 0
+            )
+            port map(
+                clk     => clk,
+                rst     => rst,
+                in_clr  => '0',
+                in_bit  => add_sync,
+                in_val  => '1',
+                out_bit => out_sync
             );
     end generate;
 

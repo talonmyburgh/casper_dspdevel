@@ -90,6 +90,7 @@ entity rTwoSDF is
 		clk     	: in  std_logic;        							--! Clock input
 		ce      	: in  std_logic := '1'; 							--! Clock enable
 		rst     	: in  std_logic := '0'; 							--! Reset input (resets on high)
+		in_sync     : in  std_logic := '0';                             --! Input Sync signal
 		in_re   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Real input (data width = g_in_dat_w)
 		in_im   	: in  std_logic_vector(g_in_dat_w - 1 downto 0); 	--! Imag input (data width = g_in_dat_w)
 		in_val  	: in  std_logic := '1'; 							--! Input select for delay component (i.e. accept input to delay)
@@ -97,6 +98,7 @@ entity rTwoSDF is
 		out_re  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output real value (data width = g_out_dat_w)
 		out_im  	: out std_logic_vector(g_out_dat_w - 1 downto 0); 	--! Output imag value (data width = g_out_dat_w)
 		ovflw		: out std_logic_vector(ceil_log2(g_nof_points) - 1 downto 0);  --! Overflow register for specifying at which stage overflow may have occured.
+	    out_sync    : out std_logic := '0';                             --! Output Sync signal
 		out_val 	: out std_logic         							--!Output valid signal (valid when high)
 	);
 end entity rTwoSDF;
@@ -123,6 +125,8 @@ architecture str of rTwoSDF is
 	signal data_re  : t_data_arr;
 	signal data_im  : t_data_arr;
 	signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+	signal sync_vector : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+	signal rtwoOrder_out_sync : std_logic := '0';
 
 	signal out_cplx     : std_logic_vector(2 * g_stage_dat_w - 1 downto 0);
 	signal raw_out_cplx : std_logic_vector(2 * g_stage_dat_w - 1 downto 0);
@@ -136,6 +140,7 @@ begin
 	data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_stage_dat_w);
 	data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_stage_dat_w);
 	data_val(c_nof_stages) <= in_val;
+	sync_vector(c_nof_stages) <= in_sync;
 
 	------------------------------------------------------------------------------
 	-- pipelined FFT stages
@@ -163,6 +168,7 @@ begin
 			port map(
                 clk     => clk,
                 rst     => rst,
+                in_sync => sync_vector(stage),
                 in_re   => data_re(stage),
                 in_im   => data_im(stage),
                 scale   => shiftreg(stage-1), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
@@ -170,6 +176,7 @@ begin
                 out_re  => data_re(stage - 1),
                 out_im  => data_im(stage - 1),
                 ovflw    => ovflw(stage-1),
+                out_sync => sync_vector(stage -1),
                 out_val => data_val(stage - 1)
 			);
 	end generate;
@@ -201,9 +208,11 @@ begin
 				clk     => clk,
 				ce      => ce,
 				rst     => rst,
+				in_sync => sync_vector(0),
 				in_dat  => raw_out_cplx,
 				in_val  => data_val(0),
 				out_dat => out_cplx,
+				out_sync=> rtwoOrder_out_sync,
 				out_val => raw_out_val
 			);
 	end generate;
@@ -263,4 +272,15 @@ begin
 		in_dat  => raw_out_val,
 		out_dat => out_val
 	);
+	-- Sync Output
+    u_out_sync : entity common_components_lib.common_pipeline_sl
+    generic map(
+        g_pipeline => c_pipeline_remove_lsb
+    )
+    port map(
+        rst     => rst,
+        clk     => clk,
+        in_dat  => rtwoOrder_out_sync,
+        out_dat => out_sync
+    );
 end str;
