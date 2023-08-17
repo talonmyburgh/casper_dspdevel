@@ -123,36 +123,49 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal buf_rd_val, buf_rd_val_d1                : std_logic;
 
     -- separate ports
-    signal sep_in_dat                            : std_logic_vector(c_dat_w - 1 downto 0);
-    signal sep_in_val, sep_in_sync, sep_out_sync : std_logic;
+    signal sep_in_dat, sep_out_dat      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_in_val, sep_out_val      : std_logic;
 
-    signal sep_out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
-    signal sep_out_val_i : std_logic;
+    signal sep_out_dat_i      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_out_val_i      : std_logic;
+    
+    signal not_first_spectrum     : std_logic := '0';
+    signal count_out_en           : std_logic;
+           
+	signal next_page : std_logic;
 
-    signal not_first_spectrum : std_logic := '0';
-    signal count_out_en       : std_logic;
+	signal cnt_ena : std_logic;
 
-    signal next_page : std_logic;
+	signal rd_en       : std_logic;
+	signal rd_adr_up   : std_logic_vector(c_adr_points_w downto 0);
+	signal rd_adr_down : std_logic_vector(c_adr_points_w downto 0); -- use intermediate rd_adr_down that has 1 bit extra to avoid truncation warning with TO_UVEC()
+	signal rd_adr      : std_logic_vector(c_adr_tot_w - 1 downto 0);
+	signal rd_dat      : std_logic_vector(c_dat_w - 1 downto 0);
+	signal rd_val      : std_logic;
 
-    signal cnt_ena : std_logic;
+	signal out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
+	signal out_val_i : std_logic;
 
-    signal rd_en       : std_logic;
-    signal rd_adr_up   : std_logic_vector(c_adr_points_w downto 0);
-    signal rd_adr_down : std_logic_vector(c_adr_points_w downto 0); -- use intermediate rd_adr_down that has 1 bit extra to avoid truncation warning with TO_UVEC()
-    signal rd_adr      : std_logic_vector(c_adr_tot_w - 1 downto 0);
+	type state_type is (s_idle, s_run_separate, s_run_normal);
 
-    type state_type is (s_idle, s_run_separate, s_run_normal);
+	type reg_type is record
+		rd_en      : std_logic;         -- The read enable signal to read out the data from the dp memory
+		switch     : std_logic;         -- Toggel register used for separate functionalilty
+		count_up   : natural;           -- An upwards counter for read addressing
+		count_down : natural;           -- A downwards counter for read addressing
+		count_chan : natural;           -- Counter that holds the number of channels for reading. 
+		state      : state_type;        -- The state machine. 
+	end record;
+	
+	constant c_reg_type : reg_type := (
+	       rd_en => '0',
+	       switch => '0',
+	       count_up => 0,
+	       count_down => 0,
+	       count_chan => 0,
+	       state => s_idle);
 
-    type reg_type is record
-        rd_en      : std_logic;         -- The read enable signal to read out the data from the dp memory
-        switch     : std_logic;         -- Toggel register used for separate functionalilty
-        count_up   : natural;           -- An upwards counter for read addressing
-        count_down : natural;           -- A downwards counter for read addressing
-        count_chan : natural;           -- Counter that holds the number of channels for reading. 
-        state      : state_type;        -- The state machine. 
-    end record;
-
-    signal r, rin : reg_type;
+	signal r, rin : reg_type := c_reg_type;
 
 begin
     u_adr_chan_cnt : entity casper_counter_lib.common_counter

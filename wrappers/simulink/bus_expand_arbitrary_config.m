@@ -18,7 +18,7 @@ function bus_expand_arbitrary_config(this_block)
   types = strrep(types, '"', '');
   types = str2double(regexp(types,'\d+','match'));
 
-  if length(division_bit_widths) != radix_points || length(division_bit_widths) != length(types)
+  if length(division_bit_widths) ~= length(radix_points) || length(division_bit_widths) ~= length(types)
     this_block.setError(sprintf('Inconsistent number of values given.'));
   end
 
@@ -42,15 +42,15 @@ function bus_expand_arbitrary_config(this_block)
     end
     
     for o_data_i = 1:length(division_bit_widths)
-      port_name = sprintf('o_data_%d',o_data_i)
+      port_name = sprintf('o_data_%d',o_data_i);
       o_data_port = this_block.port(port_name);
       o_data_port.setWidth(division_bit_widths(o_data_i));
       if types(o_data_i) == 0 % UFix
         str_o_dat_type = sprintf('UFix_%d_%d', division_bit_widths(o_data_i), radix_points(o_data_i));
         o_data_port.setType(str_o_dat_type);
       elseif types(o_data_i) == 1 % Fix
-        str_o_dat_type = sprintf('Fix_%d_%d', division_bit_widths(o_data_i), radix_points(o_data_i));
-        o_data_port.setType(str_o_dat_type);
+        str_o_dat_type = sprintf('Fix_%d_%d', division_bit_widths(o_data_i), radix_points(o_data_i))
+        o_data_port.setType(str_o_dat_type)
       elseif types(o_data_i) == 2 % bool
         if (o_data_port.width ~= 1)
           this_block.setError(sprintf('Output port "%s" must have width 1 to be bool.', port_name));

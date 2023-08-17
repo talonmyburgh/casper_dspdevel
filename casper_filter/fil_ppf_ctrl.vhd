@@ -84,7 +84,17 @@ architecture rtl of fil_ppf_ctrl is
     out_val_ena  : std_logic;                                  -- Output enable 
   end record;
   
-  signal r, rin : reg_type; 
+  constant c_reg_type_rst : reg_type := (
+    in_dat_arr => (others=>(others=>'0')),
+    init_dly_cnt => 0,
+    val_dly => (others=>'0'),
+    rd_addr => (others=>'0'),
+    wr_addr => (others=>'0'),
+    wr_en => '0',
+    taps_out_vec => (others=>'0'),
+    out_val_ena => '0'); 
+  
+  signal r, rin : reg_type := c_reg_type_rst; 
   
 begin
   

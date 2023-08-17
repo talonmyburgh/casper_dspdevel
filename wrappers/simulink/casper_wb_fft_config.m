@@ -100,15 +100,15 @@ function casper_wb_fft_config(this_block)
 %inport declarations
 this_block.addSimulinkInport('rst');
 in_rst_port = this_block.port('rst');
-in_rst_port.setType('Ufix_1_0');
+in_rst_port.setType('Bool');
 in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
-in_sync_port.setType('Ufix_1_0');
+in_sync_port.setType('Bool');
 in_sync_port.useHDLVector(false);
 this_block.addSimulinkInport('in_valid');
 in_valid_port = this_block.port('in_valid');
-in_valid_port.setType('Ufix_1_0');
+in_valid_port.setType('Bool');
 in_valid_port.useHDLVector(false);
 this_block.addSimulinkInport('in_shiftreg');
 in_shiftreg_port = this_block.port('in_shiftreg');
@@ -123,12 +123,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
 
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
-  in_sop_port.setType('Ufix_1_0');
+  in_sop_port.setType('Bool');
   in_sop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
-  in_eop_port.setType('Ufix_1_0');
+  in_eop_port.setType('Bool');
   in_eop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_empty');
@@ -159,12 +159,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   
   this_block.addSimulinkOutport('out_sync');
   out_sync_port = this_block.port('out_sync');
-  out_sync_port.setType('Ufix_1_0');
+  out_sync_port.setType('Bool');
   out_sync_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('out_valid');
   out_valid_port = this_block.port('out_valid');
-  out_valid_port.setType('Ufix_1_0');
+  out_valid_port.setType('Bool');
   out_valid_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('out_ovflw');
@@ -178,12 +178,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
     
     this_block.addSimulinkOutport('out_sop');
     out_sop_port = this_block.port('out_sop');
-    out_sop_port.setType('Ufix_1_0');
+    out_sop_port.setType('Bool');
     out_sop_port.useHDLVector(false);
     
     this_block.addSimulinkOutport('out_eop');
     out_eop_port = this_block.port('out_eop');
-    out_eop_port.setType('Ufix_1_0');
+    out_eop_port.setType('Bool');
     out_eop_port.useHDLVector(false);
     
     this_block.addSimulinkOutport('out_empty');

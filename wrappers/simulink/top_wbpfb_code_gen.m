@@ -172,8 +172,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                                  "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
+    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fil_sosi_rst_out);"
+    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fft_sosi_rst_out);"
     "begin"
     " wbpfb_unit : entity wpfb_lib.wbpfb_unit_dev"
     " generic map ("
@@ -210,26 +210,42 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "in_fil_sosi_arr(j).channel <= in_channel;"
     "in_fil_sosi_arr(j).err <= in_err;"
     "end generate;"
-    "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
-    "out_sync <= out_fft_sosi_arr(k).sync;"
-    "out_bsn <= out_fft_sosi_arr(k).bsn;"
-    "out_valid <= out_fft_sosi_arr(k).valid ;"
-    "out_sop <= out_fft_sosi_arr(k).sop;"
-    "out_eop <= out_fft_sosi_arr(k).eop;"
-    "out_empty <= out_fft_sosi_arr(k).empty;"
-    "out_channel <= out_fft_sosi_arr(k).channel;"
-    "out_err <= out_fft_sosi_arr(k).err;"
-    "end generate;"
-    "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
-    "fil_sync <= out_fil_sosi_arr(k).sync;"
-    "fil_bsn <= out_fil_sosi_arr(k).bsn;"
-    "fil_valid <= out_fil_sosi_arr(k).valid ;"
-    "fil_sop <= out_fil_sosi_arr(k).sop;"
-    "fil_eop <= out_fil_sosi_arr(k).eop;"
-    "fil_empty <= out_fil_sosi_arr(k).empty;"
-    "fil_channel <= out_fil_sosi_arr(k).channel;"
-    "fil_err <= out_fil_sosi_arr(k).err;"
-    "end generate;"
+    "out_sync <= out_fft_sosi_arr(0).sync;"
+    "out_bsn <= out_fft_sosi_arr(0).bsn;"
+    "out_valid <= out_fft_sosi_arr(0).valid ;"
+    "out_sop <= out_fft_sosi_arr(0).sop;"
+    "out_eop <= out_fft_sosi_arr(0).eop;"
+    "out_empty <= out_fft_sosi_arr(0).empty;"
+    "out_channel <= out_fft_sosi_arr(0).channel;"
+    "out_err <= out_fft_sosi_arr(0).err;"
+%     "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "out_sync <= out_fft_sosi_arr(k).sync;"
+%     "out_bsn <= out_fft_sosi_arr(k).bsn;"
+%     "out_valid <= out_fft_sosi_arr(k).valid ;"
+%     "out_sop <= out_fft_sosi_arr(k).sop;"
+%     "out_eop <= out_fft_sosi_arr(k).eop;"
+%     "out_empty <= out_fft_sosi_arr(k).empty;"
+%     "out_channel <= out_fft_sosi_arr(k).channel;"
+%     "out_err <= out_fft_sosi_arr(k).err;"
+%     "end generate;"
+    "fil_sync <= out_fil_sosi_arr(0).sync;"
+    "fil_bsn <= out_fil_sosi_arr(0).bsn;"
+    "fil_valid <= out_fil_sosi_arr(0).valid ;"
+    "fil_sop <= out_fil_sosi_arr(0).sop;"
+    "fil_eop <= out_fil_sosi_arr(0).eop;"
+    "fil_empty <= out_fil_sosi_arr(0).empty;"
+    "fil_channel <= out_fil_sosi_arr(0).channel;"
+    "fil_err <= out_fil_sosi_arr(0).err;"
+%     "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "fil_sync <= out_fil_sosi_arr(k).sync;"
+%     "fil_bsn <= out_fil_sosi_arr(k).bsn;"
+%     "fil_valid <= out_fil_sosi_arr(k).valid ;"
+%     "fil_sop <= out_fil_sosi_arr(k).sop;"
+%     "fil_eop <= out_fil_sosi_arr(k).eop;"
+%     "fil_empty <= out_fil_sosi_arr(k).empty;"
+%     "fil_channel <= out_fil_sosi_arr(k).channel;"
+%     "fil_err <= out_fil_sosi_arr(k).err;"
+%     "end generate;"
 	];
     
     lnsafterarchopen_w_o_xtradat = [");"
@@ -240,8 +256,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                              "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
+    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fil_sosi_rst_out);"
+    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fft_sosi_rst_out);"
     "begin"
     " wbpfb_unit : entity wpfb_lib.wbpfb_unit_dev"
     " generic map ("
@@ -272,14 +288,18 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "in_fil_sosi_arr(j).sync <= in_sync;"
     "in_fil_sosi_arr(j).valid <= in_valid;"
     "end generate;"
-    "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
-    "out_sync <= out_fft_sosi_arr(k).sync;"
-    "out_valid <= out_fft_sosi_arr(k).valid;"
-    "end generate;"
-    "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
-    "fil_sync <= out_fil_sosi_arr(k).sync;"
-    "fil_valid <= out_fil_sosi_arr(k).valid;"
-    "end generate;"
+    "out_sync <= out_fft_sosi_arr(0).sync;"
+    "out_valid <= out_fft_sosi_arr(0).valid;"
+%     "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "out_sync <= out_fft_sosi_arr(k).sync;"
+%     "out_valid <= out_fft_sosi_arr(k).valid;"
+%     "end generate;"
+    "fil_sync <= out_fil_sosi_arr(0).sync;"
+    "fil_valid <= out_fil_sosi_arr(0).valid;"
+%     "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "fil_sync <= out_fil_sosi_arr(k).sync;"
+%     "fil_valid <= out_fil_sosi_arr(k).valid;"
+%     "end generate;"
 	];
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %create an array of lines from architecture opening till where 
@@ -362,10 +382,8 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
             i=i+1;
             if (j ~= wbfctr-1 | k ~= nof_wb_streams-1)
                 chararr(i,1)=sprintf(outrechar,k,j);
-                fprintf("Not finished, wb: %d, str: %d",j,k);
             else
                 chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
-                fprintf("Finished, wb: %d, str: %d",j,k);
             end
             i=i+1;
         end
@@ -381,9 +399,9 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
     omap_re_c = "out_re_str%d_wb%d <= out_fft_sosi_arr(%d).re;";
     omap_im_c = "out_im_str%d_wb%d <= out_fft_sosi_arr(%d).im;";
     l = 1;
+    arr_index = 0;
     for n=0:1:nof_wb_streams-1
         for m=0:1:wbfctr-1
-            arr_index = (n+1)*m;
             achararr(l,1)=sprintf(imap_re_c,arr_index,n,m);
             l=l+1;
             achararr(l,1)=sprintf(imap_im_c,arr_index,n,m);
@@ -396,6 +414,7 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
             l=l+1;
             achararr(l,1)=sprintf(omap_im_c,n,m,arr_index);
             l=l+1;
+            arr_index = arr_index + 1;
         end
     end
 end
