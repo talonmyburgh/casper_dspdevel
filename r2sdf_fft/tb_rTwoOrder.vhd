@@ -39,73 +39,81 @@ END tb_rTwoOrder;
 
 ARCHITECTURE tb OF tb_rTwoOrder IS
 
-  CONSTANT c_clk_period : TIME := 10 ns;
+    CONSTANT c_clk_period : TIME := 10 ns;
 
-  CONSTANT c_nof_points : NATURAL := 8;
-  CONSTANT c_dat_w      : NATURAL := 10;
+    CONSTANT c_nof_points : NATURAL := 8;
+    CONSTANT c_dat_w      : NATURAL := 10;
 
-  SIGNAL tb_end    : STD_LOGIC := '0';
-  SIGNAL rst       : STD_LOGIC;
-  SIGNAL clk       : STD_LOGIC := '1';
+    SIGNAL tb_end   : STD_LOGIC := '0';
+    SIGNAL in_sync  : STD_LOGIC;
+    SIGNAL out_sync : STD_LOGIC;
+    SIGNAL clk      : STD_LOGIC := '1';
 
-  SIGNAL random_0  : STD_LOGIC_VECTOR(14 DOWNTO 0) := (OTHERS=>'0');  -- use different lengths to have different random sequences
+    SIGNAL random_0 : STD_LOGIC_VECTOR(14 DOWNTO 0) := (OTHERS => '0'); -- use different lengths to have different random sequences
 
-  SIGNAL in_dat    : STD_LOGIC_VECTOR(c_dat_w-1 DOWNTO 0) := TO_UVEC(1, c_dat_w);
-  SIGNAL in_val    : STD_LOGIC;
+    SIGNAL in_dat : STD_LOGIC_VECTOR(c_dat_w - 1 DOWNTO 0) := TO_UVEC(1, c_dat_w);
+    SIGNAL in_val : STD_LOGIC;
 
-  SIGNAL out_dat   : STD_LOGIC_VECTOR(c_dat_w-1 DOWNTO 0);
-  SIGNAL out_val   : STD_LOGIC;
+    SIGNAL out_dat : STD_LOGIC_VECTOR(c_dat_w - 1 DOWNTO 0);
+    SIGNAL out_val : STD_LOGIC;
 
 BEGIN
 
-  clk <= (NOT clk) OR tb_end AFTER c_clk_period/2;
-  rst <= '1', '0' AFTER c_clk_period*3;
+    clk     <= (NOT clk) OR tb_end AFTER c_clk_period / 2;
 
-  random_0 <= func_common_random(random_0) WHEN rising_edge(clk);
+    random_0 <= func_common_random(random_0) WHEN rising_edge(clk);
 
-  in_dat <= INCR_UVEC(in_dat, 1) when rising_edge(clk) and in_val='1';
+    in_dat <= INCR_UVEC(in_dat, 1) when rising_edge(clk) and in_val = '1';
 
-  -- run 1 us
-  p_stimuli : PROCESS
-  BEGIN
-    in_val <= '0';
-    WAIT UNTIL rst = '0';
-    proc_common_wait_some_cycles(clk, 3);
+    -- run 1 us
+    p_stimuli : PROCESS
+    BEGIN
+        in_sync <= '0';
+        in_val <= '0';
+        proc_common_wait_some_cycles(clk, 1);
+        in_sync <= '1', '0' AFTER c_clk_period * 1;
+        in_val  <= '1', '0' AFTER c_clk_period * 1;
+        WAIT FOR c_clk_period * 1;
+        
+        FOR J IN 0 TO 7 LOOP
+            -- wait some time
+            --       in_val <= '0';
+            --       FOR I IN 0 TO 1 LOOP WAIT UNTIL rising_edge(clk); END LOOP;
 
-    FOR J IN 0 TO 7 LOOP
-      -- wait some time
---       in_val <= '0';
---       FOR I IN 0 TO 1 LOOP WAIT UNTIL rising_edge(clk); END LOOP;
+            -- one block
+--            in_val <= NOT in_val;       -- toggling
+            FOR I IN 0 TO c_nof_points - 1 LOOP
+                --in_val <= NOT in_val;                 -- toggling
+                in_val <= random_0(random_0'HIGH);    -- random
+                WAIT UNTIL rising_edge(clk);
+            END LOOP;
+        END LOOP;
 
-      -- one block
-      in_val <= NOT in_val;                 -- toggling
-      FOR I IN 0 TO c_nof_points-1 LOOP
-        --in_val <= NOT in_val;                 -- toggling
-        --in_val <= random_0(random_0'HIGH);    -- random
-        WAIT UNTIL rising_edge(clk);
-      END LOOP;
-    END LOOP;
+        in_val <= '0';
 
-    in_val <= '0';
-    
-    proc_common_wait_some_cycles(clk, 10);
-    tb_end <= '1';
-    WAIT;
-  END PROCESS;
+        proc_common_wait_some_cycles(clk, 10);
+        tb_end <= '1';
+        WAIT;
+    END PROCESS;
 
-  -- device under test
-  u_dut : ENTITY work.rTwoOrder
-  GENERIC MAP (
-    g_nof_points  => c_nof_points,
-    g_bit_flip    => false
-  )
-  port map (
-    clk     => clk,
-    rst     => rst,
-    in_dat  => in_dat,
-    in_val  => in_val,
-    out_dat => out_dat,
-    out_val => out_val
-  );
+    -- device under test
+    u_dut : ENTITY work.rTwoOrder
+        GENERIC MAP(
+            g_nof_points => c_nof_points,
+            g_bit_flip   => false,
+            g_nof_chan => 0,
+            g_dat_w => c_dat_w,
+            g_ram_primitive => "auto"
+        )
+        port map(
+            clk      => clk,
+            ce       => '1',
+            in_sync  => in_sync,
+            in_dat   => in_dat,
+            in_val   => in_val,
+            out_dat  => out_dat,
+            out_sync => out_sync,
+            out_val  => out_val
+        );
 
 END tb;
