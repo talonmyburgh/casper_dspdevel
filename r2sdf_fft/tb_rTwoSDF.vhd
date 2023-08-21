@@ -126,17 +126,16 @@ architecture tb of tb_rTwoSDF is
     -- signal definitions
     signal tb_end : std_logic                     := '0';
     signal clk    : std_logic                     := '0';
-    signal rst    : std_logic                     := '0';
     signal enable : std_logic                     := '1';
     signal random : std_logic_vector(15 downto 0) := (others => '0'); -- use different lengths to have different random sequences
     signal in_en  : std_logic                     := '0';
 
-    signal in_re   : std_logic_vector(g_in_dat_w - 1 downto 0);
-    signal in_im   : std_logic_vector(g_in_dat_w - 1 downto 0);
-    signal in_sync : std_logic := '0';
-    signal trigger : std_logic := '0';
+    signal in_re     : std_logic_vector(g_in_dat_w - 1 downto 0);
+    signal in_im     : std_logic_vector(g_in_dat_w - 1 downto 0);
+    signal in_sync   : std_logic := '0';
+    signal trigger   : std_logic := '0';
     signal triggerff : std_logic := '0';
-    signal in_val  : std_logic := '0';
+    signal in_val    : std_logic := '0';
 
     signal out_re   : std_logic_vector(g_out_dat_w - 1 downto 0);
     signal out_im   : std_logic_vector(g_out_dat_w - 1 downto 0);
@@ -170,27 +169,26 @@ architecture tb of tb_rTwoSDF is
 begin
 
     clk      <= (not clk) or tb_end after c_clk_period / 2;
-    rst      <= '1', '0' after c_clk_period * 7;
     o_clk    <= clk;
-    o_rst    <= rst;
+    o_rst    <= in_sync;
     o_tb_end <= tb_end;
 
-    trigger <= '0', '1' after c_clk_period * 22;
-    enable <= '0', '1' after c_clk_period * 23;
-    random <= func_common_random(random) when rising_edge(clk);
-    in_en  <= '1' when g_in_en = 1 else random(random'HIGH);
+    trigger <= '0', '1' after c_clk_period * 23;
+    enable  <= '0', '1' after c_clk_period * 23;
+    random  <= func_common_random(random) when rising_edge(clk);
+    in_en   <= '1' when g_in_en = 1 else random(random'HIGH);
 
     process(clk)
-        begin
-            if rising_edge(clk) then
-                triggerff <= trigger;
-                if (trigger = '1') and (triggerff = '0') then
-                    in_sync <= '1';
-                else
-                    in_sync <= '0';
-                end if;
+    begin
+        if rising_edge(clk) then
+            triggerff <= trigger;
+            if (trigger = '1') and (triggerff = '0') then
+                in_sync <= '1';
+            else
+                in_sync <= '0';
             end if;
-        end process;
+        end if;
+    end process;
 
     p_read_input_file : process
         file v_input          : TEXT open READ_MODE is c_inputFile; -- this is LRM 1076-1987 style and implies that only simulator start and quit can open and close the file
@@ -233,18 +231,18 @@ begin
         wait;
     end process;
 
-    p_in_stimuli : process(clk, rst)
+    p_in_stimuli : process(clk, in_sync)
     begin
-        if rst = '1' then
-            in_re   <= (others => '0');
-            in_im   <= (others => '0');
-            in_val  <= '0';
+        if in_sync = '1' then
+            in_re  <= (others => '0');
+            in_im  <= (others => '0');
+            in_val <= '0';
 
             in_index  <= 0;
             in_repeat <= 0;
         elsif rising_edge(clk) then
 
-            in_val  <= '0';
+            in_val <= '0';
 
             -- start stimuli some arbitrary time after rst release to ensure that the proper behaviour of the DUT does not depend on that time
             if enable = '1' then
@@ -258,9 +256,9 @@ begin
                     end if;
 
                     if in_repeat < c_repeat then
-                        in_re   <= std_logic_vector(to_signed(in_file_data(in_index, 1), g_in_dat_w));
-                        in_im   <= std_logic_vector(to_signed(in_file_data(in_index, 2), g_in_dat_w));
-                        in_val  <= std_logic(in_file_val(in_index));
+                        in_re  <= std_logic_vector(to_signed(in_file_data(in_index, 1), g_in_dat_w));
+                        in_im  <= std_logic_vector(to_signed(in_file_data(in_index, 2), g_in_dat_w));
+                        in_val <= std_logic(in_file_val(in_index));
                     end if;
 
                     if in_repeat > c_repeat then
@@ -289,7 +287,6 @@ begin
         )
         port map(
             clk      => clk,
-            rst      => rst,
             in_sync  => in_sync,
             in_re    => in_re,
             in_im    => in_im,
@@ -298,7 +295,7 @@ begin
             out_re   => out_re,
             out_im   => out_im,
             out_val  => out_val,
-            out_sync => open,
+            out_sync => out_sync,
             ovflw    => s_ovflw
         );
 

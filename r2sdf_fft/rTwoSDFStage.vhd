@@ -45,8 +45,7 @@ entity rTwoSDFStage is
     );
     port(
         clk      : in  std_logic;       --! Input clock
-        rst      : in  std_logic;       --! Input reset
-        in_sync  : in  std_logic := '0'; --! Input Sync signal
+        in_sync  : in  std_logic := '0'; --! Input Sync signal (acts as reset)
         in_re    : in  std_logic_vector; --! Real input value
         in_im    : in  std_logic_vector; --! Imaginary input value
         scale    : in  std_logic;       --! Scale (1) or not (0)
@@ -103,6 +102,7 @@ architecture str of rTwoSDFStage is
 
     signal bfstage_sync : std_logic := '0';
     signal bf_sync      : std_logic := '0';
+    signal rtwomul_sync : std_logic := '0';
 
 begin
 
@@ -140,7 +140,6 @@ begin
         )
         port map(
             clk      => clk,
-            rst      => rst,
             in_sync  => in_sync,
             in_re    => in_re,
             in_im    => in_im,
@@ -203,7 +202,7 @@ begin
         )
         port map(
             clk       => clk,
-            rst       => rst,
+            in_sync   => bf_sync,
             weight_re => weight_re,
             weight_im => weight_im,
             in_re     => bf_re_tomult,
@@ -212,6 +211,7 @@ begin
             in_sel    => bf_sel_tomult,
             out_re    => mul_out_re,
             out_im    => mul_out_im,
+            out_sync  => rtwomul_sync,
             out_val   => mul_out_val
         );
     ------------------------------------------------------------------------------
@@ -284,14 +284,14 @@ begin
 
     u_sync_delay : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => g_pipeline.mul_lat + g_pipeline.stage_lat
+            g_depth => g_pipeline.stage_lat
         )
         port map(
             clk     => clk,
-            rst     => rst,
+            rst     => '0',
             in_clr  => '0',
-            in_bit  => bf_sync,
-            in_val  => '1',
+            in_bit  => rtwomul_sync,
+            in_val  => mul_out_val,
             out_bit => out_sync
         );
 
