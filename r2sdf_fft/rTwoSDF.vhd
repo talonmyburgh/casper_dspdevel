@@ -186,6 +186,7 @@ begin
         raw_out_re  <= data_re(0);
         raw_out_im  <= data_im(0);
         raw_out_val <= data_val(0);
+        rtwoOrder_out_sync <= sync_vector(0);
     end generate;
 
     gen_reorder : if g_use_reorder = true generate

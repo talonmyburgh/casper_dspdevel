@@ -201,7 +201,7 @@ begin
     --Delay sync out
     u_delay_sync : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_count_lat + g_nof_points - 1
+            g_depth => c_count_lat + g_nof_points + c_ram_read_lat
         )
         port map(
             clk     => clk,
