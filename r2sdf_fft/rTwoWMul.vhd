@@ -241,6 +241,8 @@ begin
             out_dat => out_sel
         );
 
+    -- I'm confused by why ASTRON does not "enable/disable" the pipelining of the out_val - but we need the same behaviour for the 
+    -- sync else it comes out at the wrong time when toggling the in_val signal.
     u_delay_sync : entity common_components_lib.common_bit_delay
         generic map(
             g_depth => g_lat
@@ -250,7 +252,6 @@ begin
             rst     => '0',
             in_clr  => '0',
             in_bit  => in_sync,
-            in_val  => in_val,
             out_bit => out_sync
         );
 

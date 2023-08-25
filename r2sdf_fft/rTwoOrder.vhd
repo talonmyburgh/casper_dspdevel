@@ -86,7 +86,7 @@ architecture rtl of rTwoOrder is
     signal adr_chan_cnt   : std_logic_vector(c_adr_chan_w - 1 downto 0);
     signal adr_tot_cnt    : std_logic_vector(c_adr_tot_w - 1 downto 0);
 
-    signal in_init     : STD_LOGIC;
+    signal in_init     : STD_LOGIC := '1';
     signal nxt_in_init : STD_LOGIC;
     signal in_en       : STD_LOGIC;
 
@@ -201,14 +201,14 @@ begin
     --Delay sync out
     u_delay_sync : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_count_lat + g_nof_points + c_ram_read_lat
+            g_depth => g_nof_points + c_ram_read_lat
         )
         port map(
             clk     => clk,
             rst     => '0',
             in_clr  => '0',
             in_bit  => in_sync,
-            in_val  => cnt_ena,
+            in_val  => in_val,
             out_bit => out_sync
         );
 

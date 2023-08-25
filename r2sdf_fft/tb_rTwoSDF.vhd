@@ -123,6 +123,8 @@ architecture tb of tb_rTwoSDF is
     constant c_goldenFile : string := sel_a_b(g_use_uniNoise_file, c_noiseGoldenFile, c_impulseGoldenFile);
     constant c_outputFile : string := sel_a_b(g_use_uniNoise_file, c_noiseOutputFile, c_impulseOutputFile);
 
+    signal synced : std_logic := '0';
+
     -- signal definitions
     signal tb_end : std_logic                     := '0';
     signal clk    : std_logic                     := '0';
@@ -135,12 +137,15 @@ architecture tb of tb_rTwoSDF is
     signal in_sync   : std_logic := '0';
     signal trigger   : std_logic := '0';
     signal triggerff : std_logic := '0';
+    signal out_sync_ff : std_logic := '0';
     signal in_val    : std_logic := '0';
 
     signal out_re   : std_logic_vector(g_out_dat_w - 1 downto 0);
     signal out_im   : std_logic_vector(g_out_dat_w - 1 downto 0);
     signal out_sync : std_logic := '0';
     signal out_val  : std_logic := '0';
+    signal data_val  : std_logic := '0';
+    signal out_data_ready : std_logic := '0';
     signal s_ovflw  : std_logic_vector(c_nof_points_w - 1 downto 0);
 
     signal in_file_data : t_integer_matrix(0 to c_file_len - 1, 1 to 2) := (others => (others => 0)); -- [re, im]
@@ -172,21 +177,29 @@ begin
     o_clk    <= clk;
     o_rst    <= in_sync;
     o_tb_end <= tb_end;
+    enable   <= '0', '1' after c_clk_period * 23;
+    random   <= func_common_random(random) when rising_edge(clk);
+    in_en    <= '1' when g_in_en = 1 else random(random'HIGH);
+    out_data_ready <= data_val and out_val;
 
-    trigger <= '0', '1' after c_clk_period * 23;
-    enable  <= '0', '1' after c_clk_period * 23;
-    random  <= func_common_random(random) when rising_edge(clk);
-    in_en   <= '1' when g_in_en = 1 else random(random'HIGH);
-
-    process(clk)
+    drive_sync : process(clk)
     begin
         if rising_edge(clk) then
             triggerff <= trigger;
-            if (trigger = '1') and (triggerff = '0') then
+            if (trigger = '1') and (triggerff = '0') and synced = '0' then
                 in_sync <= '1';
+                synced  <= '0', '1' after c_clk_period * 1;
             else
                 in_sync <= '0';
             end if;
+        end if;
+    end process;
+    
+    --we await the out_sync signal and wait till the rising edge before considering the data ready.
+    reg_output_sync : process(out_sync)
+    begin
+        if rising_edge(out_sync) then
+                data_val <= '1';
         end if;
     end process;
 
@@ -231,42 +244,49 @@ begin
         wait;
     end process;
 
-    p_in_stimuli : process(clk, in_sync)
+    p_in_stimuli : process(clk, in_sync, in_val)
+        variable nof_clk_periods : natural :=0;
     begin
-        if in_sync = '1' then
-            in_re  <= (others => '0');
-            in_im  <= (others => '0');
-            in_val <= '0';
-
+        if in_sync = '1' and in_val = '1' then
+            in_re     <= (others => '0');
+            in_im     <= (others => '0');
             in_index  <= 0;
             in_repeat <= 0;
-        elsif rising_edge(clk) then
-
-            in_val <= '0';
-
-            -- start stimuli some arbitrary time after rst release to ensure that the proper behaviour of the DUT does not depend on that time
-            if enable = '1' then
-                -- use always active input (the in_file contents may still contain blocks with in_val='0') or use random active input
-                if in_en = '1' then
-                    if in_index < c_file_len - 1 then
-                        in_index <= in_index + 1;
-                    else
-                        in_index  <= 0;
-                        in_repeat <= in_repeat + 1;
-                    end if;
-
-                    if in_repeat < c_repeat then
-                        in_re  <= std_logic_vector(to_signed(in_file_data(in_index, 1), g_in_dat_w));
-                        in_im  <= std_logic_vector(to_signed(in_file_data(in_index, 2), g_in_dat_w));
-                        in_val <= std_logic(in_file_val(in_index));
-                    end if;
-
-                    if in_repeat > c_repeat then
-                        tb_end <= '1';
+        end if;
+        
+        if rising_edge(clk) then
+            if nof_clk_periods = 6 then
+                trigger <= '1';
+            elsif nof_clk_periods = 7 then
+                in_val <= '1';
+            elsif nof_clk_periods = 8 then
+                in_val <= '0';
+            elsif synced = '1' then
+                in_val <= '0';
+    
+                -- start stimuli some arbitrary time after rst release to ensure that the proper behaviour of the DUT does not depend on that time
+                if enable = '1' then
+                    -- use always active input (the in_file contents may still contain blocks with in_val='0') or use random active input
+                    if in_en = '1' then
+                        if in_index < c_file_len - 1 then
+                            in_index <= in_index + 1;
+                        else
+                            in_index  <= 0;
+                            in_repeat <= in_repeat + 1;
+                        end if;
+    
+                        if in_repeat < c_repeat then
+                            in_re  <= std_logic_vector(to_signed(in_file_data(in_index, 1), g_in_dat_w));
+                            in_im  <= std_logic_vector(to_signed(in_file_data(in_index, 2), g_in_dat_w));
+                            in_val <= std_logic(in_file_val(in_index));
+                        end if;
+                        if in_repeat > c_repeat then
+                            tb_end <= '1';
+                        end if;
                     end if;
                 end if;
             end if;
-
+        nof_clk_periods := nof_clk_periods + 1;
         end if;
     end process;
 
@@ -342,7 +362,7 @@ begin
     end process;
 
     -- Show read data in Wave Window for debug purposes
-    gold_index <= gold_index + 1 when rising_edge(clk) and out_val = '1';
+    gold_index <= gold_index + 1 when rising_edge(clk) and out_data_ready = '1';
     flip_index <= (gold_index / g_nof_points) * g_nof_points + flip(gold_index mod g_nof_points, c_nof_points_w);
     gold_sync  <= gold_file_sync(gold_index);
     gold_re    <= gold_file_data(gold_index, 1) when g_use_reorder = true else gold_file_data(flip_index, 1);
@@ -360,7 +380,7 @@ begin
     begin
         -- Compare
         if rising_edge(clk) then
-            if out_val = '1' and gold_index <= gold_index_max then
+            if out_data_ready = '1' and gold_index <= gold_index_max then
                 -- only write when out_val='1', because then the file is independent of cycles with invalid out_dat
                 v_test_pass_sync := out_sync = gold_sync;
                 if not v_test_pass_sync then
@@ -388,11 +408,11 @@ begin
         variable v_line : LINE;
     begin
         if rising_edge(clk) then
-            if out_val = '1' then
+            if out_data_ready = '1' then
                 -- only write when out_val='1', because then the file is independent of cycles with invalid out_dat
                 write(v_line, out_sync);
                 write(v_line, string'(","));
-                write(v_line, out_val);
+                write(v_line, out_data_ready);
                 write(v_line, string'(","));
                 write(v_line, to_integer(signed(out_re)));
                 write(v_line, string'(","));
