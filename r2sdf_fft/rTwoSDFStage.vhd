@@ -86,7 +86,7 @@ architecture str of rTwoSDFStage is
     signal bf_re_tomult  : std_logic_vector(in_re'range);
     signal bf_im_tomult  : std_logic_vector(in_im'range);
     signal bf_sel_tomult : std_logic;
-    signal bf_val_tomult : std_logic;
+    signal bf_val_tomult : std_logic := '0';
 
     signal weight_addr : std_logic_vector(g_stage - 1 downto 1);
 

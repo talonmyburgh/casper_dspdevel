@@ -61,15 +61,14 @@ entity fft_sepa is
         g_alt_output : boolean := FALSE
     );
     port(
-        clk     : in  std_logic;
-        clken   : in  std_logic;
-        rst     : in  std_logic;
-        in_dat  : in  std_logic_vector;
-        in_sync : in std_logic;
-        in_val  : in  std_logic;
-        out_dat : out std_logic_vector;
-        out_sync: out std_logic;
-        out_val : out std_logic
+        clk      : in  std_logic;
+        clken    : in  std_logic;
+        in_dat   : in  std_logic_vector;
+        in_sync  : in  std_logic;
+        in_val   : in  std_logic;
+        out_dat  : out std_logic_vector;
+        out_sync : out std_logic;
+        out_val  : out std_logic
     );
 end entity fft_sepa;
 
@@ -77,13 +76,16 @@ architecture rtl of fft_sepa is
 
     constant c_sepa_round : boolean := true; -- must be true, because separate should round the 1 bit growth
 
-    constant c_data_w   : natural := in_dat'length / c_nof_complex;
-    constant c_c_data_w : natural := c_nof_complex * c_data_w;
-    constant c_pipeline : natural := 3;
+    constant c_data_w              : natural := in_dat'length / c_nof_complex;
+    constant c_c_data_w            : natural := c_nof_complex * c_data_w;
+    constant c_pipeline            : natural := 3;
+    constant c_pipeline_input_rnd  : natural := 0;
+    constant c_pipeline_output_rnd : natural := 0;
 
     type reg_type is record
         switch      : std_logic;        -- Register used to toggle between A & B definitionn
         val_dly     : std_logic_vector(c_pipeline - 1 downto 0); -- Register that delays the incoming valid signal
+        sync_dly    : std_logic_vector(c_pipeline - 1 downto 0); -- Register that sync the incoming sync signal
         xn_m_reg    : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(N-m) value for one cycle
         xm_reg      : std_logic_vector(c_c_data_w - 1 downto 0); -- Register to hold the X(m) value for one cycle
         add_1_reg_a : std_logic_vector(c_data_w - 1 downto 0); -- Input register A for the adder
@@ -93,51 +95,41 @@ architecture rtl of fft_sepa is
         adder_1_dir : std_logic;        -- Direction for the adder block
         adder_2_dir : std_logic;        -- Direction for the adder block
         out_dat     : std_logic_vector(c_c_data_w - 1 downto 0); -- Registered output value
+        out_sync    : std_logic;        -- Registered data sync signal 
         out_val     : std_logic;        -- Registered data valid signal  
     end record;
-    
+
     constant c_reg_type : reg_type := (
-        switch      => '0',        -- Register used to toggle between A & B definitionn
-        val_dly     => (others=>'0'), -- Register that delays the incoming valid signal
-        xn_m_reg    => (others=>'0'), -- Register to hold the X(N-m) value for one cycle
-        xm_reg      => (others=>'0'), -- Register to hold the X(m) value for one cycle
-        add_1_reg_a => (others=>'0'), -- Input register A for the adder
-        add_1_reg_b => (others=>'0'), -- Input register B for the adder
-        add_2_reg_a => (others=>'0'), -- Input register A for the subtractor
-        add_2_reg_b => (others=>'0'), -- Input register B for the subtractor
-        adder_1_dir => '0',        -- Direction for the adder block
-        adder_2_dir => '0',        -- Direction for the adder block
-        out_dat     => (others=>'0'), -- Registered output value
-        out_val     => '0'        -- Registered data valid signal 
+        switch      => '0',             -- Register used to toggle between A & B definitionn
+        val_dly     => (others => '0'), -- Register that delays the incoming valid signal
+        sync_dly    => (others => '0'), -- Register that syncs the incoming sync signal
+        xn_m_reg    => (others => '0'), -- Register to hold the X(N-m) value for one cycle
+        xm_reg      => (others => '0'), -- Register to hold the X(m) value for one cycle
+        add_1_reg_a => (others => '0'), -- Input register A for the adder
+        add_1_reg_b => (others => '0'), -- Input register B for the adder
+        add_2_reg_a => (others => '0'), -- Input register A for the subtractor
+        add_2_reg_b => (others => '0'), -- Input register B for the subtractor
+        adder_1_dir => '0',             -- Direction for the adder block
+        adder_2_dir => '0',             -- Direction for the adder block
+        out_dat     => (others => '0'), -- Registered output value
+        out_sync    => '0',             -- Registered data valid signal
+        out_val     => '0'              -- Registered data valid signal 
     );
 
     signal r, rin     : reg_type := c_reg_type;
+    signal rst        : std_logic;
     signal sub_result : std_logic_vector(c_data_w downto 0); -- Result of the subtractor   
     signal add_result : std_logic_vector(c_data_w downto 0); -- Result of the adder
-    
-    signal add_sync : std_logic := '0';   
 
     signal sub_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the subtractor   
     signal add_result_q : std_logic_vector(c_data_w - 1 downto 0); -- Requantized result of the adder
 
 begin
+    rst <= in_val and in_sync;
 
     ---------------------------------------------------------------
     -- ADDER AND SUBTRACTOR
     ---------------------------------------------------------------
-    adder_sync_delay : entity common_components_lib.common_bit_delay
-        generic map(
-            g_depth => 1 --same as the length of the pipeline output for adder/sub
-        )
-        port map(
-            clk     => clk,
-            rst     => rst,
-            in_clr  => '0',
-            in_bit  => in_sync,
-            in_val  => '1',
-            out_bit => add_sync
-        );
-    
     adder_1 : entity casper_adder_lib.common_add_sub
         generic map(
             g_direction       => "BOTH",
@@ -178,7 +170,6 @@ begin
         -- truncate the one LSbit
         add_result_q <= add_result(c_data_w downto 1);
         sub_result_q <= sub_result(c_data_w downto 1);
-        out_sync <= add_sync;
     end generate;
 
     --Could possibly be a timing issue in the future, may want to pipeline the output
@@ -190,8 +181,8 @@ begin
                 g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
                 g_round           => ROUND, -- when TRUE round the input, else truncate the input
                 g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
-                g_pipeline_input  => 0, -- >= 0
-                g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
+                g_pipeline_input  => c_pipeline_input_rnd, -- >= 0
+                g_pipeline_output => c_pipeline_output_rnd, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
                 g_in_dat_w        => c_data_w + 1,
                 g_out_dat_w       => c_data_w
             )
@@ -207,8 +198,8 @@ begin
                 g_representation  => "SIGNED", -- SIGNED (round +-0.5 away from zero to +- infinity) or UNSIGNED rounding (round 0.5 up to + inifinity)
                 g_round           => ROUND, -- when TRUE round the input, else truncate the input
                 g_round_clip      => FALSE, -- when TRUE clip rounded input >= +max to avoid wrapping to output -min (signed) or 0 (unsigned)
-                g_pipeline_input  => 0, -- >= 0
-                g_pipeline_output => 0, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
+                g_pipeline_input  => c_pipeline_input_rnd, -- >= 0
+                g_pipeline_output => c_pipeline_output_rnd, -- >= 0, use g_pipeline_input=0 and g_pipeline_output=0 for combinatorial output
                 g_in_dat_w        => c_data_w + 1,
                 g_out_dat_w       => c_data_w
             )
@@ -217,18 +208,6 @@ begin
                 clken   => clken,
                 in_dat  => sub_result,
                 out_dat => sub_result_q
-            );
-        u_rnd_delay_sync : entity common_components_lib.common_bit_delay
-            generic map(
-                g_depth => 0
-            )
-            port map(
-                clk     => clk,
-                rst     => rst,
-                in_clr  => '0',
-                in_bit  => add_sync,
-                in_val  => '1',
-                out_bit => out_sync
             );
     end generate;
 
@@ -244,9 +223,14 @@ begin
         v.val_dly(c_pipeline - 1 downto 1) := v.val_dly(c_pipeline - 2 downto 0);
         v.val_dly(0)                       := in_val;
 
+        -- Shift register for the syncd signal
+        v.sync_dly(c_pipeline - 1 downto 1) := v.sync_dly(c_pipeline - 2 downto 0);
+        v.sync_dly(0)                       := in_sync;
+
         -- Composition of the output registers:
-        v.out_dat := sub_result_q & add_result_q;
-        v.out_val := r.val_dly(c_pipeline - 1);
+        v.out_dat  := sub_result_q & add_result_q;
+        v.out_val  := r.val_dly(c_pipeline - 1);
+        v.out_sync := r.sync_dly(c_pipeline - 1);
 
         if g_alt_output = FALSE then
             -- Compose the inputs for the adder and subtractor
@@ -309,7 +293,7 @@ begin
 
         if (rst = '1') then
             v.switch      := '0';
-            v.val_dly     := (others => '0');
+            --            v.val_dly     := (others => '0');
             v.xn_m_reg    := (others => '0');
             v.xm_reg      := (others => '0');
             v.add_1_reg_a := (others => '0');
@@ -319,7 +303,6 @@ begin
             v.add_2_reg_a := (others => '0');
             v.add_2_reg_b := (others => '0');
             v.out_dat     := (others => '0');
-            v.out_val     := '0';
         end if;
 
         rin <= v;
@@ -336,8 +319,9 @@ begin
     ---------------------------------------------------------------
     -- OUTPUT STAGE
     ---------------------------------------------------------------
-    out_dat <= r.out_dat;
-    out_val <= r.out_val;
+    out_dat  <= r.out_dat;
+    out_val  <= r.out_val;
+    out_sync <= r.out_sync;
 
 end rtl;
 

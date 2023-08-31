@@ -53,7 +53,6 @@ entity fft_reorder_sepa_pipe is
     port(
         clken    : in  std_logic := '1';
         clk      : in  std_logic;
-        rst      : in  std_logic;
         in_dat   : in  std_logic_vector;
         in_sync  : in  std_logic;
         in_val   : in  std_logic;
@@ -102,6 +101,9 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal adr_tot_cnt    : std_logic_vector(c_adr_tot_w - 1 downto 0);
 
     signal sync_bram_delay : std_logic := '0';
+    signal val_bram_delay  : std_logic := '0';
+    signal sep_in_sync     : std_logic;
+    signal sep_out_sync    : std_logic;
 
     -- buffer write addressing
     signal base_counter, out_counter        : std_logic_vector(c_adr_points_w downto 0); -- counter which serves as a base
@@ -123,49 +125,49 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal buf_rd_val, buf_rd_val_d1                : std_logic;
 
     -- separate ports
-    signal sep_in_dat, sep_out_dat      : std_logic_vector(c_dat_w - 1 downto 0);
-    signal sep_in_val, sep_out_val      : std_logic;
+    signal sep_in_dat, sep_out_dat : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_in_val, sep_out_val : std_logic;
 
-    signal sep_out_dat_i      : std_logic_vector(c_dat_w - 1 downto 0);
-    signal sep_out_val_i      : std_logic;
-    
-    signal not_first_spectrum     : std_logic := '0';
-    signal count_out_en           : std_logic;
-           
-	signal next_page : std_logic;
+    signal sep_out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_out_val_i : std_logic;
 
-	signal cnt_ena : std_logic;
+    signal not_first_spectrum : std_logic := '0';
+    signal count_out_en       : std_logic;
 
-	signal rd_en       : std_logic;
-	signal rd_adr_up   : std_logic_vector(c_adr_points_w downto 0);
-	signal rd_adr_down : std_logic_vector(c_adr_points_w downto 0); -- use intermediate rd_adr_down that has 1 bit extra to avoid truncation warning with TO_UVEC()
-	signal rd_adr      : std_logic_vector(c_adr_tot_w - 1 downto 0);
-	signal rd_dat      : std_logic_vector(c_dat_w - 1 downto 0);
-	signal rd_val      : std_logic;
+    signal next_page : std_logic;
 
-	signal out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
-	signal out_val_i : std_logic;
+    signal cnt_ena : std_logic;
 
-	type state_type is (s_idle, s_run_separate, s_run_normal);
+    signal rd_en       : std_logic;
+    signal rd_adr_up   : std_logic_vector(c_adr_points_w downto 0);
+    signal rd_adr_down : std_logic_vector(c_adr_points_w downto 0); -- use intermediate rd_adr_down that has 1 bit extra to avoid truncation warning with TO_UVEC()
+    signal rd_adr      : std_logic_vector(c_adr_tot_w - 1 downto 0);
+    signal rd_dat      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal rd_val      : std_logic;
 
-	type reg_type is record
-		rd_en      : std_logic;         -- The read enable signal to read out the data from the dp memory
-		switch     : std_logic;         -- Toggel register used for separate functionalilty
-		count_up   : natural;           -- An upwards counter for read addressing
-		count_down : natural;           -- A downwards counter for read addressing
-		count_chan : natural;           -- Counter that holds the number of channels for reading. 
-		state      : state_type;        -- The state machine. 
-	end record;
-	
-	constant c_reg_type : reg_type := (
-	       rd_en => '0',
-	       switch => '0',
-	       count_up => 0,
-	       count_down => 0,
-	       count_chan => 0,
-	       state => s_idle);
+    signal out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
+    signal out_val_i : std_logic;
 
-	signal r, rin : reg_type := c_reg_type;
+    type state_type is (s_idle, s_run_separate, s_run_normal);
+
+    type reg_type is record
+        rd_en      : std_logic;         -- The read enable signal to read out the data from the dp memory
+        switch     : std_logic;         -- Toggel register used for separate functionalilty
+        count_up   : natural;           -- An upwards counter for read addressing
+        count_down : natural;           -- A downwards counter for read addressing
+        count_chan : natural;           -- Counter that holds the number of channels for reading. 
+        state      : state_type;        -- The state machine. 
+    end record;
+
+    constant c_reg_type : reg_type := (
+        rd_en      => '0',
+        switch     => '0',
+        count_up   => 0,
+        count_down => 0,
+        count_chan => 0,
+        state      => s_idle);
+
+    signal r, rin : reg_type := c_reg_type;
 
 begin
     u_adr_chan_cnt : entity casper_counter_lib.common_counter
@@ -182,10 +184,10 @@ begin
         );
     -- Generate on c_nof_channels to avoid simulation warnings on TO_UINT(adr_chan_cnt) when adr_chan_cnt is a NULL array
     one_chan : if c_nof_channels = 1 generate
-        cnt_ena <= '1' when in_val = '1' else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' else '0';
     end generate;
     more_chan : if c_nof_channels > 1 generate
-        cnt_ena <= '1' when in_val = '1' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
     end generate;
 
     base_cnt : entity casper_counter_lib.common_counter
@@ -302,7 +304,7 @@ begin
     end generate;
 
     adr_tot_cnt <= adr_points_cnt & adr_chan_cnt;
-    next_page   <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' else '0';
+    next_page   <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' and in_sync = '0' else '0';
     gen_not_in_place_buf_next_page : if g_in_place = false generate
         buf_wr_next_page <= next_page;
         buf_rd_next_page <= next_page;
@@ -313,15 +315,28 @@ begin
 
     u_bram_sync_delay : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_buf_latency
+            g_depth => c_page_size + c_rd_start_page
         )
         port map(
             clk     => clk,
-            rst     => rst,
+            rst     => '0',
             in_clr  => '0',
             in_bit  => in_sync,
-            in_val  => '1',
+            in_val  => buf_wr_en,
             out_bit => sync_bram_delay
+        );
+
+    u_bram_val_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => c_page_size + c_rd_start_page
+        )
+        port map(
+            clk     => clk,
+            rst     => '0',
+            in_clr  => '0',
+            in_bit  => buf_wr_en,
+            in_val  => '1',
+            out_bit => val_bram_delay
         );
 
     u_buff_inplace : entity casper_ram_lib.common_paged_ram_r_w
@@ -336,7 +351,7 @@ begin
             g_ram_primitive => g_ram_primitive
         )
         port map(
-            rst          => rst,
+            rst          => in_sync,
             clk          => clk,
             wr_next_page => buf_wr_next_page,
             wr_adr       => buf_wr_adr,
@@ -364,7 +379,7 @@ begin
     -- If separate functionality is disbaled a "normal" coun ter is used 
     -- to read out the dual page memory. State: s_run_normal
 
-    comb : process(r, rst, next_page)
+    comb : process(r, in_sync, in_val, next_page)
         variable v : reg_type;
     begin
         v       := r;
@@ -426,7 +441,7 @@ begin
 
         end case;
 
-        if (rst = '1') then
+        if (in_sync = '1' and in_val = '1') then
             v.switch     := '0';
             v.rd_en      := '0';
             v.count_up   := 0;
@@ -459,7 +474,7 @@ begin
         -- if not in place reorder take the input directly from output of buffer
         gen_not_in_place_reorder : if g_in_place = false generate
             sep_in_dat  <= buf_rd_dat;
-            sep_in_val  <= buf_rd_val;
+            sep_in_val  <= buf_rd_val when sync_bram_delay = '0' else val_bram_delay;
             sep_in_sync <= sync_bram_delay;
         end generate;
 
@@ -491,8 +506,9 @@ begin
                           buf_rd_dat_d2 when down_d = '1' and first_down_d = '0' else
                           buf_rd_dat;
 
-            sep_in_val <= buf_rd_val_d1 when down_d = '1' else
-                          buf_rd_val;
+            sep_in_val <= buf_rd_val_d1 when down_d = '1' and sync_bram_delay = '0' else
+                          buf_rd_val when sync_bram_delay = '0' else
+                          val_bram_delay;
 
             sep_in_sync <= sync_bram_delay;
         end generate;
@@ -505,7 +521,6 @@ begin
             port map(
                 clk      => clk,
                 clken    => clken,
-                rst      => rst,
                 in_dat   => sep_in_dat,
                 in_sync  => sep_in_sync,
                 in_val   => sep_in_val,
@@ -525,6 +540,7 @@ begin
 
         sep_out_dat_i <= buf_rd_dat;    -- when rising_edge(clk);
         sep_out_val_i <= buf_rd_val;    -- when rising_edge(clk);
+        sep_out_sync  <= sync_bram_delay;
     end generate;
 
     -- when doing things in place, read transaction is same as write
@@ -545,7 +561,7 @@ begin
             g_width   => c_adr_points_w + 1
         )
         PORT MAP(
-            rst    => sep_out_sync,
+            rst    => in_sync,
             clk    => clk,
             cnt_en => count_out_en,
             count  => out_counter
@@ -564,4 +580,3 @@ begin
     out_sync <= sep_out_sync;
     out_dat  <= sep_out_dat_i;
 end rtl;
-

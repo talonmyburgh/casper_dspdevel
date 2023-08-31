@@ -212,10 +212,11 @@ architecture tb of tb_fft_r2_pipe is
     signal tb_end        : std_logic                     := '0';
     signal tb_end_almost : std_logic                     := '0';
     signal clk           : std_logic                     := '0';
-    signal rst           : std_logic                     := '0';
     signal random        : std_logic_vector(15 DOWNTO 0) := (OTHERS => '0'); -- use different lengths to have different random sequences
 
-    signal in_sync, trigger, triggerff : std_logic := '0';
+    signal in_sync, trigger, triggerff, out_sync, synced, in_syncff : std_logic := '0';
+    signal data_val                                                 : std_logic := '0';
+    signal out_data_ready                                           : std_logic := '0';
 
     signal input_data_a_arr : t_integer_arr(0 to g_data_file_nof_lines - 1)                 := (OTHERS => 0); -- one value per line (A via re input)
     signal input_data_b_arr : t_integer_arr(0 to g_data_file_nof_lines - 1)                 := (OTHERS => 0); -- one value per line (B via im input)
@@ -305,18 +306,18 @@ begin
     shiftreg(ceil_log2(g_fft.nof_points) - 1 Downto 2) <= (others => '1');
 
     clk    <= (not clk) or tb_end after c_clk_period / 2;
-    rst    <= '1', '0' after c_clk_period * 7;
     random <= func_common_random(random) WHEN rising_edge(clk);
     in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps = TRUE ELSE '0';
 
-    o_clk    <= clk;
-    o_rst    <= rst;
-    o_tb_end <= tb_end;
+    o_clk          <= clk;
+    o_rst          <= in_sync;
+    o_tb_end       <= tb_end;
+    out_data_ready <= data_val and out_val;
 
     ---------------------------------------------------------------
     -- SYNC PROCESS
     ---------------------------------------------------------------
-    sync_proc : process(clk)
+    drive_sync : process(clk)
     begin
         if rising_edge(clk) then
             triggerff <= trigger;
@@ -328,6 +329,25 @@ begin
         end if;
     end process;
 
+    note_synced : process(clk)
+    begin
+        if rising_edge(clk) then
+            in_syncff <= in_sync;
+            if (in_sync = '1') and (in_syncff = '0') then
+                synced <= '1';
+            end if;
+        end if;
+    end process;
+
+    --we await the out_sync signal and wait till the rising edge before considering the data ready.
+    reg_output_sync : process(clk)
+    begin
+        if rising_edge(clk) then
+            if out_sync = '1' then
+                data_val <= '1';
+            end if;
+        end if;
+    end process;
     ---------------------------------------------------------------
     -- DATA INPUT
     ---------------------------------------------------------------
@@ -342,15 +362,20 @@ begin
             proc_common_read_integer_file(g_data_file_b, c_nof_lines_header, g_data_file_nof_lines, 1, input_data_b_arr);
         end if;
         wait for 1 ns;
+        wait until rising_edge(clk);
         in_dat_a <= (others => '0');
         in_dat_b <= (others => '0');
         in_val   <= '0';
-        proc_common_wait_until_low(clk, rst); -- Wait until reset has finished
-        proc_common_wait_some_cycles(clk, 9); -- Wait an additional amount of cycles
+        wait for c_clk_period;
         trigger  <= '1';                -- Trigger sync pulse
-        proc_common_wait_some_cycles(clk, 1);
+        wait for c_clk_period;
+        in_val   <= '1';
+        wait for c_clk_period;
+        in_val   <= '0';
+        proc_common_wait_until_low(clk, in_sync); -- Wait until synced
+        proc_common_wait_some_cycles(clk, 10); -- Wait an additional amount of cycles
 
-        -- apply stimuli
+        --         apply stimuli
         for I in 0 to g_data_file_nof_lines - 1 loop -- serial
             for K in 0 to c_nof_channels - 1 loop -- serial
                 if c_in_complex then
@@ -393,29 +418,28 @@ begin
         port map(
             clken    => std_logic'('1'),
             clk      => clk,
-            rst      => rst,
+            shiftreg => (0 => '0', 1 => '0', others => '1'),
             in_re    => in_dat_a,
             in_im    => in_dat_b,
-            shiftreg => (0 => '0', 1 => '0', others => '1'),
             in_sync  => in_sync,
             in_val   => in_val,
             out_re   => out_re,
             out_im   => out_im,
             ovflw    => ovflw,
-            out_sync => open,
+            out_sync => out_sync,
             out_val  => out_val
         );
 
     -- Separate output
-    in_val_cnt  <= in_val_cnt + 1 when rising_edge(clk) and in_val = '1' else in_val_cnt;
-    out_val_cnt <= out_val_cnt + 1 when rising_edge(clk) and out_val = '1' else out_val_cnt;
+    in_val_cnt  <= in_val_cnt + 1 when rising_edge(clk) and in_val = '1' and synced = '1' and in_sync = '0' else in_val_cnt;
+    out_val_cnt <= out_val_cnt + 1 when rising_edge(clk) and out_data_ready = '1' else out_val_cnt;
 
     proc_fft_out_control(1, g_fft.nof_points, c_nof_channels, g_fft.use_reorder, g_fft.use_fft_shift, g_fft.use_separate,
-                         out_val_cnt, out_val, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
+                         out_val_cnt, out_data_ready, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
 
     -- Block count t_blk for c_nof_channels>=1 channels per block
-    in_blk_val      <= '1' when in_val = '1' and (in_val_cnt mod c_nof_channels) = 0 else '0';
-    out_blk_val     <= '1' when out_val = '1' and (out_val_cnt mod c_nof_channels) = 0 else '0';
+    in_blk_val      <= '1' when in_val = '1' and synced = '1' and in_sync = '0' and (in_val_cnt mod c_nof_channels) = 0 else '0';
+    out_blk_val     <= '1' when out_data_ready = '1' and (out_val_cnt mod c_nof_channels) = 0 else '0';
     in_blk_val_cnt  <= in_val_cnt / c_nof_channels;
     out_blk_val_cnt <= out_val_cnt / c_nof_channels;
 
@@ -473,42 +497,42 @@ begin
     end process;
 
     -- p_verify_output
-    verify_data : process(rst, clk)
+    verify_data : process(clk)
         VARIABLE v_test_pass : BOOLEAN := TRUE;
         VARIABLE v_test_msg  : STRING(1 to 80);
     begin
-        if rising_edge(clk) and (rst = '0') then
+        if rising_edge(clk) and (synced = '1') then
             if not c_in_complex then
                 v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
                 v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
                 v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
                 v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
             else
                 v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
                 v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
                 if not v_test_pass then
                     v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope), o_test_msg'length, '.');
-                    report v_test_msg severity failure;
+                    report v_test_msg severity error;
                 end if;
             end if;
         end if;

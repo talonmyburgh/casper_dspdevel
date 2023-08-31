@@ -137,7 +137,6 @@ architecture tb of tb_rTwoSDF is
     signal in_sync   : std_logic := '0';
     signal trigger   : std_logic := '0';
     signal triggerff : std_logic := '0';
-    signal out_sync_ff : std_logic := '0';
     signal in_val    : std_logic := '0';
 
     signal out_re   : std_logic_vector(g_out_dat_w - 1 downto 0);

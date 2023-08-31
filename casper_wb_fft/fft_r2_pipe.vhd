@@ -69,7 +69,6 @@ entity fft_r2_pipe is
     port(
         clken    : in  std_logic;       --! Clock enable
         clk      : in  std_logic;       --! Clock
-        rst      : in  std_logic := '0'; --! Reset
         shiftreg : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Shift register
         in_re    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0); --! Input real signal
         in_im    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0); --! Input imaginary signal
@@ -98,12 +97,12 @@ architecture str of fft_r2_pipe is
     -- . the data output of the last stage has index 0
     type t_data_arr is array (c_nof_stages downto 0) of std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
 
-    signal data_re  : t_data_arr;
-    signal data_im  : t_data_arr;
-    signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+    signal data_re     : t_data_arr;
+    signal data_im     : t_data_arr;
+    signal data_val    : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+    signal sync_vector : std_logic_vector(c_nof_stages downto 0) := (others => '0');
 
-    signal sync_out_r2sdf : std_logic := '0';
-    signal raw_out_sync   : std_logic := '0';
+    signal raw_out_sync : std_logic := '0';
 
     signal out_cplx    : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
     signal in_cplx     : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
@@ -114,9 +113,10 @@ architecture str of fft_r2_pipe is
 begin
 
     -- Inputs
-    data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
-    data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_fft.stage_dat_w);
-    data_val(c_nof_stages) <= in_val;
+    data_re(c_nof_stages)     <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
+    data_im(c_nof_stages)     <= scale_and_resize_svec(in_im, c_in_scale_w, g_fft.stage_dat_w);
+    data_val(c_nof_stages)    <= in_val;
+    sync_vector(c_nof_stages) <= in_sync;
 
     ------------------------------------------------------------------------------
     -- pipelined FFT stages
@@ -142,8 +142,7 @@ begin
             )
             port map(
                 clk      => clk,
-                rst      => rst,
-                in_sync  => in_sync,
+                in_sync  => sync_vector(stage),
                 in_re    => data_re(stage),
                 in_im    => data_im(stage),
                 scale    => shiftreg(stage - 1),
@@ -151,7 +150,7 @@ begin
                 out_re   => data_re(stage - 1),
                 out_im   => data_im(stage - 1),
                 ovflw    => ovflw(stage - 1),
-                out_sync => sync_out_r2sdf,
+                out_sync => sync_vector(stage - 1),
                 out_val  => data_val(stage - 1)
             );
     end generate;
@@ -176,9 +175,8 @@ begin
             port map(
                 clken    => clken,
                 clk      => clk,
-                rst      => rst,
                 in_dat   => in_cplx,
-                in_sync  => sync_out_r2sdf,
+                in_sync  => sync_vector(0),
                 in_val   => data_val(0),
                 out_dat  => out_cplx,
                 out_sync => raw_out_sync,
@@ -194,7 +192,7 @@ begin
         raw_out_re   <= data_re(0);
         raw_out_im   <= data_im(0);
         raw_out_val  <= data_val(0);
-        raw_out_sync <= sync_out_r2sdf;
+        raw_out_sync <= sync_vector(0);
     end generate;
 
     ------------------------------------------------------------------------------
@@ -247,7 +245,7 @@ begin
             g_pipeline => c_pipeline_remove_lsb
         )
         port map(
-            rst     => rst,
+            rst     => '0',
             clk     => clk,
             in_dat  => raw_out_val,
             out_dat => out_val
@@ -259,10 +257,9 @@ begin
         )
         port map(
             clk     => clk,
-            rst     => rst,
+            rst     => '0',
             in_clr  => '0',
             in_bit  => raw_out_sync,
-            in_val  => '1',
             out_bit => out_sync
         );
 end str;
