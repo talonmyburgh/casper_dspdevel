@@ -52,7 +52,6 @@ entity fft_r2_bf_par is
 	);
 	port(
 		clk      : in  std_logic;
-		rst      : in  std_logic;
 		scale    : in  std_logic;
 		x_in_re  : in  std_logic_vector;
 		x_in_im  : in  std_logic_vector;
@@ -102,7 +101,9 @@ architecture str of fft_r2_bf_par is
 	signal mul_quant_re : std_logic_vector(y_out_re'range);
 	signal mul_quant_im : std_logic_vector(y_out_im'range);
 	signal mul_out_val  : std_logic;
+	signal mul_out_sync  : std_logic;
 	signal mul_in_val   : std_logic;
+	signal mul_in_sync   : std_logic;
 
 	signal ovflw_det	: std_logic_vector(1 DOWNTO 0); -- record overflow in any of the requantizings
     attribute keep_hierarchy : string;
@@ -178,23 +179,6 @@ begin
 			in_dat  			  => sum_im,
 			out_dat 			  => sum_quant_im
 		);
-	
-	------------------------------------------------------------------------------
-	-- Delay sync for sum/diff pipelining
-	------------------------------------------------------------------------------
-    u_sumdiff_sync_delay : entity common_components_lib.common_bit_delay
-        generic map(
-            g_depth => g_depth
-        )
-        port map(
-            clk     => clk,
-            rst     => rst,
-            in_clr  => in_clr,
-            in_bit  => in_bit,
-            in_val  => in_val,
-            out_bit => out_bit
-        );
-    
 
 	------------------------------------------------------------------------------
 	-- Butterfly output pipelining: the sum output (output C)
@@ -257,6 +241,22 @@ begin
 			out_dat => mul_in_val
 		);
 
+    ------------------------------------------------------------------------------
+    -- Delay sync for sum/diff pipelining
+    ------------------------------------------------------------------------------
+    u_bf_sync_delay : entity common_components_lib.common_bit_delay
+        generic map(
+            g_depth => g_pipeline.bf_lat
+        )
+        port map(
+            clk     => clk,
+            rst     => '0',
+            in_clr  => '0',
+            in_bit  => in_sync,
+            in_val  => in_val,
+            out_bit => mul_in_sync
+        );
+
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
 	------------------------------------------------------------------------------
@@ -269,17 +269,18 @@ begin
             g_lat            => g_pipeline.mul_lat
 		)
 		port map(
-			clk       	 	=> clk,
-			rst       	 	=> rst,
-			weight_re 	 	=> weight_re,
-			weight_im 	 	=> weight_im,
-			in_re     	 	=> dif_out_re,
-			in_im     	 	=> dif_out_im,
-			in_val    	 	=> mul_in_val,
-			in_sel    	 	=> '1',           -- Always select the multiplier output
-			out_re    	 	=> mul_out_re,
-			out_im    	 	=> mul_out_im,
-			out_val   	 	=> mul_out_val
+            clk                => clk,
+            in_sync            => mul_in_sync,
+            weight_re          => weight_re,
+            weight_im          => weight_im,
+            in_re              => dif_out_re,
+            in_im              => dif_out_im,
+            in_val             => mul_in_val,
+            in_sel             => '1',           -- Always select the multiplier output
+            out_re             => mul_out_re,
+            out_im             => mul_out_im,
+            out_sync           => mul_out_sync,
+            out_val            => mul_out_val
 		);
 
 	------------------------------------------------------------------------------
@@ -360,4 +361,14 @@ begin
 			in_dat  	=> mul_out_val,
 			out_dat 	=> out_val
 		);
+	
+    u_sync_stage_lat : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline  => g_pipeline.stage_lat
+        )
+        port map(
+            clk         => clk,
+            in_dat      => mul_out_sync,
+            out_dat     => out_sync
+        );
 end str;

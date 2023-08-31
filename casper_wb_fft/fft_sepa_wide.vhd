@@ -155,7 +155,7 @@ begin
                 g_ram_primitive => g_ram_primitive
             )
             port map(
-                rst          => rst,
+                rst          => in_sync,
                 clk          => clk,
                 wr_next_page => next_page,
                 wr_adr       => wr_adr,
@@ -185,10 +185,10 @@ begin
         )
         port map(
             clk     => clk,
-            rst     => rst,
+            rst     => '0',
             in_clr  => '0',
             in_bit  => in_sync,
-            in_val  => '1',
+            in_val  => wr_en,
             out_bit => zip_sync
         );
 
@@ -233,7 +233,6 @@ begin
             port map(
                 clk      => clk,
                 clken    => clken,
-                rst      => rst,
                 in_dat   => zip_out_dat_arr(I),
                 in_sync  => zip_sync,
                 in_val   => zip_out_val(I),
@@ -363,10 +362,10 @@ begin
         )
         port map(
             clk     => clk,
-            rst     => rst,
+            rst     => '0',
             in_clr  => '0',
             in_bit  => fft_sepa_sync,
-            in_val  => '1',
+            in_val  => sep_out_val_vec(1),
             out_bit => out_sync
         );
 
