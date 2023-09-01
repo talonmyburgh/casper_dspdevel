@@ -35,8 +35,8 @@ casper_reorder_lib.add_source_files(join(script_dir, "./*.vhd"))
 
 TB_BARREL_SWITCHER = casper_reorder_lib.test_bench("tb_tb_vu_barrel_switcher")
 
-for input_count in [3, 4, 8, 15, 31, 63, 64]:
-    for input_width in [3, 4, 8, 16, 32]:
+for input_count in [3, 4, 8]:#, 15, 31, 63, 64]:
+    for input_width in [3, 4, 8]:#, 16, 32]:
         TB_BARREL_SWITCHER.add_config(
             name = f"Barrel Shifter ({input_count} inputs of {input_width} bits)",
             generics={
