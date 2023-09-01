@@ -36,39 +36,22 @@ architecture rtl of tb_barrel_switcher is
   SIGNAL s_sync_in, s_sync_out : std_logic;
   SIGNAL s_sel : std_logic_vector(ceil_log2(g_barrel_switch_inputs)-1 downto 0);
 
-  function leftindex_wrapping(index, top : integer) return integer is
-  begin
-    if index < 0 then
-      return top + 1 + index;
+  function index_wrapping(index: integer; len: natural) return integer is
+	begin
+		if index >= len then
+      return index mod len;
+    elsif index < 0 then
+      return index_wrapping(index+len, len);
     else
       return index;
     end if;
-  end;
-
-  function rightindex_wrapping(index, top : integer) return integer is
-  begin
-    if index > top then
-      return index mod (top+1);
-    else
-      return index;
-    end if;
-  end;
+	end;
 
 begin
     clk  <= NOT clk OR tb_end AFTER clk_period / 2;
 
     o_clk <= clk;
     o_tb_end <= tb_end;
-
-    gen_input : FOR channel in s_in'RANGE(1) GENERATE
-      SIGNAL input_slv : STD_LOGIC_VECTOR(s_in'range(2));
-    begin
-      input_slv <= TO_SVEC(channel+1, g_barrel_switcher_division_bit_width);
-      gen_input_bits : FOR bit_idx in input_slv'RANGE GENERATE
-      begin
-        s_in(channel, bit_idx) <= input_slv(bit_idx);
-      END GENERATE;
-    END GENERATE;
 
     u_barrel_switcher : ENTITY work.barrel_switcher
       port map (
@@ -84,6 +67,7 @@ begin
     p_stimuli : PROCESS
       VARIABLE v_test_msg  : STRING(1 to o_test_msg'length) := (OTHERS => '.');
       VARIABLE v_test_pass : BOOLEAN := TRUE;
+      VARIABLE v_s_in : STD_LOGIC_VECTOR(s_in'range(2));
     BEGIN
 
       WAIT FOR clk_period;
@@ -94,20 +78,37 @@ begin
       WAIT UNTIL rising_edge(clk);
 
       FOR shift IN 0 to s_in'LENGTH+5 LOOP
+        -- set inputs
+        FOR channel IN s_in'range(1) LOOP
+          v_s_in := TO_SVEC(channel+(shift mod 2), g_barrel_switcher_division_bit_width);
+          slv_arr_set_variable(
+            s_in,
+            channel,
+            v_s_in
+          );
+        END LOOP;
+        
+        -- set sel
         s_sel  <= TO_SVEC(shift mod s_in'LENGTH, s_sel'LENGTH);
+
+        -- pulse sync in
+        s_sync_in   <= '1';
+        WAIT FOR 1*clk_period;
+        s_sync_in   <= '0';
+
+        -- set exp
         FOR channel IN 0 to s_in'LENGTH-1 LOOP
           slv_arr_set(
             s_exp,
             channel,
             s_in,
-            rightindex_wrapping(channel+shift, s_in'HIGH(1))
+            index_wrapping(channel+shift, s_in'LENGTH(1))
           );
         END LOOP;
 
-        s_sync_in   <= '1';
-        WAIT FOR 1*clk_period;
-        s_sync_in   <= '0';
+        -- wait for sync out
         WAIT UNTIL rising_edge(s_sync_out);
+        -- wait some more
         WAIT FOR 5*clk_period;
       END LOOP;
 

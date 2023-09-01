@@ -30,10 +30,12 @@ architecture rtl of barrel_switcher is
   TYPE t_bs_layers_slv_arr IS ARRAY (0 to i_sel'LENGTH-2) OF t_slv_arr(i_data'range(1), i_data'range(2));
   SIGNAL s_bs_layers : t_bs_layers_slv_arr := (OTHERS => (OTHERS => (OTHERS => '0')));
 
-	function rightindex_wrapping(index, top : integer) return integer is
+	function index_wrapping(index: integer; len: natural) return integer is
 	begin
-		if index > top then
-      return index mod (top+1);
+		if index >= len then
+      return index mod len;
+    elsif index < 0 then
+      return index_wrapping(index+len, len);
     else
       return index;
     end if;
@@ -82,7 +84,7 @@ begin
       gen_bit : FOR bit_index IN s_bs_layer_in'range(2) GENERATE
       BEGIN
         s_i_data_0(bit_index) <= s_bs_layer_in(channel_index, bit_index);
-        s_i_data_1(bit_index) <= s_bs_layer_in(rightindex_wrapping(i_data'LOW(1) + channel_index+pow2(layer_index-i_sel'LOW), i_data'HIGH(1)), bit_index);
+        s_i_data_1(bit_index) <= s_bs_layer_in(i_data'LOW(1) + index_wrapping(channel_index+pow2(layer_index-i_sel'LOW), i_data'LENGTH(1)), bit_index);
 
         gen_layer_output : IF layer_index = i_sel'right GENERATE
           o_data(channel_index, bit_index) <= s_o_data(bit_index);
