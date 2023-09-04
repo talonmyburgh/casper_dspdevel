@@ -284,12 +284,13 @@ begin
     o_rst    <= in_sync;
     o_tb_end <= tb_end;
 
+    out_data_ready <= data_val and out_val;
     ---------------------------------------------------------------
     -- SYNC PROCESS
     ---------------------------------------------------------------
-    drive_sync : process(clk)
+    drive_sync : process(dut_clk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(dut_clk) then
             triggerff <= trigger;
             if (trigger = '1') and (triggerff = '0') then
                 in_sync <= '1';
@@ -299,9 +300,9 @@ begin
         end if;
     end process;
 
-    note_synced : process(clk)
+    note_synced : process(dut_clk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(dut_clk) then
             in_syncff <= in_sync;
             if (in_sync = '1') and (in_syncff = '0') then
                 synced <= '1';
@@ -310,9 +311,9 @@ begin
     end process;
 
     --we await the out_sync signal and wait till the rising edge before considering the data ready.
-    reg_output_sync : process(clk)
+    reg_output_sync : process(dut_clk)
     begin
-        if rising_edge(clk) then
+        if rising_edge(dut_clk) then
             if out_sync = '1' then
                 data_val <= '1';
             end if;
@@ -336,38 +337,40 @@ begin
         in_re_arr <= (others => (others => '0'));
         in_im_arr <= (others => (others => '0'));
         in_val    <= '0';
-        wait until rising_edge(clk);
+        wait until rising_edge(dut_clk);
         wait for c_clk_period;
         trigger   <= '1';               -- Trigger sync pulse
-        wait for c_clk_period;
+--        wait for c_clk_period;
         in_val    <= '1';
         wait for c_clk_period;
         in_val    <= '0';
-        proc_common_wait_until_low(clk, in_sync); -- Wait until synced
+        proc_common_wait_until_low(dut_clk, in_sync); -- Wait until synced
         proc_common_wait_some_cycles(dut_clk, 3); -- Wait an additional amount of cycles
 
         -- apply stimuli
-        for B in 0 to g_data_file_nof_lines / g_fft.nof_points - 1 loop -- serial
-            for I in 0 to g_fft.nof_points - 1 loop -- parallel
-                if c_in_complex then
-                    in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2 * (B * g_fft.nof_points + I)), g_fft.stage_dat_w), 44);
-                    in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2 * (B * g_fft.nof_points + I) + 1), g_fft.stage_dat_w), 44);
-                else
-                    in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_a_arr(B * g_fft.nof_points + I), g_fft.stage_dat_w), 44);
-                    in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_b_arr(B * g_fft.nof_points + I), g_fft.stage_dat_w), 44);
-                end if;
-            end loop;
-            in_val <= '1';
-            proc_common_wait_some_cycles(dut_clk, 1);
-            if in_gap = '1' then
-                in_val <= '0';
-                proc_common_wait_some_cycles(dut_clk, 1);
+        for B in 0 to g_data_file_nof_lines/g_fft.nof_points-1 loop  -- serial
+          for I in 0 to g_fft.nof_points-1 loop  -- parallel
+            if c_in_complex then
+              in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)),g_fft.stage_dat_w),44);
+              in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)+1),g_fft.stage_dat_w),44);
+            else
+              in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_a_arr(B*g_fft.nof_points+I),g_fft.stage_dat_w),44);
+              in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_b_arr(B*g_fft.nof_points+I),g_fft.stage_dat_w),44);
             end if;
+          end loop;
+          in_val <= '1';
+          proc_common_wait_some_cycles(dut_clk, 1);
+          if in_gap='1' then
+            in_val <= '0';
+            proc_common_wait_some_cycles(dut_clk, 1);
+          end if;
         end loop;
 
         -- Wait until done
         in_val     <= '0';
+        report "WAIT FOR DUT_CLK LATENCY";
         proc_common_wait_some_cycles(dut_clk, c_dut_clk_latency); -- wait for DUT latency
+        report "WAITED FOR DUT_CLK LATENCY";
         tb_end_dut <= '1';
         wait;
     end process;
@@ -396,8 +399,8 @@ begin
         );
 
     -- Block count
-    in_val_cnt  <= in_val_cnt + 1 when rising_edge(dut_clk) and in_val = '1' else in_val_cnt;
-    out_val_cnt <= out_val_cnt + 1 when rising_edge(dut_clk) and out_val = '1' else out_val_cnt;
+    in_val_cnt  <= in_val_cnt + 1 when rising_edge(dut_clk) and in_val = '1' and synced='1' else in_val_cnt;
+    out_val_cnt <= out_val_cnt + 1 when rising_edge(dut_clk) and out_data_ready = '1' else out_val_cnt;
 
     -- Block count t_blk
     t_blk <= in_val_cnt;
@@ -406,7 +409,7 @@ begin
     p_capture_output : process(dut_clk)
     begin
         if rising_edge(dut_clk) then
-            if out_val = '1' then
+            if out_data_ready = '1' then
                 if c_in_complex then
                     for I in 0 to g_fft.nof_points - 1 loop
                         output_data_c_re_arr(out_val_cnt * g_fft.nof_points + I) <= TO_SINT(out_re_arr(I));
@@ -484,10 +487,10 @@ begin
         wait;
     end process;
 
-    out_cnt <= out_cnt + 1 when rising_edge(tb_clk) and out_data_ready = '1' else out_cnt;
+    out_cnt <= out_cnt + 1 when rising_edge(tb_clk) and out_val_c = '1' else out_cnt;
 
     proc_fft_out_control(1, g_fft.nof_points, c_nof_channels, g_fft.use_reorder, g_fft.use_fft_shift, g_fft.use_separate,
-                         out_cnt, out_data_ready, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
+                         out_cnt, out_val_c, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
 
     ---------------------------------------------------------------
     -- VERIFY OUTPUT
