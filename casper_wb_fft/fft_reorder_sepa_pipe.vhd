@@ -539,7 +539,7 @@ begin
         -- Taking data directly from Block ram is not advisable add a pipeline stage here to improve place and route timing into the pipeline sum block will improve performance.
 
         sep_out_dat_i <= buf_rd_dat;    -- when rising_edge(clk);
-        sep_out_val_i <= buf_rd_val;    -- when rising_edge(clk);
+        sep_out_val_i <= buf_rd_val when sync_bram_delay = '0' else val_bram_delay;    -- when rising_edge(clk);
         sep_out_sync  <= sync_bram_delay;
     end generate;
 
