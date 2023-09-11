@@ -190,8 +190,11 @@ architecture tb of tb_fft_r2_wide is
     signal tb_end_almost : std_logic                     := '0';
     signal clk           : std_logic                     := '0';
     signal sclk          : std_logic                     := '0';
-    signal rst           : std_logic                     := '0';
     signal random        : std_logic_vector(15 DOWNTO 0) := (OTHERS => '0'); -- use different lengths to have different random sequences
+
+    signal in_sync, trigger, triggerff, out_sync, synced, in_syncff : std_logic := '0';
+    signal data_val                                                 : std_logic := '0';
+    signal out_data_ready                                           : std_logic := '0';
 
     signal input_data_a_arr : t_integer_arr(0 to g_data_file_nof_lines - 1)                 := (OTHERS => 0); -- one value per line (A via re input)
     signal input_data_b_arr : t_integer_arr(0 to g_data_file_nof_lines - 1)                 := (OTHERS => 0); -- one value per line (B via im input)
@@ -218,19 +221,16 @@ architecture tb of tb_fft_r2_wide is
 
     -- Input
     type t_din_array is array (g_fft.wb_factor - 1 downto 0) of std_logic_vector(g_fft.in_dat_w - 1 downto 0);
-    signal in_re_arr   : t_din_array;
-    signal in_im_arr   : t_din_array;
-    signal in_re_arr44 : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
-    signal in_im_arr44 : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
-    signal in_re_data  : std_logic_vector(g_fft.wb_factor * c_in_dat_w - 1 DOWNTO 0);
-    signal in_im_data  : std_logic_vector(g_fft.wb_factor * c_in_dat_w - 1 DOWNTO 0);
-    signal in_val      : std_logic := '0';
-    signal in_val_cnt  : natural   := 0;
-    signal in_gap      : std_logic := '0';
-
-    signal in_sync, trigger, triggerff, out_sync, synced, in_syncff : std_logic := '0';
-    signal data_val                                                 : std_logic := '0';
-    signal out_data_ready                                           : std_logic := '0';
+    signal in_re_arr      : t_din_array;
+    signal in_im_arr      : t_din_array;
+    signal in_re_arr44    : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal in_im_arr44    : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+    signal in_re_data     : std_logic_vector(g_fft.wb_factor * c_in_dat_w - 1 DOWNTO 0);
+    signal in_im_data     : std_logic_vector(g_fft.wb_factor * c_in_dat_w - 1 DOWNTO 0);
+    signal in_val         : std_logic := '0';
+    signal data_scope_val : std_logic := '0';
+    signal in_val_cnt     : natural   := 0;
+    signal in_gap         : std_logic := '0';
 
     -- Input in sclk domain  
     signal in_re_scope  : integer;
@@ -291,13 +291,12 @@ begin
 
     sclk   <= (not sclk) or tb_end after c_sclk_period / 2;
     clk    <= (not clk) or tb_end after c_clk_period / 2;
-    rst    <= '1', '0' after c_clk_period * 7;
     random <= func_common_random(random) WHEN rising_edge(clk);
     in_gap <= random(random'HIGH) WHEN g_enable_in_val_gaps = TRUE ELSE '0';
 
-    o_clk    <= clk;
-    o_rst    <= rst;
-    o_tb_end <= tb_end;
+    o_clk          <= clk;
+    o_rst          <= in_sync;
+    o_tb_end       <= tb_end;
     out_data_ready <= data_val and out_val;
 
     ---------------------------------------------------------------
@@ -334,7 +333,7 @@ begin
             end if;
         end if;
     end process;
-    
+
     ---------------------------------------------------------------
     -- DATA INPUT
     ---------------------------------------------------------------
@@ -351,6 +350,7 @@ begin
         in_re_arr <= (others => (others => '0'));
         in_im_arr <= (others => (others => '0'));
         in_val    <= '0';
+        wait until rising_edge(clk);
         wait for c_clk_period;
         trigger   <= '1';               -- Trigger sync pulse
         wait for c_clk_period;
@@ -421,8 +421,9 @@ begin
         );
 
     -- Data valid count
-    in_val_cnt  <= in_val_cnt + 1 when rising_edge(clk) and in_val = '1' and synced = '1' and in_sync = '0' else in_val_cnt;
-    out_val_cnt <= out_val_cnt + 1 when rising_edge(clk) and out_data_ready = '1' else out_val_cnt;
+    data_scope_val <= in_val and synced and (not in_sync);
+    in_val_cnt     <= in_val_cnt + 1 when rising_edge(clk) and data_scope_val = '1' else in_val_cnt;
+    out_val_cnt    <= out_val_cnt + 1 when rising_edge(clk) and out_data_ready = '1' else out_val_cnt;
 
     -- Block count t_blk time axis
     t_blk <= in_val_cnt / (g_fft.nof_points / g_fft.wb_factor);
@@ -432,10 +433,10 @@ begin
     begin
         -- Wait until tb_end_almost
         proc_common_wait_until_high(clk, tb_end_almost);
-        assert in_val_cnt > 0 report "Test did not run, no valid input data" severity error;
+        assert in_val_cnt > 0 report "Test did not run, no valid input data" severity failure;
         if g_fft.wb_factor = g_fft.nof_points then
             -- Parallel FFT 
-            assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity error;
+            assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity failure;
         else
             -- Wideband FFT 
             -- The PFFT has a memory of 1 block, independent of use_reorder and use_separate, but without the
@@ -444,15 +445,15 @@ begin
             if g_fft.use_reorder = true then
                 if g_fft.pipe_reo_in_place = true then
                     if g_fft.use_separate = true then
-                        assert out_val_cnt = in_val_cnt - (g_fft.nof_points / 2) report "Unexpected number of valid output data (in place, real)" severity error;
+                        assert out_val_cnt = in_val_cnt - (g_fft.nof_points / 2) report "Unexpected number of valid output data (in place, real)" severity failure;
                     else
-                        assert out_val_cnt = in_val_cnt - (2 * c_nof_valid_per_block - 1) report "Unexpected number of valid output data (in place, complex)" severity error;
+                        assert out_val_cnt = in_val_cnt - (2 * c_nof_valid_per_block - 1) report "Unexpected number of valid output data (in place, complex)" severity failure;
                     end if;
                 else
-                    assert out_val_cnt = in_val_cnt - c_nof_valid_per_block report "Unexpected number of valid output data (double buffer)" severity error;
+                    assert out_val_cnt = in_val_cnt - c_nof_valid_per_block report "Unexpected number of valid output data (double buffer)" severity failure;
                 end if;
             else
-                assert out_val_cnt = in_val_cnt - c_nof_valid_per_block + c_nof_channels report "Unexpected number of valid output data" severity error;
+                assert out_val_cnt = in_val_cnt - c_nof_valid_per_block + c_nof_channels report "Unexpected number of valid output data" severity failure;
             end if;
         end if;
         wait;
@@ -499,47 +500,45 @@ begin
     ---------------------------------------------------------------
     -- VERIFY OUTPUT DATA
     ---------------------------------------------------------------
-    verify_data : process(rst, clk, out_val_a, out_val_b, out_val_c)
+    verify_data : process(clk, out_val_a, out_val_b, out_val_c)
         VARIABLE v_test_pass : BOOLEAN         := TRUE;
         VARIABLE v_test_msg  : STRING(1 to 80) := (others => '.');
     begin
-        if rising_edge(clk) then
-            if rst = '0' then
-                if not c_in_complex then
-                    if (out_val_a = '1') and (out_val_b = '1') then
-                        v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
-                        v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
-                        v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
-                        v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
+        if rising_edge(clk) and (synced = '1') then
+            if not c_in_complex then
+                if (out_val_a = '1') and (out_val_b = '1') then
+                    v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
                     end if;
-                else
-                    if out_val_c = '1' then
-                        v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
-                        v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
-                        if not v_test_pass then
-                            v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope), o_test_msg'length, '.');
-                            report v_test_msg severity error;
-                        end if;
+                    v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
+                    end if;
+                    v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
+                    end if;
+                    v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
+                    end if;
+                end if;
+            else
+                if out_val_c = '1' then
+                    v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
+                    end if;
+                    v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
+                    if not v_test_pass then
+                        v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope), o_test_msg'length, '.');
+                        report v_test_msg severity failure;
                     end if;
                 end if;
             end if;
@@ -601,7 +600,7 @@ begin
 
             -- Streaming input data
             in_data => in_re_data,
-            in_val  => in_val,
+            in_val  => data_scope_val,
             -- Scope output samples
             out_dat => OPEN,
             out_int => in_re_scope,
@@ -621,7 +620,7 @@ begin
 
             -- Streaming input data
             in_data => in_im_data,
-            in_val  => in_val,
+            in_val  => data_scope_val,
             -- Scope output samples
             out_dat => OPEN,
             out_int => in_im_scope,
@@ -641,7 +640,7 @@ begin
 
             -- Streaming input data
             in_data => out_re_data,
-            in_val  => out_val,
+            in_val  => out_data_ready,
             -- Scope output samples
             out_dat => OPEN,
             out_int => out_re_scope,
@@ -661,7 +660,7 @@ begin
 
             -- Streaming input data
             in_data => out_im_data,
-            in_val  => out_val,
+            in_val  => out_data_ready,
             -- Scope output samples
             out_dat => OPEN,
             out_int => out_im_scope,

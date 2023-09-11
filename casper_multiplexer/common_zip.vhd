@@ -28,17 +28,18 @@ use IEEE.std_logic_1164.ALL;
 use common_pkg_lib.common_pkg.ALL;
 
 entity common_zip is
-  generic (
-    g_nof_streams : natural := 2;  -- Number of input streams to be zipped
+  generic(
+    g_nof_streams : natural := 2;       -- Number of input streams to be zipped
     g_dat_w       : natural := 8
   );
-  port (
-    rst        : in  std_logic := '0';
+  port(
+    in_sync    : in  std_logic := '0';
     clk        : in  std_logic;
     in_val     : in  std_logic := '0';
-    in_dat_arr : in  t_slv_64_arr(g_nof_streams-1 downto 0);
+    in_dat_arr : in  t_slv_64_arr(g_nof_streams - 1 downto 0);
     out_val    : out std_logic;
-    out_dat    : out std_logic_vector(g_dat_w-1 downto 0)
+    out_sync   : out std_logic;
+    out_dat    : out std_logic_vector(g_dat_w - 1 downto 0)
   );
 end common_zip;
 
@@ -47,57 +48,68 @@ architecture rtl of common_zip is
   type t_dat_arr is array (natural range <>) of std_logic_vector(out_dat'range);
 
   type reg_type is record
-    in_dat_arr  : t_dat_arr(g_nof_streams-1 downto 1);  -- Input register
-    index       : integer range 1 to g_nof_streams;     -- Index
-    out_dat     : std_logic_vector(g_dat_w-1 downto 0); -- Registered output value
-    out_val     : std_logic;                            -- Registered data valid signal  
+    in_dat_arr : t_dat_arr(g_nof_streams - 1 downto 1); -- Input register
+    index      : integer range 1 to g_nof_streams; -- Index
+    out_dat    : std_logic_vector(g_dat_w - 1 downto 0); -- Registered output value
+    out_val    : std_logic;             -- Registered data valid signal
+    out_sync   : std_logic;
   end record;
-  
-  signal r, rin : reg_type; 
-   
+
+  constant c_reg_type_default : reg_type := (
+    in_dat_arr => (others => (others => '0')),
+    index      => g_nof_streams,
+    out_dat    => (others => '0'),
+    out_val    => '0',
+    out_sync   => '0'
+  );
+
+  signal r, rin : reg_type := c_reg_type_default;
+
 begin
-  
-  comb : process(r, rst, in_val, in_dat_arr)
+
+  comb : process(r, in_sync, in_val, in_dat_arr)
     variable v : reg_type;
   begin
+    v          := r;
+    v.out_val  := '0';                  -- Default the output valid signal is low. 
+    v.out_sync := '0';
 
-    v := r; 
-    v.out_val := '0';                                         -- Default the output valid signal is low. 
-    
-    if(in_val = '1') then                                     -- Wait for incoming data
+    if (in_val = '1' and in_sync = '0') then -- Wait for incoming data
       v.index   := 1;
       v.out_val := '1';
-      v.out_dat := in_dat_arr(0)(g_dat_w-1 downto 0);         -- Output the first stream already
-      for I in 1 to g_nof_streams-1 loop
-        v.in_dat_arr(I) := in_dat_arr(I)(g_dat_w-1 downto 0); -- Store input data in register
+      v.out_dat := in_dat_arr(0)(g_dat_w - 1 downto 0); -- Output the first stream already
+      for I in 1 to g_nof_streams - 1 loop
+        v.in_dat_arr(I) := in_dat_arr(I)(g_dat_w - 1 downto 0); -- Store input data in register
       end loop;
     end if;
-    
-    if(r.index < g_nof_streams) then 
+
+    if (r.index < g_nof_streams) then
       v.out_val := '1';
-      v.out_dat := r.in_dat_arr(r.index);                     -- Output the next input stream
-      v.index   := r.index+1;
-    end if; 
-      
-    if(rst = '1') then
+      v.out_dat := r.in_dat_arr(r.index); -- Output the next input stream
+      v.index   := r.index + 1;
+    end if;
+
+    if (in_sync = '1' and in_val = '1') then
       v.in_dat_arr := (others => (others => '0'));
       v.index      := g_nof_streams;
       v.out_dat    := (others => '0');
-      v.out_val    := '0';
+      v.out_val    := '1';
+      v.out_sync   := '1';
     end if;
-    
-    rin <= v;  
-    
+
+    rin <= v;
+
   end process comb;
-  
+
   regs : process(clk)
-  begin 
-    if rising_edge(clk) then 
-      r <= rin; 
-    end if; 
-  end process; 
-  
-  out_dat <= r.out_dat;
-  out_val <= r.out_val;
-  
+  begin
+    if rising_edge(clk) then
+      r <= rin;
+    end if;
+  end process;
+
+  out_dat  <= r.out_dat;
+  out_val  <= r.out_val;
+  out_sync <= r.out_sync;
+
 end rtl;
