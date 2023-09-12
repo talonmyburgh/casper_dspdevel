@@ -39,20 +39,20 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_wide_unit is
     generic(
-        g_fft            : t_fft            := c_fft; --! generics for the FFT
-        g_pft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the pipelined part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
-        g_fft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
-        g_alt_output     : boolean          := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
-        g_use_variant    : string           := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-        g_use_dsp        : string           := "yes"; --! = "yes" or "no"
-        g_ovflw_behav    : string           := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-        g_round          : t_rounding_mode  := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
-        g_ram_primitive  : string           := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-        g_twid_file_stem : string           := c_twid_file_stem --! path stem for twiddle factors
+        g_fft            : t_fft           := c_fft; --! generics for the FFT
+        g_pft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the pipelined part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+        g_fft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the parallel part, defined in casper_r2sdf_fft_lib.rTwoSDFPkg
+        g_alt_output     : boolean         := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
+        g_use_variant    : string          := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+        g_use_dsp        : string          := "yes"; --! = "yes" or "no"
+        g_ovflw_behav    : string          := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_round          : t_rounding_mode := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
+        g_ram_primitive  : string          := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+        g_twid_file_stem : string          := c_twid_file_stem; --! path stem for twiddle factors
+        g_wide_control   : boolean         := FALSE
     );
     port(
         clken            : in  std_logic := '1'; --! Clock enable
-        rst              : in  std_logic := '0'; --! Reset
         clk              : in  std_logic := '1'; --! Clock
         shiftreg         : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
         in_fft_sosi_arr  : in  t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0); --! Input data array (wb_factor wide)
@@ -73,6 +73,9 @@ architecture str of fft_wide_unit is
     signal fft_out_fft_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor - 1 downto 0);
     signal fft_shiftreg         : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
 
+    signal fft_out_sync : std_logic;
+    signal rst          : std_logic;
+
     type reg_type is record
         in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0);
         shiftreg        : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
@@ -81,6 +84,8 @@ architecture str of fft_wide_unit is
     signal r, rin : reg_type;
 
 begin
+
+    rst <= in_fft_sosi_arr(0).sync and in_fft_sosi_arr(0).valid;
 
     ---------------------------------------------------------------
     -- INPUT REGISTER FOR THE INPUT SIGNALS
@@ -109,8 +114,8 @@ begin
     -- to fit the format of the fft_r2_wide unit. 
 
     gen_prep_fft_data : for I in 0 to g_fft.wb_factor - 1 generate
-        fft_in_re_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0),44);
-        fft_in_im_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0),44);
+        fft_in_re_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).re(g_fft.in_dat_w - 1 downto 0), 44);
+        fft_in_im_arr(I) <= RESIZE_SVEC(r.in_fft_sosi_arr(I).im(g_fft.in_dat_w - 1 downto 0), 44);
     end generate;
     fft_shiftreg <= r.shiftreg;
 
@@ -133,14 +138,15 @@ begin
         port map(
             clken      => clken,
             clk        => clk,
-            rst        => rst,
             shiftreg   => fft_shiftreg,
             in_re_arr  => fft_in_re_arr,
             in_im_arr  => fft_in_im_arr,
+            in_sync    => r.in_fft_sosi_arr(0).sync,
             in_val     => r.in_fft_sosi_arr(0).valid,
             out_re_arr => fft_out_re_arr,
             out_im_arr => fft_out_im_arr,
             ovflw      => ovflw,
+            out_sync   => fft_out_sync,
             out_val    => fft_out_val
         );
 
@@ -148,24 +154,35 @@ begin
     -- FFT CONTROL UNIT
     ---------------------------------------------------------------
     -- The fft control unit composes the output array in the dp-
-    -- streaming format. 
-    u_fft_control : entity work.fft_wide_unit_control
-        generic map(
-            g_fft => g_fft
-        )
-        port map(
-            rst          => rst,
-            clk          => clk,
-            in_re_arr    => fft_out_re_arr,
-            in_im_arr    => fft_out_im_arr,
-            in_val       => fft_out_val,
-            ctrl_sosi    => r.in_fft_sosi_arr(0),
-            out_sosi_arr => fft_out_fft_sosi_arr
-        );
+    -- streaming format.
+    wide_control : if g_wide_control generate
+        u_fft_control : entity work.fft_wide_unit_control
+            generic map(
+                g_fft => g_fft
+            )
+            port map(
+                rst          => rst,
+                clk          => clk,
+                in_re_arr    => fft_out_re_arr,
+                in_im_arr    => fft_out_im_arr,
+                in_val       => fft_out_val,
+                ctrl_sosi    => r.in_fft_sosi_arr(0),
+                out_sosi_arr => fft_out_fft_sosi_arr
+            );
 
-    -- Connect to the outside world 
-    gen_output : for I in 0 to g_fft.wb_factor - 1 generate
-        out_fft_sosi_arr(I) <= fft_out_fft_sosi_arr(I);
+        -- Connect to the outside world 
+        gen_output : for I in 0 to g_fft.wb_factor - 1 generate
+            out_fft_sosi_arr(I) <= fft_out_fft_sosi_arr(I);
+        end generate;
+    end generate;
+
+    no_control : if g_wide_control = FALSE generate
+        u_map_valid_sync_to_sosi : for I in 0 to g_fft.wb_factor - 1 generate
+            out_fft_sosi_arr(I).re    <= fft_out_re_arr(I)(g_fft.out_dat_w - 1 DOWNTO 0);
+            out_fft_sosi_arr(I).im    <= fft_out_im_arr(I)(g_fft.out_dat_w - 1 DOWNTO 0);
+            out_fft_sosi_arr(I).valid <= fft_out_val;
+            out_fft_sosi_arr(I).sync  <= fft_out_sync;
+        end generate;
     end generate;
 
 end str;
