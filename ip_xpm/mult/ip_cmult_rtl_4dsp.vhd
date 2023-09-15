@@ -69,7 +69,6 @@ ENTITY ip_cmult_rtl_4dsp IS
 		g_use_dsp          : STRING  := "YES"; --! Implement multiplications in DSP48 or not
 		g_in_a_w           : POSITIVE;  --! A input bit width
 		g_in_b_w           : POSITIVE;  --! B input bit width
-		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
 		g_conjugate_b      : BOOLEAN := FALSE; --! Whether or not to conjugate B value
 		g_pipeline_input   : NATURAL := 1; --! 0 or 1
 		g_pipeline_product : NATURAL := 0; --! 0 or 1
@@ -84,8 +83,8 @@ ENTITY ip_cmult_rtl_4dsp IS
 		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Imaginary input A
 		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Real input B
 		in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Imaginary input B
-		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0); --! Real result
-		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0) --! Imaginary result
+		result_re : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0); --! Real result
+		result_im : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0) --! Imaginary result
 	);
 	attribute use_dsp : string;
 	attribute use_dsp of ip_cmult_rtl_4dsp : entity is g_use_dsp;
@@ -117,8 +116,8 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	SIGNAL reg_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
 	SIGNAL reg_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL reg_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL reg_result_re  : SIGNED(g_out_p_w - 1 DOWNTO 0);
-	SIGNAL reg_result_im  : SIGNED(g_out_p_w - 1 DOWNTO 0);
+	SIGNAL reg_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
+	SIGNAL reg_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
 
 	-- combinatorial
 	SIGNAL nxt_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
@@ -131,8 +130,8 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	SIGNAL nxt_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
 	SIGNAL nxt_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL nxt_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL nxt_result_re  : SIGNED(g_out_p_w - 1 DOWNTO 0);
-	SIGNAL nxt_result_im  : SIGNED(g_out_p_w - 1 DOWNTO 0);
+	SIGNAL nxt_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
+	SIGNAL nxt_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
 
 	-- the active signals
 	SIGNAL ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
@@ -269,8 +268,8 @@ BEGIN
 	-- Result sum after optional rounding
 	------------------------------------------------------------------------------
 
-	nxt_result_re <= RESIZE_NUM(sum_re, g_out_p_w);
-	nxt_result_im <= RESIZE_NUM(sum_im, g_out_p_w);
+	nxt_result_re <= sum_re;
+	nxt_result_im <= sum_im;
 
 	no_result_reg : IF g_pipeline_output = 0 GENERATE -- wired
 		result_re <= STD_LOGIC_VECTOR(nxt_result_re);

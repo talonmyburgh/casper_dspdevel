@@ -33,7 +33,6 @@ PACKAGE tech_mult_component_pkg IS
 			g_use_dsp          : STRING  := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
-			g_out_p_w          : POSITIVE;
 			g_conjugate_b      : BOOLEAN := FALSE;
 			g_pipeline_input   : NATURAL := 1;
 			g_pipeline_product : NATURAL := 0;
@@ -48,36 +47,53 @@ PACKAGE tech_mult_component_pkg IS
 			in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
 			in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
 			in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-			result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-			result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
+			result_re : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0);
+			result_im : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0)
 		);
 	end component ip_cmult_rtl_4dsp;
 
-	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
-	component ip_cmult_rtl_3dsp
+  component ip_cmult_infer_rtl
 		generic(
-			g_use_dsp          : STRING  := "yes";
 			g_in_a_w           : POSITIVE;
 			g_in_b_w           : POSITIVE;
-			g_out_p_w          : POSITIVE;
-			g_conjugate_b      : BOOLEAN := FALSE;
-			g_pipeline_input   : NATURAL := 1;
-			g_pipeline_product : NATURAL := 0;
-			g_pipeline_adder   : NATURAL := 1;
-			g_pipeline_output  : NATURAL := 1
+			g_conjugate_b      : BOOLEAN := FALSE
 		);
 		port(
-			rst       : IN  STD_LOGIC;
 			clk       : IN  STD_LOGIC;
-			clken     : IN  STD_LOGIC;
 			in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
 			in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
 			in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
 			in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
-			result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-			result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
+			result_re : OUT STD_LOGIC_VECTOR(g_in_a_w+g_in_b_w DOWNTO 0);
+			result_im : OUT STD_LOGIC_VECTOR(g_in_a_w+g_in_b_w DOWNTO 0)
 		);
-	end component ip_cmult_rtl_3dsp;
+	end component ip_cmult_infer_rtl;
+
+	--! Complex multiplier that infers DSP element on 7 series Xilinx chips.
+	-- component ip_cmult_rtl_3dsp
+	-- 	generic(
+	-- 		g_use_dsp          : STRING  := "yes";
+	-- 		g_in_a_w           : POSITIVE;
+	-- 		g_in_b_w           : POSITIVE;
+	-- 		g_out_p_w          : POSITIVE;
+	-- 		g_conjugate_b      : BOOLEAN := FALSE;
+	-- 		g_pipeline_input   : NATURAL := 1;
+	-- 		g_pipeline_product : NATURAL := 0;
+	-- 		g_pipeline_adder   : NATURAL := 1;
+	-- 		g_pipeline_output  : NATURAL := 1
+	-- 	);
+	-- 	port(
+	-- 		rst       : IN  STD_LOGIC;
+	-- 		clk       : IN  STD_LOGIC;
+	-- 		clken     : IN  STD_LOGIC;
+	-- 		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+	-- 		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
+	-- 		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+	-- 		in_bi     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);
+	-- 		result_re : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
+	-- 		result_im : OUT STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0)
+	-- 	);
+	-- end component ip_cmult_rtl_3dsp;
 
 	--! Real multiplier that infers DSP element on 7 series Xilinx chips. 
 	component ip_mult_infer
