@@ -47,14 +47,14 @@ USE technology_lib.technology_select_pkg.ALL;
 ENTITY common_complex_mult IS
 	GENERIC(
 		g_use_ip           : BOOLEAN := FALSE;  -- Use IP component when TRUE, else rtl component when FALSE
-		g_use_variant      : STRING  := "4DSP"; --! Use 4DSP variant or 3DSP variant
+		g_use_variant      : STRING  := "3DSP"; --! Use 4DSP variant or 3DSP variant
 		g_use_dsp          : STRING  := "YES";
-		g_in_a_w           : POSITIVE;  --! Input A-bitwidth
-		g_in_b_w           : POSITIVE;  --! Input B-bitwidth
-		g_out_p_w          : POSITIVE;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
+		g_in_a_w           : POSITIVE := 8;  --! Input A-bitwidth
+		g_in_b_w           : POSITIVE := 8;  --! Input B-bitwidth
+		g_out_p_w          : POSITIVE := 16;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
 		g_conjugate_b      : BOOLEAN := FALSE; --! Conjugate b value prior to cmult
-		g_pipeline_input   : NATURAL := 1; --! 0 or 1
-		g_pipeline_product : NATURAL := 0; --! 0 or 1
+		g_pipeline_input   : NATURAL := 0; --! 0 or 1
+		g_pipeline_product : NATURAL := 1; --! 0 or 1
 		g_pipeline_adder   : NATURAL := 1; --! 0 or 1
 		g_pipeline_output  : NATURAL := 1 --! >= 0
 	);
@@ -81,10 +81,10 @@ ARCHITECTURE str OF common_complex_mult IS
 	CONSTANT c_dsp_latency : NATURAL := sel_a_b((c_tech_select_default = c_tech_agilex or c_tech_select_default=c_tech_versal),4,3); -- the agilex model is 4 clocks internally so deal with that here.
 
 	-- Extra output pipelining is only needed when c_pipeline > c_dsp_latency
-	CONSTANT c_pipeline_output : NATURAL := sel_a_b(c_pipeline > c_dsp_latency, c_pipeline - c_dsp_latency, 0);
+	CONSTANT c_pipeline_output : NATURAL := 1;--sel_a_b(c_pipeline > c_dsp_latency, c_pipeline - c_dsp_latency, 0);
 
-	SIGNAL result_re : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
-	SIGNAL result_im : STD_LOGIC_VECTOR(g_out_p_w - 1 DOWNTO 0);
+	SIGNAL result_re : STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0);
+	SIGNAL result_im : STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0);
 	signal in_clr    : STD_LOGIC := '0';
 	signal in_en     : STD_LOGIC := '1';
 
@@ -116,7 +116,6 @@ BEGIN
 			g_use_dsp          => g_use_dsp,
 			g_in_a_w           => g_in_a_w,
 			g_in_b_w           => g_in_b_w,
-			g_out_p_w          => g_out_p_w,
 			g_conjugate_b      => g_conjugate_b,
 			g_pipeline_input   => g_pipeline_input,
 			g_pipeline_product => g_pipeline_product,
@@ -143,7 +142,7 @@ BEGIN
 		GENERIC MAP(
 			g_representation => "SIGNED",
 			g_pipeline       => c_pipeline_output,
-			g_in_dat_w       => g_out_p_w,
+			g_in_dat_w       => g_in_a_w + g_in_b_w + 1,
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
@@ -160,7 +159,7 @@ BEGIN
 		GENERIC MAP(
 			g_representation => "SIGNED",
 			g_pipeline       => c_pipeline_output,
-			g_in_dat_w       => g_out_p_w,
+			g_in_dat_w       => g_in_a_w + g_in_b_w + 1,
 			g_out_dat_w      => g_out_p_w
 		)
 		PORT MAP(
