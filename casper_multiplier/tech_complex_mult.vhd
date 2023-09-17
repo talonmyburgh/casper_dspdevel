@@ -114,12 +114,11 @@ begin
 	end generate;
 
 	 gen_ip_xpm_rtl_3dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
-	 	u1 : entity casper_multiplier_lib.ip_cmult_rtl_3dsp_casper
+	 	u1 : ip_cmult_rtl_3dsp_casper
 	 		generic map(
 	 			g_use_dsp          => g_use_dsp,
 	 			g_in_a_w           => g_in_a_w,
 	 			g_in_b_w           => g_in_b_w,
-	 	        --g_out_p_w          => g_out_p_w,
 	 			g_conjugate_b      => g_conjugate_b,
 	 			g_pipeline_input   => g_pipeline_input,
 	 			g_pipeline_product => g_pipeline_product,
