@@ -108,6 +108,32 @@ begin
 
         -- wait for sync out
         WAIT UNTIL rising_edge(s_sync_out);
+
+        -- change inputs
+        FOR channel IN s_in'range(1) LOOP
+          v_s_in := TO_SVEC(channel+2, g_barrel_switcher_division_bit_width);
+          slv_arr_set_variable(
+            s_in,
+            channel,
+            v_s_in
+          );
+        END LOOP;
+        
+        -- pulse sync in
+        s_sync_in   <= '1';
+        WAIT FOR 1*clk_period;
+        s_sync_in   <= '0';
+
+        -- set exp
+        FOR channel IN 0 to s_in'LENGTH-1 LOOP
+          slv_arr_set(
+            s_exp,
+            channel,
+            s_in,
+            index_wrapping(channel+shift, s_in'LENGTH(1))
+          );
+        END LOOP;
+
         -- wait some more
         WAIT FOR 5*clk_period;
       END LOOP;

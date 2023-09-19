@@ -12,7 +12,7 @@ entity mux is
     );
     port (
         clk : IN std_logic := '0';
-        ce :  IN std_logic := '0';
+        ce :  IN std_logic := '1';
         i_sel : IN std_logic;
         i_data_0 : IN std_logic_vector;
         i_data_1 : IN std_logic_vector;
@@ -33,7 +33,7 @@ begin
     -- Synchronous operation
     --------------------------------------------------------
     sync : IF g_async = FALSE GENERATE
-        sync_process: PROCESS (clk, ce, i_sel)
+        sync_process: PROCESS (clk)
         begin
             if rising_edge(clk) and ce='1' THEN
               if i_sel = '1' then
