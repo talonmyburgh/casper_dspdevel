@@ -143,15 +143,8 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_multiplier/tech_agilex_versal_cmult.vhd">
-        <FileInfo SFType="VHDL2008">
-          <Attr Name="Library" Val="casper_multiplier_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../casper_multiplier/tech_complex_mult.vhd">
-        <FileInfo SFType="VHDL2008">
+        <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -167,6 +160,27 @@
       <File Path="$PPRDIR/../../casper_counter/common_counter.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_counter_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/common_ram_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_component_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_cr_cw.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -213,28 +227,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_ram/common_ram_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_ram/tech_memory_component_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_crw_crw.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_cr_cw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -411,16 +404,16 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd">
+      <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp_casper.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_multiplier_lib"/>
+          <Attr Name="Library" Val="ip_xpm_mult_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_4dsp.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_multiplier_lib"/>
+          <Attr Name="Library" Val="ip_xpm_mult_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -434,14 +427,14 @@
       </File>
       <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="Library" Val="ip_xpm_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
       <File Path="$PPRDIR/../../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="Library" Val="ip_xpm_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -494,6 +487,22 @@
         <FileInfo SFType="VHDL2008">
           <Attr Name="ImportPath" Val="$PPRDIR/../../../Work/dspdevel_designs/casper_dspdevel/casper_wb_fft/casper_wb_barebones/casper_wb_barebones.srcs/sources_1/new/wb_slim_fft_top.vhd"/>
           <Attr Name="ImportTime" Val="1624458631"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_multiplier/tech_agilex_versal_cmult.vhd">
+        <FileInfo SFType="VHDL2008">
+          <Attr Name="Library" Val="casper_multiplier_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_multiplier_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>

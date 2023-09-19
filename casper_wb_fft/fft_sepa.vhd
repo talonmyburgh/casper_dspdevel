@@ -214,7 +214,7 @@ begin
     ---------------------------------------------------------------
     -- CONTROL PROCESS
     ---------------------------------------------------------------
-    comb : process(r, rst, in_val, in_dat, add_result_q, sub_result_q)
+    comb : process(r, rst, in_sync, in_val, in_dat, add_result_q, sub_result_q)
         variable v : reg_type;
     begin
         v := r;
