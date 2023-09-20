@@ -86,7 +86,7 @@ architecture rtl of fft_sepa_wide is
     signal wr_adr       : std_logic_vector(c_adr_w - 1 downto 0); -- The write address
     signal wr_dat       : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data to be written to memory
     signal out_ram_sync : std_logic;    -- Signal for sync out of the bram module
-    signal out_zip_sync : std_logic := '0'; -- Signal for sync out of the fft_sepa module
+    signal out_zip_sync : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others=>'0'); -- Signal for sync out of the fft_sepa module
 
     signal rd_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array of data that is read from memory
     signal rd_adr_arr : t_rd_adr_arr(1 downto 0); -- There are two different read addresses. 
@@ -232,7 +232,7 @@ begin
                 in_val     => zip_in_val(I),
                 in_dat_arr => zip_in_matrix(I),
                 out_val    => zip_out_val(I),
-                out_sync   => out_zip_sync,
+                out_sync   => out_zip_sync(I),
                 out_dat    => zip_out_dat_arr(I)
             );
 
@@ -244,7 +244,7 @@ begin
                 clk      => clk,
                 clken    => clken,
                 in_dat   => zip_out_dat_arr(I),
-                in_sync  => out_zip_sync,
+                in_sync  => out_zip_sync(I),
                 in_val   => zip_out_val(I),
                 out_dat  => sep_out_dat_arr(I),
                 out_sync => sep_out_sync_vec(I),

@@ -1959,12 +1959,10 @@ PACKAGE BODY common_pkg IS
 		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
 		VARIABLE sum_a_b_sign : SIGNED(sum_a_b'RANGE) := SIGNED(sum_a_b);
 	BEGIN
-		IF (a_sign >= 0 xor b_sign >= 0) THEN
-			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
-		ELSIF (sum_a_b_sign >= 0 xor a_sign >= 0) THEN -- signs are same so use either a_sign|b_sign
+		IF (sum_a_b_sign >= 0 xor a_sign >= 0) THEN -- signs are same so use either a_sign|b_sign
 			RETURN '1';	-- overflow has occured - note sum wrapped to a different sign than inputs
 		ELSE 
-			RETURN '0';
+			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
 		END IF;
 	END;
 
@@ -1973,12 +1971,10 @@ PACKAGE BODY common_pkg IS
 		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
 		VARIABLE sub_a_b_sign: SIGNED(sub_a_b'RANGE) := SIGNED(sub_a_b);
 	BEGIN
-		IF not (a_sign >= 0 xor b_sign >= 0) THEN
-			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
-		ELSIF not (sub_a_b_sign >= 0 xor b_sign >= 0) THEN
+		IF not (sub_a_b_sign >= 0 xor b_sign >= 0) THEN
 			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
 		ELSE 
-			RETURN '0';
+			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
 		END IF;
 	END;
 	
