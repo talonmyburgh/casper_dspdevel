@@ -98,10 +98,6 @@ function casper_wb_fft_config(this_block)
   vhdlfile = top_wb_fft_code_gen(dbl_wb_factor,dbl_nof_points,double_t_d_w, technology_int, xtra_dat_sigs,str2double(i_d_w),str2double(o_d_w),str2double(s_d_w));
 
 %inport declarations
-this_block.addSimulinkInport('rst');
-in_rst_port = this_block.port('rst');
-in_rst_port.setType('Bool');
-in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
 in_sync_port.setType('Bool');
