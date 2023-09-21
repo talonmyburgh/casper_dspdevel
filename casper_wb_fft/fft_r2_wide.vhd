@@ -76,7 +76,7 @@ entity fft_r2_wide is
         g_pft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
         g_fft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
         g_alt_output     : boolean          := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
-        g_use_variant    : string           := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+        g_use_variant    : string           := "3DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp        : string           := "yes"; --! = "yes" or "no"
         g_ovflw_behav    : string           := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
         g_round          : t_rounding_mode  := ROUND; --! = ROUND, ROUNDINF or TRUNCATE will default to TRUNCATE if invalid option used
