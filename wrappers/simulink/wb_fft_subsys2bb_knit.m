@@ -292,10 +292,10 @@ function wb_fft_subsys2bb_knit()
         %Get bb port handles to add signals
         bbports=get_param(wb_fft_bb,'PortHandles');
         if xtra_dat_sigs
-            i_basic_prts = 11;
+            i_basic_prts = 10;
             o_basic_prts = 10;
         else
-            i_basic_prts = 5;
+            i_basic_prts = 4;
             o_basic_prts = 4;
         end
         %start index for ports on bb
