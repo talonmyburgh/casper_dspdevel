@@ -13,7 +13,7 @@ CONSTANT c_fft_stage_dat_w    : natural := 18;
 CONSTANT c_fft_use_reorder          : boolean := false;     -- = false for bit-reversed output, true for normal output
 CONSTANT c_fft_use_fft_shift        : boolean := false;     -- = false for [0, pos, neg] bin frequencies order, true for [neg, 0, pos] bin frequencies order in case of complex input
 CONSTANT c_fft_use_separate         : boolean := true;      -- = false for complex input, true for two real inputs
-CONSTANT c_fft_wb_factor      		: natural := 1;   		-- = default 1, wideband factor",wb_factor);
+CONSTANT c_fft_wb_factor      		: natural := 4;   		-- = default 1, wideband factor",wb_factor);
 CONSTANT c_fft_nof_points     		: natural := 1024;    	-- = 1024, N point FFT",nof_points);
 CONSTANT c_fft_nof_chan             : natural := 0;       	-- = default 0, defines the number of channels (=time-multiplexed input signals): nof channels = 2**nof_chan 
 CONSTANT c_fft_twiddle_dat_w  		: natural := 18;	    -- = 18, coefficient data width

@@ -113,48 +113,52 @@ begin
 			);
 	end generate;
 
-	 gen_ip_xpm_rtl_3dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
-	 	u1 : ip_cmult_rtl_3dsp_casper
-	 		generic map(
-	 			g_use_dsp          => g_use_dsp,
-	 			g_in_a_w           => g_in_a_w,
-	 			g_in_b_w           => g_in_b_w,
-	 			g_conjugate_b      => g_conjugate_b,
-	 			g_pipeline_input   => g_pipeline_input,
-	 			g_pipeline_product => g_pipeline_product,
-	 			g_pipeline_adder   => g_pipeline_adder,
-	 			g_pipeline_output  => g_pipeline_output
-	 		)
-	 		port map(
-	 			rst       => rst,
-	 			clk       => clk,
-	 			clken     => clken,
-	 			in_ar     => in_ar,
-	 			in_ai     => in_ai,
-	 			in_br     => in_br,
-	 			in_bi     => in_bi,
-	 			result_re => result_re,
-	 			result_im => result_im
-	 		);
-	 end generate;
+--	 gen_ip_xpm_rtl_3dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
+--	 	u1 : ip_cmult_rtl_3dsp_casper
+--	 		generic map(
+--	 			g_use_dsp          => g_use_dsp,
+--	 			g_in_a_w           => g_in_a_w,
+--	 			g_in_b_w           => g_in_b_w,
+--	 			g_conjugate_b      => g_conjugate_b,
+--	 			g_pipeline_input   => g_pipeline_input,
+--	 			g_pipeline_product => g_pipeline_product,
+--	 			g_pipeline_adder   => g_pipeline_adder,
+--	 			g_pipeline_output  => g_pipeline_output
+--	 		)
+--	 		port map(
+--	 			rst       => rst,
+--	 			clk       => clk,
+--	 			clken     => clken,
+--	 			in_ar     => in_ar,
+--	 			in_ai     => in_ai,
+--	 			in_br     => in_br,
+--	 			in_bi     => in_bi,
+--	 			result_re => result_re,
+--	 			result_im => result_im
+--	 		);
+--	 end generate;
 
-	--gen_ip_cmult_infer_rtl : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
-	--	u1 : ip_cmult_infer_rtl
-	--		generic map(
-	--			g_in_a_w           => g_in_a_w,
-	--			g_in_b_w           => g_in_b_w,
-	--			g_conjugate_b      => g_conjugate_b
-	--		)
-	--		port map(
-	--			clk       => clk,
-	--			in_ar     => in_ar,
-	--			in_ai     => in_ai,
-	--			in_br     => in_br,
-	--			in_bi     => in_bi,
-	--			result_re => result_re,
-	--			result_im => result_im
-	--		);
-	--end generate;
+	gen_ip_cmult_infer_rtl : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
+		assert g_pipeline_input = 1 severity failure;
+		assert g_pipeline_product = 1 severity failure;
+		assert g_pipeline_adder = 1 severity failure;
+		assert g_pipeline_output = 1 severity failure;
+		u1 : ip_cmult_infer_rtl
+			generic map(
+				g_in_a_w           => g_in_a_w,
+				g_in_b_w           => g_in_b_w,
+				g_conjugate_b      => g_conjugate_b
+			)
+			port map(
+				clk       => clk,
+				in_ar     => in_ar,
+				in_ai     => in_ai,
+				in_br     => in_br,
+				in_bi     => in_bi,
+				result_re => result_re,
+				result_im => result_im
+			);
+	end generate;
 
 --   gen_ip_stratixiv_ip_4dsp : IF c_tech_select_default = c_tech_stratixiv AND g_use_variant = "4DSP" AND g_use_ip = TRUE GENERATE
 --     -- Adapt DSP input widths

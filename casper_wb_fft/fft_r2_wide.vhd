@@ -200,7 +200,9 @@ architecture rtl of fft_r2_wide is
 
     signal int_val  : std_logic_vector(g_fft.wb_factor - 1 downto 0);
     signal int_sync : std_logic_vector(g_fft.wb_factor - 1 downto 0);
-
+    signal int_val_d  : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    
 begin
 
     -- Default to fft_r2_pipe when g_fft.wb_factor=1
@@ -332,9 +334,15 @@ begin
 
         -- Create input for parallel FFT
         gen_inputs_for_par : for I in g_fft.wb_factor - 1 downto 0 generate
-
-            in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
-            in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+            reg_pipe_par : process (clk)
+            begin
+                if rising_Edge(clk) then
+                    int_sync_d(I)        <= int_sync(I);
+                    int_val_d(I)         <= int_val(I);
+                    in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                    in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                end if;
+            end process; 
         end generate;
 
         -- The g_fft.wb_factor outputs of the pipelined fft's are offered
@@ -354,8 +362,8 @@ begin
                 in_re_arr  => in_fft_par_re_arr,
                 in_im_arr  => in_fft_par_im_arr,
                 shiftreg   => shiftreg(c_nof_stages_par - 1 DOWNTO 0), -- Only c_stage_par of shiftreg
-                in_sync    => int_sync(0),
-                in_val     => int_val(0),
+                in_sync    => int_sync_d(0),
+                in_val     => int_val_d(0),
                 out_re_arr => fft_out_re_arr,
                 out_im_arr => fft_out_im_arr,
                 ovflw      => ovflw(c_nof_stages_par - 1 DOWNTO 0),
