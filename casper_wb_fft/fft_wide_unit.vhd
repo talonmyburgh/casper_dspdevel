@@ -49,7 +49,7 @@ entity fft_wide_unit is
         g_round          : t_rounding_mode := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
         g_ram_primitive  : string          := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
         g_twid_file_stem : string          := c_twid_file_stem; --! path stem for twiddle factors
-        g_wide_control   : boolean         := FALSE
+        g_wide_control   : boolean         := FALSE --! If false, control block is not instantiated and extra data signals are not populated
     );
     port(
         clken            : in  std_logic := '1'; --! Clock enable
