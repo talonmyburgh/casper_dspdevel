@@ -86,7 +86,7 @@ architecture str of fft_r2_pipe is
 
     constant c_clip : boolean := sel_a_b(g_ovflw_behav = "SATURATE", TRUE, FALSE);
 
-    constant c_pipeline_remove_lsb : natural := 0;
+    constant c_pipeline_remove_lsb : natural := 1;
 
     constant c_nof_stages  : natural := ceil_log2(g_fft.nof_points);
     constant c_in_scale_w  : natural := g_fft.stage_dat_w - g_fft.in_dat_w - sel_a_b(g_fft.guard_enable, g_fft.guard_w, 0);

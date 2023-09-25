@@ -336,7 +336,7 @@ begin
         gen_inputs_for_par : for I in g_fft.wb_factor - 1 downto 0 generate
             reg_pipe_par : process (clk)
             begin
-                if rising_Edge(clk) then
+                if rising_edge(clk) then
                     int_sync_d(I)        <= int_sync(I);
                     int_val_d(I)         <= int_val(I);
                     in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);

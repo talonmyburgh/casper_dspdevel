@@ -165,7 +165,7 @@ begin
 		ADD_MACRO_inst : ADDSUB_MACRO
 			generic map(
 				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => 0,           -- Desired clock cycle latency, 0-2
+				LATENCY => 1,           -- Desired clock cycle latency, 0-2
 				WIDTH   => out_c'length) -- Input / Output bus width, 1-48
 			port map(
 				CARRYOUT => s_subtraction_ovflw(0), -- 1-bit carry-out output signal
@@ -181,7 +181,7 @@ begin
 		SUB_MACRO_inst : ADDSUB_MACRO
 			generic map(
 				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => 0,           -- Desired clock cycle latency, 0-2
+				LATENCY => 1,           -- Desired clock cycle latency, 0-2
 				WIDTH   => out_d'length) -- Input / Output bus width, 1-48
 			port map(
 				CARRYOUT => s_addition_ovflw(0), -- 1-bit carry-out output signal
@@ -194,6 +194,10 @@ begin
 				CLK      => clk,        -- 1-bit clock input
 				RST      => '0'         -- 1-bit active high synchronous reset
 			);
+			
+			
+		    out_c     <= out_c_buf when in_sel = '1' else in_a_dly;
+	        out_d_ely <= out_d_ely_buf when in_sel = '1' else in_b;
 	end generate;
 
 	rtl_inst : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE
@@ -201,10 +205,14 @@ begin
 		begin
 			if rising_edge(clk) then
 				if in_sel = '1' then
+				    out_c <= ADD_SVEC(in_a_dly, in_b, out_c'length);
+				    out_d_ely <= SUB_SVEC(in_a_dly, in_b, out_d'length);
 					s_addition_ovflw(0)    <= S_ADD_OVFLW_DET(in_a_dly, in_b, out_c_buf);
 					s_subtraction_ovflw(0) <= S_SUB_OVFLW_DET(in_a_dly, in_b, out_d_ely);
 					ovflw_imm(0)           <= (s_addition_ovflw(0) or s_subtraction_ovflw(0));
 				else
+				    out_c <= in_a_dly;
+				    out_d_ely <= in_b;
 					s_addition_ovflw(0)    <= '0';
 					s_subtraction_ovflw(0) <= '0';
 					ovflw_imm(0)           <= '0';
@@ -217,8 +225,5 @@ begin
 			end if;
 		end process;
 	END GENERATE;
-
-	out_c     <= out_c_buf when in_sel = '1' else in_a_dly;
-	out_d_ely <= out_d_ely_buf when in_sel = '1' else in_b;
 
 end rtl;

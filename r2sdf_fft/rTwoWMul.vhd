@@ -29,7 +29,7 @@ entity rTwoWMul is
         g_use_variant : STRING          := "4DSP";
         g_round       : t_rounding_mode := ROUND; -- even rounding by default
         g_stage       : natural         := 1;
-        g_lat         : natural         := 3 + 1 -- 3 for mult, 1 for round
+        g_lat         : natural         := 4 + 1 -- 4 for mult, 1 for round
     );
     port(
         clk       : in  std_logic;

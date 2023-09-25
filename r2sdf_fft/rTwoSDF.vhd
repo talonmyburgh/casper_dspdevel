@@ -78,7 +78,7 @@ entity rTwoSDF is
         -- pipeline generics
         g_stage_lat      : natural         := 1; --! stage latencies
         g_weight_lat     : natural         := 1;
-        g_mult_lat       : natural         := 4;
+        g_mult_lat       : natural         := 5;
         g_bf_lat         : natural         := 1;
         g_bf_use_zdly    : natural         := 1;
         g_bf_in_a_zdly   : natural         := 0;
