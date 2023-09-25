@@ -261,7 +261,7 @@ begin
                 generic map(
                     g_direction       => "ADD",
                     g_representation  => "SIGNED",
-                    g_pipeline_input  => 0,
+                    g_pipeline_input  => 1,
                     g_pipeline_output => c_pipeline_add_sub,
                     g_in_dat_w        => g_fft.stage_dat_w,
                     g_out_dat_w       => g_fft.stage_dat_w + 1
@@ -277,7 +277,7 @@ begin
                 generic map(
                     g_direction       => "ADD",
                     g_representation  => "SIGNED",
-                    g_pipeline_input  => 0,
+                    g_pipeline_input  => 1,
                     g_pipeline_output => c_pipeline_add_sub,
                     g_in_dat_w        => g_fft.stage_dat_w,
                     g_out_dat_w       => g_fft.stage_dat_w + 1
@@ -293,7 +293,7 @@ begin
                 generic map(
                     g_direction       => "SUB",
                     g_representation  => "SIGNED",
-                    g_pipeline_input  => 0,
+                    g_pipeline_input  => 1,
                     g_pipeline_output => c_pipeline_add_sub,
                     g_in_dat_w        => g_fft.stage_dat_w,
                     g_out_dat_w       => g_fft.stage_dat_w + 1
@@ -309,7 +309,7 @@ begin
                 generic map(
                     g_direction       => "SUB",
                     g_representation  => "SIGNED",
-                    g_pipeline_input  => 0,
+                    g_pipeline_input  => 1,
                     g_pipeline_output => c_pipeline_add_sub,
                     g_in_dat_w        => g_fft.stage_dat_w,
                     g_out_dat_w       => g_fft.stage_dat_w + 1
@@ -408,7 +408,7 @@ begin
 
         u_pipeline_a_re_0 : entity common_components_lib.common_pipeline
             generic map(
-                g_pipeline  => c_pipeline_add_sub,
+                g_pipeline  => c_pipeline_add_sub + 1,
                 g_in_dat_w  => g_fft.stage_dat_w,
                 g_out_dat_w => g_fft.stage_dat_w
             )
@@ -420,7 +420,7 @@ begin
 
         u_pipeline_b_re_0 : entity common_components_lib.common_pipeline
             generic map(
-                g_pipeline  => c_pipeline_add_sub,
+                g_pipeline  => c_pipeline_add_sub + 1,
                 g_in_dat_w  => g_fft.stage_dat_w,
                 g_out_dat_w => g_fft.stage_dat_w
             )
@@ -439,7 +439,7 @@ begin
         ------------------------------------------------------------------------------
         u_seperate_fft_val : entity common_components_lib.common_pipeline_sl
             generic map(
-                g_pipeline => c_pipeline_add_sub
+                g_pipeline => c_pipeline_add_sub + 1
             )
             port map(
                 clk     => clk,
@@ -449,7 +449,7 @@ begin
 
         u_separate_fft_sync : entity common_components_lib.common_bit_delay
             generic map(
-                g_depth => c_pipeline_add_sub
+                g_depth => c_pipeline_add_sub + 1
             )
             port map(
                 clk     => clk,
@@ -531,7 +531,7 @@ begin
         
     u_out_sync : entity common_components_lib.common_bit_delay
     generic map(
-        g_depth => c_pipeline_add_sub
+        g_depth => c_pipeline_add_sub + 1
     )
     port map(
         clk     => clk,
