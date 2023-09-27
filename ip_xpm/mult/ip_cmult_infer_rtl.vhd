@@ -78,7 +78,7 @@ out_imag_conj : if g_conjugate_b generate
     begin
     if rising_edge(clk) then
         ai_ddd   <= ai_dd;
-        ai_dddd  <= ai_ddd;
+        ai_dddd  <= - ai_ddd;
         addi     <= resize(br_ddd, g_in_b_w+1) + resize(bi_ddd, g_in_b_w+1);
         multi    <= addi * ai_dddd;
         commonr2 <= common;
@@ -86,7 +86,7 @@ out_imag_conj : if g_conjugate_b generate
     end if;
     end process;
 end generate;
-out_imag : if g_conjugate_b generate
+out_imag : if g_conjugate_b=FALSE generate
     process(clk)
     begin
     if rising_edge(clk) then
