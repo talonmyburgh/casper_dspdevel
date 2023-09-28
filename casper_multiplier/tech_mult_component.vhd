@@ -40,9 +40,9 @@ PACKAGE tech_mult_component_pkg IS
 			g_pipeline_output  : NATURAL := 1
 		);
 		port(
-			rst       : IN  STD_LOGIC;
+--			rst       : IN  STD_LOGIC;
 			clk       : IN  STD_LOGIC;
-			clken     : IN  STD_LOGIC;
+--			clken     : IN  STD_LOGIC;
 			in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
 			in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0);
 			in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0);

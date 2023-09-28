@@ -22,13 +22,13 @@ end entity ip_cmult_infer_rtl;
 
 architecture RTL of ip_cmult_infer_rtl is
 -- Insert the below before begin keyword in architecture
-    signal ai_d, ai_dd, ai_ddd, ai_dddd                 : signed(g_in_a_w-1 downto 0);
-    signal ar_d, ar_dd, ar_ddd, ar_dddd                 : signed(g_in_a_w-1 downto 0);
-    signal bi_d, bi_dd, bi_ddd, br_d, br_dd, br_ddd     : signed(g_in_b_w-1 downto 0);
-    signal addcommon                                    : signed(g_in_a_w downto 0);
-    signal addr, addi                                   : signed(g_in_b_w downto 0);
-    signal mult0, multr, multi, pr_int, pi_int          : signed(g_in_a_w+g_in_b_w downto 0);
-    signal common, commonr1, commonr2                   : signed(g_in_a_w+g_in_b_w downto 0);
+    signal ai_d, ai_dd, ai_ddd, ai_dddd                 : signed(g_in_a_w-1 downto 0) := (others=>'0');
+    signal ar_d, ar_dd, ar_ddd, ar_dddd                 : signed(g_in_a_w-1 downto 0) := (others=>'0');
+    signal bi_d, bi_dd, bi_ddd, br_d, br_dd, br_ddd     : signed(g_in_b_w-1 downto 0) := (others=>'0');
+    signal addcommon                                    : signed(g_in_a_w downto 0) := (others=>'0');
+    signal addr, addi                                   : signed(g_in_b_w downto 0) := (others=>'0');
+    signal mult0, multr, multi,multr_d, multi_d, pr_int, pi_int          : signed(g_in_a_w+g_in_b_w downto 0) := (others=>'0');
+    signal common, commonr1, commonr2                   : signed(g_in_a_w+g_in_b_w downto 0) := (others=>'0');
 begin
 
 -- Insert the below after begin keyword in architecture
@@ -58,47 +58,82 @@ process(clk)
       common    <= mult0;
  end if;
 end process;
-
--- Real product
-process(clk)
- begin
-  if rising_edge(clk) then
-      ar_ddd   <= ar_dd;
-      ar_dddd  <= ar_ddd;
-      addr     <= resize(br_ddd, g_in_b_w+1) - resize(bi_ddd, g_in_b_w+1);
-      multr    <= addr * ar_dddd;
-      commonr1 <= common;
-      pr_int   <= multr + commonr1;
-  end if;
-end process;
-
--- Imaginary product
-out_imag_conj : if g_conjugate_b generate
+conj_b : if g_conjugate_b generate
+    -- Real product
+    process(clk)
+     begin
+      if rising_edge(clk) then
+    --      ar_ddd   <= ar_dd;
+    --      ar_dddd  <= ar_ddd;
+          addr     <= resize(br_d, g_in_b_w+1) + resize(bi_d, g_in_b_w+1);
+          multr    <= addr * ar_dd;
+          multr_d  <= multr;
+          commonr1 <= mult0;
+          pr_int   <= multr_d - commonr1;
+      end if;
+    end process;
+---- Imaginary product
     process(clk)
     begin
     if rising_edge(clk) then
-        ai_ddd   <= ai_dd;
-        ai_dddd  <= - ai_ddd;
-        addi     <= resize(br_ddd, g_in_b_w+1) + resize(bi_ddd, g_in_b_w+1);
-        multi    <= addi * ai_dddd;
-        commonr2 <= common;
-        pi_int   <= multi - commonr2;
+--        ai_ddd   <= ai_dd;
+--        ai_dddd  <= ai_ddd;
+        addi     <= resize(br_d, g_in_b_w+1) - resize(bi_d, g_in_b_w+1);
+        multi    <= addi * ai_dd;
+        multi_d  <= multi;
+        commonr2 <= mult0;
+        pi_int   <= multi_d - commonr2;
     end if;
     end process;
 end generate;
-out_imag : if g_conjugate_b=FALSE generate
+no_conj_b: if g_conjugate_b = FALSE generate
+    -- Real product
+    process(clk)
+     begin
+      if rising_edge(clk) then
+    --      ar_ddd   <= ar_dd;
+    --      ar_dddd  <= ar_ddd;
+          addr     <= resize(br_d, g_in_b_w+1) - resize(bi_d, g_in_b_w+1);
+          multr    <= addr * ar_dd;
+          multr_d  <= multr;
+          commonr1 <= mult0;
+          pr_int   <= multr_d + commonr1;
+      end if;
+    end process;
+---- Imaginary product
     process(clk)
     begin
     if rising_edge(clk) then
-        ai_ddd   <= ai_dd;
-        ai_dddd  <= ai_ddd;
-        addi     <= resize(br_ddd, g_in_b_w+1) + resize(bi_ddd, g_in_b_w+1);
-        multi    <= addi * ai_dddd;
-        commonr2 <= common;
-        pi_int   <= multi + commonr2;
+--        ai_ddd   <= ai_dd;
+--        ai_dddd  <= ai_ddd;
+        addi     <= resize(br_d, g_in_b_w+1) + resize(bi_d, g_in_b_w+1);
+        multi    <= addi * ai_dd;
+        multi_d  <= multi;
+        commonr2 <= mult0;
+        pi_int   <= multi_d + commonr2;
     end if;
     end process;
+
 end generate;
+
+
+--out_imag_conj : if g_conjugate_b generate
+--    process(clk)
+--    begin
+--    if rising_edge(clk) then
+----        ai_ddd   <= ai_dd;
+----        ai_dddd  <= - ai_ddd;
+--        addi     <= resize(br_d, g_in_b_w+1) + resize(bi_d, g_in_b_w+1);
+--        multi    <= addi * ai_dd;
+--        multi_d  <= multi;
+--        commonr2 <= mult0;
+--        pi_int   <= multi_d + commonr2;
+--    end if;
+--    end process;
+--end generate;
+--out_imag : if g_conjugate_b=FALSE generate
+   
+--end generate;
 
 result_re <= std_logic_vector(pr_int);
 result_im <= std_logic_vector(pi_int);

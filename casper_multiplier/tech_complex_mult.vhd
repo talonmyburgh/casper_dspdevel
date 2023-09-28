@@ -101,9 +101,9 @@ begin
 				g_pipeline_output  => g_pipeline_output
 			)
 			port map(
-				rst       => rst,
+--				rst       => rst,
 				clk       => clk,
-				clken     => clken,
+--				clken     => clken,
 				in_ar     => in_ar,
 				in_ai     => in_ai,
 				in_br     => in_br,

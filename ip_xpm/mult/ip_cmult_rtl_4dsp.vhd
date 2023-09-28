@@ -76,9 +76,9 @@ ENTITY ip_cmult_rtl_4dsp IS
 		g_pipeline_output  : NATURAL := 1 --! >= 0
 	);
 	PORT(
-		rst       : IN  STD_LOGIC := '0'; --! Reset signal
+--		rst       : IN  STD_LOGIC := '0'; --! Reset signal
 		clk       : IN  STD_LOGIC;      --! Input clock signal
-		clken     : IN  STD_LOGIC := '1'; --! Clock enable
+--		clken     : IN  STD_LOGIC := '1'; --! Clock enable
 		in_ar     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Real input A
 		in_ai     : IN  STD_LOGIC_VECTOR(g_in_a_w - 1 DOWNTO 0); --! Imaginary input A
 		in_br     : IN  STD_LOGIC_VECTOR(g_in_b_w - 1 DOWNTO 0); --! Real input B
@@ -106,44 +106,44 @@ ARCHITECTURE str OF ip_cmult_rtl_4dsp IS
 	-- Signals
 	------------------------------------------------------------------------------
 	-- registers
-	SIGNAL reg_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL reg_ai         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL reg_br         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL reg_bi         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL reg_prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- re
-	SIGNAL reg_prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL reg_prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- im
-	SIGNAL reg_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL reg_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL reg_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL reg_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
-	SIGNAL reg_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
+	SIGNAL reg_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_ai         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_br         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_bi         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- re
+	SIGNAL reg_prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- im
+	SIGNAL reg_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL reg_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0) := (others=>'0');
+	SIGNAL reg_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0) := (others=>'0');
 
 	-- combinatorial
-	SIGNAL nxt_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL nxt_ai         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL nxt_br         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL nxt_bi         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL nxt_prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- re
-	SIGNAL nxt_prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL nxt_prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- im
-	SIGNAL nxt_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL nxt_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL nxt_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL nxt_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
-	SIGNAL nxt_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
+	SIGNAL nxt_ar         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_ai         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_br         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_bi         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- re
+	SIGNAL nxt_prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- im
+	SIGNAL nxt_prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_result_re  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0) := (others=>'0');
+	SIGNAL nxt_result_im  : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0) := (others=>'0');
 
 	-- the active signals
-	SIGNAL ar         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL ai         : SIGNED(g_in_a_w - 1 DOWNTO 0);
-	SIGNAL br         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL bi         : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- re
-	SIGNAL prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0); -- im
-	SIGNAL prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0);
-	SIGNAL sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0);
+	SIGNAL ar         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL ai         : SIGNED(g_in_a_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL br         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL bi         : SIGNED(g_in_b_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL prod_ar_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- re
+	SIGNAL prod_ai_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL prod_ai_br : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0'); -- im
+	SIGNAL prod_ar_bi : SIGNED(c_prod_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL sum_re     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
+	SIGNAL sum_im     : SIGNED(c_sum_w - 1 DOWNTO 0) := (others=>'0');
 
 BEGIN
 	assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style complex multiplier, while it will work on Intel and versal, it is not ideal" severity warning;
@@ -156,20 +156,20 @@ BEGIN
 	p_reg : PROCESS(clk)
 	BEGIN
 		IF rising_edge(clk) THEN
-			IF rst = '1' THEN
-				reg_ar         <= (OTHERS => '0');
-				reg_ai         <= (OTHERS => '0');
-				reg_br         <= (OTHERS => '0');
-				reg_bi         <= (OTHERS => '0');
-				reg_prod_ar_br <= (OTHERS => '0');
-				reg_prod_ai_bi <= (OTHERS => '0');
-				reg_prod_ai_br <= (OTHERS => '0');
-				reg_prod_ar_bi <= (OTHERS => '0');
-				reg_sum_re     <= (OTHERS => '0');
-				reg_sum_im     <= (OTHERS => '0');
-				reg_result_re  <= (OTHERS => '0');
-				reg_result_im  <= (OTHERS => '0');
-			ELSIF clken = '1' THEN
+--			IF rst = '1' THEN
+--				reg_ar         <= (OTHERS => '0');
+--				reg_ai         <= (OTHERS => '0');
+--				reg_br         <= (OTHERS => '0');
+--				reg_bi         <= (OTHERS => '0');
+--				reg_prod_ar_br <= (OTHERS => '0');
+--				reg_prod_ai_bi <= (OTHERS => '0');
+--				reg_prod_ai_br <= (OTHERS => '0');
+--				reg_prod_ar_bi <= (OTHERS => '0');
+--				reg_sum_re     <= (OTHERS => '0');
+--				reg_sum_im     <= (OTHERS => '0');
+--				reg_result_re  <= (OTHERS => '0');
+--				reg_result_im  <= (OTHERS => '0');
+--			ELSIF clken = '1' THEN
 				reg_ar         <= nxt_ar; -- inputs
 				reg_ai         <= nxt_ai;
 				reg_br         <= nxt_br;
@@ -182,18 +182,22 @@ BEGIN
 				reg_sum_im     <= nxt_sum_im;
 				reg_result_re  <= nxt_result_re; -- result sum after optional register stage
 				reg_result_im  <= nxt_result_im;
-			END IF;
+--			END IF;
 		END IF;
 	END PROCESS;
 
 	------------------------------------------------------------------------------
 	-- Inputs
 	------------------------------------------------------------------------------
-
-	nxt_ar <= SIGNED(in_ar);
-	nxt_ai <= SIGNED(in_ai);
-	nxt_br <= SIGNED(in_br);
-	nxt_bi <= SIGNED(in_bi);
+	process(clk)
+	begin
+		if rising_edge(clk) then
+			nxt_ar <= SIGNED(in_ar);
+			nxt_ai <= SIGNED(in_ai);
+			nxt_br <= SIGNED(in_br);
+			nxt_bi <= SIGNED(in_bi);
+		end if;
+	end process;
 
 	no_input_reg : IF g_pipeline_input = 0 GENERATE -- wired
 		ar <= nxt_ar;

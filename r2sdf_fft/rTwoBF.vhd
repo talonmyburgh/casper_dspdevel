@@ -78,7 +78,8 @@ use UNIMACRO.vcomponents.all;
 entity rTwoBF is
 	generic(
 		g_in_a_zdly  : natural := 0;    --! default 0, 1
-		g_out_d_zdly : natural := 1     --! default 0, optionally use 1
+		g_out_d_zdly : natural := 1;     --! default 0, optionally use 1
+		g_dsp_dly    : natural := 1
 	);
 	port(
 		clk    : in  std_logic := '0';  --! Input clock source
@@ -165,7 +166,7 @@ begin
 		ADD_MACRO_inst : ADDSUB_MACRO
 			generic map(
 				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => 1,           -- Desired clock cycle latency, 0-2
+				LATENCY => g_dsp_dly,           -- Desired clock cycle latency, 0-2
 				WIDTH   => out_c'length) -- Input / Output bus width, 1-48
 			port map(
 				CARRYOUT => s_subtraction_ovflw(0), -- 1-bit carry-out output signal
@@ -181,7 +182,7 @@ begin
 		SUB_MACRO_inst : ADDSUB_MACRO
 			generic map(
 				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => 1,           -- Desired clock cycle latency, 0-2
+				LATENCY => g_dsp_dly,           -- Desired clock cycle latency, 0-2
 				WIDTH   => out_d'length) -- Input / Output bus width, 1-48
 			port map(
 				CARRYOUT => s_addition_ovflw(0), -- 1-bit carry-out output signal

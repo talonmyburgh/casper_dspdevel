@@ -54,6 +54,7 @@ architecture str of rTwoBFStage is
     -- Optionally move some z-1 delay into this BF stage, default 0
     constant c_bf_in_a_zdly  : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_in_a_zdly, 0);
     constant c_bf_out_b_zdly : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_out_d_zdly, 0);
+    constant c_dsp_dly       : natural := 1;
 
     constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly;
     constant c_feedback_zdly : natural := pow2(g_stage - 1);
@@ -91,7 +92,8 @@ begin
     u_bf_re : entity work.rTwoBF
         generic map(
             g_in_a_zdly  => c_bf_in_a_zdly,
-            g_out_d_zdly => c_bf_out_b_zdly
+            g_out_d_zdly => c_bf_out_b_zdly,
+            g_dsp_dly    => c_dsp_dly
         )
         port map(
             clk    => clk,
@@ -107,7 +109,8 @@ begin
     u_bf_im : entity work.rTwoBF
         generic map(
             g_in_a_zdly  => c_bf_in_a_zdly,
-            g_out_d_zdly => c_bf_out_b_zdly
+            g_out_d_zdly => c_bf_out_b_zdly,
+            g_dsp_dly    => c_dsp_dly
         )
         port map(
             clk    => clk,

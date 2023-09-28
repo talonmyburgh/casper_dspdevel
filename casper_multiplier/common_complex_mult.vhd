@@ -53,7 +53,7 @@ ENTITY common_complex_mult IS
 		g_in_b_w           : POSITIVE := 8;  --! Input B-bitwidth
 		g_out_p_w          : POSITIVE := 16;  --! default use g_out_p_w = g_in_a_w+g_in_b_w = c_prod_w
 		g_conjugate_b      : BOOLEAN := FALSE; --! Conjugate b value prior to cmult
-		g_pipeline_input   : NATURAL := 0; --! 0 or 1
+		g_pipeline_input   : NATURAL := 1; --! 0 or 1
 		g_pipeline_product : NATURAL := 1; --! 0 or 1
 		g_pipeline_adder   : NATURAL := 1; --! 0 or 1
 		g_pipeline_output  : NATURAL := 1 --! >= 0
@@ -97,7 +97,7 @@ BEGIN
 	-- Propagate in_val with c_pipeline latency
 	u_out_val : ENTITY common_components_lib.common_pipeline_sl
 		GENERIC MAP(
-			g_pipeline => c_pipeline
+			g_pipeline => c_pipeline + 2
 		)
 		PORT MAP(
 			rst     => rst,
@@ -151,7 +151,7 @@ BEGIN
 			clken   => clken,
 			in_clr  => in_clr,
 			in_en   => in_en,
-			in_dat  => STD_LOGIC_VECTOR(result_re),
+			in_dat  => result_re,
 			out_dat => out_pr
 		);
 
@@ -168,7 +168,7 @@ BEGIN
 			clken   => clken,
 			in_clr  => in_clr,
 			in_en   => in_en,
-			in_dat  => STD_LOGIC_VECTOR(result_im),
+			in_dat  => result_im,
 			out_dat => out_pi
 		);
 
