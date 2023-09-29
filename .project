@@ -53,6 +53,11 @@
 			<location>//export/data_1/vunit/vunit/vhdl/osvvm</location>
 		</link>
 		<link>
+			<name>Common Libraries/unimacro</name>
+			<type>2</type>
+			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/vhdl/src/unimacro</locationURI>
+		</link>
+		<link>
 			<name>Common Libraries/unisim</name>
 			<type>2</type>
 			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/vhdl/src/unisims</locationURI>

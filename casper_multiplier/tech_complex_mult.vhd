@@ -114,7 +114,7 @@ begin
 	end generate;
 
 	 gen_ip_xpm_rtl_3dsp : IF (c_tech_select_default = c_tech_xpm) AND g_use_variant = "3DSP" GENERATE  -- Xilinx
-	 	u1 : ip_cmult_rtl_3dsp_casper
+	 	u1 : ip_cmult_rtl_3dsp
 	 		generic map(
 	 			g_use_dsp          => g_use_dsp,
 	 			g_in_a_w           => g_in_a_w,

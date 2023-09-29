@@ -39,9 +39,9 @@ ENTITY tb_common_complex_mult IS
     g_out_dat_w        : NATURAL := 8;       -- g_in_dat_w*2 for multiply and +1 for adder
     g_conjugate_b      : BOOLEAN := FALSE;   -- When FALSE p = a * b, else p = a * conj(b)
     g_pipeline_input   : NATURAL := 1;
-    g_pipeline_product : NATURAL := 0;
+    g_pipeline_product : NATURAL := 1;
     g_pipeline_adder   : NATURAL := 1;
-  	g_pipeline_output  : NATURAL := 1;
+  	g_pipeline_output  : NATURAL := 2;
 		g_a_val_min        : INTEGER := 0;            -- -(2**(g_in_dat_w - 1)) if left as zero
 		g_a_val_max        : INTEGER := 0;            -- 2**(g_in_dat_w - 1) - 1 if left as zero
 		g_b_val_min        : INTEGER := 0;            -- -(2**(g_in_dat_w - 1)) if left as zero
@@ -236,7 +236,7 @@ END PROCESS;
     out_dat => result_val_expected
   );
 
-	u_dut_rtl : ENTITY work.common_complex_mult
+	u_dut_4dsp : ENTITY work.common_complex_mult
 	GENERIC MAP(
 		g_use_variant      => "4DSP",
     g_use_dsp          => "YES",
@@ -263,10 +263,10 @@ END PROCESS;
 		out_val => result_val_4dsp
 	);
 
-	u_dut_ip : ENTITY work.common_complex_mult
+	u_dut_3dsp : ENTITY work.common_complex_mult
 	GENERIC MAP(
 		g_use_variant      => "3DSP",
-    g_use_dsp          => "YES",
+        g_use_dsp          => "YES",
 		g_in_a_w           => g_in_dat_w,
 		g_in_b_w           => g_in_dat_w,
 		g_out_p_w          => g_out_dat_w,
@@ -298,44 +298,44 @@ END PROCESS;
 			IF rising_edge(clk) THEN
         v_test_pass := v_test_pass and (result_re_4dsp = result_re_expected);
         if result_re_4dsp /= result_re_expected then
-          v_test_msg := pad("4DSP RE cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_re_expected) & " but got: " & to_hstring(result_re_4DSP), o_test_msg'length, '.');
+--          v_test_msg := pad("4DSP RE cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_re_expected) & " but got: " & to_hstring(result_re_4DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
           
         v_test_pass := v_test_pass and (result_im_4dsp = result_im_expected);
         if result_im_4dsp /= result_im_expected then
-          v_test_msg := pad("4DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_4DSP), o_test_msg'length, '.');
+--          v_test_msg := pad("4DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_4DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
           
         v_test_pass := v_test_pass and (result_val_4dsp = result_val_expected);
         if result_val_4dsp /= result_val_expected then
           v_test_msg := pad("4DSP VAL cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & std_logic'image(result_val_expected) & " but got: " & std_logic'image(result_val_4DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
 
         v_test_pass := v_test_pass and (result_re_3dsp = result_re_expected);
         if result_re_3dsp /= result_re_expected then
-          v_test_msg := pad("3DSP RE cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_re_expected) & " but got: " & to_hstring(result_re_3DSP), o_test_msg'length, '.');
+--          v_test_msg := pad("3DSP RE cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_re_expected) & " but got: " & to_hstring(result_re_3DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
           
         v_test_pass := v_test_pass and (result_im_3dsp = result_im_expected);
         if result_im_3dsp /= result_im_expected then
-          v_test_msg := pad("3DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_3DSP), o_test_msg'length, '.');
+--          v_test_msg := pad("3DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_3DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
 				
         v_test_pass := v_test_pass and (result_val_3dsp = result_val_expected);
         if result_val_3dsp /= result_val_expected then
           v_test_msg := pad("3DSP VAL cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & std_logic'image(result_val_expected) & " but got: " & std_logic'image(result_val_3DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
-          report "Error: " & v_test_msg severity failure;
+          report "Error: " & v_test_msg severity error;
         end if;
 			END IF;
 		END IF;

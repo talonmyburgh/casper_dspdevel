@@ -14,6 +14,7 @@
   <Mappings Location="casper_mm" Library="casper_mm_lib"/>
   <Mappings Location="casper_multiplexer" Library="casper_multiplexer_lib"/>
   <Mappings Location="casper_multiplier" Library="casper_multiplier_lib"/>
+  <Mappings Location="casper_pfb_fir" Library="casper_pfb_fir_lib"/>
   <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
   <Mappings Location="casper_ram" Library="casper_ram_lib"/>
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
@@ -33,6 +34,11 @@
   <Mappings Location="ip_xpm/ram" Library="ip_xpm_ram_lib"/>
   <Mappings Location="intel/altera_mf/lpm_pack.vhd" Library="lpm"/>
   <Mappings Location="Common Libraries" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unimacro/primitive" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unimacro/retarget" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unimacro/retarget_VCOMP.vhd" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unimacro/secureip" Library="not mapped"/>
+  <Mappings Location="Common Libraries/unimacro/unisim_retarget_VCOMP.vhd" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/primitive" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/retarget" Library="not mapped"/>
   <Mappings Location="Common Libraries/unisim/retarget_VCOMP.vhd" Library="not mapped"/>
@@ -55,6 +61,7 @@
   <Mappings Location="r2sdf_fft" Library="r2sdf_fft_lib"/>
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="technology" Library="technology_lib"/>
+  <Mappings Location="Common Libraries/unimacro" Library="unimacro"/>
   <Mappings Location="Common Libraries/unisim" Library="unisim"/>
   <Mappings Location="Common Libraries/vunit_lib" Library="vunit_lib"/>
   <Mappings Location="casper_wb_fft" Library="wb_fft_lib"/>

@@ -41,9 +41,9 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	SIGNAL reg_ai        : SIGNED(g_in_a_w - 1 DOWNTO 0);
 	SIGNAL reg_br        : SIGNED(g_in_b_w - 1 DOWNTO 0);
 	SIGNAL reg_bi        : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL reg_k1        : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL reg_k2        : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL reg_k3        : SIGNED(c_prod_w - 1 DOWNTO 0);
+	SIGNAL reg_k1        : SIGNED(c_sum_w - 1 DOWNTO 0);
+	SIGNAL reg_k2        : SIGNED(c_sum_w - 1 DOWNTO 0);
+	SIGNAL reg_k3        : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL reg_sum_re    : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL reg_sum_im    : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL reg_result_re : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
@@ -54,9 +54,9 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	SIGNAL nxt_ai        : SIGNED(g_in_a_w - 1 DOWNTO 0);
 	SIGNAL nxt_br        : SIGNED(g_in_b_w - 1 DOWNTO 0);
 	SIGNAL nxt_bi        : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	SIGNAL nxt_k1        : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL nxt_k2        : SIGNED(c_prod_w - 1 DOWNTO 0);
-	SIGNAL nxt_k3        : SIGNED(c_prod_w - 1 DOWNTO 0);
+	SIGNAL nxt_k1        : SIGNED(c_sum_w - 1 DOWNTO 0);
+	SIGNAL nxt_k2        : SIGNED(c_sum_w - 1 DOWNTO 0);
+	SIGNAL nxt_k3        : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL nxt_sum_re    : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL nxt_sum_im    : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL nxt_result_re : SIGNED(g_in_a_w + g_in_b_w DOWNTO 0);
@@ -67,9 +67,9 @@ architecture RTL of ip_cmult_rtl_3dsp is
 	SIGNAL ai     : SIGNED(g_in_a_w - 1 DOWNTO 0);
 	SIGNAL br     : SIGNED(g_in_b_w - 1 DOWNTO 0);
 	SIGNAL bi     : SIGNED(g_in_b_w - 1 DOWNTO 0);
-	signal k1     : SIGNED(c_prod_w - 1 DOWNTO 0);
-	signal k2     : SIGNED(c_prod_w - 1 DOWNTO 0);
-	signal k3     : SIGNED(c_prod_w - 1 DOWNTO 0);
+	signal k1     : SIGNED(c_sum_w - 1 DOWNTO 0);
+	signal k2     : SIGNED(c_sum_w - 1 DOWNTO 0);
+	signal k3     : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL sum_re : SIGNED(c_sum_w - 1 DOWNTO 0);
 	SIGNAL sum_im : SIGNED(c_sum_w - 1 DOWNTO 0);
 
@@ -157,8 +157,8 @@ assert c_tech_select_default=c_tech_xpm report "This block infers a Xilinx style
 
 	gen_k_mult_conj_b : IF g_conjugate_b GENERATE
 		nxt_k1 <= br * (resize(ar, c_a_sum_w) + resize(ai, c_a_sum_w));
-		nxt_k2 <= resize(ar * (-resize(bi, c_prod_w) - resize(br, c_prod_w)), c_prod_w);
-		nxt_k3 <= resize(ai * (resize(br, c_prod_w) - resize(bi, c_prod_w)), c_prod_w);
+		nxt_k2 <= resize(ar * (-resize(bi, c_b_sum_w) - resize(br, c_b_sum_w)), c_sum_w);
+		nxt_k3 <= resize(ai * (resize(br, c_b_sum_w) - resize(bi, c_b_sum_w)), c_sum_w);
 	END GENERATE;
 
 	no_product_reg : IF g_pipeline_product = 0 GENERATE -- wired

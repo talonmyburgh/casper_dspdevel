@@ -52,7 +52,7 @@ PACKAGE tech_mult_component_pkg IS
 		);
 	end component ip_cmult_rtl_4dsp;
 	
-component ip_cmult_rtl_3dsp_casper
+component ip_cmult_rtl_3dsp
 		generic(
 			g_use_dsp          : STRING  := "yes";
 			g_in_a_w           : POSITIVE;
@@ -74,7 +74,7 @@ component ip_cmult_rtl_3dsp_casper
 			result_re : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0);
 			result_im : OUT STD_LOGIC_VECTOR(g_in_a_w + g_in_b_w DOWNTO 0)
 		);
-	end component ip_cmult_rtl_3dsp_casper;
+	end component ip_cmult_rtl_3dsp;
 
   component ip_cmult_infer_rtl
 		generic(
