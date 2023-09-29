@@ -59,7 +59,7 @@ architecture str of rTwoWMul is
     -- the total latency from in_* to out_*.
 
     -- DSP multiplier IP
-    constant c_dsp_mult_lat : natural := 3;
+    constant c_dsp_mult_lat : natural := 4;
 
     -- Pipeline multiplier product rounding from c_prod_w via c_round_w to c_out_dat_w
     constant c_round_lat : natural := sel_a_b(g_lat > c_dsp_mult_lat, 1, 0); -- allocate 1 pipeline for round
@@ -138,6 +138,7 @@ begin
             );
     end generate;
 
+    --with the change in latencies to the original, this logic below needs to be looked at again:
     gen_ip : if g_stage > 1 and c_in_dat_w <= c_dsp_mult_w and c_lat >= c_dsp_mult_lat generate
         u_cmplx_mul : entity casper_multiplier_lib.common_complex_mult
             generic map(
@@ -190,7 +191,7 @@ begin
         -- Rounding takes logic due to adding 0.5 therefore need to use c_round_lat=1 to achieve timing
         -- Overflow style is set to wrap, rounding can be specified by generic g_round
         gen_comb : if c_round_lat = 0 generate
-            ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY FAILURE;
+            ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY ERROR;
             round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w);
             round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w);
         end generate;

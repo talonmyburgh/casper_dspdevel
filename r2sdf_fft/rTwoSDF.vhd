@@ -76,13 +76,13 @@ entity rTwoSDF is
         g_max_addr_w     : natural         := 9;
         g_twid_file_stem : string          := c_twid_file_stem;
         -- pipeline generics
-        g_stage_lat      : natural         := 1; --! stage latencies
-        g_weight_lat     : natural         := 1;
-        g_mult_lat       : natural         := 4;
-        g_bf_lat         : natural         := 1;
-        g_bf_use_zdly    : natural         := 1;
-        g_bf_in_a_zdly   : natural         := 0;
-        g_bf_out_d_zdly  : natural         := 0;
+        g_stage_lat      : natural         := c_fft_pipeline.stage_lat; --! stage latencies
+        g_weight_lat     : natural         := c_fft_pipeline.weight_lat;
+        g_mult_lat       : natural         := c_fft_pipeline.mul_lat;
+        g_bf_lat         : natural         := c_fft_pipeline.bf_lat;
+        g_bf_use_zdly    : natural         := c_fft_pipeline.bf_use_zdly;
+        g_bf_in_a_zdly   : natural         := c_fft_pipeline.bf_in_a_zdly;
+        g_bf_out_d_zdly  : natural         := c_fft_pipeline.bf_out_d_zdly;
         --generics for rTwoOrder
         g_ram_primitive  : STRING          := "auto"
     );
