@@ -34,85 +34,85 @@ USE common_pkg_lib.tb_common_pkg.ALL;
 USE common_pkg_lib.common_str_pkg.ALL;
 
 ENTITY tb_common_complex_mult IS
-  GENERIC (
+  GENERIC(
     g_in_dat_w         : NATURAL := 4;
-    g_out_dat_w        : NATURAL := 8;       -- g_in_dat_w*2 for multiply and +1 for adder
-    g_conjugate_b      : BOOLEAN := FALSE;   -- When FALSE p = a * b, else p = a * conj(b)
+    g_out_dat_w        : NATURAL := 8;  -- g_in_dat_w*2 for multiply and +1 for adder
+    g_conjugate_b      : BOOLEAN := TRUE; -- When FALSE p = a * b, else p = a * conj(b)
     g_pipeline_input   : NATURAL := 1;
     g_pipeline_product : NATURAL := 1;
     g_pipeline_adder   : NATURAL := 1;
-  	g_pipeline_output  : NATURAL := 2;
-		g_a_val_min        : INTEGER := 0;            -- -(2**(g_in_dat_w - 1)) if left as zero
-		g_a_val_max        : INTEGER := 0;            -- 2**(g_in_dat_w - 1) - 1 if left as zero
-		g_b_val_min        : INTEGER := 0;            -- -(2**(g_in_dat_w - 1)) if left as zero
-		g_b_val_max        : INTEGER := 0             -- 2**(g_in_dat_w - 1) - 1 if left as zero
-	);
+    g_pipeline_output  : NATURAL := 2;
+    g_a_val_min        : INTEGER := 0;  -- -(2**(g_in_dat_w - 1)) if left as zero
+    g_a_val_max        : INTEGER := 0;  -- 2**(g_in_dat_w - 1) - 1 if left as zero
+    g_b_val_min        : INTEGER := 0;  -- -(2**(g_in_dat_w - 1)) if left as zero
+    g_b_val_max        : INTEGER := 0   -- 2**(g_in_dat_w - 1) - 1 if left as zero
+  );
   PORT(
-    o_rst				       : OUT STD_LOGIC;
-		o_clk				       : OUT STD_LOGIC;
-		o_tb_end		       : OUT STD_LOGIC;
-		o_test_msg	       : OUT STRING(1 to 80);
-		o_test_pass	       : OUT BOOLEAN
+    o_rst       : OUT STD_LOGIC;
+    o_clk       : OUT STD_LOGIC;
+    o_tb_end    : OUT STD_LOGIC;
+    o_test_msg  : OUT STRING(1 to 80);
+    o_test_pass : OUT BOOLEAN
   );
 
 END tb_common_complex_mult;
 
 ARCHITECTURE tb OF tb_common_complex_mult IS
 
-  CONSTANT clk_period        : TIME := 10 ns;
-  CONSTANT c_pipeline        : NATURAL := g_pipeline_input + g_pipeline_product + g_pipeline_adder + g_pipeline_output;
+  CONSTANT clk_period : TIME    := 10 ns;
+  CONSTANT c_pipeline : NATURAL := g_pipeline_input + g_pipeline_product + g_pipeline_adder + g_pipeline_output;
 
-  CONSTANT c_max             : INTEGER :=  2**(g_in_dat_w-1)-1;
-  CONSTANT c_min             : INTEGER := -2**(g_in_dat_w-1);
+  CONSTANT c_max : INTEGER := 2 ** (g_in_dat_w - 1) - 1;
+  CONSTANT c_min : INTEGER := -2 ** (g_in_dat_w - 1);
 
-  CONSTANT c_a_val_min       : INTEGER := sel_a_b(g_a_val_min = 0, c_min, g_a_val_min);
-  CONSTANT c_a_val_max       : INTEGER := sel_a_b(g_a_val_max = 0, c_max, g_a_val_max);
-  CONSTANT c_b_val_min       : INTEGER := sel_a_b(g_b_val_min = 0, c_min, g_b_val_min);
-  CONSTANT c_b_val_max       : INTEGER := sel_a_b(g_b_val_max = 0, c_max, g_b_val_max);
+  CONSTANT c_a_val_min : INTEGER := sel_a_b(g_a_val_min = 0, c_min, g_a_val_min);
+  CONSTANT c_a_val_max : INTEGER := sel_a_b(g_a_val_max = 0, c_max, g_a_val_max);
+  CONSTANT c_b_val_min : INTEGER := sel_a_b(g_b_val_min = 0, c_min, g_b_val_min);
+  CONSTANT c_b_val_max : INTEGER := sel_a_b(g_b_val_max = 0, c_max, g_b_val_max);
 
-  SIGNAL tb_end              : STD_LOGIC := '0';
-  SIGNAL rst                 : STD_LOGIC;
-  SIGNAL clk                 : STD_LOGIC := '0';
+  SIGNAL tb_end : STD_LOGIC := '0';
+  SIGNAL rst    : STD_LOGIC;
+  SIGNAL clk    : STD_LOGIC := '0';
 
-  SIGNAL random              : STD_LOGIC_VECTOR(14 DOWNTO 0) := (OTHERS=>'0');  -- use different lengths to have different random sequences
+  SIGNAL random : STD_LOGIC_VECTOR(14 DOWNTO 0) := (OTHERS => '0'); -- use different lengths to have different random sequences
 
-  SIGNAL in_ar               : STD_LOGIC_VECTOR(g_in_dat_w-1 DOWNTO 0);
-  SIGNAL in_ai               : STD_LOGIC_VECTOR(g_in_dat_w-1 DOWNTO 0);
-  SIGNAL in_br               : STD_LOGIC_VECTOR(g_in_dat_w-1 DOWNTO 0);
-  SIGNAL in_bi               : STD_LOGIC_VECTOR(g_in_dat_w-1 DOWNTO 0);
+  SIGNAL in_ar : STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
+  SIGNAL in_ai : STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
+  SIGNAL in_br : STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
+  SIGNAL in_bi : STD_LOGIC_VECTOR(g_in_dat_w - 1 DOWNTO 0);
 
-  SIGNAL in_val              : STD_LOGIC;  -- in_val is only passed on to out_val
+  SIGNAL in_val              : STD_LOGIC; -- in_val is only passed on to out_val
   SIGNAL result_val_expected : STD_LOGIC;
   SIGNAL result_val_4dsp     : STD_LOGIC;
   SIGNAL result_val_3dsp     : STD_LOGIC;
 
-  SIGNAL out_result_re       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);  -- combinatorial result
-  SIGNAL out_result_im       : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);
-  SIGNAL result_re_expected  : STD_LOGIC_VECTOR(g_out_dat_w-1 DOWNTO 0);  -- pipelined results
-  SIGNAL result_re_4dsp      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
-  SIGNAL result_re_3dsp      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
-  SIGNAL result_im_expected  : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
-  SIGNAL result_im_4dsp      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
-  SIGNAL result_im_3dsp      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL out_result_re      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- combinatorial result
+  SIGNAL out_result_im      : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL result_re_expected : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0); -- pipelined results
+  SIGNAL result_re_4dsp     : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL result_re_3dsp     : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL result_im_expected : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL result_im_4dsp     : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
+  SIGNAL result_im_3dsp     : STD_LOGIC_VECTOR(g_out_dat_w - 1 DOWNTO 0);
 
   SIGNAL s_test_count : NATURAL := 0;
 
 BEGIN
 
-  clk <= (NOT clk) OR tb_end AFTER clk_period/2;
+  clk <= (NOT clk) OR tb_end AFTER clk_period / 2;
 
   random <= func_common_random(random) WHEN rising_edge(clk);
 
   in_val <= random(random'HIGH);
 
-  o_rst <= rst;
-  o_clk <= clk;
+  o_rst    <= rst;
+  o_clk    <= clk;
   o_tb_end <= tb_end;
 
   -- run -all
   p_in_stimuli : PROCESS
   BEGIN
-    rst <= '1';
+    rst   <= '1';
     in_ar <= TO_SVEC(0, g_in_dat_w);
     in_br <= TO_SVEC(0, g_in_dat_w);
     in_ai <= TO_SVEC(0, g_in_dat_w);
@@ -121,41 +121,41 @@ BEGIN
     FOR I IN 0 TO 9 LOOP
       WAIT UNTIL rising_edge(clk);
     END LOOP;
-    rst <= '0';
+    rst   <= '0';
     FOR I IN 0 TO 9 LOOP
       WAIT UNTIL rising_edge(clk);
     END LOOP;
 
     -- Some special combinations
-    in_ar <= TO_SVEC(2, g_in_dat_w);
-    in_ai <= TO_SVEC(4, g_in_dat_w);
-    in_br <= TO_SVEC(3, g_in_dat_w);
-    in_bi <= TO_SVEC(5, g_in_dat_w);
+    in_ar        <= TO_SVEC(2, g_in_dat_w);
+    in_ai        <= TO_SVEC(4, g_in_dat_w);
+    in_br        <= TO_SVEC(3, g_in_dat_w);
+    in_bi        <= TO_SVEC(5, g_in_dat_w);
     WAIT UNTIL rising_edge(clk);
-    in_ar <= TO_SVEC( c_max, g_in_dat_w);  -- p*p - p*p + j ( p*p + p*p) = 0 + j 2pp  or  p*p + p*p + j (-p*p + p*p) = 2pp + j 0
-    in_ai <= TO_SVEC( c_max, g_in_dat_w);
-    in_br <= TO_SVEC( c_max, g_in_dat_w);
-    in_bi <= TO_SVEC( c_max, g_in_dat_w);
+    in_ar        <= TO_SVEC(c_max, g_in_dat_w); -- p*p - p*p + j ( p*p + p*p) = 0 + j 2pp  or  p*p + p*p + j (-p*p + p*p) = 2pp + j 0
+    in_ai        <= TO_SVEC(c_max, g_in_dat_w);
+    in_br        <= TO_SVEC(c_max, g_in_dat_w);
+    in_bi        <= TO_SVEC(c_max, g_in_dat_w);
     WAIT UNTIL rising_edge(clk);
-    in_ar <= TO_SVEC( c_min, g_in_dat_w);
-    in_ai <= TO_SVEC( c_min, g_in_dat_w);
-    in_br <= TO_SVEC( c_min, g_in_dat_w);
-    in_bi <= TO_SVEC( c_min, g_in_dat_w);
+    in_ar        <= TO_SVEC(c_min, g_in_dat_w);
+    in_ai        <= TO_SVEC(c_min, g_in_dat_w);
+    in_br        <= TO_SVEC(c_min, g_in_dat_w);
+    in_bi        <= TO_SVEC(c_min, g_in_dat_w);
     WAIT UNTIL rising_edge(clk);
-    in_ar <= TO_SVEC( c_max, g_in_dat_w);
-    in_ai <= TO_SVEC( c_max, g_in_dat_w);
-    in_br <= TO_SVEC( c_min, g_in_dat_w);
-    in_bi <= TO_SVEC( c_min, g_in_dat_w);
+    in_ar        <= TO_SVEC(c_max, g_in_dat_w);
+    in_ai        <= TO_SVEC(c_max, g_in_dat_w);
+    in_br        <= TO_SVEC(c_min, g_in_dat_w);
+    in_bi        <= TO_SVEC(c_min, g_in_dat_w);
     WAIT UNTIL rising_edge(clk);
-    in_ar <= TO_SVEC( c_max, g_in_dat_w);
-    in_ai <= TO_SVEC( c_max, g_in_dat_w);
-    in_br <= TO_SVEC(-c_max, g_in_dat_w);
-    in_bi <= TO_SVEC(-c_max, g_in_dat_w);
+    in_ar        <= TO_SVEC(c_max, g_in_dat_w);
+    in_ai        <= TO_SVEC(c_max, g_in_dat_w);
+    in_br        <= TO_SVEC(-c_max, g_in_dat_w);
+    in_bi        <= TO_SVEC(-c_max, g_in_dat_w);
     WAIT UNTIL rising_edge(clk);
-    in_ar <= TO_SVEC( c_min, g_in_dat_w);
-    in_ai <= TO_SVEC( c_min, g_in_dat_w);
-    in_br <= TO_SVEC(-c_max, g_in_dat_w);
-    in_bi <= TO_SVEC(-c_max, g_in_dat_w);
+    in_ar        <= TO_SVEC(c_min, g_in_dat_w);
+    in_ai        <= TO_SVEC(c_min, g_in_dat_w);
+    in_br        <= TO_SVEC(-c_max, g_in_dat_w);
+    in_bi        <= TO_SVEC(-c_max, g_in_dat_w);
     s_test_count <= 6;
     WAIT UNTIL rising_edge(clk);
 
@@ -168,10 +168,10 @@ BEGIN
       FOR J IN c_a_val_min TO c_a_val_max LOOP
         FOR K IN c_b_val_min TO c_b_val_max LOOP
           FOR L IN c_b_val_min TO c_b_val_max LOOP
-            in_ar <= TO_SVEC(I, g_in_dat_w);
-            in_ai <= TO_SVEC(K, g_in_dat_w);
-            in_br <= TO_SVEC(J, g_in_dat_w);
-            in_bi <= TO_SVEC(L, g_in_dat_w);
+            in_ar        <= TO_SVEC(I, g_in_dat_w);
+            in_ai        <= TO_SVEC(K, g_in_dat_w);
+            in_br        <= TO_SVEC(J, g_in_dat_w);
+            in_bi        <= TO_SVEC(L, g_in_dat_w);
             s_test_count <= s_test_count + 1;
             WAIT UNTIL rising_edge(clk);
           END LOOP;
@@ -184,132 +184,132 @@ BEGIN
     END LOOP;
 
     tb_end <= '1';
-	  wait;
-END PROCESS;
+    wait;
+  END PROCESS;
 
   -- Expected combinatorial complex multiply out_result
   out_result_re <= func_complex_multiply(in_ar, in_ai, in_br, in_bi, g_conjugate_b, "RE", g_out_dat_w);
   out_result_im <= func_complex_multiply(in_ar, in_ai, in_br, in_bi, g_conjugate_b, "IM", g_out_dat_w);
 
   u_result_re : ENTITY common_components_lib.common_pipeline
-  GENERIC MAP (
-    g_representation => "SIGNED",
-    g_pipeline       => c_pipeline,
-    g_reset_value    => 0,
-    g_in_dat_w       => g_out_dat_w,
-    g_out_dat_w      => g_out_dat_w
-  )
-  PORT MAP (
-    rst     => rst,
-    clk     => clk,
-    clken   => '1',
-    in_dat  => out_result_re,
-    out_dat => result_re_expected
-  );
+    GENERIC MAP(
+      g_representation => "SIGNED",
+      g_pipeline       => c_pipeline,
+      g_reset_value    => 0,
+      g_in_dat_w       => g_out_dat_w,
+      g_out_dat_w      => g_out_dat_w
+    )
+    PORT MAP(
+      rst     => rst,
+      clk     => clk,
+      clken   => '1',
+      in_dat  => out_result_re,
+      out_dat => result_re_expected
+    );
 
   u_result_im : ENTITY common_components_lib.common_pipeline
-  GENERIC MAP (
-    g_representation => "SIGNED",
-    g_pipeline       => c_pipeline,
-    g_reset_value    => 0,
-    g_in_dat_w       => g_out_dat_w,
-    g_out_dat_w      => g_out_dat_w
-  )
-  PORT MAP (
-    rst     => rst,
-    clk     => clk,
-    clken   => '1',
-    in_dat  => out_result_im,
-    out_dat => result_im_expected
-  );
+    GENERIC MAP(
+      g_representation => "SIGNED",
+      g_pipeline       => c_pipeline,
+      g_reset_value    => 0,
+      g_in_dat_w       => g_out_dat_w,
+      g_out_dat_w      => g_out_dat_w
+    )
+    PORT MAP(
+      rst     => rst,
+      clk     => clk,
+      clken   => '1',
+      in_dat  => out_result_im,
+      out_dat => result_im_expected
+    );
 
   u_result_val_expected : ENTITY common_components_lib.common_pipeline_sl
-  GENERIC MAP (
-    g_pipeline    => c_pipeline,
-    g_reset_value => 0
-  )
-  PORT MAP (
-    rst     => rst,
-    clk     => clk,
-    clken   => '1',
-    in_dat  => in_val,
-    out_dat => result_val_expected
-  );
+    GENERIC MAP(
+      g_pipeline    => c_pipeline,
+      g_reset_value => 0
+    )
+    PORT MAP(
+      rst     => rst,
+      clk     => clk,
+      clken   => '1',
+      in_dat  => in_val,
+      out_dat => result_val_expected
+    );
 
-	u_dut_4dsp : ENTITY work.common_complex_mult
-	GENERIC MAP(
-		g_use_variant      => "4DSP",
-    g_use_dsp          => "YES",
-		g_in_a_w           => g_in_dat_w,
-		g_in_b_w           => g_in_dat_w,
-		g_out_p_w          => g_out_dat_w,
-		g_conjugate_b      => g_conjugate_b,
-		g_pipeline_input   => g_pipeline_input,
-		g_pipeline_product => g_pipeline_product,
-		g_pipeline_adder   => g_pipeline_adder,
-		g_pipeline_output  => g_pipeline_output
-	)
-	PORT MAP(
-		rst     => rst,
-		clk     => clk,
-		clken   => '1',
-		in_ar   => in_ar,
-		in_ai   => in_ai,
-		in_br   => in_br,
-		in_bi   => in_bi,
-		in_val  => in_val,
-		out_pr  => result_re_4dsp,
-		out_pi  => result_im_4dsp,
-		out_val => result_val_4dsp
-	);
+  u_dut_4dsp : ENTITY work.common_complex_mult
+    GENERIC MAP(
+      g_use_variant      => "4DSP",
+      g_use_dsp          => "YES",
+      g_in_a_w           => g_in_dat_w,
+      g_in_b_w           => g_in_dat_w,
+      g_out_p_w          => g_out_dat_w,
+      g_conjugate_b      => g_conjugate_b,
+      g_pipeline_input   => g_pipeline_input,
+      g_pipeline_product => g_pipeline_product,
+      g_pipeline_adder   => g_pipeline_adder,
+      g_pipeline_output  => g_pipeline_output
+    )
+    PORT MAP(
+      rst     => rst,
+      clk     => clk,
+      clken   => '1',
+      in_ar   => in_ar,
+      in_ai   => in_ai,
+      in_br   => in_br,
+      in_bi   => in_bi,
+      in_val  => in_val,
+      out_pr  => result_re_4dsp,
+      out_pi  => result_im_4dsp,
+      out_val => result_val_4dsp
+    );
 
-	u_dut_3dsp : ENTITY work.common_complex_mult
-	GENERIC MAP(
-		g_use_variant      => "3DSP",
-        g_use_dsp          => "YES",
-		g_in_a_w           => g_in_dat_w,
-		g_in_b_w           => g_in_dat_w,
-		g_out_p_w          => g_out_dat_w,
-		g_conjugate_b      => g_conjugate_b,
-		g_pipeline_input   => g_pipeline_input,
-		g_pipeline_product => g_pipeline_product,
-		g_pipeline_adder   => g_pipeline_adder,
-		g_pipeline_output  => g_pipeline_output
-	)
-	PORT MAP(
-		rst     => rst,
-		clk     => clk,
-		clken   => '1',
-		in_ar   => in_ar,
-		in_ai   => in_ai,
-		in_br   => in_br,
-		in_bi   => in_bi,
-		in_val  => in_val,
-		out_pr  => result_re_3dsp,
-		out_pi  => result_im_3dsp,
-		out_val => result_val_3dsp
-	);
+  u_dut_3dsp : ENTITY work.common_complex_mult
+    GENERIC MAP(
+      g_use_variant      => "3DSP",
+      g_use_dsp          => "YES",
+      g_in_a_w           => g_in_dat_w,
+      g_in_b_w           => g_in_dat_w,
+      g_out_p_w          => g_out_dat_w,
+      g_conjugate_b      => g_conjugate_b,
+      g_pipeline_input   => g_pipeline_input,
+      g_pipeline_product => g_pipeline_product,
+      g_pipeline_adder   => g_pipeline_adder,
+      g_pipeline_output  => g_pipeline_output
+    )
+    PORT MAP(
+      rst     => rst,
+      clk     => clk,
+      clken   => '1',
+      in_ar   => in_ar,
+      in_ai   => in_ai,
+      in_br   => in_br,
+      in_bi   => in_bi,
+      in_val  => in_val,
+      out_pr  => result_re_3dsp,
+      out_pi  => result_im_3dsp,
+      out_val => result_val_3dsp
+    );
 
-	p_verify : PROCESS(rst, clk)
-  VARIABLE v_test_msg : STRING(1 to o_test_msg'length) := (OTHERS => '.');
-  VARIABLE v_test_pass : BOOLEAN := TRUE;
-	BEGIN
-		IF rst = '0' THEN
-			IF rising_edge(clk) THEN
+  p_verify : PROCESS(rst, clk)
+    VARIABLE v_test_msg  : STRING(1 to o_test_msg'length) := (OTHERS => '.');
+    VARIABLE v_test_pass : BOOLEAN                        := TRUE;
+  BEGIN
+    IF rst = '0' THEN
+      IF rising_edge(clk) THEN
         v_test_pass := v_test_pass and (result_re_4dsp = result_re_expected);
         if result_re_4dsp /= result_re_expected then
 --          v_test_msg := pad("4DSP RE cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_re_expected) & " but got: " & to_hstring(result_re_4DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
           report "Error: " & v_test_msg severity error;
         end if;
-          
+
         v_test_pass := v_test_pass and (result_im_4dsp = result_im_expected);
         if result_im_4dsp /= result_im_expected then
 --          v_test_msg := pad("4DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_4DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
           report "Error: " & v_test_msg severity error;
         end if;
-          
+
         v_test_pass := v_test_pass and (result_val_4dsp = result_val_expected);
         if result_val_4dsp /= result_val_expected then
           v_test_msg := pad("4DSP VAL cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & std_logic'image(result_val_expected) & " but got: " & std_logic'image(result_val_4DSP), o_test_msg'length, '.');
@@ -323,23 +323,23 @@ END PROCESS;
           o_test_msg <= v_test_msg;
           report "Error: " & v_test_msg severity error;
         end if;
-          
+
         v_test_pass := v_test_pass and (result_im_3dsp = result_im_expected);
         if result_im_3dsp /= result_im_expected then
 --          v_test_msg := pad("3DSP IM cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & to_hstring(result_im_expected) & " but got: " & to_hstring(result_im_3DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
           report "Error: " & v_test_msg severity error;
         end if;
-				
+
         v_test_pass := v_test_pass and (result_val_3dsp = result_val_expected);
         if result_val_3dsp /= result_val_expected then
           v_test_msg := pad("3DSP VAL cmult wrong RTL result#" & integer'image(s_test_count) & ", expected: " & std_logic'image(result_val_expected) & " but got: " & std_logic'image(result_val_3DSP), o_test_msg'length, '.');
           o_test_msg <= v_test_msg;
           report "Error: " & v_test_msg severity error;
         end if;
-			END IF;
-		END IF;
-    
+      END IF;
+    END IF;
+
     o_test_pass <= v_test_pass;
-	END PROCESS;
+  END PROCESS;
 END tb;

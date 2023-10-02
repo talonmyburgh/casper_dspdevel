@@ -66,9 +66,9 @@ architecture str of rTwoWMul is
     constant c_lat       : natural := g_lat - c_round_lat; -- allocate remaining pipeline to multiplier
 
     constant c_mult_input_lat   : natural := sel_a_b(c_lat > 1, 1, 0); -- second priority use DSP pipeline input
-    constant c_mult_product_lat : natural := 0;
+    constant c_mult_product_lat : natural := 1;
     constant c_mult_adder_lat   : natural := sel_a_b(c_lat > 2, 1, 0); -- third priority use DSP internal product-sum pipeline
-    constant c_mult_extra_lat   : natural := sel_a_b(c_lat > 3, c_lat - 3, 0); -- remaining extra pipelining in logic
+    constant c_mult_extra_lat   : natural := sel_a_b(c_lat > 4, c_lat - 4, 0); -- remaining extra pipelining in logic
     constant c_mult_output_lat  : natural := sel_a_b(c_lat > 0, 1, 0) + c_mult_extra_lat; -- first priority use DSP pipeline output
     constant c_mult_lat         : natural := c_mult_input_lat + c_mult_product_lat + c_mult_adder_lat + c_mult_output_lat;
 
