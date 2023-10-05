@@ -55,7 +55,7 @@ architecture str of rTwoBFStage is
     constant c_bf_in_a_zdly  : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_in_a_zdly, 0);
     constant c_bf_out_b_zdly : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_out_d_zdly, 0);
 
-    constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly;
+    constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly + g_dsp_dly;
     constant c_feedback_zdly : natural := pow2(g_stage - 1);
 
     -- The BF adds, subtracts or passes the data on, so typically c_out_dat_w = c_in_dat_w + 1
@@ -91,7 +91,8 @@ begin
     u_bf_re : entity work.rTwoBF
         generic map(
             g_in_a_zdly  => c_bf_in_a_zdly,
-            g_out_d_zdly => c_bf_out_b_zdly
+            g_out_d_zdly => c_bf_out_b_zdly,
+            g_dsp_dly => g_dsp_dly
         )
         port map(
             clk    => clk,
@@ -107,7 +108,8 @@ begin
     u_bf_im : entity work.rTwoBF
         generic map(
             g_in_a_zdly  => c_bf_in_a_zdly,
-            g_out_d_zdly => c_bf_out_b_zdly
+            g_out_d_zdly => c_bf_out_b_zdly,
+            g_dsp_dly => g_dsp_dly
         )
         port map(
             clk    => clk,
