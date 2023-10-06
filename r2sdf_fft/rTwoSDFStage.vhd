@@ -28,6 +28,7 @@ use common_components_lib.common_bit_delay;
 entity rTwoSDFStage is
     generic(
         g_nof_chan       : natural         := 0; --! Exponent of nr of subbands (0 means 1 subband)
+        g_dsp_dly        : natural         := 1;
         g_stage          : natural         := 8; --! Stage number
         g_nof_points     : natural         := 32; --! Number of points
         g_wb_factor      : natural         := 1; --! WB factor of a wideband FFT
@@ -133,6 +134,7 @@ begin
         generic map(
             g_nof_chan      => g_nof_chan,
             g_stage         => g_stage,
+            g_dsp_dly       => g_dsp_dly,
             g_bf_lat        => g_pipeline.bf_lat,
             g_bf_use_zdly   => g_pipeline.bf_use_zdly,
             g_bf_in_a_zdly  => g_pipeline.bf_in_a_zdly,

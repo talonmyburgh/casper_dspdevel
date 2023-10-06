@@ -69,6 +69,7 @@ entity rTwoSDF is
         -- generics for rTwoSDFStage
         g_variant        : string          := "4DSP"; --! Use 3dsp or 4dsp for multiplication
         g_use_dsp        : string          := "yes"; --! Use dsp48 chips (yes) or LUT's (no) for cmults in butterflies
+        g_dsp_dly        : natural         := 1;
         g_ovflw_behav    : string          := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
         g_round          : t_rounding_mode := ROUND; --! ROUND, ROUNDINF or TRUNCATE
         g_use_mult_round : t_rounding_mode := TRUNCATE; --! ROUND, ROUNDINF or TRUNCATE
@@ -150,6 +151,7 @@ begin
                 g_nof_chan       => g_nof_chan,
                 g_stage          => stage,
                 g_nof_points     => g_nof_points,
+                g_dsp_dly        => g_dsp_dly,                
                 g_wb_factor      => 1,
                 g_wb_inst        => 0,
                 g_twid_dat_w     => g_twid_dat_w,

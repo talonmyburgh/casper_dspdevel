@@ -94,7 +94,7 @@ BEGIN
         port map(
             clk                 => clk,
             ce                  => '1', -- Don't Simulate Clock Enables.
-            rst                 => rst,
+            in_sync             => '0',
             in_re               => in_re,
             in_im               => in_im,
             in_val              => in_val,

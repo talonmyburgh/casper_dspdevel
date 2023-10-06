@@ -61,6 +61,7 @@
   <Mappings Location="r2sdf_fft" Library="r2sdf_fft_lib"/>
   <Mappings Location="Common Libraries/STD" Library="std"/>
   <Mappings Location="technology" Library="technology_lib"/>
+  <Mappings Location="Common Libraries/unimaco" Library="unimacro"/>
   <Mappings Location="Common Libraries/unimacro" Library="unimacro"/>
   <Mappings Location="Common Libraries/unisim" Library="unisim"/>
   <Mappings Location="Common Libraries/vunit_lib" Library="vunit_lib"/>

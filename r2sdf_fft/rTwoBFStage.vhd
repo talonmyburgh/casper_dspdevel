@@ -28,6 +28,7 @@ entity rTwoBFStage is
         g_nof_chan      : natural := 0; --! Exponent of nr of subbands (0 means 1 subband)
         g_stage         : natural;      --! The stage indices are ..., 3, 2, 1. The input stage has the highest index, the output stage has index 1.
         g_bf_lat        : natural := 1; --! Digital pipelining latency
+        g_dsp_dly       : natural := 1;
         -- generics for rTwoBF
         g_bf_use_zdly   : natural := 1; --! >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
         g_bf_in_a_zdly  : natural := 0; --! g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
@@ -155,7 +156,7 @@ begin
     -- compensate for feedback fifo
     u_stage_sel : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_feedback_zdly * (2 ** g_nof_chan)
+            g_depth => c_feedback_zdly * (2 ** g_nof_chan) + g_dsp_dly
         )
         port map(
             clk     => clk,
@@ -169,7 +170,7 @@ begin
     -- compensate for feedback fifo
     u_stage_val : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_feedback_zdly * (2 ** g_nof_chan)
+            g_depth => c_feedback_zdly * (2 ** g_nof_chan)  + g_dsp_dly+1
         )
         port map(
             clk     => clk,
@@ -183,7 +184,7 @@ begin
     -- sync always comes out of entity with dvalid. Only delay sync if dvalid is high	
     u_stage_sync : entity common_components_lib.common_bit_delay
         generic map(
-            g_depth => c_feedback_zdly * (2 ** g_nof_chan) + g_bf_lat
+            g_depth => c_feedback_zdly * (2 ** g_nof_chan) + g_bf_lat + g_dsp_dly
         )
         port map(
             clk     => clk,

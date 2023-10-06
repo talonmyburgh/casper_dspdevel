@@ -162,7 +162,7 @@ begin
 			out_dat => in_b_dly
 		);
 	
-	u_in_a_dly_dly : entity common_components_lib.common_delay
+		u_in_a_dly_dly : entity common_components_lib.common_delay
 		generic map(
 			g_dat_w => in_a'length,
 			g_depth => g_dsp_dly

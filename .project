@@ -35,27 +35,22 @@
 		<link>
 			<name>Common Libraries/IEEE</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/93/IEEE</locationURI>
+			<locationURI>sigasiresource:/vhdl/2008/IEEE</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/IEEE Synopsys</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/93/IEEE%20Synopsys</locationURI>
+			<locationURI>sigasiresource:/vhdl/2008/IEEE%20Synopsys</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/STD</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/93/STD</locationURI>
+			<locationURI>sigasiresource:/vhdl/2008/STD</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/osvvm</name>
 			<type>2</type>
-			<location>//export/data_1/vunit/vunit/vhdl/osvvm</location>
-		</link>
-		<link>
-			<name>Common Libraries/unimacro</name>
-			<type>2</type>
-			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/vhdl/src/unimacro</locationURI>
+			<locationURI>/export/data_1/vunit/vunit/vhdl/osvvm</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/unisim</name>
@@ -63,14 +58,14 @@
 			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/vhdl/src/unisims</locationURI>
 		</link>
 		<link>
+			<name>Common Libraries/unimaco</name>
+			<type>2</type>
+			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/vhdl/src/unimacro</locationURI>
+		</link>
+		<link>
 			<name>Common Libraries/vunit_lib</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
-		</link>
-		<link>
-			<name>Common Libraries/xpm</name>
-			<type>2</type>
-			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/ip/xpm</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/vunit_lib/ansi_pkg.vhd</name>
@@ -91,11 +86,6 @@
 			<name>Common Libraries/vunit_lib/check_api.vhd</name>
 			<type>1</type>
 			<locationURI>/export/data_1/vunit/vunit/vhdl/check/src/check_api.vhd</locationURI>
-		</link>
-		<link>
-			<name>Common Libraries/vunit_lib/check_deprecated_pkg.vhd</name>
-			<type>1</type>
-			<locationURI>/export/data_1/vunit/vunit/vhdl/check/src/check_deprecated_pkg.vhd</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/vunit_lib/checker_pkg-body.vhd</name>
@@ -198,11 +188,6 @@
 			<locationURI>/export/data_1/vunit/vunit/vhdl/logging/src/location_pkg.vhd</locationURI>
 		</link>
 		<link>
-			<name>Common Libraries/vunit_lib/log_deprecated_pkg.vhd</name>
-			<type>1</type>
-			<locationURI>/export/data_1/vunit/vunit/vhdl/logging/src/log_deprecated_pkg.vhd</locationURI>
-		</link>
-		<link>
 			<name>Common Libraries/vunit_lib/log_handler_pkg-body.vhd</name>
 			<type>1</type>
 			<locationURI>/export/data_1/vunit/vunit/vhdl/logging/src/log_handler_pkg-body.vhd</locationURI>
@@ -278,11 +263,6 @@
 			<locationURI>/export/data_1/vunit/vunit/vhdl/run/src/run_api.vhd</locationURI>
 		</link>
 		<link>
-			<name>Common Libraries/vunit_lib/run_deprecated_pkg.vhd</name>
-			<type>1</type>
-			<locationURI>/export/data_1/vunit/vunit/vhdl/run/src/run_deprecated_pkg.vhd</locationURI>
-		</link>
-		<link>
 			<name>Common Libraries/vunit_lib/run_types.vhd</name>
 			<type>1</type>
 			<locationURI>/export/data_1/vunit/vunit/vhdl/run/src/run_types.vhd</locationURI>
@@ -336,6 +316,11 @@
 			<name>Common Libraries/vunit_lib/vunit_run_context.vhd</name>
 			<type>1</type>
 			<locationURI>/export/data_1/vunit/vunit/vhdl/vunit_run_context.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/xpm</name>
+			<type>2</type>
+			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/ip/xpm</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/xpm/xpm_VCOMP.vhd</name>

@@ -9,9 +9,11 @@ cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle T
 cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
 args = cli.parse_args()
 vu = VUnit.from_args(args = args)
-#vu = VUnit.from_argv(argv = args,)
+#vu = VUnit.from_argv(argv = args,)cd 
 vu.add_vhdl_builtins()
 vu.add_random()
+vu.add_external_library("unisim", "/export/home/creon/mschiller_ngvla_project/temp/vivado2022.2/unisim/")
+vu.add_external_library("unimacro", "/export/home/creon/mschiller_ngvla_project/temp/vivado2022.2/unimacro/")
 
 script_dir,_ = split(abspath(__file__))
 # XPM Library compile
