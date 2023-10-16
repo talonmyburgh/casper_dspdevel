@@ -123,6 +123,7 @@ architecture str of rTwoSDF is
 	signal data_re  : t_data_arr;
 	signal data_im  : t_data_arr;
 	signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+	signal data_sync : std_logic_vector(c_nof_stages downto 0) := (others => '0');
 
 	signal out_cplx     : std_logic_vector(2 * g_stage_dat_w - 1 downto 0);
 	signal raw_out_cplx : std_logic_vector(2 * g_stage_dat_w - 1 downto 0);
@@ -130,13 +131,13 @@ architecture str of rTwoSDF is
 	signal raw_out_im   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_val  : std_logic;
 	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly);
-
+	signal raw_out_rst	: std_logic;
 begin
 	-- Inputs
 	data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_stage_dat_w);
 	data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_stage_dat_w);
-	data_val(c_nof_stages) <= in_val;
-
+	data_val(c_nof_stages) <= in_val when rst='0' else '1'; -- force high during reset so we issue a sync.
+  data_sync(c_nof_stages) <= '1' when rst='1' else '0';
 	------------------------------------------------------------------------------
 	-- pipelined FFT stages
 	------------------------------------------------------------------------------
@@ -162,13 +163,15 @@ begin
 			)
 			port map(
                 clk     => clk,
-                rst     => rst,
+                --rst     => rst,
+								in_sync => data_sync(stage),
                 in_re   => data_re(stage),
                 in_im   => data_im(stage),
                 scale   => shiftreg(stage-1), -- On average all stages have a gain factor of 2 therefore each stage needs to round 1 bit except for the last g_guard_w nof stages due to the input c_in_scale_w
                 in_val  => data_val(stage),
                 out_re  => data_re(stage - 1),
                 out_im  => data_im(stage - 1),
+								out_sync => data_sync(stage-1),
                 ovflw    => ovflw(stage-1),
                 out_val => data_val(stage - 1)
 			);
@@ -181,7 +184,7 @@ begin
 	no_reorder : if g_use_reorder = false generate
 		raw_out_re  <= data_re(0);
 		raw_out_im  <= data_im(0);
-		raw_out_val <= data_val(0);
+		raw_out_val <= data_val(0) when data_sync(0)='0' else '0';
 	end generate;
 
 	gen_reorder : if g_use_reorder = true generate
@@ -189,7 +192,7 @@ begin
 
 		raw_out_re <= out_cplx(g_stage_dat_w - 1 downto 0);
 		raw_out_im <= out_cplx(2 * g_stage_dat_w - 1 downto g_stage_dat_w);
-
+		raw_out_rst <= '1' when data_sync(0)='1' else '0';
 		u_cplx : entity work.rTwoOrder
 			generic map(
 				g_nof_points    => g_nof_points,
@@ -200,7 +203,7 @@ begin
 			port map(
 				clk     => clk,
 				ce      => ce,
-				rst     => rst,
+				rst     => raw_out_rst, -- this needs to be converted to sync as well.
 				in_dat  => raw_out_cplx,
 				in_val  => data_val(0),
 				out_dat => out_cplx,
@@ -258,7 +261,7 @@ begin
 		g_pipeline => c_pipeline_remove_lsb
 	)
 	port map(
-		rst     => rst,
+		rst     => '0',
 		clk     => clk,
 		in_dat  => raw_out_val,
 		out_dat => out_val
