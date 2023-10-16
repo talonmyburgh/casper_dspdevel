@@ -161,7 +161,7 @@ begin
 	------------------------------------------------------------------------------
 	-- This ought to render weight_addr as having address width g_stage - 1 
 	weight_addr 		<= ctrl_sel(g_stage + g_nof_chan - 1 downto g_nof_chan + 1);
-	start_of_frame	<= '1' when unsigned(weight_addr)=0 else '0';
+	start_of_frame	<= '1' when (unsigned(weight_addr)=0 or weight_addr'length=0) else '0';
 
 
 	u_weights : entity work.rTwoWeights

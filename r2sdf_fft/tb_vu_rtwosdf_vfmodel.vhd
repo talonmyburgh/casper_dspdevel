@@ -280,7 +280,7 @@ BEGIN
     for n in 1 to (16*g_fftsize_log2) loop
       wait until rising_edge(clk);
     end loop;
-
+    report "Data_cnt=" & integer'image(data_cnt) & " words_expected=" & integer'image(words_expected) severity note;
     check(data_cnt>=words_expected,"tb_vu_rtwosdf_vfmodel: Data output count less than input data");
     endsim  <= '1';
 		test_runner_cleanup(runner);

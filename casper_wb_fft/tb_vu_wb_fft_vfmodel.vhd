@@ -289,7 +289,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     for n in 1 to (16*g_fftsize_log2) loop
       wait until rising_edge(clk);
     end loop;
-
+    report "Words Expected=" & integer'image(words_expected) & " Data Cnt=" & integer'image(data_cnt) severity note;
+    wait until rising_edge(clk);
     check(data_cnt>=words_expected,"tb_vu_rtwosdf_vfmodel: Data output count less than input data");
     endsim  <= '1';
 		test_runner_cleanup(runner);
