@@ -69,7 +69,7 @@ entity fft_r2_pipe is
     port(
         clken    : in  std_logic;       --! Clock enable
         clk      : in  std_logic;       --! Clock
-        rst      : in  std_logic := '0'; --! Reset
+        in_sync  : in  std_logic := '0'; --! Input sync signal
         shiftreg : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Shift register
         in_re    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0); --! Input real signal
         in_im    : in  std_logic_vector(g_fft.in_dat_w - 1 downto 0); --! Input imaginary signal
@@ -77,6 +77,7 @@ entity fft_r2_pipe is
         out_re   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0); --! Output real signal
         out_im   : out std_logic_vector(g_fft.out_dat_w - 1 downto 0); --! Output imaginary signal
         ovflw    : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Overflow register (detects overflow in add/sub of butterfly)
+        out_sync : out std_logic := '0'; --! Output sync signal
         out_val  : out std_logic        --! Output data valid
     );
 end entity fft_r2_pipe;
@@ -99,12 +100,14 @@ architecture str of fft_r2_pipe is
     signal data_re  : t_data_arr;
     signal data_im  : t_data_arr;
     signal data_val : std_logic_vector(c_nof_stages downto 0) := (others => '0');
+    signal data_sync : std_logic_vector(c_nof_stages downto 0) := (others => '0');
 
     signal out_cplx    : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
     signal in_cplx     : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
     signal raw_out_re  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
     signal raw_out_im  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
     signal raw_out_val : std_logic;
+    signal raw_out_rst : std_logic;
 
 begin
 
@@ -112,6 +115,7 @@ begin
     data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
     data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_fft.stage_dat_w);
     data_val(c_nof_stages) <= in_val;
+    data_sync(c_nof_stages) <= in_sync;
 
     ------------------------------------------------------------------------------
     -- pipelined FFT stages
@@ -137,13 +141,14 @@ begin
             )
             port map(
                 clk     => clk,
-                rst     => rst,
+                in_sync => data_sync(stage),
                 in_re   => data_re(stage),
                 in_im   => data_im(stage),
                 scale   => shiftreg(stage - 1),
                 in_val  => data_val(stage),
                 out_re  => data_re(stage - 1),
                 out_im  => data_im(stage - 1),
+                out_sync => data_sync(stage-1),
                 ovflw   => ovflw(stage - 1),
                 out_val => data_val(stage - 1)
             );
@@ -169,7 +174,7 @@ begin
 			port map(
 				clken   => clken,
 				clk     => clk,
-				rst     => rst,
+				rst     => raw_out_rst,
 				in_dat  => in_cplx,
 				in_val  => data_val(0),
 				out_dat => out_cplx,
@@ -178,8 +183,9 @@ begin
 
         raw_out_re <= out_cplx(g_fft.stage_dat_w - 1 downto 0);
         raw_out_im <= out_cplx(2 * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w);
-
     end generate;
+
+    raw_out_rst <= data_sync(0);
 
     no_reorder_no_generate : if (g_fft.use_separate = false and g_fft.use_reorder = false) generate
         raw_out_re  <= data_re(0);
@@ -236,7 +242,7 @@ begin
             g_pipeline => c_pipeline_remove_lsb
         )
         port map(
-            rst     => rst,
+            rst     => in_sync,
             clk     => clk,
             in_dat  => raw_out_val,
             out_dat => out_val

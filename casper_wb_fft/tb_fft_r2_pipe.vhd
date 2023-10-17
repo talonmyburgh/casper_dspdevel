@@ -249,6 +249,8 @@ architecture tb of tb_fft_r2_pipe is
   signal in_dat_b_scope         : integer;
   signal in_channel             : natural;
   signal in_val                 : std_logic:= '0';
+  signal dut_val                : std_logic:= '0';
+  signal in_sync                : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_blk_val             : std_logic;
   signal in_blk_val_cnt         : natural := 0;
@@ -259,6 +261,7 @@ architecture tb of tb_fft_r2_pipe is
   signal out_val                : std_logic:= '0';  -- for complex(A,B)
   signal out_val_a              : std_logic:= '0';  -- for real A
   signal out_val_b              : std_logic:= '0';  -- for real B
+  signal out_sync               : std_logic:= '0';
   signal out_bin_cnt            : natural := 0;
   signal out_bin                : natural;
   signal out_channel            : natural;
@@ -314,6 +317,8 @@ begin
 
   o_clk <= clk;
   o_rst <= rst;
+  in_sync <= rst;
+  dut_val <= in_val when rst ='0' else '1';
   o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
@@ -379,13 +384,14 @@ begin
   port map (
     clken    => std_logic'('1'),
     clk      => clk,
-    rst      => rst,
+    in_sync  => in_sync,
     in_re    => in_dat_a,
     in_im    => in_dat_b,
     shiftreg => (0=>'0', 1=>'0', others=>'1'),
-    in_val   => in_val,
+    in_val   => dut_val,
     out_re   => out_re,
     out_im   => out_im,
+    out_sync => out_sync,
     ovflw    => ovflw,
     out_val  => out_val
   );
