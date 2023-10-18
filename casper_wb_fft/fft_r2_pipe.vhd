@@ -106,16 +106,18 @@ architecture str of fft_r2_pipe is
     signal in_cplx     : std_logic_vector(c_nof_complex * g_fft.stage_dat_w - 1 downto 0);
     signal raw_out_re  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
     signal raw_out_im  : std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
-    signal raw_out_val : std_logic;
-    signal raw_out_rst : std_logic;
+    signal raw_out_val : std_logic := '0';
+    signal raw_out_sync: std_logic := '0';
+    signal raw_out_rst : std_logic := '0';
+    signal trigger_sync_out : std_logic := '0';
 
 begin
 
     -- Inputs
     data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
     data_im(c_nof_stages)  <= scale_and_resize_svec(in_im, c_in_scale_w, g_fft.stage_dat_w);
-    data_val(c_nof_stages) <= in_val;
-    data_sync(c_nof_stages) <= in_sync;
+    data_val(c_nof_stages) <= '1' when in_sync='1' and in_val='1' else in_val;
+    data_sync(c_nof_stages) <= '1' when in_sync='1' and in_val='1' else '0';
 
     ------------------------------------------------------------------------------
     -- pipelined FFT stages
@@ -174,10 +176,11 @@ begin
 			port map(
 				clken   => clken,
 				clk     => clk,
-				rst     => raw_out_rst,
+				in_sync => raw_out_rst,
 				in_dat  => in_cplx,
 				in_val  => data_val(0),
 				out_dat => out_cplx,
+                out_sync=> raw_out_sync,
 				out_val => raw_out_val
 			);
 
@@ -190,7 +193,7 @@ begin
     no_reorder_no_generate : if (g_fft.use_separate = false and g_fft.use_reorder = false) generate
         raw_out_re  <= data_re(0);
         raw_out_im  <= data_im(0);
-        raw_out_val <= data_val(0);
+        raw_out_val <= data_val(0) when data_sync(0)='0' else '0';
     end generate;
 
     ------------------------------------------------------------------------------
@@ -247,4 +250,16 @@ begin
             in_dat  => raw_out_val,
             out_dat => out_val
         );
+-- Valid Output
+    u_out_sync : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => c_pipeline_remove_lsb
+        )
+        port map(
+            rst     => in_sync,
+            clk     => clk,
+            in_dat  => raw_out_sync,
+            out_dat => out_sync
+        );
+
 end str;

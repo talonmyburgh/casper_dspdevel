@@ -250,6 +250,7 @@ architecture tb of tb_fft_r2_pipe is
   signal in_channel             : natural;
   signal in_val                 : std_logic:= '0';
   signal dut_val                : std_logic:= '0';
+  signal dat_val                : std_logic:= '0';
   signal in_sync                : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_blk_val             : std_logic;
@@ -319,6 +320,7 @@ begin
   o_rst <= rst;
   in_sync <= rst;
   dut_val <= in_val when rst ='0' else '1';
+  dat_val <= out_val when out_sync = '0' else '0';
   o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
@@ -398,14 +400,14 @@ begin
 
   -- Separate output
   in_val_cnt  <= in_val_cnt+1  when rising_edge(clk) and in_val='1'  else in_val_cnt;
-  out_val_cnt <= out_val_cnt+1 when rising_edge(clk) and out_val='1' else out_val_cnt;
+  out_val_cnt <= out_val_cnt+1 when rising_edge(clk) and dat_val='1' else out_val_cnt;
 
   proc_fft_out_control(1, g_fft.nof_points, c_nof_channels, g_fft.use_reorder, g_fft.use_fft_shift, g_fft.use_separate,
-                       out_val_cnt, out_val, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
+                       out_val_cnt, dat_val, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
                        
   -- Block count t_blk for c_nof_channels>=1 channels per block
   in_blk_val  <= '1' when in_val='1'  and (in_val_cnt  mod c_nof_channels)=0 else '0';
-  out_blk_val <= '1' when out_val='1' and (out_val_cnt mod c_nof_channels)=0 else '0';
+  out_blk_val <= '1' when dat_val='1' and (out_val_cnt mod c_nof_channels)=0 else '0';
   in_blk_val_cnt  <= in_val_cnt/c_nof_channels;
   out_blk_val_cnt <= out_val_cnt/c_nof_channels;
 
@@ -472,33 +474,33 @@ begin
       v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
       v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
       v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
       v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
     else
       v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
       v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
       if not v_test_pass then
         v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-        report v_test_msg severity failure;
+        report v_test_msg severity error;
       end if;
     end if;
     end if;
@@ -512,10 +514,10 @@ begin
   in_dat_a_scope <= TO_SINT(in_dat_a);
   in_dat_b_scope <= TO_SINT(in_dat_b);
 
-  -- clk diff to avoid combinatorial glitches when selecting the data with out_val_a,b, out_val
+  -- clk diff to avoid combinatorial glitches when selecting the data with out_val_a,b, dat_val
   reg_out_val_a   <= out_val_a   when rising_edge(clk);
   reg_out_val_b   <= out_val_b   when rising_edge(clk);
-  reg_out_val     <= out_val     when rising_edge(clk);
+  reg_out_val     <= dat_val     when rising_edge(clk);
   reg_out_channel <= out_channel when rising_edge(clk);
   reg_out_bin_cnt <= out_bin_cnt when rising_edge(clk);
   reg_out_bin     <= out_bin     when rising_edge(clk);
@@ -525,15 +527,15 @@ begin
   out_im_a_scope <= TO_SINT(out_im) when rising_edge(clk) and out_val_a='1';
   out_re_b_scope <= TO_SINT(out_re) when rising_edge(clk) and out_val_b='1';
   out_im_b_scope <= TO_SINT(out_im) when rising_edge(clk) and out_val_b='1';
-  out_re_c_scope <= TO_SINT(out_re) when rising_edge(clk) and out_val='1';
-  out_im_c_scope <= TO_SINT(out_im) when rising_edge(clk) and out_val='1';
+  out_re_c_scope <= TO_SINT(out_re) when rising_edge(clk) and dat_val='1';
+  out_im_c_scope <= TO_SINT(out_im) when rising_edge(clk) and dat_val='1';
 
   exp_re_a_scope <= expected_data_a_re_arr(out_bin_cnt) when rising_edge(clk) and out_val_a='1';
   exp_im_a_scope <= expected_data_a_im_arr(out_bin_cnt) when rising_edge(clk) and out_val_a='1';
   exp_re_b_scope <= expected_data_b_re_arr(out_bin_cnt) when rising_edge(clk) and out_val_b='1';
   exp_im_b_scope <= expected_data_b_im_arr(out_bin_cnt) when rising_edge(clk) and out_val_b='1';  
-  exp_re_c_scope <= expected_data_c_re_arr(out_bin_cnt) when rising_edge(clk) and out_val='1';
-  exp_im_c_scope <= expected_data_c_im_arr(out_bin_cnt) when rising_edge(clk) and out_val='1';
+  exp_re_c_scope <= expected_data_c_re_arr(out_bin_cnt) when rising_edge(clk) and dat_val='1';
+  exp_im_c_scope <= expected_data_c_im_arr(out_bin_cnt) when rising_edge(clk) and dat_val='1';
 
   diff_re_a_scope <= exp_re_a_scope - out_re_a_scope;
   diff_im_a_scope <= exp_im_a_scope - out_im_a_scope;
