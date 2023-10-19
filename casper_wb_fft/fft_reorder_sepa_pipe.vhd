@@ -93,7 +93,6 @@ architecture rtl of fft_reorder_sepa_pipe is
 
     signal rst : std_logic := '0';
     signal start_of_frame : std_logic := '0';
-    signal start_of_frame_op1 : std_logic := '0';
     signal reject_data : std_logic := '0';
     signal out_val_p1 : std_logic := '0';
   
@@ -125,6 +124,7 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal sep_in_val      : std_logic;
 
     signal sep_out_dat_i      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_out_dat_ii      : std_logic_vector(c_dat_w - 1 downto 0);
     signal sep_out_val_i      : std_logic;
     
     signal not_first_spectrum     : std_logic := '0';
@@ -163,7 +163,7 @@ architecture rtl of fft_reorder_sepa_pipe is
 begin
 
     rst <= '1' when in_sync='1' and in_val='1' else '0';
-    start_of_frame	<= '1' when (unsigned(adr_chan_cnt)=0 or adr_chan_cnt'length=0) else '0';
+    start_of_frame  <= '0' when (unsigned(out_counter)=0 or out_counter'length=0) else '1';
 
     u_adr_chan_cnt : entity casper_counter_lib.common_counter
         generic map(
@@ -179,10 +179,10 @@ begin
         );    
     -- Generate on c_nof_channels to avoid simulation warnings on TO_UINT(adr_chan_cnt) when adr_chan_cnt is a NULL array
     one_chan : if c_nof_channels = 1 generate
-        cnt_ena <= '1' when in_val = '1' else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' else '0';
     end generate;
     more_chan : if c_nof_channels > 1 generate
-        cnt_ena <= '1' when in_val = '1' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
     end generate;
 
     base_cnt : entity casper_counter_lib.common_counter
@@ -299,14 +299,14 @@ begin
     end generate;
     
     adr_tot_cnt <= adr_points_cnt & adr_chan_cnt;
-    next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' else '0';
+    next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' and in_sync ='0' else '0';
     gen_not_in_place_buf_next_page : if g_in_place = false generate
         buf_wr_next_page <= next_page;
         buf_rd_next_page <= next_page;
     end generate;    
         
     buf_wr_dat <= in_dat;
-    buf_wr_en <= in_val;
+    buf_wr_en <= in_val and not in_sync;
         
     u_buff_inplace : entity casper_ram_lib.common_paged_ram_r_w
         generic map(
@@ -540,14 +540,17 @@ begin
         out_val_p1 <= sep_out_val_i;        
     end generate;
 
-	sof_delay : entity common_components_lib.common_pipeline_sl
+    -- delay data out by one clock cycle as we want sync to appear one clock cycle before
+	out_dat_delay : entity common_components_lib.common_pipeline
 		generic map(
-			g_pipeline => c_buf_latency + g_nof_chan
+			g_pipeline => 1,
+            g_in_dat_w => c_dat_w,
+            g_out_dat_w => c_dat_w
 		)
 		port map(
 			clk     => clk,
-			in_dat  => start_of_frame,
-			out_dat => start_of_frame_op1
+			in_dat  => sep_out_dat_i,
+			out_dat => sep_out_dat_ii
 		);
 
     final_reg : process (clk)
@@ -557,23 +560,24 @@ begin
 				out_val 			<= '1';
 				out_sync			<= '1';
 				reject_data		    <= '1';
+                out_dat             <= (others=>'0');
 			else
 				if reject_data='1' then
-					if start_of_frame_op1='1' and out_val_p1='1' then
+					if start_of_frame='1' and out_val_p1='1' then
 						out_val			<= out_val_p1;
 						out_sync		<= '0';
-						reject_data	<= '0';
+						reject_data	    <= '0';
+                        out_dat         <= sep_out_dat_ii;
 					end if;
 				else
 					-- not syncing pass data.
-					reject_data		<= '0';
-					out_sync      <= '0';
+					reject_data		    <= '0';
+					out_sync            <= '0';
 					out_val				<= out_val_p1;
+                    out_dat             <= sep_out_dat_ii;
 				end if;
 			end if;
 		end if;
 	end process final_reg;
-    
-    out_dat <= sep_out_dat_i;
 end rtl;
 
