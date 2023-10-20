@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------  --
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 -- Purpose:  Complex Pipelined Fast Fourier Transform
 -- 
 -- Description: The fft_r2_pipe unit performs a complex pipelined FFT on the incoming data stream.
@@ -193,7 +197,8 @@ begin
     no_reorder_no_generate : if (g_fft.use_separate = false and g_fft.use_reorder = false) generate
         raw_out_re  <= data_re(0);
         raw_out_im  <= data_im(0);
-        raw_out_val <= data_val(0) when data_sync(0)='0' else '0';
+        raw_out_val <= data_val(0);
+        raw_out_sync <= data_sync(0);
     end generate;
 
     ------------------------------------------------------------------------------

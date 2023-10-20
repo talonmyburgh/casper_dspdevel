@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: This unit performs the reordering and the separation for the two real
 --          input option of the complex fft.
