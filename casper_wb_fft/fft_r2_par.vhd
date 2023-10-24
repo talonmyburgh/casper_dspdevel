@@ -162,6 +162,8 @@ architecture str of fft_r2_par is
     signal add_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
     signal sub_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
     signal int_val    : std_logic;
+    signal int_sync   : std_logic;
+    signal fft_sync    : std_logic;
     signal fft_val    : std_logic;
     attribute keep_hierarchy : string; -- don't optimize across units, to allow for faster speed
     attribute keep_hierarchy of str : architecture is "yes";
@@ -178,7 +180,7 @@ begin
         data_re(c_nof_stages)(2 * I + 1) <= scale_and_resize_svec(in_re_arr(I + g_fft.nof_points / 2), c_in_scale_w, g_fft.stage_dat_w);
         data_im(c_nof_stages)(2 * I)     <= scale_and_resize_svec(in_im_arr(I), c_in_scale_w, g_fft.stage_dat_w);
         data_im(c_nof_stages)(2 * I + 1) <= scale_and_resize_svec(in_im_arr(I + g_fft.nof_points / 2), c_in_scale_w, g_fft.stage_dat_w);
-        data_val(c_nof_stages)(I)        <= in_val when in_sync = '0' else '0';
+        data_val(c_nof_stages)(I)        <= in_val;
         data_sync(c_nof_stages)(I)       <= in_sync;
     end generate;
 
@@ -245,6 +247,7 @@ begin
         int_im_arr <= data_im(0);
     end generate;
     int_val <= data_val(0)(0);
+    int_sync <= data_sync(0)(0);
 
     --------------------------------------------------------------------------------
     -- Optional separate 
@@ -444,6 +447,15 @@ begin
                 in_dat  => int_val,
                 out_dat => fft_val
             );
+            u_seperate_fft_sync : entity common_components_lib.common_pipeline_sl
+            generic map(
+                g_pipeline => c_pipeline_add_sub
+            )
+            port map(
+                clk     => clk,
+                in_dat  => int_sync,
+                out_dat => fft_sync
+            );
     end generate;
 
     no_separate : if g_fft.use_separate = false generate
@@ -452,6 +464,7 @@ begin
             fft_im_arr(I) <= int_im_arr(I);
         end generate;
         fft_val <= int_val;
+        fft_sync <= int_sync;
     end generate;
 
     ------------------------------------------------------------------------------
@@ -512,6 +525,14 @@ begin
             in_dat  => fft_val,
             out_dat => out_val
         );
-        
-        out_sync <='0';
+    u_out_sync : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => c_pipeline_remove_lsb
+        )
+        port map(
+            rst     => '0',
+            clk     => clk,
+            in_dat  => fft_sync,
+            out_dat => out_sync
+        );
 end str;

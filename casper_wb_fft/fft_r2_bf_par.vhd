@@ -64,7 +64,7 @@ entity fft_r2_bf_par is
 		y_out_re : out std_logic_vector;
 		y_out_im : out std_logic_vector;
 		ovflw	 : out std_logic;
-		out_sync  : in  std_logic;
+		out_sync : out  std_logic;
 		out_val  : out std_logic
 	);
 end entity fft_r2_bf_par;
@@ -102,6 +102,8 @@ architecture str of fft_r2_bf_par is
 	signal mul_quant_im : std_logic_vector(y_out_im'range);
 	signal mul_out_val  : std_logic;
 	signal mul_in_val   : std_logic;
+	signal out_val_tmp1 : std_logic;
+	signal out_val_tmp2 : std_logic;
 	signal mul_in_rst   : std_logic;
 	signal valid_int    : std_logic;
 
@@ -241,6 +243,24 @@ begin
 			in_dat  => valid_int,
 			out_dat => mul_in_val
 		);
+	u_val_lat : entity common_components_lib.common_pipeline_sl
+		generic map(
+			g_pipeline => g_pipeline.bf_lat + g_pipeline.mul_lat + g_pipeline.stage_lat
+		)
+		port map(
+			clk     => clk,
+			in_dat  => in_val,
+			out_dat => out_val_tmp1
+		);
+   u_sync_lat : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => g_pipeline.bf_lat + g_pipeline.mul_lat + g_pipeline.stage_lat
+        )
+        port map(
+            clk     => clk,
+            in_dat  => in_sync,
+            out_dat => out_sync
+        );
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
@@ -343,6 +363,7 @@ begin
 		port map(
 			clk     	=> clk,
 			in_dat  	=> mul_out_val,
-			out_dat 	=> out_val
+			out_dat 	=> out_val_tmp2
 		);
+	out_val <= out_val_tmp1 or out_val_tmp2;
 end str;
