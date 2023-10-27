@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 
 library ieee, common_pkg_lib, casper_ram_lib, common_components_lib, casper_counter_lib, casper_requantize_lib;
 use IEEE.std_logic_1164.all;
@@ -109,7 +113,7 @@ architecture str of rTwoSDFStage is
 	signal reject_data				: std_logic;
 begin
 	rst 					<= '1' when in_sync='1' and in_val='1' else '0';
-	valid_int 		<= in_val when in_sync='0' else '0';
+	valid_int 			    <= in_val when in_sync='0' else '0';
 
 	------------------------------------------------------------------------------
 	-- stage counter
@@ -141,7 +145,8 @@ begin
 			g_bf_lat        => g_pipeline.bf_lat,
 			g_bf_use_zdly   => g_pipeline.bf_use_zdly,
 			g_bf_in_a_zdly  => g_pipeline.bf_in_a_zdly,
-			g_bf_out_d_zdly => g_pipeline.bf_out_d_zdly
+			g_bf_out_d_zdly => g_pipeline.bf_out_d_zdly,
+			g_dsp_dly		=> g_pipeline.bf_dsp_dly
 		)
 		port map(
             clk     => clk,

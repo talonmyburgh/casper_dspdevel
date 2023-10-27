@@ -18,8 +18,9 @@ package rTwoSDFPkg is
 		bf_use_zdly   : natural;        -- = 1
 		bf_in_a_zdly  : natural;        -- = 0
 		bf_out_d_zdly : natural;        -- = 0
+		bf_dsp_dly	  : natural;        -- = 1
 	end record;
-	constant c_fft_pipeline : t_fft_pipeline := (1, 2, 5, 1, 1, 0, 0);
+	constant c_fft_pipeline : t_fft_pipeline := (1, 2, 5, 1, 1, 0, 0, 0);
 
 end package rTwoSDFPkg;
 

@@ -113,7 +113,6 @@ architecture str of fft_r2_pipe is
     signal raw_out_val : std_logic := '0';
     signal raw_out_sync: std_logic := '0';
     signal raw_out_rst : std_logic := '0';
-    signal trigger_sync_out : std_logic := '0';
 
 begin
 

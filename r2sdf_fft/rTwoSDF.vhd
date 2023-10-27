@@ -19,7 +19,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 
 --! Purpose: Pipelined radix 2 FFT
 --! Description: CASPER R2SDF FFT implementation

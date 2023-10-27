@@ -18,9 +18,10 @@
 --
 --------------------------------------------------------------------------------
 
-library ieee, common_pkg_lib, common_components_lib;
+library ieee, common_pkg_lib, common_components_lib, technology_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
+USE technology_lib.technology_select_pkg.ALL;
 
 entity rTwoBFStage is
 	generic(
@@ -31,7 +32,8 @@ entity rTwoBFStage is
 		-- generics for rTwoBF
 		g_bf_use_zdly   : natural := 1; --! >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
 		g_bf_in_a_zdly  : natural := 0; --! g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
-		g_bf_out_d_zdly : natural := 0  --! The stage z^(-1) delays are ..., 4, 2, 1.
+		g_bf_out_d_zdly : natural := 0; --! The stage z^(-1) delays are ..., 4, 2, 1.
+		g_dsp_dly		: natural := 1	--! Butterfly units delay - expect timing failure for dsp_dly < 1 (ignored for non Xilinx designs)
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
@@ -54,7 +56,9 @@ architecture str of rTwoBFStage is
 	constant c_bf_in_a_zdly  : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_in_a_zdly, 0);
 	constant c_bf_out_b_zdly : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_out_d_zdly, 0);
 
-	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly;
+	constant c_use_dsp_dly : boolean := c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal;
+	constant c_dsp_dly : natural := sel_a_b(c_use_dsp_dly, g_dsp_dly, 0);
+	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly + c_dsp_dly;
 	constant c_feedback_zdly : natural := pow2(g_stage - 1);
 
 	-- The BF adds, subtracts or passes the data on, so typically c_out_dat_w = c_in_dat_w + 1
@@ -90,7 +94,8 @@ begin
 	u_bf_re : entity work.rTwoBF
 		generic map(
 			g_in_a_zdly  => c_bf_in_a_zdly,
-			g_out_d_zdly => c_bf_out_b_zdly
+			g_out_d_zdly => c_bf_out_b_zdly,
+			g_dsp_dly    => c_dsp_dly
 		)
 		port map(
 			clk    => clk,
@@ -106,7 +111,8 @@ begin
 	u_bf_im : entity work.rTwoBF
 		generic map(
 			g_in_a_zdly  => c_bf_in_a_zdly,
-			g_out_d_zdly => c_bf_out_b_zdly
+			g_out_d_zdly => c_bf_out_b_zdly,
+			g_dsp_dly    => c_dsp_dly
 		)
 		port map(
 			clk    => clk,
