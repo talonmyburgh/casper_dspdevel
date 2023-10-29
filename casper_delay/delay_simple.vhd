@@ -39,3 +39,40 @@ begin
     end PROCESS;
 
 end architecture;
+
+LIBRARY IEEE;
+USE IEEE.std_logic_1164.ALL;
+USE IEEE.numeric_std.ALL;
+
+entity delay_simple_sl is
+    generic (
+        g_delay : NATURAL := 1;
+        g_initial_values : std_logic := '0'
+    );
+    port (
+        clk : IN std_logic := '0';
+        ce :  IN std_logic := '0';
+        i_data : IN std_logic;
+        o_data : out std_logic
+    );
+end delay_simple_sl;
+
+architecture rtl of delay_simple_sl is
+    SIGNAL s_in, s_out : STD_LOGIC_VECTOR(0 to 0);
+begin
+    s_in(0) <= i_data;
+    o_data <= s_out(0);
+
+    u_sync_delay : entity work.delay_simple
+        generic map (
+            g_delay => g_delay,
+            g_initial_values => g_initial_values
+        )
+        port map (
+        clk => clk,
+        ce => ce,
+        i_data => s_in,
+        o_data => s_out
+    );
+
+end architecture;

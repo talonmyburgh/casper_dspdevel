@@ -25,7 +25,7 @@ architecture rtl of square_transposer is
   CONSTANT c_inputs_log2 : INTEGER := ceil_log2(i_data'LENGTH(1));
 
   SIGNAL s_delayed_in, s_out : t_slv_arr(i_data'RANGE(1), i_data'RANGE(2)) := (OTHERS => (OTHERS => '0'));
-  SIGNAL s_sync_out, s_sync_out_pre : std_logic_vector(0 downto 0) := (OTHERS => '0');
+  SIGNAL s_sync_out : std_logic := '0';
   SIGNAL s_sel_counting_desc : std_logic_vector(c_inputs_log2-1 downto 0) := (OTHERS => '0');
 begin
   
@@ -39,11 +39,11 @@ begin
     i_sel => s_sel_counting_desc,
     i_sync => i_sync,
     i_data => s_delayed_in,
-    o_sync => s_sync_out(0),
+    o_sync => s_sync_out,
     o_data => s_out
   );
   
-  u_sync_delay : entity casper_delay_lib.delay_simple
+  u_sync_delay : entity casper_delay_lib.delay_simple_sl
     generic map (
       g_delay => i_data'LENGTH(1)-1
     )
@@ -51,9 +51,8 @@ begin
       clk => clk,
       ce => ce,
       i_data => s_sync_out,
-      o_data => s_sync_out_pre
+      o_data => o_sync
   );
-  o_sync <= s_sync_out_pre(0);
   
   u_counter : entity casper_counter_lib.free_run_up_counter
     generic map (

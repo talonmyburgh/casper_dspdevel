@@ -26,7 +26,6 @@ architecture rtl of barrel_switcher is
   CONSTANT c_channels : INTEGER := i_data'length(1);
   CONSTANT c_channels_log2 : INTEGER := ceil_log2(c_channels);
 
-  SIGNAL s_sync_in, s_sync_out : std_logic_vector(0 to 0) := (OTHERS => '0');
   TYPE t_bs_layers_slv_arr IS ARRAY (0 to i_sel'LENGTH-2) OF t_slv_arr(i_data'range(1), i_data'range(2));
   SIGNAL s_bs_layers : t_bs_layers_slv_arr := (OTHERS => (OTHERS => (OTHERS => '0')));
 
@@ -44,17 +43,15 @@ architecture rtl of barrel_switcher is
 begin
 
   gen_sync : IF not g_async GENERATE
-    s_sync_in(0) <= i_sync;
-    o_sync <= s_sync_out(0);
-    u_sync_delay : entity casper_delay_lib.delay_simple
+    u_sync_delay : entity casper_delay_lib.delay_simple_sl
       generic map (
         g_delay => c_channels_log2
       )
       port map (
         clk => clk,
         ce => ce,
-        i_data => s_sync_in,
-        o_data => s_sync_out
+        i_data => i_sync,
+        o_data => o_sync
       );
   end GENERATE;
 
