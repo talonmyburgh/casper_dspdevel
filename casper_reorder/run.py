@@ -22,26 +22,34 @@ common_slv_arr_pkg_lib.add_source_files(join(script_dir, "../common_slv_arr_pkg/
 casper_delay_lib = vu.add_library("casper_delay_lib")
 casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_simple.vhd"))
 
+# Create library 'casper_counter_lib'
+casper_counter_lib = vu.add_library("casper_counter_lib")
+casper_counter_lib.add_source_files(join(script_dir, "../casper_counter/free_run_up_counter.vhd"))
+
 # Create library 'casper_reorder_lib'
 casper_reorder_lib = vu.add_library("casper_reorder_lib")
 casper_reorder_lib.add_source_files(join(script_dir, "./*.vhd"))
 
-# # Create library 'barrel_switcher_pkg'
-# barrel_switcher_pkg = vu.add_library("barrel_switcher_pkg")
-# barrel_switcher_pkg.add_source_files(join(script_dir, "./mux.vhd"))
-# barrel_switcher_pkg.add_source_files(join(script_dir, "./barrel_switcher.vhd"))
-# barrel_switcher_pkg.add_source_files(join(script_dir, "./tb_barrel_switcher.vhd"))
-# barrel_switcher_pkg.add_source_files(join(script_dir, "./tb_tb_vu_barrel_switcher.vhd"))
-
+# Really, the barrel_switcher gets tested within the square_transposer
 TB_BARREL_SWITCHER = casper_reorder_lib.test_bench("tb_tb_vu_barrel_switcher")
-
-for input_count in [3, 4, 8]:#, 15, 31, 63, 64]:
-    for input_width in [3, 4, 8]:#, 16, 32]:
+for input_count in [3,]:
+    for input_width in [4]:
         TB_BARREL_SWITCHER.add_config(
             name = f"Barrel Shifter ({input_count} inputs of {input_width} bits)",
             generics={
                 "g_barrel_switch_inputs": input_count,
                 "g_barrel_switcher_division_bit_width": input_width
+            }
+        )
+
+TB_SQUARE_TRANSPOSER = casper_reorder_lib.test_bench("tb_tb_vu_square_transposer")
+for input_count in [2, 3, 4]:
+    for input_width in [4, 5, 8]:
+        TB_SQUARE_TRANSPOSER.add_config(
+            name = f"Square-Transposer ({input_count} inputs of {input_width} bits)",
+            generics={
+                "g_inputs_2exp": input_count,
+                "g_input_bit_width": input_width
             }
         )
 

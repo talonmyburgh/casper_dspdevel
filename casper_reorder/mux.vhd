@@ -33,6 +33,7 @@ begin
     -- Synchronous operation
     --------------------------------------------------------
     sync : IF g_async = FALSE GENERATE
+    BEGIN
         sync_process: PROCESS (clk)
         begin
             if rising_edge(clk) and ce='1' THEN

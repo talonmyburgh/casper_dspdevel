@@ -15,14 +15,15 @@ package common_slv_arr_pkg is
 
   procedure slv_arr_get(signal slv : out std_logic_vector; signal slv_arr : in t_slv_arr; constant idx : natural);
   procedure slv_arr_get_variable(variable slv : out std_logic_vector; signal slv_arr : in t_slv_arr; constant idx : natural);
+  function slv_arr_index(signal slv_arr : in t_slv_arr; constant idx : natural) return std_logic_vector;
 end package;
 
 package body common_slv_arr_pkg is
   procedure slv_arr_set(signal slv_arr : out t_slv_arr; constant idx : natural; signal slv : in std_logic_vector) is
-  begin
-    for i in slv'range loop
-      slv_arr(idx, i) <= slv(i);
-    end loop;
+	begin
+		for i in slv'range loop
+			slv_arr(idx, i) <= slv(i);
+		end loop;
   end procedure;
 
   procedure slv_arr_set_variable(signal slv_arr : out t_slv_arr; constant idx : natural; variable slv : in std_logic_vector) is
@@ -52,4 +53,13 @@ package body common_slv_arr_pkg is
       slv(i) := slv_arr(idx, i);
     end loop;
   end procedure;
+
+  function slv_arr_index(signal slv_arr : in t_slv_arr; constant idx : natural) return std_logic_vector is
+    variable result: STD_LOGIC_VECTOR(slv_arr'RANGE(2));
+  begin
+    for i in slv_arr'range(2) loop
+      result(i) := slv_arr(idx, i);
+    end loop;
+    return result;
+  end function;
 end package body;

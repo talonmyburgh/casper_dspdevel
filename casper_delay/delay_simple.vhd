@@ -8,7 +8,8 @@ USE IEEE.numeric_std.ALL;
 
 entity delay_simple is
     generic (
-        g_delay : NATURAL := 1
+        g_delay : NATURAL := 1;
+        g_initial_values : std_logic := '0'
     );
     port (
         clk : IN std_logic := '0';
@@ -20,7 +21,7 @@ end delay_simple;
 
 architecture rtl of delay_simple is
     TYPE t_delay_slv_arr IS ARRAY (0 to g_delay-1) OF STD_LOGIC_VECTOR(i_data'RANGE);
-    SIGNAL s_delays : t_delay_slv_arr;
+    SIGNAL s_delays : t_delay_slv_arr := (OTHERS => (OTHERS => g_initial_values));
 begin
     o_data <= s_delays(g_delay-1);
 

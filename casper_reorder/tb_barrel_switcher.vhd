@@ -32,7 +32,7 @@ architecture rtl of tb_barrel_switcher is
   SIGNAL s_in, s_out, s_exp : t_slv_arr(
     0 to g_barrel_switch_inputs-1,
     g_barrel_switcher_division_bit_width-1 downto 0
-  );
+  ) := (OTHERS => (OTHERS => 'Z'));
   SIGNAL s_sync_in, s_sync_out : std_logic;
   SIGNAL s_sel : std_logic_vector(ceil_log2(g_barrel_switch_inputs)-1 downto 0);
 
