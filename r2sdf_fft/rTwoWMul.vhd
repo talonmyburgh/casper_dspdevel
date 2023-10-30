@@ -29,7 +29,7 @@ entity rTwoWMul is
 		g_use_variant: STRING  := "4DSP";
 		g_round		 : t_rounding_mode := ROUND; -- even rounding by default
 		g_stage      : natural := 1;
-		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
+		g_lat        : natural := 4 + 1 -- 4 for mult, 1 for round
 	);
 	port(
 		clk       	 : in  std_logic;
@@ -58,16 +58,16 @@ architecture str of rTwoWMul is
 	-- the total latency from in_* to out_*.
 
 	-- DSP multiplier IP
-	constant c_dsp_mult_lat : natural := 3;
+	constant c_dsp_mult_lat : natural := 4;
 
 	-- Pipeline multiplier product rounding from c_prod_w via c_round_w to c_out_dat_w
 	constant c_round_lat : natural := sel_a_b(g_lat > c_dsp_mult_lat, 1, 0); -- allocate 1 pipeline for round
 	constant c_lat       : natural := g_lat - c_round_lat; -- allocate remaining pipeline to multiplier
 
 	constant c_mult_input_lat   : natural := sel_a_b(c_lat > 1, 1, 0); -- second priority use DSP pipeline input
-	constant c_mult_product_lat : natural := 0;
+	constant c_mult_product_lat : natural := 1;
 	constant c_mult_adder_lat   : natural := sel_a_b(c_lat > 2, 1, 0); -- third priority use DSP internal product-sum pipeline
-	constant c_mult_extra_lat   : natural := sel_a_b(c_lat > 3, c_lat - 3, 0); -- remaining extra pipelining in logic
+	constant c_mult_extra_lat   : natural := sel_a_b(c_lat > 4, c_lat - 4, 0); -- remaining extra pipelining in logic
 	constant c_mult_output_lat  : natural := sel_a_b(c_lat > 0, 1, 0) + c_mult_extra_lat; -- first priority use DSP pipeline output
 	constant c_mult_lat         : natural := c_mult_input_lat + c_mult_product_lat + c_mult_adder_lat + c_mult_output_lat;
 
