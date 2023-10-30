@@ -39,7 +39,7 @@ ENTITY tb_common_complex_mult IS
     g_out_dat_w        : NATURAL := 8;       -- g_in_dat_w*2 for multiply and +1 for adder
     g_conjugate_b      : BOOLEAN := FALSE;   -- When FALSE p = a * b, else p = a * conj(b)
     g_pipeline_input   : NATURAL := 1;
-    g_pipeline_product : NATURAL := 0;
+    g_pipeline_product : NATURAL := 1;
     g_pipeline_adder   : NATURAL := 1;
   	g_pipeline_output  : NATURAL := 1;
 		g_a_val_min        : INTEGER := 0;            -- -(2**(g_in_dat_w - 1)) if left as zero
