@@ -82,11 +82,12 @@ entity rTwoSDF is
 		-- pipeline generics
 		g_stage_lat     : natural := 1; --! stage latencies
 		g_weight_lat    : natural := 1;
-		g_mult_lat      : natural := 4;
+		g_mult_lat      : natural := 5;
 		g_bf_lat        : natural := 1;
 		g_bf_use_zdly   : natural := 1;
 		g_bf_in_a_zdly  : natural := 0;
 		g_bf_out_d_zdly : natural := 0;
+		g_bf_dsp_dly    : natural := 1;
 		--generics for rTwoOrder
 		g_ram_primitive : STRING  := "auto"
 	);
@@ -134,7 +135,7 @@ architecture str of rTwoSDF is
 	signal raw_out_re   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_im   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_val  : std_logic;
-	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly);
+	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly,g_bf_dsp_dly);
 	signal raw_out_rst	: std_logic;
 begin
 	-- Inputs

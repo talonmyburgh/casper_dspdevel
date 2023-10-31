@@ -58,7 +58,7 @@ architecture str of rTwoBFStage is
 
 	constant c_use_dsp_dly : boolean := c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal;
 	constant c_dsp_dly : natural := sel_a_b(c_use_dsp_dly, g_dsp_dly, 0);
-	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly + c_dsp_dly;
+	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly ;
 	constant c_feedback_zdly : natural := pow2(g_stage - 1);
 
 	-- The BF adds, subtracts or passes the data on, so typically c_out_dat_w = c_in_dat_w + 1
@@ -82,6 +82,7 @@ architecture str of rTwoBFStage is
 	signal stage_im          : std_logic_vector(out_im'range);
 	signal stage_sel         : std_logic;
 	signal stage_val         : std_logic;
+	signal in_val_d1		 : std_logic;
 
 	signal ovflw_det		 : std_logic_vector(1 DOWNTO 0);
 
@@ -183,9 +184,9 @@ begin
             out_bit => bf_val_dly
 		);
 
+
 	-- after the z^(-1) stage delay the bf_val_dly goes high and remains high and acts as an enable for in_val to out_val
 	stage_val <= in_val and bf_val_dly;
-
 	------------------------------------------------------------------------------
 	-- stage output pipelining
 	------------------------------------------------------------------------------
@@ -209,7 +210,7 @@ begin
 
 	u_out_sel : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_bf_lat
+			g_pipeline => g_bf_lat+g_dsp_dly
 		)
 		port map(
 			clk     => clk,
@@ -219,7 +220,7 @@ begin
 
 	u_out_val : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_bf_lat
+			g_pipeline => g_bf_lat+g_dsp_dly
 		)
 		port map(
 			clk     => clk,
