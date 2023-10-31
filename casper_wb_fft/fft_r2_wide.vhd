@@ -87,7 +87,7 @@ entity fft_r2_wide is
     port(
         clken      : in  std_logic;     --! Clock enable
         clk        : in  std_logic;     --! Clock
-        rst        : in  std_logic := '0'; --! Reset
+        in_sync    : in  std_logic := '0'; --! Input sync
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
         in_re_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
         in_im_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
@@ -95,6 +95,7 @@ entity fft_r2_wide is
         out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
         out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Overflow register
+        out_sync   : out std_logic; --! Output sync
         out_val    : out std_logic      --! Out data valid
     );
 end entity fft_r2_wide;
@@ -185,10 +186,12 @@ architecture rtl of fft_r2_wide is
     signal fft_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
+    signal fft_out_sync    : std_logic;
 
     signal sep_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_val    : std_logic;
+    signal sep_out_sync    : std_logic;
 
     signal par_stg_fft_re_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
     signal par_stg_fft_im_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
@@ -196,6 +199,9 @@ architecture rtl of fft_r2_wide is
     signal par_stg_fft_im_out : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
 
     signal int_val : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_sync : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_val_d : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0);
 
 begin
 
@@ -216,7 +222,7 @@ begin
             port map(
                 clken    => clken,
                 clk      => clk,
-                rst      => rst,
+                in_sync  => in_sync,
                 shiftreg => shiftreg,   -- full length shiftreg here since stages = log2(pts)
                 in_re    => in_re_arr(0)(g_fft.in_dat_w - 1 downto 0),
                 in_im    => in_im_arr(0)(g_fft.in_dat_w - 1 downto 0),
@@ -224,6 +230,7 @@ begin
                 out_re   => fft_pipe_out_re,
                 out_im   => fft_pipe_out_im,
                 ovflw    => ovflw,
+                out_sync => out_sync,
                 out_val  => out_val
             );
 
@@ -255,7 +262,7 @@ begin
             )
             port map(
                 clk        => clk,
-                rst        => rst,
+                in_sync    => in_sync,
                 in_re_arr  => par_stg_fft_re_in,
                 in_im_arr  => par_stg_fft_im_in,
                 shiftreg   => shiftreg,
@@ -263,6 +270,7 @@ begin
                 out_re_arr => par_stg_fft_re_out,
                 out_im_arr => par_stg_fft_im_out,
                 ovflw      => ovflw,
+                out_sync   => out_sync,
                 out_val    => out_val
             );
     end generate;
@@ -299,7 +307,7 @@ begin
                 port map(
                     clken    => clken,
                     clk      => clk,
-                    rst      => rst,
+                    in_sync  => in_sync,
                     shiftreg => shiftreg(c_nof_stages - 1 DOWNTO c_nof_stages_par), -- Only c_nof_stages_pipe of shiftreg
                     in_re    => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
                     in_im    => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
@@ -307,6 +315,7 @@ begin
                     out_re   => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
                     out_im   => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
                     ovflw    => fft_pipe_ovflw_arr(I),
+                    out_sync => int_sync(I),
                     out_val  => int_val(I)
                 );
         end generate;
@@ -325,9 +334,15 @@ begin
 
         -- Create input for parallel FFT
         gen_inputs_for_par : for I in g_fft.wb_factor - 1 downto 0 generate
-        
-            in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
-            in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
+            reg_pipe_par : process (clk)
+            begin
+                if rising_edge(clk) then
+                    int_sync_d(I)        <= int_sync(I);
+                    int_val_d(I)         <= int_val(I);
+                    in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                    in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                end if;
+            end process; 
         end generate;
 
         -- The g_fft.wb_factor outputs of the pipelined fft's are offered
@@ -344,14 +359,15 @@ begin
             )
             port map(
                 clk        => clk,
-                rst        => rst,
                 in_re_arr  => in_fft_par_re_arr,
                 in_im_arr  => in_fft_par_im_arr,
                 shiftreg   => shiftreg(c_nof_stages_par - 1 DOWNTO 0), -- Only c_stage_par of shiftreg
-                in_val     => int_val(0),
+                in_val     => int_val_d(0),
+                in_sync    => int_sync_d(0),
                 out_re_arr => fft_out_re_arr,
                 out_im_arr => fft_out_im_arr,
                 ovflw      => ovflw(c_nof_stages_par - 1 DOWNTO 0),
+                out_sync   => fft_out_sync,
                 out_val    => fft_out_val
             );
 
@@ -370,7 +386,7 @@ begin
                 port map(
                     clken      => clken,
                     clk        => clk,
-                    rst        => rst,
+                    rst        => fft_out_sync,
                     in_re_arr  => fft_out_re_arr,
                     in_im_arr  => fft_out_im_arr,
                     in_val     => fft_out_val,
@@ -385,6 +401,7 @@ begin
             sep_out_re_arr <= fft_out_re_arr;
             sep_out_im_arr <= fft_out_im_arr;
             sep_out_val    <= fft_out_val;
+            sep_out_sync    <= fft_out_sync;
         end generate;
 
         ---------------------------------------------------------------
@@ -441,13 +458,28 @@ begin
                 g_out_invert  => FALSE
             )
             port map(
-                rst     => rst,
+                rst     => '0',
                 clk     => clk,
                 clken   => clken,
                 in_clr  => '0',
                 in_en   => '1',
                 in_dat  => sep_out_val,
                 out_dat => out_val
+            );
+        u_out_sync : entity common_components_lib.common_pipeline_sl
+            generic map(
+                g_pipeline    => c_pipeline_remove_lsb,
+                g_reset_value => 0,
+                g_out_invert  => FALSE
+            )
+            port map(
+                rst     => '0',
+                clk     => clk,
+                clken   => clken,
+                in_clr  => '0',
+                in_en   => '1',
+                in_dat  => sep_out_sync,
+                out_dat => out_sync
             );
 
     end generate;

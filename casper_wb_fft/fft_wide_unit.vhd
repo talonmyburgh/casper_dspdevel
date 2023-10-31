@@ -52,7 +52,7 @@ entity fft_wide_unit is
     );
     port(
         clken            : in  std_logic := '1'; --! Clock enable
-        rst              : in  std_logic := '0'; --! Reset
+        -- rst              : in  std_logic := '0'; --! Reset
         clk              : in  std_logic := '1'; --! Clock
         shiftreg         : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
         in_fft_sosi_arr  : in  t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0); --! Input data array (wb_factor wide)
@@ -70,8 +70,10 @@ architecture str of fft_wide_unit is
     signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
 
-    signal fft_out_fft_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor - 1 downto 0);
+    -- signal fft_out_fft_sosi_arr : t_fft_sosi_arr_out(g_fft.wb_factor - 1 downto 0);
     signal fft_shiftreg         : std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0);
+
+    signal fft_out_sync : std_logic;
 
     type reg_type is record
         in_fft_sosi_arr : t_fft_sosi_arr_in(g_fft.wb_factor - 1 downto 0);
@@ -133,7 +135,7 @@ begin
         port map(
             clken      => clken,
             clk        => clk,
-            rst        => rst,
+            in_sync    =>  r.in_fft_sosi_arr(0).sync,
             shiftreg   => fft_shiftreg,
             in_re_arr  => fft_in_re_arr,
             in_im_arr  => fft_in_im_arr,
@@ -141,31 +143,46 @@ begin
             out_re_arr => fft_out_re_arr,
             out_im_arr => fft_out_im_arr,
             ovflw      => ovflw,
+            out_sync   => fft_out_sync,
             out_val    => fft_out_val
         );
 
     ---------------------------------------------------------------
     -- FFT CONTROL UNIT
     ---------------------------------------------------------------
+    ---------------------------------------------------------------
+    -- FFT CONTROL UNIT
+    ---------------------------------------------------------------
     -- The fft control unit composes the output array in the dp-
-    -- streaming format. 
-    u_fft_control : entity work.fft_wide_unit_control
-        generic map(
-            g_fft => g_fft
-        )
-        port map(
-            rst          => rst,
-            clk          => clk,
-            in_re_arr    => fft_out_re_arr,
-            in_im_arr    => fft_out_im_arr,
-            in_val       => fft_out_val,
-            ctrl_sosi    => r.in_fft_sosi_arr(0),
-            out_sosi_arr => fft_out_fft_sosi_arr
-        );
+    -- streaming format.
+    -- wide_control : if g_wide_control generate
+    --     u_fft_control : entity work.fft_wide_unit_control
+    --         generic map(
+    --             g_fft => g_fft
+    --         )
+    --         port map(
+    --             rst          => rst,
+    --             clk          => clk,
+    --             in_re_arr    => fft_out_re_arr,
+    --             in_im_arr    => fft_out_im_arr,
+    --             in_val       => fft_out_val,
+    --             ctrl_sosi    => r.in_fft_sosi_arr(0),
+    --             out_sosi_arr => fft_out_fft_sosi_arr
+    --         );
 
-    -- Connect to the outside world 
-    gen_output : for I in 0 to g_fft.wb_factor - 1 generate
-        out_fft_sosi_arr(I) <= fft_out_fft_sosi_arr(I);
+    --     -- Connect to the outside world 
+    --     gen_output : for I in 0 to g_fft.wb_factor - 1 generate
+    --         out_fft_sosi_arr(I) <= fft_out_fft_sosi_arr(I);
+    --     end generate;
+    -- end generate;
+
+    -- no_control : if g_wide_control = FALSE generate
+    u_map_valid_sync_to_sosi : for I in 0 to g_fft.wb_factor - 1 generate
+        out_fft_sosi_arr(I).re    <= fft_out_re_arr(I)(g_fft.out_dat_w - 1 DOWNTO 0);
+        out_fft_sosi_arr(I).im    <= fft_out_im_arr(I)(g_fft.out_dat_w - 1 DOWNTO 0);
+        out_fft_sosi_arr(I).valid <= fft_out_val;
+        out_fft_sosi_arr(I).sync  <= fft_out_sync;
     end generate;
+    -- end generate;
 
 end str;
