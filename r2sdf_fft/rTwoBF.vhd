@@ -205,7 +205,7 @@ begin
 				ADD_SUB  => '1',        -- 1-bit add/sub input, high selects add, low selects subtract
 				B        => in_b,       -- Input B bus, width defined by WIDTH generic
 				CARRYIN  => '0',        -- 1-bit carry-in input
-				CE       => '1',        -- 1-bit clock enable input
+				CE       => in_val,        -- 1-bit clock enable input
 				CLK      => clk,        -- 1-bit clock input
 				RST      => '0'         -- 1-bit active high synchronous reset
 			);
@@ -221,7 +221,7 @@ begin
 				ADD_SUB  => '0',        -- 1-bit add/sub input, high selects add, low selects subtract
 				B        => in_b,       -- Input B bus, width defined by WIDTH generic
 				CARRYIN  => '0',        -- 1-bit carry-in input
-				CE       => '1',        -- 1-bit clock enable input
+				CE       => in_val,        -- 1-bit clock enable input
 				CLK      => clk,        -- 1-bit clock input
 				RST      => '0'         -- 1-bit active high synchronous reset
 			);

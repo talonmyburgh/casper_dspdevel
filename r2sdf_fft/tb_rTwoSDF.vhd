@@ -334,7 +334,7 @@ begin
   end process;
   
   -- Show read data in Wave Window for debug purposes
-  gold_index <= gold_index + 1 when rising_edge(clk) and out_val='1';
+  gold_index <= gold_index + 1 when rising_edge(clk) and out_val='1' and gold_index <= gold_index_max;
   flip_index <= (gold_index / g_nof_points) * g_nof_points + flip(gold_index mod g_nof_points, c_nof_points_w);
   gold_sync  <= gold_file_sync(gold_index);
   gold_re    <= gold_file_data(gold_index,1) when g_use_reorder=true else gold_file_data(flip_index,1);

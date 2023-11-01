@@ -19,6 +19,8 @@
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
   <Mappings Location="casper_sim_tools" Library="casper_sim_tools_lib"/>
   <Mappings Location="casper_statistics" Library="casper_statistics_lib"/>
+  <Mappings Location="cern_general_core" Library="cern_general_cores"/>
+  <Mappings Location="cern_general_cores" Library="cern_general_cores"/>
   <Mappings Location="common_components" Library="common_components_lib"/>
   <Mappings Location="common_pkg" Library="common_pkg_lib"/>
   <Mappings Location="casper_dp_components" Library="dp_components_lib"/>

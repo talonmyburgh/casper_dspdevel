@@ -22,8 +22,28 @@ xpm_source_file_sdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm
 xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd"))
 xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd"))
 xpm_source_file_tdpram = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd"))
-xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
-xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
+#xpm_source_file_fifobase = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_fifo_base.vhd"))
+#xpm_source_file_regbit = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_fifo_reg_bit.vhd"))
+#xpm_source_file_regvect = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_fifo_reg_vec.vhd"))
+#xpm_source_file_cnt_updn = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_counter_updn.vhd"))
+#xpm_source_file_fiforst = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_fifo_rst.vhd"))
+#xpm_source_file_fifosync = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_fifo_sync.vhd"))
+#xpm_source_file_cdcgray = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_cdc/hdl/xpm_cdc_gray.vhd"))
+#xpm_source_file_sreset = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_cdc/hdl/xpm_cdc_sync_rst.vhd"))
+#xpm_source_file_areset = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_cdc/hdl/xpm_cdc_async_rst.vhd"))
+#xpm_source_file_regpipebit = lib_xpm.add_source_file(join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_fifo/hdl/xpm_reg_pipe_bit.vhd"))
+
+#xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
+#xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_fifobase)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_regbit)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_regvect)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_cnt_updn)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_fiforst)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_cdcgray)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_sreset)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_areset)
+#xpm_source_file_fifosync.add_dependency_on(xpm_source_file_regpipebit)
 
 # Altera_mf library
 lib_altera_mf = vu.add_library("altera_mf")
@@ -40,6 +60,13 @@ ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=
 ip_stratixiv_complex_mult_rtl = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult_rtl.vhd"))
 ip_stratixiv_complex_mult = ip_stratixiv_mult_lib.add_source_file(join(script_dir, "../ip_stratixiv/mult/ip_stratixiv_complex_mult.vhd"))
 ip_stratixiv_complex_mult.add_dependency_on(altera_mf_source_file)
+
+## Statrix FIFO Library
+#ip_stratixiv_fifo_lib = vu.add_library("ip_stratixiv_fifo_lib")
+#ip_stratixiv_fifo_lib.add_source_files(join(script_dir, "../ip_stratixiv/fifo/ip_stratixiv_fifo_sc.vhd"))
+## XPM FIFO Library
+#ip_xpm_fifo_lib = vu.add_library("ip_xpm_fifo_lib")
+#ip_xpm_fifo_lib.add_source_files(join(script_dir, "../ip_xpm/fifo/ip_xilinx_fifo_sc.vhd"))
 
 # XPM RAM library
 ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
@@ -65,7 +92,8 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_bit_delay.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
 common_components_lib.add_source_files(join(script_dir, "../common_components/common_delay.vhd"))
-
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_async.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_areset.vhd"))
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib")
 # the latest version (4.0.0) of GHDL doesn't like the hacked up vhdl 93 fixed library so we'll use the real one but compile if for common_pkg
@@ -129,6 +157,19 @@ casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_ram_r_w.vh
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_r_w.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_rw_rw.vhd"))
 casper_ram_lib.add_source_file(join(script_dir, "../casper_ram/common_paged_ram_crw_crw.vhd"))
+
+cgc = vu.add_library("cern_general_cores")
+
+# Add files from cern general cores
+cgc.add_source_files(join(script_dir, "../cern_general_cores/*.vhd"),allow_empty=True)
+
+# CASPER FIFO Library
+casper_fifo_lib = vu.add_library("casper_fifo_lib")
+#casper_fifo_lib.add_source_file(join(script_dir, "../casper_fifo/common_fifo_sc.vhd"))
+#casper_fifo_lib.add_source_file(join(script_dir, "../casper_fifo/tech_fifo_component_pkg.vhd"))
+casper_fifo_lib.add_source_file(join(script_dir, "../casper_fifo/siriushdl_fifo_sync_1_0.vhd"))
+
+
 
 # RTWOSDF Library
 # Pathline for twid coefficients
