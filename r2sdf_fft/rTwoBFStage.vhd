@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 
 library ieee, common_pkg_lib, common_components_lib, technology_lib;
 use IEEE.std_logic_1164.all;
@@ -32,8 +36,7 @@ entity rTwoBFStage is
 		-- generics for rTwoBF
 		g_bf_use_zdly   : natural := 1; --! >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
 		g_bf_in_a_zdly  : natural := 0; --! g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
-		g_bf_out_d_zdly : natural := 0; --! The stage z^(-1) delays are ..., 4, 2, 1.
-		g_dsp_dly		: natural := 1	--! Butterfly units delay - expect timing failure for dsp_dly < 1 (ignored for non Xilinx designs)
+		g_bf_out_d_zdly : natural := 0 --! The stage z^(-1) delays are ..., 4, 2, 1.
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
@@ -56,8 +59,6 @@ architecture str of rTwoBFStage is
 	constant c_bf_in_a_zdly  : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_in_a_zdly, 0);
 	constant c_bf_out_b_zdly : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_out_d_zdly, 0);
 
-	constant c_use_dsp_dly : boolean := c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal;
-	constant c_dsp_dly : natural := sel_a_b(c_use_dsp_dly, g_dsp_dly, 0);
 	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly ;
 	constant c_feedback_zdly : natural := pow2(g_stage - 1);
 
@@ -82,7 +83,6 @@ architecture str of rTwoBFStage is
 	signal stage_im          : std_logic_vector(out_im'range);
 	signal stage_sel         : std_logic;
 	signal stage_val         : std_logic;
-	signal in_val_d1		 : std_logic;
 
 	signal ovflw_det		 : std_logic_vector(1 DOWNTO 0);
 
@@ -95,8 +95,7 @@ begin
 	u_bf_re : entity work.rTwoBF
 		generic map(
 			g_in_a_zdly  => c_bf_in_a_zdly,
-			g_out_d_zdly => c_bf_out_b_zdly,
-			g_dsp_dly    => c_dsp_dly
+			g_out_d_zdly => c_bf_out_b_zdly
 		)
 		port map(
 			clk    => clk,
@@ -112,8 +111,7 @@ begin
 	u_bf_im : entity work.rTwoBF
 		generic map(
 			g_in_a_zdly  => c_bf_in_a_zdly,
-			g_out_d_zdly => c_bf_out_b_zdly,
-			g_dsp_dly    => c_dsp_dly
+			g_out_d_zdly => c_bf_out_b_zdly
 		)
 		port map(
 			clk    => clk,
@@ -210,7 +208,7 @@ begin
 
 	u_out_sel : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_bf_lat+g_dsp_dly
+			g_pipeline => g_bf_lat
 		)
 		port map(
 			clk     => clk,
@@ -220,7 +218,7 @@ begin
 
 	u_out_val : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_bf_lat+g_dsp_dly
+			g_pipeline => g_bf_lat
 		)
 		port map(
 			clk     => clk,

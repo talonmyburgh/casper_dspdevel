@@ -24,14 +24,9 @@
 -- myburgh.talon@gmail.com
 -- https://github.com/talonmyburgh | https://github.com/MydonSolutions
 ---------------------------------------------------------------------------------
-library ieee, common_pkg_lib, common_components_lib, technology_lib;
+library ieee, common_pkg_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
-USE technology_lib.technology_select_pkg.ALL;
-Library UNISIM;
-use UNISIM.vcomponents.all;
-Library UNIMACRO;
-use UNIMACRO.vcomponents.all;
 
 --! Purpose : Butterfly
 --! Description :
@@ -81,8 +76,7 @@ use UNIMACRO.vcomponents.all;
 entity rTwoBF is
 	generic(
 		g_in_a_zdly  : natural := 0;    --! default 0, 1
-		g_out_d_zdly : natural := 0;     --! default 0, optionally use 1
-		g_dsp_dly    : natural := 1
+		g_out_d_zdly : natural := 0     --! default 0, optionally use 1
 	);
 	port(
 		clk    : in  std_logic := '0';  --! Input clock source
@@ -90,7 +84,7 @@ entity rTwoBF is
 		in_b   : in  std_logic_vector;  --! Input signal B
 		in_sel : in  std_logic;         --! Select input
 		in_val : in  std_logic := '0';  --! Select input for delay
-		ovflw  : out std_logic;         --! Overflow flag for addition/subtraction
+		ovflw  : out std_logic;			--! Overflow flag for addition/subtraction
 		out_c  : out std_logic_vector;  --! Output signal c
 		out_d  : out std_logic_vector   --! Output signal d
 	);
@@ -98,21 +92,22 @@ end;
 
 architecture rtl of rTwoBF is
 
-	signal in_a_dly            : std_logic_vector(in_a'range);
-	signal in_b_dly            : std_logic_vector(in_b'range);
-	signal in_a_dly_dly        : std_logic_vector(in_a'range);
-	signal out_c_buf           : std_logic_vector(out_c'range);
-	signal out_d_ely           : std_logic_vector(out_d'range);
-	signal out_d_ely_buf       : std_logic_vector(out_d'range);
-	signal s_addition_ovflw    : std_logic_vector(0 downto 0) := "0";
-	signal s_subtraction_ovflw : std_logic_vector(0 downto 0) := "0";
-	signal ovflw_imm           : std_logic_vector(0 downto 0);
-	signal ovflw_dly           : std_logic_vector(0 downto 0);
+	--summation svec must be one larger than the largest svec
+	constant c_sum_bit_width : natural := sel_a_b(in_a'length > in_b'length, in_a'length, in_b'length) + 1;
+
+	signal in_a_dly  : std_logic_vector(in_a'range) := (others=>'0');
+	signal out_c_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
+	signal out_d_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
+	signal out_d_ely : std_logic_vector(out_d'range) := (others=>'0');
+	signal ovflw_add  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_sub  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_imm  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_dly  : std_logic_vector(0 downto 0) := "0";
 
 begin
 
 	-- Optionally some z-1 delay gets move here into this BF stage, default 0
-	u_in_a_dly : entity common_components_lib.common_delay
+	u_in_dly : entity common_components_lib.common_delay
 		generic map(
 			g_dat_w => in_a'length,
 			g_depth => g_in_a_zdly
@@ -149,113 +144,32 @@ begin
 		);
 
 	------------------------------------------------------------------------------------
-	-- PRE-EMPT overflow in addition and subtraction
+	-- DETECT overflow in addition and subtraction
 	------------------------------------------------------------------------------------
-	xilinx_dsp48 : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal) GENERATE
-
-		u_in_b_dly : entity common_components_lib.common_delay
-		generic map(
-			g_dat_w => in_b'length,
-			g_depth => g_dsp_dly
-		)
-		port map(
-			clk     => clk,
-			in_val  => in_val,
-			in_dat  => in_b,
-			out_dat => in_b_dly
-		);
 	
-	u_in_a_dly_dly : entity common_components_lib.common_delay
-		generic map(
-			g_dat_w => in_a'length,
-			g_depth => g_dsp_dly
-		)
-		port map(
-			clk     => clk,
-			in_val  => in_val,
-			in_dat  => in_a_dly,
-			out_dat => in_a_dly_dly
-		);
-
-		reg_overflows : process(clk)
-		begin
-			if rising_edge(clk) then
-				if in_sel = '1' then
-					ovflw_imm(0) <= (s_addition_ovflw(0) or s_subtraction_ovflw(0));
-				else
-					ovflw_imm(0) <= '0';
-				end if;
-				if in_val = '1' then
-					ovflw <= ovflw_dly(0);
-				else
-					ovflw <= ovflw_imm(0);
-				end if;
+	p_det_ovflw : process(clk)
+	begin
+		if rising_edge(clk) then
+			if in_a_dly(in_a_dly'length-1) /= out_c_buf(c_sum_bit_width-1) and in_sel='1' then
+				ovflw_add(0) <= '1';
+			else
+				ovflw_add(0) <= '0';
 			end if;
-		end process;
-
-		ADD_MACRO_inst : ADDSUB_MACRO
-			generic map(
-				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => g_dsp_dly,           -- Desired clock cycle latency, 0-2
-				WIDTH   => out_c'length) -- Input / Output bus width, 1-48
-			port map(
-				CARRYOUT => s_subtraction_ovflw(0), -- 1-bit carry-out output signal
-				RESULT   => out_c_buf,  -- Add/sub result output, width defined by WIDTH generic
-				A        => in_a_dly,   -- Input A bus, width defined by WIDTH generic
-				ADD_SUB  => '1',        -- 1-bit add/sub input, high selects add, low selects subtract
-				B        => in_b,       -- Input B bus, width defined by WIDTH generic
-				CARRYIN  => '0',        -- 1-bit carry-in input
-				CE       => '1',        -- 1-bit clock enable input
-				CLK      => clk,        -- 1-bit clock input
-				RST      => '0'         -- 1-bit active high synchronous reset
-			);
-		SUB_MACRO_inst : ADDSUB_MACRO
-			generic map(
-				DEVICE  => "7SERIES",   -- Target Device: "VIRTEX5", "7SERIES", "SPARTAN6" 
-				LATENCY => g_dsp_dly,           -- Desired clock cycle latency, 0-2
-				WIDTH   => out_d'length) -- Input / Output bus width, 1-48
-			port map(
-				CARRYOUT => s_addition_ovflw(0), -- 1-bit carry-out output signal
-				RESULT   => out_d_ely_buf, -- Add/sub result output, width defined by WIDTH generic
-				A        => in_a_dly,   -- Input A bus, width defined by WIDTH generic
-				ADD_SUB  => '0',        -- 1-bit add/sub input, high selects add, low selects subtract
-				B        => in_b,       -- Input B bus, width defined by WIDTH generic
-				CARRYIN  => '0',        -- 1-bit carry-in input
-				CE       => '1',        -- 1-bit clock enable input
-				CLK      => clk,        -- 1-bit clock input
-				RST      => '0'         -- 1-bit active high synchronous reset
-			);
-			
-			
-		    out_c     <= out_c_buf when in_sel = '1' else in_a_dly_dly;
-	        out_d_ely <= out_d_ely_buf when in_sel = '1' else in_b_dly;
-	end generate;
-
-	rtl_inst : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE
-		reg_overflows : process(clk)
-		begin
-			if rising_edge(clk) then
-				if in_sel = '1' then
-				    out_c_buf <= ADD_SVEC(in_a_dly, in_b, out_c'length);
-				    out_d_ely <= SUB_SVEC(in_a_dly, in_b, out_d'length);
-					s_addition_ovflw(0)    <= S_ADD_OVFLW_DET(in_a_dly, in_b, out_c_buf);
-					s_subtraction_ovflw(0) <= S_SUB_OVFLW_DET(in_a_dly, in_b, out_d_ely);
-					ovflw_imm(0)           <= (s_addition_ovflw(0) or s_subtraction_ovflw(0));
-				else
-				    out_c_buf <= in_a_dly;
-				    out_d_ely <= in_b;
-					s_addition_ovflw(0)    <= '0';
-					s_subtraction_ovflw(0) <= '0';
-					ovflw_imm(0)           <= '0';
-				end if;
-				if in_val = '1' then
-					ovflw <= ovflw_dly(0);
-				else
-					ovflw <= ovflw_imm(0);
-				end if;
+			if in_a_dly(in_a_dly'length-1) /= out_d_buf(c_sum_bit_width-1) and in_sel='1' then
+				ovflw_sub(0) <= '1';
+			else
+				ovflw_sub(0) <= '0';
 			end if;
-		end process;
-		out_c <= out_c_buf;
-	END GENERATE;
+			ovflw_imm(0) <= ovflw_add(0) or ovflw_sub(0);
+		end if;
+	end process;
+
+	ovflw <= ovflw_dly(0) when in_val = '1' else ovflw_imm(0);
+
+	-- BF function: add, subtract or pass the data on dependent on in_sel
+	out_c_buf <= ADD_SVEC(in_a_dly, in_b, c_sum_bit_width) when in_sel = '1' else RESIZE_SVEC(in_a_dly, c_sum_bit_width);
+	out_c 		<= RESIZE_SVEC(out_c_buf, out_c'length);
+	out_d_buf <= SUB_SVEC(in_a_dly, in_b, c_sum_bit_width) when in_sel = '1' else RESIZE_SVEC(in_b, c_sum_bit_width);
+	out_d_ely <= RESIZE_SVEC(out_d_buf, out_d'length);	
 
 end rtl;

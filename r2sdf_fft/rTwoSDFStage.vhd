@@ -145,8 +145,7 @@ begin
 			g_bf_lat        => g_pipeline.bf_lat,
 			g_bf_use_zdly   => g_pipeline.bf_use_zdly,
 			g_bf_in_a_zdly  => g_pipeline.bf_in_a_zdly,
-			g_bf_out_d_zdly => g_pipeline.bf_out_d_zdly,
-			g_dsp_dly		=> g_pipeline.bf_dsp_dly
+			g_bf_out_d_zdly => g_pipeline.bf_out_d_zdly
 		)
 		port map(
             clk     => clk,
