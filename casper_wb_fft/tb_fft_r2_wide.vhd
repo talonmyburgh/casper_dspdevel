@@ -431,15 +431,15 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
-  out_cnt <= out_cnt + 1 when rising_edge(sclk) and dat_val='1' else out_cnt;
+  out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c='1' else out_cnt;
     
   proc_fft_out_control(g_fft.wb_factor, g_fft.nof_points, c_nof_channels, g_fft.use_reorder, g_fft.use_fft_shift, g_fft.use_separate,
-                       out_cnt, dat_val, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
+                       out_cnt, out_val_c, out_val_a, out_val_b, out_channel, out_bin, out_bin_cnt);
   
   -- clk diff to avoid combinatorial glitches when selecting the data with out_val_a,b,c
   reg_out_val_a   <= out_val_a   when rising_edge(sclk);
   reg_out_val_b   <= out_val_b   when rising_edge(sclk);
-  reg_out_val_c   <= dat_val   when rising_edge(sclk);
+  reg_out_val_c   <= out_val_c   when rising_edge(sclk);
   reg_out_channel <= out_channel when rising_edge(sclk);
   reg_out_cnt     <= out_cnt     when rising_edge(sclk);
   reg_out_bin_cnt <= out_bin_cnt when rising_edge(sclk);
@@ -449,15 +449,15 @@ begin
   out_im_a_scope <= out_im_scope when rising_edge(sclk) and out_val_a='1';
   out_re_b_scope <= out_re_scope when rising_edge(sclk) and out_val_b='1';
   out_im_b_scope <= out_im_scope when rising_edge(sclk) and out_val_b='1';
-  out_re_c_scope <= out_re_scope when rising_edge(sclk) and dat_val='1';
-  out_im_c_scope <= out_im_scope when rising_edge(sclk) and dat_val='1';
+  out_re_c_scope <= out_re_scope when rising_edge(sclk) and out_val_c='1';
+  out_im_c_scope <= out_im_scope when rising_edge(sclk) and out_val_c='1';
 
   exp_re_a_scope <= expected_data_a_re_arr(out_bin_cnt) when rising_edge(sclk) and out_val_a='1';
   exp_im_a_scope <= expected_data_a_im_arr(out_bin_cnt) when rising_edge(sclk) and out_val_a='1';
   exp_re_b_scope <= expected_data_b_re_arr(out_bin_cnt) when rising_edge(sclk) and out_val_b='1';
   exp_im_b_scope <= expected_data_b_im_arr(out_bin_cnt) when rising_edge(sclk) and out_val_b='1';  
-  exp_re_c_scope <= expected_data_c_re_arr(out_bin_cnt) when rising_edge(sclk) and dat_val='1';
-  exp_im_c_scope <= expected_data_c_im_arr(out_bin_cnt) when rising_edge(sclk) and dat_val='1';
+  exp_re_c_scope <= expected_data_c_re_arr(out_bin_cnt) when rising_edge(sclk) and out_val_c='1';
+  exp_im_c_scope <= expected_data_c_im_arr(out_bin_cnt) when rising_edge(sclk) and out_val_c='1';
 
   diff_re_a_scope <= exp_re_a_scope - out_re_a_scope;
   diff_im_a_scope <= exp_im_a_scope - out_im_a_scope;
@@ -469,7 +469,7 @@ begin
   ---------------------------------------------------------------
   -- VERIFY OUTPUT DATA
   ---------------------------------------------------------------
-  verify_data : process(rst,clk,out_val_a,out_val_b,dat_val)
+  verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
     VARIABLE v_test_pass : BOOLEAN := TRUE;
     VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
@@ -613,7 +613,7 @@ begin
 
     -- Streaming input data
     in_data   => out_re_data,
-    in_val    => out_val,
+    in_val    => dat_val,
 
     -- Scope output samples
     out_dat   => OPEN,
