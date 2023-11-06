@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_tb_pfb_fir_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="common_lfsr_sequences_pkg" />
+            <top_module name="common_pkg" />
+            <top_module name="common_ram_pkg" />
+            <top_module name="pfb_fir_pkg" />
+            <top_module name="tb_common_pkg" />
+            <top_module name="tb_tb_pfb_fir" />
+            <top_module name="tech_memory_component_pkg" />
+            <top_module name="technology_select_pkg" />
+            <top_module name="vcomponents" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="7698549fs"></ZoomStartTime>
+      <ZoomEndTime time="7767250fs"></ZoomEndTime>
+      <Cursor1Time time="6762989fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="238"></NameColumnWidth>
+      <ValueColumnWidth column_width="116"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="33" />
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/sync_in">
+      <obj_property name="ElementShortName">sync_in</obj_property>
+      <obj_property name="ObjectShortName">sync_in</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/en">
+      <obj_property name="ElementShortName">en</obj_property>
+      <obj_property name="ObjectShortName">en</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/master_counter">
+      <obj_property name="ElementShortName">master_counter[5:0]</obj_property>
+      <obj_property name="ObjectShortName">master_counter[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/en_delay">
+      <obj_property name="ElementShortName">en_delay[5:0]</obj_property>
+      <obj_property name="ObjectShortName">en_delay[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/sync_in_delay">
+      <obj_property name="ElementShortName">sync_in_delay[5:0]</obj_property>
+      <obj_property name="ObjectShortName">sync_in_delay[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider222" type="divider">
+      <obj_property name="label">Coeffs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_rdaddr">
+      <obj_property name="ElementShortName">coef_rdaddr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">coef_rdaddr[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_rdaddr_inv">
+      <obj_property name="ElementShortName">coef_rdaddr_inv[5:0]</obj_property>
+      <obj_property name="ObjectShortName">coef_rdaddr_inv[5:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec">
+      <obj_property name="ElementShortName">coef_vec[7:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">coef_vec[7:0][15:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[7]">
+         <obj_property name="ElementShortName">[7][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[7][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[6]">
+         <obj_property name="ElementShortName">[6][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[6][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[5]">
+         <obj_property name="ElementShortName">[5][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[5][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[4]">
+         <obj_property name="ElementShortName">[4][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[4][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[3]">
+         <obj_property name="ElementShortName">[3][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[2]">
+         <obj_property name="ElementShortName">[2][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[1]">
+         <obj_property name="ElementShortName">[1][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/coef_vec[0]">
+         <obj_property name="ElementShortName">[0][15:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="divider221" type="divider">
+      <obj_property name="label">Taps</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/din">
+      <obj_property name="ElementShortName">din[0:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">din[0:0][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/din_delay">
+      <obj_property name="ElementShortName">din_delay[0:0][7:0]</obj_property>
+      <obj_property name="ObjectShortName">din_delay[0:0][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/taps_rdaddr">
+      <obj_property name="ElementShortName">taps_rdaddr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">taps_rdaddr[5:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/taps_wren">
+      <obj_property name="ElementShortName">taps_wren</obj_property>
+      <obj_property name="ObjectShortName">taps_wren</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/taps_wraddr">
+      <obj_property name="ElementShortName">taps_wraddr[5:0]</obj_property>
+      <obj_property name="ObjectShortName">taps_wraddr[5:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/taps_in_vec">
+      <obj_property name="ElementShortName">taps_in_vec[55:0]</obj_property>
+      <obj_property name="ObjectShortName">taps_in_vec[55:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/taps_out_vec">
+      <obj_property name="ElementShortName">taps_out_vec[55:0]</obj_property>
+      <obj_property name="ObjectShortName">taps_out_vec[55:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider421" type="divider">
+      <obj_property name="label">Multipliers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/mult_din">
+      <obj_property name="ElementShortName">mult_din[63:0]</obj_property>
+      <obj_property name="ObjectShortName">mult_din[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/mult_din_reordered">
+      <obj_property name="ElementShortName">mult_din_reordered[63:0]</obj_property>
+      <obj_property name="ObjectShortName">mult_din_reordered[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/mult_din_padding">
+      <obj_property name="ElementShortName">mult_din_padding[63:0]</obj_property>
+      <obj_property name="ObjectShortName">mult_din_padding[63:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/prod_vec">
+      <obj_property name="ElementShortName">prod_vec[183:0]</obj_property>
+      <obj_property name="ObjectShortName">prod_vec[183:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider666" type="divider">
+      <obj_property name="label">Adder trees</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/adder_out">
+      <obj_property name="ElementShortName">adder_out[22:0]</obj_property>
+      <obj_property name="ObjectShortName">adder_out[22:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider670" type="divider">
+      <obj_property name="label">Requantizers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/requant_out">
+      <obj_property name="ElementShortName">requant_out[22:0]</obj_property>
+      <obj_property name="ObjectShortName">requant_out[22:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <obj_property name="radix_realType">SIGNEDFIXEDPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">15</obj_property>
+      <obj_property name="radix_otherWidth">0</obj_property>
+   </wvobject>
+   <wvobject fp_name="divider671" type="divider">
+      <obj_property name="label">Output</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/dout">
+      <obj_property name="ElementShortName">dout[0:0][22:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[0:0][22:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/dout[0]">
+         <obj_property name="ElementShortName">[0][22:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][22:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/sync_out">
+      <obj_property name="ElementShortName">sync_out</obj_property>
+      <obj_property name="ObjectShortName">sync_out</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/dvalid">
+      <obj_property name="ElementShortName">dvalid</obj_property>
+      <obj_property name="ObjectShortName">dvalid</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/sync_cnt">
+      <obj_property name="ElementShortName">sync_cnt[8:0]</obj_property>
+      <obj_property name="ObjectShortName">sync_cnt[8:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/tb_tb_pfb_fir/u1_act_new/u_dut/c_sync_delay">
+      <obj_property name="ElementShortName">c_sync_delay</obj_property>
+      <obj_property name="ObjectShortName">c_sync_delay</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+</wave_config>
