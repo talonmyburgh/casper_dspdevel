@@ -45,6 +45,7 @@ end common_zip;
 architecture rtl of common_zip is
 
   type t_dat_arr is array (natural range <>) of std_logic_vector(out_dat'range);
+  constant c_t_dat_arr : t_dat_arr(g_nof_streams-1 downto 1) := (others=>(others=>'0'));
 
   type reg_type is record
     in_dat_arr  : t_dat_arr(g_nof_streams-1 downto 1);  -- Input register
@@ -52,8 +53,10 @@ architecture rtl of common_zip is
     out_dat     : std_logic_vector(g_dat_w-1 downto 0); -- Registered output value
     out_val     : std_logic;                            -- Registered data valid signal  
   end record;
+
+  constant c_reg_type : reg_type := (c_t_dat_arr,g_nof_streams,(others=>'0'),'0');
   
-  signal r, rin : reg_type; 
+  signal r, rin : reg_type := c_reg_type; 
    
 begin
   
