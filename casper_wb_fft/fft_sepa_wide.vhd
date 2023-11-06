@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: The fft_sepa_wide unit performs the separate function on the
 --          output of a complex wideband fft in order to extract the spectrum
@@ -52,13 +56,14 @@ entity fft_sepa_wide is
 	port(
 		clken      : in  std_logic;
 		clk        : in  std_logic;
-		rst        : in  std_logic := '0';
+		in_sync    : in  std_logic := '0'; -- input sync signal (acts as reset when combined with in_val)
 		-- The Generic in g_fft is controlling for input/output width, as long as the stage_dat_w is less than 44, this is a work around for bad VHDL2008 support in xsim
 		in_re_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0); 
 		in_im_arr  : in  t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
 		in_val     : in  std_logic := '1';
 		out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
 		out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.stage_dat_w-1 downto 0);
+		out_sync   : out std_logic; -- output sync, appears 1 clk cycle before valid data
 		out_val    : out std_logic
 	);
 
@@ -94,6 +99,13 @@ architecture rtl of fft_sepa_wide is
 	signal sep_out_dat_arr : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the outputs of the separation blocks
 	signal sep_out_val_vec : std_logic_vector(g_fft.wb_factor - 1 downto 0); -- Vector containing the datavalids from the separation blocks
 	signal out_dat_arr     : t_dat_arr(g_fft.wb_factor - 1 downto 0); -- Array that holds the ouput values, where real and imag are concatenated 
+	signal out_re_arr_t    : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+	signal out_im_arr_t    : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
+
+	signal rst : std_logic := '0';
+    signal start_of_frame : std_logic := '0';
+	signal reject_data : std_logic := '0';
+    signal out_val_p1 : std_logic := '0';
 
 	type state_type is (s_idle, s_read);
 	type reg_type is record
@@ -105,9 +117,14 @@ architecture rtl of fft_sepa_wide is
 		state      : state_type;        -- The state machine. 
 	end record;
 
-	signal r, rin : reg_type;
+	constant c_reg_type : reg_type := ('0', 0, 0, '0', '0', s_idle);
+
+	signal r, rin : reg_type := c_reg_type;
 
 begin
+
+	rst <= '1' when in_sync='1' and in_val='1' else '0';
+    start_of_frame  <= '0' when (unsigned(wr_adr)=0 or wr_adr'length=0) else '1';
 
 	---------------------------------------------------------------
 	-- DUAL PAGED RAMS
@@ -290,6 +307,7 @@ begin
 	---------------------------------------------------------------
 	-- OUTPUT STAGE: ALIGNMENT AND PIPELINE STAGES
 	---------------------------------------------------------------
+
 	gen_align_and_pipeline_stages : for I in g_fft.wb_factor / 2 - 1 downto 0 generate
 		u_output_pipeline_align : entity common_components_lib.common_pipeline
 			generic map(
@@ -323,13 +341,43 @@ begin
 		port map(
 			clk     => clk,
 			in_dat  => sep_out_val_vec(1),
-			out_dat => out_val
+			out_dat => out_val_p1
 		);
 
 	-- Split the concatenated array into a real and imaginary array for the output
 	gen_output_arrays : for I in g_fft.wb_factor - 1 downto 0 generate
-		out_re_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), 64); --g_fft.stage_dat_w);
-		out_im_arr(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), 64); --g_fft.stage_dat_w);
+		out_re_arr_t(I) <= RESIZE_SVEC(out_dat_arr(I)(g_fft.stage_dat_w - 1 downto 0), 64); --g_fft.stage_dat_w);
+		out_im_arr_t(I) <= RESIZE_SVEC(out_dat_arr(I)(c_nof_complex * g_fft.stage_dat_w - 1 downto g_fft.stage_dat_w), 64); --g_fft.stage_dat_w);
 	end generate;
+
+	final_reg : process (clk)
+	begin
+		if rising_edge(clk) then
+			if rst='1' then
+				out_val 			<= '1';
+				out_sync			<= '1';
+				reject_data		    <= '1';
+                out_re_arr          <= (others=>(others=>'0'));
+                out_im_arr          <= (others=>(others=>'0'));
+			else
+				if reject_data='1' then
+					if start_of_frame='1' and out_val_p1='1' then
+						out_val			<= out_val_p1;
+						out_sync		<= '0';
+						reject_data	    <= '0';
+                        out_re_arr      <= out_re_arr_t;
+                        out_im_arr      <= out_im_arr_t;
+					end if;
+				else
+					-- not syncing pass data.
+					reject_data		    <= '0';
+					out_sync            <= '0';
+					out_val				<= out_val_p1;
+                    out_re_arr      <= out_re_arr_t;
+					out_im_arr      <= out_im_arr_t;
+				end if;
+			end if;
+		end if;
+	end process final_reg;
 
 end rtl;

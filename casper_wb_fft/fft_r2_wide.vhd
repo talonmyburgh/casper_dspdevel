@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 -- Purpose: The fft_r2_wide unit performs a complex FFT that is partly pipelined 
 --          and partly parallel. 
 --
@@ -200,8 +204,8 @@ architecture rtl of fft_r2_wide is
 
     signal int_val : std_logic_vector(g_fft.wb_factor - 1 downto 0);
     signal int_sync : std_logic_vector(g_fft.wb_factor - 1 downto 0);
-    signal int_val_d : std_logic_vector(g_fft.wb_factor - 1 downto 0);
-    signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_val_d : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others=>'0');
+    signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others=>'0');
 
 begin
 
@@ -377,6 +381,7 @@ begin
         -- When the separate functionality is required:
 
         gen_separate : if g_fft.use_separate generate
+
             u_separator : entity work.fft_sepa_wide
                 generic map(
                     g_fft           => g_fft,
@@ -386,12 +391,13 @@ begin
                 port map(
                     clken      => clken,
                     clk        => clk,
-                    rst        => fft_out_sync,
+                    in_sync    => fft_out_sync,
                     in_re_arr  => fft_out_re_arr,
                     in_im_arr  => fft_out_im_arr,
                     in_val     => fft_out_val,
                     out_re_arr => sep_out_re_arr,
                     out_im_arr => sep_out_im_arr,
+                    out_sync   => sep_out_sync,
                     out_val    => sep_out_val
                 );
         end generate;
@@ -401,7 +407,7 @@ begin
             sep_out_re_arr <= fft_out_re_arr;
             sep_out_im_arr <= fft_out_im_arr;
             sep_out_val    <= fft_out_val;
-            sep_out_sync    <= fft_out_sync;
+            sep_out_sync   <= fft_out_sync;
         end generate;
 
         ---------------------------------------------------------------
