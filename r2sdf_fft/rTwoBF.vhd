@@ -150,16 +150,18 @@ begin
 	p_det_ovflw : process(clk)
 	begin
 		if rising_edge(clk) then
-			if in_a_dly(in_a_dly'length-1) /= out_c_buf(c_sum_bit_width-1) and in_sel='1' then
-				ovflw_add(0) <= '1';
-			else
-				ovflw_add(0) <= '0';
-			end if;
-			if in_a_dly(in_a_dly'length-1) /= out_d_buf(c_sum_bit_width-1) and in_sel='1' then
-				ovflw_sub(0) <= '1';
-			else
-				ovflw_sub(0) <= '0';
-			end if;
+			ovflw_add(0) <= '0';
+			for checkbit in out_c_buf'length-1 downto out_c'length loop
+				if out_c_buf(checkbit) /= out_c_buf(out_c'length-1) then
+					ovflw_add(0) <= '1';
+				end if;
+			end loop;
+			ovflw_sub(0) <= '0';
+			for checkbit in out_d_buf'length-1 downto out_d'length loop
+				if out_d_buf(checkbit) /= out_d_buf(out_d'length-1) then
+					ovflw_sub(0) <= '1';
+				end if;
+			end loop;
 			ovflw_imm(0) <= ovflw_add(0) or ovflw_sub(0);
 		end if;
 	end process;

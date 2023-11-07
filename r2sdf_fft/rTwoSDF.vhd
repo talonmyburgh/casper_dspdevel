@@ -135,7 +135,7 @@ architecture str of rTwoSDF is
 	signal raw_out_re   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_im   : std_logic_vector(g_stage_dat_w - 1 downto 0);
 	signal raw_out_val  : std_logic;
-	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly,g_bf_dsp_dly);
+	constant pipeline   : t_fft_pipeline := (g_stage_lat, g_weight_lat, g_mult_lat, g_bf_lat, g_bf_use_zdly, g_bf_in_a_zdly, g_bf_out_d_zdly);
 	signal raw_out_rst	: std_logic;
 begin
 	-- Inputs

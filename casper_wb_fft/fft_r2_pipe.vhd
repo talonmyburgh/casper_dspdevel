@@ -249,7 +249,7 @@ begin
             g_pipeline => c_pipeline_remove_lsb
         )
         port map(
-            rst     => in_sync,
+            rst     => '0',
             clk     => clk,
             in_dat  => raw_out_val,
             out_dat => out_val
@@ -260,7 +260,7 @@ begin
             g_pipeline => c_pipeline_remove_lsb
         )
         port map(
-            rst     => in_sync,
+            rst     => '0',
             clk     => clk,
             in_dat  => raw_out_sync,
             out_dat => out_sync

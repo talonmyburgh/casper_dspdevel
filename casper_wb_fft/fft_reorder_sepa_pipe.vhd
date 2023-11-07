@@ -536,13 +536,18 @@ begin
     count_out_en <= not(not_first_spectrum) and sep_out_val_i;        
 
     not_first_spectrum <= out_counter(c_adr_points_w);       
-    gen_in_place_reorder : if g_in_place = true generate
-        out_val_p1 <= sep_out_val_i and not_first_spectrum;        
-    end generate;
-    
-    gen_not_in_place_reorder : if g_in_place = false generate
-        out_val_p1 <= sep_out_val_i;        
-    end generate;
+
+    out_val_proc : process (clk)
+    begin
+        if rising_edge(clk) then
+            if g_in_place then
+                out_val_p1 <= sep_out_val_i and not_first_spectrum;
+            else
+                out_val_p1 <= sep_out_val_i; 
+            end if;
+        end if;
+    end process out_val_proc;
+
 
     -- delay data out by one clock cycle as we want sync to appear one clock cycle before
 	out_dat_delay : entity common_components_lib.common_pipeline
@@ -564,7 +569,7 @@ begin
 				out_val 			<= '1';
 				out_sync			<= '1';
 				reject_data		    <= '1';
-                out_dat             <= (others=>'0');
+                out_dat             <= std_logic_vector(to_unsigned(0,out_dat'length));
 			else
 				if reject_data='1' then
 					if start_of_frame='1' and out_val_p1='1' then

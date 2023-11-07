@@ -257,7 +257,7 @@ architecture tb of tb_fft_r2_pipe is
   signal dat_val                : std_logic:= '0';
   signal in_sync                : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
-  signal in_val_cnt_test        : natural := 0;
+  --signal in_val_cnt_test        : natural := 0;
   signal in_blk_val             : std_logic;
   signal in_blk_val_cnt         : natural := 0;
   signal in_gap                 : std_logic := '0';
@@ -424,6 +424,7 @@ begin
   -- VERIFY OUTPUT
   ---------------------------------------------------------------
   p_verify_out_val_cnt : process
+  variable in_val_cnt_test : integer;
   begin
     -- Wait until tb_end_almost
     proc_common_wait_until_high(clk, tb_end_almost);
@@ -434,17 +435,18 @@ begin
     if g_fft.use_reorder=true then
         if g_fft.pipe_reo_in_place=true then
             if g_fft.use_separate=true then
-                in_val_cnt_test<=in_val_cnt-(2*g_fft.nof_points-2);
+                in_val_cnt_test:=in_val_cnt-(2*g_fft.nof_points-2);
             else
-              in_val_cnt_test<=in_val_cnt-(2*g_fft.nof_points-1); 
+              in_val_cnt_test:=in_val_cnt-(2*g_fft.nof_points-1); 
             end if;
         else
-            in_val_cnt_test<=in_val_cnt-c_nof_valid_per_block;
+            in_val_cnt_test:=in_val_cnt-c_nof_valid_per_block;
         end if;
     else
-        in_val_cnt_test<=in_val_cnt-c_nof_valid_per_block+c_nof_channels;
+        in_val_cnt_test:=in_val_cnt-c_nof_valid_per_block+c_nof_channels;
     end if;
-    assert out_val_cnt = in_val_cnt_test report "Unexpected number of valid output data" severity error;
+    report "out_val_cnt=" & integer'image(out_val_cnt) & " in_val_cnt_test=" & integer'image(in_val_cnt_test)  & " in_val_cnt=" & integer'image(in_val_cnt) severity note;
+    assert out_val_cnt = in_val_cnt_test report "Unexpected number of valid output data out_val_cnt=" & integer'image(out_val_cnt) & " in_val_cnt_test=" & integer'image(in_val_cnt_test) severity error;
     wait;
   end process;
             
