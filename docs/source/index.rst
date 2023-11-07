@@ -14,6 +14,7 @@ IP Cores:
    flow_control
    misc
    r2sdf_fft
+   reorder
    wideband_fft
    wideband_pfb
    
