@@ -39,8 +39,8 @@ function [vhdlfile, entityname] = square_transposer_code_gen(unique_prefix, inou
     "end ENTITY;"
     ""
     sprintf("ARCHITECTURE rtl of %s is", entityname)
-    sprintf("  SIGNAL slv_arr_in : t_slv_arr(0 to %d-1, i_data_1'range) := (OTHERS => (OTHERS => '0'));", inout_port_count)
-    sprintf("  SIGNAL slv_arr_out : t_slv_arr(0 to %d-1, o_data_1'range) := (OTHERS => (OTHERS => '0'));", inout_port_count)
+    sprintf("  SIGNAL slv_arr_in : t_slv_arr(0 to %d-1, i_data_0'range) := (OTHERS => (OTHERS => '0'));", inout_port_count)
+    sprintf("  SIGNAL slv_arr_out : t_slv_arr(0 to %d-1, o_data_0'range) := (OTHERS => (OTHERS => '0'));", inout_port_count)
     "begin"
     ""
 

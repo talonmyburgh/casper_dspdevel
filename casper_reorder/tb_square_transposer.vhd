@@ -6,7 +6,6 @@ LIBRARY IEEE, common_pkg_lib, common_slv_arr_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.all;
-USE STD.TEXTIO.ALL;
 USE common_slv_arr_pkg_lib.common_slv_arr_pkg.all;
 
 entity tb_square_transposer is
