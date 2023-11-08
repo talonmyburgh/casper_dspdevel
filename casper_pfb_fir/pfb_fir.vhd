@@ -31,7 +31,9 @@ end pfb_fir;
 
 architecture rtl of pfb_fir is
     --reorder data into little endian format if needed
-    signal din_munged : t_pfb_fir_array_in((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
+    type t_streams_in_arr   is array(integer range <> ) of std_logic_vector(g_pfb_fir.n_streams*g_pfb_fir.din_w  -1 downto 0);
+    signal din_munged      : t_streams_in_arr( g_pfb_fir.wb_factor-1 downto 0);   
+    --signal din_munged : t_pfb_fir_array_in((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
 
     -- control logic
     constant c_tap_length : natural := (g_pfb_fir.n_bins / g_pfb_fir.wb_factor) * (2 ** g_pfb_fir.n_chans);
@@ -93,15 +95,17 @@ architecture rtl of pfb_fir is
     constant c_sum_w     : natural := c_prod_w + c_gain_w;
     constant c_ppf_lsb_w : natural := c_sum_w - g_pfb_fir.dout_w;
 
-    signal adder_out : std_logic_vector(g_pfb_fir.wb_factor * c_sum_w - 1 downto 0) := (others => '0');
+    signal adder_out : std_logic_vector(g_pfb_fir.wb_factor * g_pfb_fir.n_streams * c_sum_w - 1 downto 0) := (others => '0');
 
     --requantisation  
-    signal requant_out : std_logic_vector(g_pfb_fir.wb_factor * g_pfb_fir.dout_w - 1 downto 0);
+    signal requant_out : std_logic_vector(g_pfb_fir.wb_factor * g_pfb_fir.n_streams * g_pfb_fir.dout_w - 1 downto 0);
 
     --output       
     signal sync_out_int : std_logic;
     signal dvalid_int   : std_logic;
-    signal dout_int     : t_pfb_fir_array_out((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
+    type t_streams_out_arr  is array(integer range <> ) of std_logic_vector(g_pfb_fir.n_streams*g_pfb_fir.dout_w -1 downto 0);
+    signal dout_int     : t_streams_out_arr(g_pfb_fir.wb_factor -1 downto 0);
+    --signal dout_int     : t_pfb_fir_array_out((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
 
 begin
 
@@ -335,7 +339,8 @@ begin
             process(clk)
             begin
                 if (rising_edge(clk)) then
-                    dout_int(c_offset) <= requant_out(((c_offset + 1) * g_pfb_fir.dout_w) - 1 downto c_offset * g_pfb_fir.dout_w);
+                    --dout_int(c_offset) <= requant_out(((c_offset + 1) * g_pfb_fir.dout_w) - 1 downto c_offset * g_pfb_fir.dout_w);
+                    dout_int(I)((S+1)*g_pfb_fir.dout_w-1 downto S*g_pfb_fir.dout_w) <= requant_out(((c_offset + 1) * g_pfb_fir.dout_w) - 1 downto c_offset * g_pfb_fir.dout_w);
                 end if;
             end process;
         end generate;                   --S 

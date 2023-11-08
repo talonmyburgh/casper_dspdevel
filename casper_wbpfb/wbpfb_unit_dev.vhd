@@ -496,7 +496,7 @@ begin
                 g_big_endian_out   => false,
                 g_coefs_file       => c_pfb_fir_coefs_file,
                 g_ram_primitive    => g_fil_ram_primitive,
-                g_pfb_fir          => c_pfb_fir,
+                g_pfb_fir          => c_fil_ppf, --c_pfb_fir,
                 g_pfb_fir_pipeline => c_pfb_fir_pipeline
             )
             port map(
