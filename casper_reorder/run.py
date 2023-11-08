@@ -3,7 +3,7 @@ from os.path import dirname, join
 import random
 
 # Create VUnit instance by parsing command line arguments
-vu = VUnit.from_argv(compile_builtins=False)
+vu = VUnit.from_argv()
 vu.add_vhdl_builtins()
 script_dir = dirname(__file__)
 
