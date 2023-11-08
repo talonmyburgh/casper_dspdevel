@@ -2,7 +2,7 @@
 -- @author: Ross Donnachie
 -- @company: Mydon Solutions
 
-LIBRARY IEEE, casper_counter_lib;
+LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
 ENTITY reg is
