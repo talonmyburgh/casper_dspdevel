@@ -24,6 +24,7 @@ jobs:
       multiplier: ${{ steps.multiplier.outputs.any_changed }}
       fifo: ${{ steps.fifo.outputs.any_changed }}
       ram: ${{ steps.ram.outputs.any_changed }}
+      reorder: ${{ steps.reorder.outputs.any_changed }}
       r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
       pipe_fft: ${{ steps.pipe_fft.outputs.any_changed }}
       par_fft: ${{ steps.par_fft.outputs.any_changed }}
@@ -512,7 +513,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: needs.files_changed.outputs.reorder == 'true'
+    if: true # needs.files_changed.outputs.reorder == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
