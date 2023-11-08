@@ -32,7 +32,8 @@ end pfb_fir;
 architecture rtl of pfb_fir is
     --reorder data into little endian format if needed
     type t_streams_in_arr   is array(integer range <> ) of std_logic_vector(g_pfb_fir.n_streams*g_pfb_fir.din_w  -1 downto 0);
-    signal din_munged      : t_streams_in_arr( g_pfb_fir.wb_factor-1 downto 0);   
+    signal din_munged      : t_streams_in_arr( g_pfb_fir.wb_factor-1 downto 0);
+    
     --signal din_munged : t_pfb_fir_array_in((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
 
     -- control logic
@@ -76,7 +77,8 @@ architecture rtl of pfb_fir is
     signal taps_wren           : std_logic := '0';
     type t_in_dat_delay is array (g_pfb_fir_pipeline.mem_latency - 1 downto 0) of std_logic_vector(c_tap_data_w - 1 downto 0);
     signal din_delay           : t_in_dat_delay;
-
+    signal din_unpacked        : std_logic_vector (c_tap_data_w -1 downto 0);
+    
     signal taps_rdaddr, taps_wraddr  : std_logic_vector(c_addr_w - 1 downto 0);
     signal taps_in_vec, taps_out_vec : std_logic_vector(c_taps_mem_data_w - 1 downto 0) := (others => '0');
 
@@ -110,7 +112,7 @@ architecture rtl of pfb_fir is
 begin
 
     p_wire_input : process(din)
-        variable vP : natural;
+        variable vP, idx : natural;
     begin
         for P in 0 to g_pfb_fir.wb_factor - 1 loop
             if g_big_endian_in = true then
@@ -119,7 +121,21 @@ begin
                 vP := P;                -- keep input little endian time [0,1,2,3] to P [0,1,2,3] index mapping 
             end if;
             for S in 0 to g_pfb_fir.n_streams - 1 loop
+                idx := (P*g_pfb_fir.n_streams) + S;
                 din_munged(vP)((S + 1) * g_pfb_fir.din_w - 1 downto S * g_pfb_fir.din_w) <= din(P * g_pfb_fir.n_streams + S)(g_pfb_fir.din_w - 1 downto 0);
+                din_unpacked((idx+1) * g_pfb_fir.din_w -1 downto idx*g_pfb_fir.din_w) <= din_munged(P)((S+1)*g_pfb_fir.din_w-1 downto S*g_pfb_fir.din_w);
+            end loop;
+            
+        end loop;
+    end process;
+
+    p_unpack_input : process(din_munged)
+        variable idx : natural;
+    begin
+        for P in 0 to g_pfb_fir.wb_factor-1 loop
+            for S in 0 to g_pfb_fir.n_streams -1 loop
+                idx := (P*g_pfb_fir.n_streams) + S;
+                 
             end loop;
         end loop;
     end process;
@@ -176,7 +192,7 @@ begin
     proc_taps : process(clk)
     begin
         if (rising_edge(clk)) then
-            din_delay(0)                                  <= din_munged(0);
+            din_delay(0)                                  <= din_unpacked;
             din_delay(g_pfb_fir_pipeline.mem_latency - 1 downto 1) <= din_delay(g_pfb_fir_pipeline.mem_latency - 2 downto 0);
 
             -- the write address is delayed while we wait for the data from the read 
