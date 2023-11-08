@@ -39,7 +39,8 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
 
   --CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0, 1, 1, 1, 1);
-  CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, 8, 23, 16, 0, 1, 1, 1, 1);
+  CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, 8, 23, 16, 0);
+  CONSTANT c_fil_ppf_1_act_pipeline   : t_pfb_fir_pipeline := (1,1,1,1);
   
   -- Inputs
   CONSTANT c_hanning_1_act            : string := "/home/andrew/casper/casper_dspdevel/casper_pfb_fir/data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
@@ -82,6 +83,6 @@ BEGIN
   -- u4_rnd_4channels   : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_4channels, c_hanning_4_rnd_4channels, TRUE);
   
   -- verify for new ppf 
-  u1_act_new         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_hanning_1_act, TRUE);  
+  u1_act_new         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_fil_ppf_1_act_pipeline, c_hanning_1_act, TRUE);  
   
 END tb;

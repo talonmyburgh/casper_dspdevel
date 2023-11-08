@@ -47,7 +47,8 @@ entity tb_pfb_fir is
     -- generics for tb
     g_big_endian_wb_in  : boolean := true;
     g_big_endian_wb_out : boolean := true;
-    g_pfb_fir : t_pfb_fir := (4, 0, 64, 8, 1, 8, 23, 16, 0, 1, 1, 1, 1); 
+    g_pfb_fir : t_pfb_fir := (4, 0, 64, 8, 1, 8, 23, 16, 0);
+    g_pfb_fir_pipeline : t_pfb_fir_pipeline := (1,1,1,1); 
     --type t_pfb_fir is record
     --  wb_factor       : natural; -- = 1, the wideband factor
     --  n_chans         : natural; -- = 0, number of time multiplexed input signals
@@ -87,23 +88,14 @@ architecture tb of tb_pfb_fir is
   constant c_nof_valid_in_filter  : natural := c_nof_data_in_filter / g_pfb_fir.wb_factor;
   constant c_nof_valid_per_tap    : natural := c_nof_data_per_tap / g_pfb_fir.wb_factor;
   constant c_nof_bands_per_file   : natural := g_pfb_fir.n_bins / g_pfb_fir.wb_factor;
-  constant c_file_coef_mem_addr_w : natural := ceil_log2(g_pfb_fir.n_bins);
-  constant c_file_coef_mem_span   : natural := 2**c_file_coef_mem_addr_w;                       -- mif coef mem span for one tap
 
   constant c_coefs_file_prefix    : string  := g_coefs_file_prefix;
   constant c_memory_file_prefix   : string  := c_coefs_file_prefix & "_" & integer'image(g_pfb_fir.wb_factor) & "wb";
   
-  constant c_fil_prod_w           : natural := g_pfb_fir.din_w + g_pfb_fir.coef_w - 1;  -- skip double sign bit
-  constant c_fil_sum_w            : natural := c_fil_prod_w;                                   -- DC gain = 1
-  constant c_fil_lsb_w            : natural := c_fil_sum_w - g_pfb_fir.dout_w;              -- nof LSbits that get rounded for out_dat
   constant c_in_ampl              : natural := 1; -- for now 2**c_fil_lsb_w;                                 -- scale in_dat to compensate for rounding
   
   constant c_gap_factor           : natural := sel_a_b(g_enable_in_val_gaps, 3, 1);
   
-  -- input/output data width
-  constant c_in_dat_w             : natural := g_pfb_fir.din_w;   
-  constant c_out_dat_w            : natural := g_pfb_fir.dout_w;
-
   type t_wb_integer_arr2 is array(integer range <>) of t_integer_arr(c_nof_valid_in_filter-1 downto 0);
   
   -- signal definitions
@@ -132,9 +124,7 @@ architecture tb of tb_pfb_fir is
 
   signal ref_coefs_arr   : t_integer_arr(c_nof_coefs-1 downto 0) := (OTHERS=>0);                    -- = PFIR coef for all taps as read from the coefs file
   signal ref_dat_arr2    : t_wb_integer_arr2(0 to g_pfb_fir.wb_factor-1) := (OTHERS=>(OTHERS=>0));  -- = PFIR coef for all taps as read from the coefs file expanded for all channels
-  signal ref_dat_arr     : t_integer_arr(0 to g_pfb_fir.wb_factor-1) := (OTHERS=>0);
-
-  signal read_coefs_arr  : t_integer_arr(c_nof_coefs-1 downto 0) := (OTHERS=>0);           -- = PFIR coef for all taps as read via MM from the coefs memories           
+  signal ref_dat_arr     : t_integer_arr(0 to g_pfb_fir.wb_factor-1) := (OTHERS=>0);           
                          
 begin
 

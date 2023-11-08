@@ -1,9 +1,9 @@
-library ieee, common_pkg_lib, r2sdf_fft_lib, wb_fft_lib, casper_filter_lib;
+library ieee, common_pkg_lib, r2sdf_fft_lib, wb_fft_lib, casper_pfb_fir_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
 use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all; 
-use casper_filter_lib.fil_pkg.all;
+use casper_pfb_fir_lib.pfb_fir_pkg.all;
 
 PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
 
@@ -48,16 +48,16 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
     -- Pipeline parameters for both poly phase filter and FFT. These are heritaged from the filter and fft libraries.  
     pft_pipeline      : t_fft_pipeline;     -- Pipeline settings for the pipelined FFT
     fft_pipeline      : t_fft_pipeline;     -- Pipeline settings for the parallel FFT
-    fil_pipeline      : t_fil_ppf_pipeline; -- Pipeline settings for the filter units 
+    pfb_fir_pipeline  : t_pfb_fir_pipeline; -- Pipeline settings for the filter units 
   end record;
 
   constant c_wpfb : t_wpfb := (c_fft_wb_factor, c_fft_nof_points, c_fft_nof_chan,
-                              c_wbpfb_nof_wb_streams, c_fil_nof_taps, c_fil_backoff_w,
-                              c_fil_in_dat_w, c_fil_out_dat_w, c_fil_coef_dat_w,
+                              c_wbpfb_nof_wb_streams, c_pfb_fir_n_taps, c_pfb_fir_padding,
+                              c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w,
                               c_fft_use_reorder, c_fft_use_fft_shift, c_fft_use_separate,
                               c_fft_in_dat_w, c_fft_out_dat_w, c_fft_out_gain_w, c_fft_stage_dat_w,
                               c_fft_twiddle_dat_w, c_max_addr_w, c_fft_guard_w, c_fft_guard_enable,
-                              c_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                              c_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
 
 ----------------------------------------------------------------------------------------------------------
 -- SOSI/SISO Arrays
@@ -74,8 +74,8 @@ TYPE t_dp_siso_arr IS ARRAY (INTEGER RANGE <>) OF t_dp_siso;
 TYPE t_fil_sosi_in IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
-re       : STD_LOGIC_VECTOR(c_fil_in_dat_w-1 DOWNTO 0);         -- data
-im       : STD_LOGIC_VECTOR(c_fil_in_dat_w-1 DOWNTO 0);         -- data
+re       : STD_LOGIC_VECTOR(c_pfb_fir_din_w-1 DOWNTO 0);         -- data
+im       : STD_LOGIC_VECTOR(c_pfb_fir_din_w-1 DOWNTO 0);         -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
@@ -91,8 +91,8 @@ TYPE t_fil_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_in;
 TYPE t_fil_sosi_out IS RECORD  -- Source Out or Sink In
 sync     : STD_LOGIC; 
 bsn      : STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);      -- ctrl
-re       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);         -- data
-im       : STD_LOGIC_VECTOR(c_fil_out_dat_w-1 DOWNTO 0);         -- data
+re       : STD_LOGIC_VECTOR(c_pfb_fir_dout_w-1 DOWNTO 0);         -- data
+im       : STD_LOGIC_VECTOR(c_pfb_fir_dout_w-1 DOWNTO 0);         -- data
 valid    : STD_LOGIC;                                           -- ctrl
 sop      : STD_LOGIC;                                           -- ctrl
 eop      : STD_LOGIC;                                           -- ctrl
