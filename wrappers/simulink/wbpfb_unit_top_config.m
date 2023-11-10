@@ -1,5 +1,10 @@
-function wbpfb_unit_top_config(this_block)
+%--------------------------------------------------------------------------------
+%- Created for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+%- myburgh.talon@gmail.com
+%- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+%--------------------------------------------------------------------------------%
 
+function wbpfb_unit_top_config(this_block)
 
   this_block.setTopLevelLanguage('VHDL');
   filepath = fileparts(which('wbpfb_unit_top_config'));
@@ -113,10 +118,6 @@ vhdlfile = top_wbpfb_code_gen(dbl_wb_factor, dbl_nof_wb_streams, double_t_d_w, d
           ,str2double(fil_i_d_w), str2double(fil_o_d_w), technology_int);
 
 %inport declarations
-this_block.addSimulinkInport('rst');
-in_rst_port = this_block.port('rst');
-in_rst_port.setType('Bool');
-in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
 in_sync_port.setType('Bool');
