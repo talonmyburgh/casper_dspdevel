@@ -542,7 +542,7 @@ begin
                     g_twid_file_stem => g_twid_file_stem
                 )
                 port map(
-                    clken      => ce,
+                    clken      => '1',
                     clk        => clk,
                     in_sync    => fft_in_sync,
                     shiftreg   => shiftreg,
@@ -580,7 +580,7 @@ begin
                     g_twid_file_stem     => g_twid_file_stem
                 )
                 port map(
-                    clken    => ce,
+                    clken    => '1',
                     clk      => clk,
                     in_sync  => fft_in_sync,
                     shiftreg => shiftreg,
