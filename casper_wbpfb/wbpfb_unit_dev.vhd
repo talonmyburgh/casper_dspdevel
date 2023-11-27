@@ -619,42 +619,4 @@ begin
         out_sosi_arr(I).im <= fft_out_im_arr(I)(c_fft.out_dat_w - 1 downto 0);
     end generate;
 
-
-    -- Capture input BSN at input sync and pass the captured input BSN it on to PFB output sync.
-    -- The FFT output valid defines PFB output sync, sop, eop.
-
---    fft_out_sosi.sync  <= r.in_sosi_arr(0).sync;
---    fft_out_sosi.bsn   <= r.in_sosi_arr(0).bsn;
---    fft_out_sosi.valid <= fft_out_val_arr(0);
---
---    wire_fft_out_sosi_arr : for I in 0 to g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 generate
---        fft_out_sosi_arr(I).re    <= fft_out_re_arr(I)(c_fft.out_dat_w - 1 downto 0);
---        fft_out_sosi_arr(I).im    <= fft_out_im_arr(I)(c_fft.out_dat_w - 1 downto 0);
---        fft_out_sosi_arr(I).valid <= fft_out_val_arr(I);
---    end generate;
---
---    u_dp_block_gen_valid_arr : ENTITY work.dp_block_gen_valid_arr
---        GENERIC MAP(
---            g_nof_streams        => g_wpfb.nof_wb_streams * g_wpfb.wb_factor,
---            g_nof_data_per_block => c_nof_valid_per_block,
---            g_nof_blk_per_sync   => g_wpfb.nof_blk_per_sync,
---            g_check_input_sync   => false,
---            g_nof_pages_bsn      => 1,
---            g_restore_global_bsn => true
---        )
---        PORT MAP(
---            rst         => rst,
---            clk         => clk,
---            -- Streaming sink
---            snk_in      => fft_out_sosi,
---            snk_in_arr  => fft_out_sosi_arr,
---            -- Streaming source
---            src_out_arr => pfb_out_sosi_arr,
---            -- Control
---            enable      => '1'
---        );
---
---    -- Connect to the outside world
---    out_sosi_arr <= pfb_out_sosi_arr;
-
 end str;

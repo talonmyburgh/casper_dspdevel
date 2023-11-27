@@ -95,7 +95,7 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
   ----------------------------------------------------------------------------------------------------------
   -- Function declarations
   ----------------------------------------------------------------------------------------------------------
-  -- function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural;
+  function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural;
   -- function func_wpfb_set_nof_block_per_sync(wpfb : t_wpfb; nof_block_per_sync : NATURAL) return t_wpfb;
   -- FUNCTION func_dp_stream_bsn_set(st_sosi : t_fft_sosi_out; bsn : STD_LOGIC_VECTOR) RETURN t_fft_sosi_out;
   -- FUNCTION func_dp_stream_arr_combine_data_info_ctrl(dp : t_fft_sosi_arr_out; info, ctrl : t_fft_sosi_out) RETURN t_fft_sosi_arr_out;
@@ -104,22 +104,22 @@ END wbpfb_gnrcs_intrfcs_pkg;
 
 PACKAGE BODY wbpfb_gnrcs_intrfcs_pkg IS
 
-  -- function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural is
-  --     constant c_nof_channels : natural := 2**wpfb.nof_chan;
-  --     constant c_block_size   : natural := c_nof_channels * wpfb.nof_points / wpfb.wb_factor;
-  --     constant c_block_dly    : natural := 10;
-  --   begin
-  --     -- The prefilter, pipelined FFT, pipelined reorder and the wideband separate reorder
-  --     -- cause block latency.
-  --     -- The parallel FFT has no block latency.
-  --     -- The parallel FFT reorder is merely a rewiring and causes no latency.
-  --     -- ==> This yields maximim 4 block latency
-  --     -- ==> Add one extra block latency to round up
-  --     -- Each block in the Wideband FFT also introduces about c_block_dly clock cycles of
-  --     -- pipeline latency.
-  --     -- ==> This yields maximum ( 5 * c_block_dly ) / c_block_size of block latency
-  --     return 4 + 1 + (5 * c_block_dly) / c_block_size;
-  --   end func_wpfb_maximum_sop_latency;
+  function func_wpfb_maximum_sop_latency(wpfb : t_wpfb) return natural is
+      constant c_nof_channels : natural := 2**wpfb.nof_chan;
+      constant c_block_size   : natural := c_nof_channels * wpfb.nof_points / wpfb.wb_factor;
+      constant c_block_dly    : natural := 10;
+    begin
+      -- The prefilter, pipelined FFT, pipelined reorder and the wideband separate reorder
+      -- cause block latency.
+      -- The parallel FFT has no block latency.
+      -- The parallel FFT reorder is merely a rewiring and causes no latency.
+      -- ==> This yields maximim 4 block latency
+      -- ==> Add one extra block latency to round up
+      -- Each block in the Wideband FFT also introduces about c_block_dly clock cycles of
+      -- pipeline latency.
+      -- ==> This yields maximum ( 5 * c_block_dly ) / c_block_size of block latency
+      return 4 + 1 + (5 * c_block_dly) / c_block_size;
+    end func_wpfb_maximum_sop_latency;
 
   --   -- Overwrite nof_block_per_sync field in wpfb (typically for faster simulation)
   --   function func_wpfb_set_nof_block_per_sync(wpfb : t_wpfb; nof_block_per_sync : NATURAL) return t_wpfb is
