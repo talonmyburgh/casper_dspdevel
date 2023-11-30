@@ -801,7 +801,7 @@ VivadoSynthesisWBFFT:
     - echo Starting Vivado Synthesis WBFFT
     - cd /tmp
     - git clone https://github.com/Xilinx/XilinxTclStore.git
-    - chown -R ci $GIT_CLONE_PATH
+    #- chown -R ci $GIT_CLONE_PATH
     - cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
     - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
