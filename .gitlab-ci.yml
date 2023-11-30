@@ -796,7 +796,7 @@ VivadoSynthesisWBFFT:
   image : vivado_vol:2023.2
   needs: []
   tags:
-    - Vivado_vol
+    - vivado_vol
   script :
     - echo Starting Vivado Synthesis WBFFT
     - cd /tmp
