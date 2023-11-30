@@ -809,7 +809,7 @@ VivadoSynthesisWBFFT:
     - rm -f *.jou
     - rm -f *.log
     - rm -f synth_output/post_synth.dcp
-    - source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
+    #- source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
     - LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1 vivado -mode batch -source ngVLA_wbfft_test.tcl
   #after_script:
     # Set files back to root
