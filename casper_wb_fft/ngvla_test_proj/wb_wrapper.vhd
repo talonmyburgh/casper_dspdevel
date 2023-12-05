@@ -57,7 +57,7 @@ architecture wb_wrapper_arch of wb_wrapper is
 constant c_fft_test : t_fft :=  (
                                   use_reorder         => false, 
                                   use_fft_shift       => false, 
-                                  use_separate        => false,  -- we'll actually use seperate on ngVLA but let's start with complex 
+                                  use_separate        => false,  -- we'll actually use seperate on ngVLA but let's start with complex  -- @suppress "VHDL code line exceeds 120 characters. Long lines badly affect code readability"
                                   nof_chan            => 0, 
                                   wb_factor           => g_wb_factor, 
                                   nof_points          => 131072, 
@@ -111,7 +111,7 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
   port map(
     clken               => '1', -- let's not use clock enables...
     clk                 => i_clk,
-    rst                 => i_rst,
+    in_sync             => i_rst,
     shiftreg            => shiftreg,
     in_re_arr           => re_arr,
     in_im_arr           => im_arr,
