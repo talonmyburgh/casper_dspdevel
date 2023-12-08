@@ -167,7 +167,7 @@ begin
 	weight_addr 		<= ctrl_sel(g_stage + g_nof_chan - 1 downto g_nof_chan + 1);
 	start_of_frame	<= '1' when (unsigned(weight_addr)=0 or weight_addr'length=0) else '0';
 
-
+	
 	u_weights : entity work.rTwoWeights
 		generic map(
 			g_stage          	=> g_stage,
@@ -183,20 +183,50 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
-		-- When the Twiddle memory is delay 2 (which it should be for timing) we need to delay every thing else.
-		tgen_comb : if c_ram.latency<=1 generate
-			bf_re_tomult <= bf_re;
-			bf_im_tomult <= bf_im;
-			bf_val_tomult<= bf_val;
-			bf_sel_tomult<= bf_sel;
-		end generate;
-		tgen_reg : if c_ram.latency=2 generate
-			bf_re_tomult <= bf_re when rising_edge(clk);
-			bf_im_tomult <= bf_im when rising_edge(clk);
-			bf_val_tomult<= bf_val when rising_edge(clk);
-			bf_sel_tomult<= bf_sel when rising_edge(clk);
-		end generate;
-
+		bf_re_tomult_dly_inst : entity common_components_lib.common_delay
+			generic map(
+				g_dat_w => bf_re'length,
+				g_depth => (c_ram.latency-1)
+			)
+			port map(
+				clk     => clk,
+				in_val  => '1',
+				in_dat  => bf_re,
+				out_dat => bf_re_tomult
+			);
+		bf_im_tomult_dly_inst : entity common_components_lib.common_delay
+			generic map(
+				g_dat_w => bf_re'length,
+				g_depth => (c_ram.latency-1)
+			)
+			port map(
+				clk     => clk,
+				in_val  => '1',
+				in_dat  => bf_im,
+				out_dat => bf_im_tomult
+			);
+		bf_valid_dly_inst : entity common_components_lib.common_delay
+			generic map(
+				g_dat_w => 1,
+				g_depth => (c_ram.latency-1)
+			)
+			port map(
+				clk     => clk,
+				in_val  => '1',
+				in_dat(0)  => bf_val,
+				out_dat(0) => bf_val_tomult
+			);			
+		bf_sel_dly_inst : entity common_components_lib.common_delay
+			generic map(
+				g_dat_w => 1,
+				g_depth => (c_ram.latency-1)
+			)
+			port map(
+				clk     => clk,
+				in_val  => '1',
+				in_dat(0)  => bf_sel,
+				out_dat(0) => bf_sel_tomult
+			);				
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
 	------------------------------------------------------------------------------
