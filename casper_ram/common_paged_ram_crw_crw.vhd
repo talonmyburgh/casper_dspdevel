@@ -117,9 +117,9 @@ ARCHITECTURE rtl OF common_paged_ram_crw_crw IS
 
 	-- g_str = "use_mux" and g_str = "use_adr" :
 	-- . use page_sel direct for wr_en, rd_en, and address
-	SIGNAL page_sel_a     : NATURAL RANGE 0 TO g_nof_pages - 1;
+	SIGNAL page_sel_a     : NATURAL RANGE 0 TO g_nof_pages - 1 := g_start_page_a;
 	SIGNAL nxt_page_sel_a : NATURAL;
-	SIGNAL page_sel_b     : NATURAL RANGE 0 TO g_nof_pages - 1;
+	SIGNAL page_sel_b     : NATURAL RANGE 0 TO g_nof_pages - 1 := g_start_page_b;
 	SIGNAL nxt_page_sel_b : NATURAL;
 
 	-- . use page_sel_dly to adjust for g_rd_latency of rd_dat and rd_val

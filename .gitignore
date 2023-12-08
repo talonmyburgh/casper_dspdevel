@@ -18,3 +18,4 @@ vivado*.str
 *.cache/
 *proj*.sim/
 casper_wb_fft/ngvla_test_proj/*
+*.bak
