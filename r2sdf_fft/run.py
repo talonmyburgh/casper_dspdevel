@@ -7,6 +7,7 @@ from vunit.sim_if.factory import SIMULATOR_FACTORY
 cli = VUnitCLI()
 cli.parser.add_argument('--twid',action = 'store_true',help = 'Run the Twiddle Tests')
 cli.parser.add_argument('--bitaccurate',action = 'store_true',help = 'Run the bitaccurate Tests')
+cli.parser.add_argument('--agilex',action = 'store_true',help = 'Run with AgileX components')
 args = cli.parse_args()
 vu = VUnit.from_args(args = args)
 #vu = VUnit.from_argv(argv = args,)
@@ -90,7 +91,10 @@ common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_lfsr_sequ
 
 # TECHNOLOGY Library
 technology_lib = vu.add_library("technology_lib")
-technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg.vhd"))
+if args.agilex:
+    technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg_agilex.vhd"))
+else:
+    technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg.vhd"))
 
 # COMMON COUNTER Library
 casper_counter_lib = vu.add_library("casper_counter_lib")

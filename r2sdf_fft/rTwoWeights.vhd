@@ -140,9 +140,11 @@ begin
 			-- Note Ultraram might not efficiently be used unless we futz with sharing roms.
 			-- Ultraram can't be initialized in Ultrascale+ anyway apparently.
 
-			add_reg_mux	<= addr_reg when c_latency=2 else
+			add_reg_mux	<= unsigned(in_wAdr) when c_latency=1 else
+										 addr_reg when c_latency=2 else
 			               addr_reg_d1 when c_latency=3 else
-										 addr_reg_d2 when c_latency=4 else unsigned(in_wAdr);
+										 addr_reg_d2; -- when c_latency>=4 delay this 2
+
 			twiddle_rom_proc : process (clk)
 			begin
 				if clk'event and clk='1' then
@@ -156,7 +158,7 @@ begin
 			end process twiddle_rom_proc;
 			rom_data_mux   <= rom_data when c_latency<=4 else
 			                  rom_data_d1 when c_latency=5 else
-												rom_data_d2;
+												rom_data_d2; -- when c_latency=6
 			weight_re_irom <= std_logic_vector(rom_data_mux(weight_re'length-1 downto 0));
 			weight_im_irom <= std_logic_vector(rom_data_mux(rom_data'length-1 downto weight_re'length));
 		end generate rom_infer;

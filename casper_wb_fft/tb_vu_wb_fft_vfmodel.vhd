@@ -301,7 +301,7 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
 		test_runner_cleanup(runner);
 		wait;
 	END PROCESS p_vunit;
-
+  assert g_out_dat_w<=32 report "Output width not supported by test bench" severity failure;
   o_data_proc : process
   variable line_var           : line;
   file output_file            : text;
@@ -316,10 +316,10 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
       exit when endsim='1';
       wait until falling_edge(clk) and out_val='1' and out_sync='0'; -- read data on falling clocks to avoid delta issues.
       for widx in 0 to (c_fft_test.wb_factor-1) loop
-        temp_number     := to_integer(signed(out_re(widx)));
+        temp_number     := to_integer(signed(out_re(widx)(31 downto 0)));
         write(line_var,temp_number);
         writeline(output_file,line_var);
-        temp_number     := to_integer(signed(out_im(widx)));
+        temp_number     := to_integer(signed(out_im(widx)(31 downto 0)));
         write(line_var,temp_number);
         writeline(output_file,line_var);
         data_cntV        := data_cntV + 1;
@@ -363,7 +363,7 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
 
   error_proc : process
   begin
-    wait until falling_edge(clk) and unsigned(ovflw)>0;
+    wait until falling_edge(clk) and rst='0' and out_sync='0' and unsigned(ovflw)>0;
     check(unsigned(ovflw)=0,"tb_vu_rtwosdf_vfmodel: Overflow detected: 0x" & to_hstring(ovflw));
   end process error_proc;
 
