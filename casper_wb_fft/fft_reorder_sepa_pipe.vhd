@@ -325,12 +325,14 @@ begin
                 buf_wr_dat_mux          <= buf_wr_dat;
             end if;
         end process delay_wr_proc;
-    else generate
+	end generate delay_wr_in_placegen;
+   delay_wr_in_nplacegen: if g_in_place = false generate
+	begin
         buf_wr_next_page_mux    <= buf_wr_next_page;
         buf_wr_adr_mux          <= buf_wr_adr;
         buf_wr_en_mux           <= buf_wr_en;
         buf_wr_dat_mux          <= buf_wr_dat;
-    end generate delay_wr_in_placegen;
+    end generate delay_wr_in_nplacegen;
 
 
 

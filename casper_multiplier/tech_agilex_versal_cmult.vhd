@@ -248,13 +248,15 @@ agilex_generate_notm_gen : if g_is_xilinx=false generate
   attribute keep of bi        : signal is "true";
   
   begin
-    gen_input_logic: if g_desired_pipedelay<6 generate
+    gen_input_logicnoreg: if g_desired_pipedelay<6 generate
     begin
       ar                      <= resize(i_dataA_real,ar'length);
       ai                      <= resize(i_dataA_imag,ai'length);
       bi                      <= resize(i_dataB_imag,bi'length);
       br                      <= resize(i_dataB_real,br'length);
-    else generate -- use input reg when g_desired_pipedelay=6
+	 end generate gen_input_logicnoreg;
+	 gen_input_logicreg : if g_desired_pipedelay>=6 generate
+	 begin
       reg_input_proc : process (i_clk)
       begin
         if rising_edge(i_clk) then
@@ -264,7 +266,7 @@ agilex_generate_notm_gen : if g_is_xilinx=false generate
           br                  <= resize(i_dataB_real,br'length);
         end if;
       end process reg_input_proc;
-    end generate gen_input_logic;
+    end generate gen_input_logicreg;
 
 
     assert (g_desired_pipedelay=c_agilex_pipe_delay or g_desired_pipedelay=c_agilex_pipe_delay+1 or g_desired_pipedelay=c_agilex_pipe_delay+2) report " In AgileX mode only pipe depth 4,5 or 6 is supported!" severity failure;
@@ -299,13 +301,15 @@ agilex_generate_notm_gen : if g_is_xilinx=false generate
       end if;
     end process cmplmult_outpur_reg_agilex;
 
-    gen_output_logic: if g_desired_pipedelay<5 generate
+    gen_output_logicnoreg: if g_desired_pipedelay<5 generate
     begin
       o_data_real                           <= out_real(o_data_real'length-1 downto 0);
       o_data_imag                           <= out_imag(o_data_imag'length-1 downto 0);
       o_pipe                                <= pipe_d(c_agilex_pipe_delay-1)(g_pipe_width downto 1);
       o_data_valid                          <= pipe_d(c_agilex_pipe_delay-1)(0);
-    else generate -- use input reg when g_desired_pipedelay=6
+	 end generate gen_output_logicnoreg;
+	 gen_output_logicreg : if g_desired_pipedelay>=5 generate
+    begin
       reg_output_proc : process (i_clk)
       begin
         if rising_edge(i_clk) then
@@ -315,7 +319,7 @@ agilex_generate_notm_gen : if g_is_xilinx=false generate
           o_data_valid                      <= pipe_d(c_agilex_pipe_delay-1)(0);
         end if;
       end process reg_output_proc;
-    end generate gen_output_logic;
+    end generate gen_output_logicreg;
 
 end generate agilex_generate_notm_gen;
 
