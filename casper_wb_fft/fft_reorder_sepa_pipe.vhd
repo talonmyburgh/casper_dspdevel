@@ -74,7 +74,7 @@ architecture rtl of fft_reorder_sepa_pipe is
 	constant c_adr_chan_w   : natural := g_nof_chan;
 	constant c_adr_tot_w    : natural := c_adr_points_w + c_adr_chan_w;
 
-    constant c_buf_latency : natural := 1;
+    constant c_buf_latency : natural := 2;
 
     -- goodness VHDL is verbose
     function f_number_pages(in_place_reorder: boolean)
@@ -115,9 +115,10 @@ architecture rtl of fft_reorder_sepa_pipe is
        
     -- the buffer ports
     signal buf_wr_next_page, buf_rd_next_page   : std_logic;
-    signal buf_wr_adr, buf_rd_adr               : std_logic_vector(c_adr_tot_w - 1 downto 0);                    
-    signal buf_wr_dat                           : std_logic_vector(c_dat_w - 1 downto 0); -- buffer input
-    signal buf_wr_en, buf_rd_en                 : std_logic;
+    signal buf_wr_next_page_mux                 : std_logic;
+    signal buf_wr_adr, buf_rd_adr,buf_wr_adr_mux: std_logic_vector(c_adr_tot_w - 1 downto 0);                    
+    signal buf_wr_dat,buf_wr_dat_mux            : std_logic_vector(c_dat_w - 1 downto 0); -- buffer input
+    signal buf_wr_en, buf_rd_en,buf_wr_en_mux   : std_logic;
    
     -- buffer outputs (and house-keeping for in place separation)   
     signal buf_rd_dat, buf_rd_dat_d1, buf_rd_dat_d2     : std_logic_vector(c_dat_w - 1 downto 0); -- buffer output
@@ -311,7 +312,28 @@ begin
         
     buf_wr_dat <= in_dat;
     buf_wr_en <= in_val and not in_sync;
-        
+
+    delay_wr_in_placegen : if g_in_place = true generate
+    begin
+        delay_wr_proc : process(clk)
+        begin
+            if rising_edge(clk) then
+                -- prevent overlaps between read/write
+                buf_wr_next_page_mux    <= buf_wr_next_page;
+                buf_wr_adr_mux          <= buf_wr_adr;
+                buf_wr_en_mux           <= buf_wr_en;
+                buf_wr_dat_mux          <= buf_wr_dat;
+            end if;
+        end process delay_wr_proc;
+    else generate
+        buf_wr_next_page_mux    <= buf_wr_next_page;
+        buf_wr_adr_mux          <= buf_wr_adr;
+        buf_wr_en_mux           <= buf_wr_en;
+        buf_wr_dat_mux          <= buf_wr_dat;
+    end generate delay_wr_in_placegen;
+
+
+
     u_buff_inplace : entity casper_ram_lib.common_paged_ram_r_w
         generic map(
             g_str           => "use_adr",
@@ -326,10 +348,10 @@ begin
         port map(
             rst          => rst,
             clk          => clk,
-            wr_next_page => buf_wr_next_page,
-            wr_adr       => buf_wr_adr,
-            wr_en        => buf_wr_en,
-            wr_dat       => buf_wr_dat,
+            wr_next_page => buf_wr_next_page_mux,
+            wr_adr       => buf_wr_adr_mux,
+            wr_en        => buf_wr_en_mux,
+            wr_dat       => buf_wr_dat_mux,
             rd_next_page => buf_rd_next_page,
             rd_adr       => buf_rd_adr,
             rd_en        => buf_rd_en,
