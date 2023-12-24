@@ -197,6 +197,8 @@ begin
   begin
     -- Read all coeffs from coefs file
     proc_common_read_integer_file(c_coefs_file_prefix & ".dat", 0, c_nof_coefs, 1, ref_coefs_arr);
+    for C in 0 to (c_nof_coefs/2)-1 loop
+    end loop;
     wait for 1 ns;
     -- Reverse the coeffs per tap
     for J in 0 to g_pfb_fir.n_taps-1 loop
@@ -242,7 +244,10 @@ begin
   ---------------------------------------------------------------  
   u_dut : entity work.pfb_fir 
   generic map (
+    g_big_endian_in     => g_big_endian_wb_in,
+    g_big_endian_out     => g_big_endian_wb_out,
     g_pfb_fir           => g_pfb_fir,
+    g_pfb_fir_pipeline  => g_pfb_fir_pipeline,
     g_coefs_file        => c_coefs_file_prefix
   )
   port map (

@@ -38,13 +38,29 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
 
-  --CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0, 1, 1, 1, 1);
-  CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, 8, 23, 16, 0);
-  CONSTANT c_fil_ppf_1_act_pipeline   : t_pfb_fir_pipeline := (1,1,1,1);
-  
+  CONSTANT c_pfb_fir_pipeline         : t_pfb_fir_pipeline := (1, 1, 1, 1);
+
+  CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_1_rnd_quant      : t_pfb_fir := (1, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_1_rnd_3streams   : t_pfb_fir := (1, 0, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_1_rnd_4channels  : t_pfb_fir := (1, 2, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_act            : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_act_be_le      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_act_le_le      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_rnd_quant      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_rnd_3streams   : t_pfb_fir := (4, 0, 64, 9, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_rnd_4channels  : t_pfb_fir := (4, 2, 64, 9, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+
   -- Inputs
-  CONSTANT c_hanning_1_act            : string := "/home/andrew/casper/casper_dspdevel/casper_pfb_fir/data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  --CONSTANT c_hanning_1_act            : string := "/home/andrew/casper/data/hex/";
+  CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+
     
 BEGIN
 
@@ -67,22 +83,17 @@ BEGIN
     --g_enable_in_val_gaps : boolean := FALSE
 
   -- verify fil_ppf_wide for wb_factor=1, so effectively same as using fil_ppf_single directly
-  -- u1_act             : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_act, c_hanning_1_act, FALSE);
-  -- u1_rnd_quant       : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_rnd_quant, c_hanning_1_rnd_quant, TRUE);
-  -- u1_rnd_9taps       : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_rnd_9taps, c_hanning_1_rnd_9taps, TRUE);
-  -- u1_rnd_3streams    : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_rnd_3streams, c_hanning_1_rnd_3streams, TRUE);
-  -- u1_rnd_4channels   : ENTITY work.tb_fil_ppf_wide GENERIC MAP (TRUE, TRUE, c_fil_ppf_pipeline, c_fil_ppf_1_rnd_4channels, c_hanning_1_rnd_4channels, TRUE);
+  u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, FALSE);
+  u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
+  u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
+  u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
   
   -- verify fil_ppf_wide for wb_factor>1
-  -- u4_act            :  ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_act, c_hanning_4_act, FALSE);
-  -- u4_act_be_le       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE, FALSE, c_fil_ppf_pipeline, c_fil_ppf_4_act_be_le, c_hanning_4_act_be_le, FALSE);
-  -- u4_act_le_le       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( FALSE,FALSE, c_fil_ppf_pipeline, c_fil_ppf_4_act_le_le, c_hanning_4_act_le_le, FALSE);
-  -- u4_rnd_quant       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_quant, c_hanning_4_rnd_quant, TRUE);
-  -- u4_rnd_9taps       : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_9taps, c_hanning_4_rnd_9taps, TRUE);
-  -- u4_rnd_3streams    : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_3streams, c_hanning_4_rnd_3streams, TRUE);
-  -- u4_rnd_4channels   : ENTITY work.tb_fil_ppf_wide GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_pipeline, c_fil_ppf_4_rnd_4channels, c_hanning_4_rnd_4channels, TRUE);
-  
-  -- verify for new ppf 
-  u1_act_new         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_fil_ppf_1_act_pipeline, c_hanning_1_act, TRUE);  
+  u4_act            :  ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_act, c_pfb_fir_pipeline, c_hanning_4_act, TRUE);
+  u4_act_be_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE, FALSE, c_fil_ppf_4_act_be_le, c_pfb_fir_pipeline, c_hanning_4_act_be_le, FALSE);
+  u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
+  u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
+  --u4_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_3streams, c_pfb_fir_pipeline,  c_hanning_1_rnd_3streams, TRUE);
+  --u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
   
 END tb;

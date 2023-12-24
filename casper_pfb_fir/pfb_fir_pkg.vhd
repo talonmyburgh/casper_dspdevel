@@ -5,21 +5,21 @@ use IEEE.std_logic_1164.all;
 package pfb_fir_pkg is
 
     --UPDATED BY MATLAB CODE
-    CONSTANT c_pfb_fir_din_w      : natural := 16;
-    CONSTANT c_pfb_fir_dout_w     : natural := 16;
+    CONSTANT c_pfb_fir_din_w      : natural := 8;
+    CONSTANT c_pfb_fir_dout_w     : natural := 23;
     CONSTANT c_pfb_fir_coef_w     : natural := 16;
     CONSTANT c_pfb_fir_coefs_file : string  := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
 
     --UPDATED THROUGH THE MATLAB CONFIG
-    CONSTANT c_pfb_fir_wb_factor : natural := 8;
+    CONSTANT c_pfb_fir_wb_factor : natural := 4;
     CONSTANT c_pfb_fir_n_taps    : natural := 8;
     CONSTANT c_pfb_fir_n_chans   : natural := 0;
-    CONSTANT c_pfb_fir_n_bins    : natural := 8192;
+    CONSTANT c_pfb_fir_n_bins    : natural := 64;
     CONSTANT c_pfb_fir_n_streams : natural := 1;
     CONSTANT c_pfb_fir_padding   : natural := 0;
 
-    CONSTANT c_pfb_fir_mem_latency  : natural := 2;
-    CONSTANT c_pfb_fir_mult_latency : natural := 3;
+    CONSTANT c_pfb_fir_mem_latency  : natural := 1;
+    CONSTANT c_pfb_fir_mult_latency : natural := 1;
     CONSTANT c_pfb_fir_add_latency  : natural := 1;
     CONSTANT c_pfb_fir_conv_latency : natural := 1;
     
