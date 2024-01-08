@@ -112,7 +112,7 @@ architecture rtl of pfb_fir is
 begin
 
     p_wire_input : process(din)
-        variable vP, idx : natural;
+        variable vP, idx : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for P in 0 to g_pfb_fir.wb_factor - 1 loop
             if g_big_endian_in = true then
@@ -130,7 +130,7 @@ begin
     end process;
 
     p_unpack_input : process(din_munged)
-        variable idx : natural;
+        variable idx : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for P in 0 to g_pfb_fir.wb_factor-1 loop
             for S in 0 to g_pfb_fir.n_streams -1 loop
@@ -363,7 +363,7 @@ begin
     end generate;                       --I
 
     p_wire_output : process(dout_int)
-        variable vP : natural;
+        variable vP : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for P in 0 to g_pfb_fir.wb_factor - 1 loop
             if g_big_endian_out then

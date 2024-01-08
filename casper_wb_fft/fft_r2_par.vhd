@@ -108,9 +108,9 @@ architecture str of fft_r2_par is
     -- input element odd => output = element.   
 
     function func_butterfly_connect(array_index, stage, nr_of_points : natural) return natural is
-        variable v_nr_of_domains : natural; -- Variable that represents the number of "even" areas. 
-        variable v_return        : natural; -- Holds the return value
-        variable v_offset        : natural; -- Offset
+        variable v_nr_of_domains : natural; -- Variable that represents the number of "even" areas.  -- @suppress "The type of a variable has to be constrained in size"
+        variable v_return        : natural; -- Holds the return value -- @suppress "The type of a variable has to be constrained in size"
+        variable v_offset        : natural; -- Offset -- @suppress "The type of a variable has to be constrained in size"
     begin
         v_nr_of_domains := nr_of_points / 2 ** (stage + 1);
         v_offset        := 2 ** stage;

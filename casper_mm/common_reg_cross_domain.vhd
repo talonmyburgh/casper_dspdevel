@@ -113,7 +113,7 @@ BEGIN
   
   p_in_clk : PROCESS(in_rst, in_clk)
   BEGIN
-    IF in_rst='1' THEN
+    IF in_rst='1' THEN -- @suppress "Incomplete reset branch: missing asynchronous reset for register 'in_buf_reg'"
       in_new_hold <= '0';
       in_done     <= '0';
       state       <= s_idle;
@@ -184,7 +184,7 @@ BEGIN
   ------------------------------------------------------------------------------
   p_out_clk : PROCESS(out_rst, out_clk)
   BEGIN
-    IF out_rst='1' THEN
+    IF out_rst='1' THEN -- @suppress "Incomplete reset branch: missing asynchronous reset for register 'i_out_dat'"
       out_new   <= '0';
     ELSIF rising_edge(out_clk) THEN
       i_out_dat <= nxt_out_dat;

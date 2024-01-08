@@ -26,7 +26,7 @@
 
 library ieee, common_pkg_lib;
 use IEEE.std_logic_1164.all;
-use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_unsigned.all; -- @suppress "Deprecated package"
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
 use STD.textio.all;

@@ -116,7 +116,7 @@ architecture rtl of fft_r2_wide is
     -- Most imortant in the settings the nof_points.
     ----------------------------------------------------------
     function func_create_generic_for_pipe_fft(input : t_fft) return t_fft_arr is
-        variable v_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages
+        variable v_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages -- @suppress "The type of a variable has to be constrained in size"
         variable v_return     : t_fft_arr(input.wb_factor - 1 downto 0) := (others => input); -- Variable that holds the return values
     begin
         for I in 0 to input.wb_factor - 1 loop

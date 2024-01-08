@@ -78,7 +78,7 @@ BEGIN
 
 
 	rst    <= '1', '0' AFTER clk_period * 7;
-	clk    <= NOT clk OR tb_end AFTER clk_period / 2;
+	clk    <= NOT clk OR tb_end AFTER clk_period / 2; -- @suppress "Clock signal 'clk' not used as clock"
 	tb_end <= '0', '1' AFTER 20 us;
 
 	verify_en <= '0', '1' AFTER clk_period * 35;

@@ -118,9 +118,9 @@ ARCHITECTURE rtl OF common_paged_ram_crw_crw IS
 	-- g_str = "use_mux" and g_str = "use_adr" :
 	-- . use page_sel direct for wr_en, rd_en, and address
 	SIGNAL page_sel_a     : NATURAL RANGE 0 TO g_nof_pages - 1 := g_start_page_a;
-	SIGNAL nxt_page_sel_a : NATURAL;
+	SIGNAL nxt_page_sel_a : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
 	SIGNAL page_sel_b     : NATURAL RANGE 0 TO g_nof_pages - 1 := g_start_page_b;
-	SIGNAL nxt_page_sel_b : NATURAL;
+	SIGNAL nxt_page_sel_b : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
 
 	-- . use page_sel_dly to adjust for g_rd_latency of rd_dat and rd_val
 	SIGNAL page_sel_a_dly     : t_page_sel_arr(0 TO g_rd_latency - 1);
@@ -130,9 +130,9 @@ ARCHITECTURE rtl OF common_paged_ram_crw_crw IS
 
 	-- g_str = "use_ofs" :
 	SIGNAL page_ofs_a     : NATURAL RANGE 0 TO c_buf_nof_words - 1;
-	SIGNAL nxt_page_ofs_a : NATURAL;
+	SIGNAL nxt_page_ofs_a : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
 	SIGNAL page_ofs_b     : NATURAL RANGE 0 TO c_buf_nof_words - 1;
-	SIGNAL nxt_page_ofs_b : NATURAL;
+	SIGNAL nxt_page_ofs_b : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
 
 	-- >>> Access control
 
