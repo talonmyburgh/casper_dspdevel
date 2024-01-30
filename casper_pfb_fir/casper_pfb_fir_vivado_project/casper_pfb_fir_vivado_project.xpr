@@ -38,7 +38,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="249"/>
+    <Option Name="WTXSimLaunchSim" Val="259"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -350,6 +350,16 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/u4_rnd_4channles_3streams.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/u4_rnd_4channels_3streams.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
         <Option Name="TopModule" Val="tb_tb_pfb_fir"/>
@@ -369,6 +379,8 @@
         <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_act.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_rnd_3streams.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_act.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u4_rnd_4channles_3streams.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u4_rnd_4channels_3streams.wcfg"/>
       </Config>
     </FileSet>
     <FileSet Name="utils_1" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
