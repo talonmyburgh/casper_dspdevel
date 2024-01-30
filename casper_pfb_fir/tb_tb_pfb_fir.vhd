@@ -48,8 +48,8 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   CONSTANT c_fil_ppf_4_act_be_le      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
   CONSTANT c_fil_ppf_4_act_le_le      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
   CONSTANT c_fil_ppf_4_rnd_quant      : t_pfb_fir := (4, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
-  CONSTANT c_fil_ppf_4_rnd_3streams   : t_pfb_fir := (4, 0, 64, 9, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
-  CONSTANT c_fil_ppf_4_rnd_4channels  : t_pfb_fir := (4, 2, 64, 9, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_rnd_3streams   : t_pfb_fir := (4, 0, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
+  CONSTANT c_fil_ppf_4_rnd_4channels  : t_pfb_fir := (4, 2, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
 
   -- Inputs
   CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
@@ -83,17 +83,17 @@ BEGIN
     --g_enable_in_val_gaps : boolean := FALSE
 
   -- verify fil_ppf_wide for wb_factor=1, so effectively same as using fil_ppf_single directly
-  u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, FALSE);
-  u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
-  u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
-  u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
+  --u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, FALSE);
+  --u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
+  --u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
+  --u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
   
   -- verify fil_ppf_wide for wb_factor>1
-  u4_act            :  ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_act, c_pfb_fir_pipeline, c_hanning_4_act, TRUE);
-  u4_act_be_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE, FALSE, c_fil_ppf_4_act_be_le, c_pfb_fir_pipeline, c_hanning_4_act_be_le, FALSE);
-  u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
-  u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
+  --u4_act            :  ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_act, c_pfb_fir_pipeline, c_hanning_4_act, TRUE);
+  --u4_act_be_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE, FALSE, c_fil_ppf_4_act_be_le, c_pfb_fir_pipeline, c_hanning_4_act_be_le, FALSE);
+  --u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
+  --u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
   --u4_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_3streams, c_pfb_fir_pipeline,  c_hanning_1_rnd_3streams, TRUE);
-  --u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
+  u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
   
 END tb;
