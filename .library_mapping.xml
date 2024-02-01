@@ -9,6 +9,8 @@
   <Mappings Location="casper_diagnostics" Library="casper_diagnostics_lib"/>
   <Mappings Location="casper_fifo" Library="casper_fifo_lib"/>
   <Mappings Location="casper_filter" Library="casper_filter_lib"/>
+  <Mappings Location="casper_pfb_fir" Library="casper_pfb_fir_lib"/>
+  <Mappings Location="casper_pfb_fir/pfb_fir.vhd" Library="casper_pfb_fir_lib"/>
   <Mappings Location="casper_flow_control" Library="casper_flow_control_lib"/>
   <Mappings Location="misc" Library="casper_misc_lib"/>
   <Mappings Location="casper_mm" Library="casper_mm_lib"/>
