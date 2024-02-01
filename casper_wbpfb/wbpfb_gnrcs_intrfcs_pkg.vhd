@@ -71,26 +71,26 @@ PACKAGE wbpfb_gnrcs_intrfcs_pkg IS
   TYPE t_dp_siso_arr IS ARRAY (INTEGER RANGE <>) OF t_dp_siso;
 
   --t_dp_sosi record in. Since this always goes into the filterbank first, its bitwidth is the fil_in_dat_w
-  TYPE t_fil_sosi_in IS RECORD          -- Source Out or Sink In
+  TYPE t_pfb_fir_sosi_in IS RECORD          -- Source Out or Sink In
     sync  : STD_LOGIC;
     re    : STD_LOGIC_VECTOR(c_pfb_fir_din_w - 1 DOWNTO 0); -- data
     im    : STD_LOGIC_VECTOR(c_pfb_fir_din_w - 1 DOWNTO 0); -- data
     valid : STD_LOGIC;                  -- ctrl
   END RECORD;
-  CONSTANT c_fil_sosi_rst_in : t_fil_sosi_in := ('0', (OTHERS => '0'), (OTHERS => '0'), '0');
+  CONSTANT c_pfb_fir_sosi_rst_in : t_pfb_fir_sosi_in := ('0', (OTHERS => '0'), (OTHERS => '0'), '0');
 
-  TYPE t_fil_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_in;
+  TYPE t_pfb_fir_sosi_arr_in IS ARRAY (INTEGER RANGE <>) OF t_pfb_fir_sosi_in;
 
   --t_dp_sosi record in. Since this always goes into the filterbank first, its bitwidth is the fil_in_dat_w
-  TYPE t_fil_sosi_out IS RECORD         -- Source Out or Sink In
+  TYPE t_pfb_fir_sosi_out IS RECORD         -- Source Out or Sink In
     sync  : STD_LOGIC;
     re    : STD_LOGIC_VECTOR(c_pfb_fir_dout_w - 1 DOWNTO 0); -- data
     im    : STD_LOGIC_VECTOR(c_pfb_fir_dout_w - 1 DOWNTO 0); -- data
     valid : STD_LOGIC;                  -- ctrl
   END RECORD;
-  CONSTANT c_fil_sosi_rst_out : t_fil_sosi_out := ('0', (OTHERS => '0'), (OTHERS => '0'), '0');
+  CONSTANT c_pfb_fir_sosi_rst_out : t_pfb_fir_sosi_out := ('0', (OTHERS => '0'), (OTHERS => '0'), '0');
 
-  TYPE t_fil_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_fil_sosi_out;
+  TYPE t_pfb_fir_sosi_arr_out IS ARRAY (INTEGER RANGE <>) OF t_pfb_fir_sosi_out;
 
   ----------------------------------------------------------------------------------------------------------
   -- Function declarations

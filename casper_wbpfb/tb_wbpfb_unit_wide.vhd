@@ -1,4 +1,6 @@
 -- Author: Eric Kooistra    : kooistra at astron.nl: july 2016
+
+-- Modified for CASPER: Talon Myburgh 2023
 --------------------------------------------------------------------------------
 --
 -- Copyright (C) 2016
@@ -18,7 +20,11 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: Test bench for wpfb_unit_dev.vhd using file data
 --
@@ -46,7 +52,7 @@
 --   > observe the *_scope signals as radix decimal, format analogue format
 --     signals in the Wave window
 --
-library ieee, common_pkg_lib, casper_filter_lib, r2sdf_fft_lib, wb_fft_lib, casper_ram_lib, dp_components_lib, casper_sim_tools_lib;
+library ieee, common_pkg_lib, casper_pfb_fir_lib, r2sdf_fft_lib, wb_fft_lib, casper_ram_lib, dp_components_lib, casper_sim_tools_lib;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.std_logic_textio.all;
@@ -55,7 +61,7 @@ use common_pkg_lib.common_pkg.all;
 use casper_ram_lib.common_ram_pkg.ALL;
 use common_pkg_lib.common_lfsr_sequences_pkg.ALL;
 use common_pkg_lib.tb_common_pkg.all;
-use casper_filter_lib.fil_pkg.all; 
+use casper_pfb_fir_lib.pfb_fir_pkg.all;
 use r2sdf_fft_lib.rTwoSDFPkg.all;
 use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all;
 use wb_fft_lib.tb_fft_pkg.all;
@@ -67,7 +73,7 @@ entity tb_wbpfb_unit_wide is
     g_wpfb : t_wpfb := (4, 32, 0, 1,
                         16, 1, 8, 16, 16,
                         true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, FALSE, 56, 2, 20,
-                        c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                        c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
     --  type t_wpfb is record  
     --    -- General parameters for the wideband poly phase filter
     --    wb_factor         : natural;        -- = default 4, wideband factor
@@ -101,7 +107,7 @@ entity tb_wbpfb_unit_wide is
     --    -- Pipeline parameters for both poly phase filter and FFT. These are heritaged from the filter and fft libraries.  
     --    pft_pipeline      : t_fft_pipeline;     -- Pipeline settings for the pipelined FFT
     --    fft_pipeline      : t_fft_pipeline;     -- Pipeline settings for the parallel FFT
-    --    fil_pipeline      : t_fil_ppf_pipeline; -- Pipeline settings for the filter units 
+    --    fil_pipeline      : t_pfb_fir_ppf_pipeline; -- Pipeline settings for the filter units 
     --  end record;
     
     -- TB generics
@@ -254,8 +260,8 @@ architecture tb of tb_wbpfb_unit_wide is
   signal exp_output_data_c_im_arr : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- full spectrum, im  
 
   -- Input
-  signal in_re_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal in_im_arr              : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal in_re_arr              : t_pfb_fir_array_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal in_im_arr              : t_pfb_fir_array_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
   signal in_re_data             : std_logic_vector(g_wpfb.wb_factor*c_in_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal in_im_data             : std_logic_vector(g_wpfb.wb_factor*c_in_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal in_val                 : std_logic:= '0';
@@ -266,13 +272,13 @@ architecture tb of tb_wbpfb_unit_wide is
   signal in_blk_val             : std_logic;
   signal in_blk_val_cnt         : natural := 0;
   signal in_gap                 : std_logic := '0';
-  signal in_sosi_arr            : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others=>c_fil_sosi_rst_in);
+  signal in_sosi_arr            : t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) := (others=>c_pfb_fir_sosi_rst_in);
   signal in_blk_time            : integer := 0;  -- input block time counter
   
-  signal in_sosi_val            : t_fil_sosi_in;
-  signal ref_sosi_ctrl          : t_fil_sosi_in;
-  signal ref_re_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal ref_im_arr             : t_fil_slv_arr_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal in_sosi_val            : t_pfb_fir_sosi_in;
+  signal ref_sosi_ctrl          : t_pfb_fir_sosi_in;
+  signal ref_re_arr             : t_pfb_fir_array_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal ref_im_arr             : t_pfb_fir_array_in(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
 
   signal shiftreg               : std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (0=>'0', 1=>'0', others=>'1');
 
@@ -289,10 +295,10 @@ architecture tb of tb_wbpfb_unit_wide is
   signal exp_fil_im_scope       : integer;
 
   -- Filter output
-  type t_fil_out_data is array (g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) of std_logic_vector(g_wpfb.fil_out_dat_w-1 downto 0);
-  signal fil_sosi_arr           : t_fil_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
-  signal fil_re_arr             : t_fil_out_data;
-  signal fil_im_arr             : t_fil_out_data;
+  type t_pfb_fir_out_data is array (g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0) of std_logic_vector(g_wpfb.fil_out_dat_w-1 downto 0);
+  signal fil_sosi_arr           : t_pfb_fir_sosi_arr_out(g_wpfb.nof_wb_streams*g_wpfb.wb_factor-1 downto 0);
+  signal fil_re_arr             : t_pfb_fir_out_data;
+  signal fil_im_arr             : t_pfb_fir_out_data;
   signal fil_re_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_im_data            : std_logic_vector(g_wpfb.wb_factor*c_fil_dat_w-1 DOWNTO 0);  -- scope data only for stream 0
   signal fil_val                : std_logic:= '0';  -- for parallel output
@@ -300,7 +306,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal fil_out_cnt            : natural := 0;
 
   -- Observe common sosi fields via sosi_arr(0)
-  signal in_sosi_0              : t_fil_sosi_in;
+  signal in_sosi_0              : t_pfb_fir_sosi_in;
   signal out_sosi_0             : t_fft_sosi_out;
   
   -- Output
@@ -469,7 +475,7 @@ begin
     g_big_endian_wb_in  => c_big_endian_wb_in,
     g_wpfb              => g_wpfb,
     g_use_prefilter     => TRUE,
-    g_coefs_file_prefix => c_coefs_memory_file_prefix,
+    c_pfb_fir_coefs_file=> c_coefs_memory_file_prefix,
     g_twid_file_stem    => g_twid_file_stem
   )
   port map (

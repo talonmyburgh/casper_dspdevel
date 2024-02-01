@@ -341,7 +341,7 @@ entity wbpfb_unit_dev is
         g_wpfb               : t_wpfb          := c_wpfb;
         g_dont_flip_channels : boolean         := false; -- True preserves channel interleaving for pipelined FFT
         g_use_prefilter      : boolean         := TRUE;
-        g_coefs_file_prefix  : string          := c_pfb_fir_coefs_file; -- File prefix for the coefficients files.
+        c_pfb_fir_coefs_prefix : string          := c_pfb_fir_coefs_file; -- File prefix for the coefficients files.
         g_alt_output         : boolean         := FALSE; -- Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
         g_fil_ram_primitive  : string          := "block";
         g_use_variant        : string          := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
@@ -355,8 +355,8 @@ entity wbpfb_unit_dev is
         clk          : in  std_logic                                                   := '0';
         ce           : in  std_logic                                                   := '1';
         shiftreg     : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (others => '1'); --! Shift register
-        in_sosi_arr  : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-        fil_sosi_arr : out t_fil_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        in_sosi_arr  : in  t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        fil_sosi_arr : out t_pfb_fir_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
         ovflw        : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0); --! Ovflw register
         out_sosi_arr : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)
     );
@@ -430,10 +430,10 @@ architecture str of wbpfb_unit_dev is
     signal pfb_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
 
     type reg_type is record
-        in_sosi_arr : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        in_sosi_arr : t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     end record;
 
-    signal r, rin : reg_type := (others => (others => c_fil_sosi_rst_in));
+    signal r, rin : reg_type := (others => (others => c_pfb_fir_sosi_rst_in));
 
 begin
 
@@ -494,7 +494,7 @@ begin
             generic map(
                 g_big_endian_in    => g_big_endian_wb_in,
                 g_big_endian_out   => false,
-                g_coefs_file       => c_pfb_fir_coefs_file,
+                g_coefs_file       => c_pfb_fir_coefs_prefix,
                 g_ram_primitive    => g_fil_ram_primitive,
                 g_pfb_fir          => c_fil_ppf, --c_pfb_fir,
                 g_pfb_fir_pipeline => c_pfb_fir_pipeline
