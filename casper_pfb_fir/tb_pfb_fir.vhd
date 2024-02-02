@@ -64,7 +64,7 @@ entity tb_pfb_fir is
     --  add_latency     : natural; -- = 1, adder latency
     --  conv_latency    : natural; -- = 1, type conversion latency
     --end record;
-    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
+    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing";
     g_enable_in_val_gaps : boolean := FALSE
   );
   PORT   (
@@ -248,7 +248,7 @@ begin
     g_big_endian_out     => g_big_endian_wb_out,
     g_pfb_fir           => g_pfb_fir,
     g_pfb_fir_pipeline  => g_pfb_fir_pipeline,
-    g_coefs_file        => c_coefs_file_prefix
+    g_coefs_file_prefix => c_coefs_file_prefix
   )
   port map (
     clk            => clk,

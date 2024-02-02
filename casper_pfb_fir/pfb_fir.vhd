@@ -278,7 +278,7 @@ begin
                     g_ram            => c_coef_mem,
                     g_init_file      => sel_a_b(g_coefs_file_prefix = "UNUSED",
                                                 g_coefs_file_prefix,
-                                                g_coefs_file_prefix & "_" & integer'image(g_pfb_fir.n_taps) & "taps" --append taps
+                                                g_coefs_file_prefix & "_" & integer'image(g_pfb_fir.n_taps) & "taps"--append taps
                                                 & "_" & integer'image(g_pfb_fir.n_bins) & "points" --append points
                                                 & "_" & integer'image(g_pfb_fir.coef_w) & "b" --append bits
                                                 & "_" & integer'image(g_pfb_fir.wb_factor) & "wb" --append wideband factor

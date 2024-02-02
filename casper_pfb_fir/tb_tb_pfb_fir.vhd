@@ -52,14 +52,14 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   CONSTANT c_fil_ppf_4_rnd_4channels  : t_pfb_fir := (4, 2, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
 
   -- Inputs
-  CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
-  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+  CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
 
     
 BEGIN
