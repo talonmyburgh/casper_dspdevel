@@ -6,9 +6,9 @@ package pfb_fir_pkg is
 
     --UPDATED BY MATLAB CODE
     CONSTANT c_pfb_fir_din_w      : natural := 8;
-    CONSTANT c_pfb_fir_dout_w     : natural := 23;
+    CONSTANT c_pfb_fir_dout_w     : natural := 16;
     CONSTANT c_pfb_fir_coef_w     : natural := 16;
-    CONSTANT c_pfb_fir_coefs_file : string  := "../../../../../data/hex/run_pfir_coeff_m_incrementing_8taps_64points_16b";
+    CONSTANT c_pfb_fir_coefs_file : string  := "../../../../../data/hex/run_pfir_coeff_m_incrementing"; --must be prefix as file will append required detail
 
     --UPDATED THROUGH THE MATLAB CONFIG
     CONSTANT c_pfb_fir_wb_factor : natural := 4;
