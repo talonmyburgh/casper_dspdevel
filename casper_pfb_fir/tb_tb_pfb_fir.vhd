@@ -52,14 +52,14 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   CONSTANT c_fil_ppf_4_rnd_4channels  : t_pfb_fir := (4, 2, 64, 8, 3, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
 
   -- Inputs
-  CONSTANT c_hanning_1_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_4_act            : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
-  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_act            : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_quant      : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_3streams   : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_1_rnd_4channels  : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act            : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act_be_le      : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_act_le_le      : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
+  CONSTANT c_hanning_4_rnd_quant      : string := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing";
 
     
 BEGIN
@@ -83,7 +83,7 @@ BEGIN
     --g_enable_in_val_gaps : boolean := FALSE
 
   -- verify fil_ppf_wide for wb_factor=1, so effectively same as using fil_ppf_single directly
-  --u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, FALSE);
+  u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, FALSE);
   --u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
   --u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
   --u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
@@ -94,6 +94,6 @@ BEGIN
   --u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP ( FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
   --u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
   --u4_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_3streams, c_pfb_fir_pipeline,  c_hanning_1_rnd_3streams, TRUE);
-  u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
+--  u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP ( TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
   
 END tb;
