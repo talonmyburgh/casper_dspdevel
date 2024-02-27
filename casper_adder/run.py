@@ -82,37 +82,6 @@ generate_tests(TB_GENERATED,
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)
 lib2.add_source_files(os.path.join(script_dir, "../common_components/*.vhd"))
 
-# XPM Library compile
-lib_xpm = vu.add_library("xpm")
-lib_xpm.add_source_files(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
-xpm_source_file_base = lib_xpm.add_source_file(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd"))
-xpm_source_file_sdpram = lib_xpm.add_source_file(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd"))
-xpm_source_file_tdpram = lib_xpm.add_source_file(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd"))
-xpm_source_file_tdpram = lib_xpm.add_source_file(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd"))
-xpm_source_file_tdpram = lib_xpm.add_source_file(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd"))
-xpm_source_file_sdpram.add_dependency_on(xpm_source_file_base)
-xpm_source_file_tdpram.add_dependency_on(xpm_source_file_base)
-
-# Altera_mf library
-lib_altera_mf = vu.add_library("altera_mf")
-lib_altera_mf.add_source_file(os.path.join(script_dir, "../intel/altera_mf/altera_mf_components.vhd"))
-altera_mf_source_file = lib_altera_mf.add_source_file(os.path.join(script_dir, "../intel/altera_mf/altera_mf.vhd"))
-
-# STRATIXIV RAM Library
-ip_stratixiv_ram_lib = vu.add_library("ip_stratixiv_ram_lib")
-ip_stratix_file_cr_cw = ip_stratixiv_ram_lib.add_source_file(os.path.join(script_dir, "../ip_stratixiv/ram/ip_stratixiv_ram_cr_cw.vhd"))
-ip_stratix_file_crw_crw = ip_stratixiv_ram_lib.add_source_file(os.path.join(script_dir, "../ip_stratixiv/ram/ip_stratixiv_ram_crw_crw.vhd"))
-ip_stratix_file_cr_cw.add_dependency_on(altera_mf_source_file)
-ip_stratix_file_crw_crw.add_dependency_on(altera_mf_source_file)
-
-ip_xpm_ram_lib = vu.add_library("ip_xpm_ram_lib")
-ip_xpm_file_cr_cw = ip_xpm_ram_lib.add_source_files(os.path.join(script_dir, "../ip_xpm/ram/ip_xpm_ram_cr_cw.vhd"))
-ip_xpm_file_cr_cw.add_dependency_on(xpm_source_file_sdpram)
-ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(os.path.join(script_dir, "../ip_xpm/ram/ip_xpm_ram_crw_crw.vhd"))
-ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
-ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(os.path.join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r_r.vhd"))
-ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
-
 # TECHNOLOGY Library
 technology_lib = vu.add_library("technology_lib")
 technology_lib.add_source_files(os.path.join(script_dir, "../technology/technology_select_pkg.vhd"))
@@ -148,9 +117,6 @@ ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(os.path.join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r_r.vhd"))
 ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 
-# TECHNOLOGY Library
-technology_lib = vu.add_library("technology_lib")
-technology_lib.add_source_files(os.path.join(script_dir, "../technology/technology_select_pkg.vhd"))
 
 casper_ram_lib = vu.add_library("casper_ram_lib")
 casper_ram_lib.add_source_file(os.path.join(script_dir, "../casper_ram/common_ram_pkg.vhd"))
