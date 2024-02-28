@@ -337,26 +337,26 @@ use work.wbpfb_gnrcs_intrfcs_pkg.all;
 
 entity wbpfb_unit_dev is
     generic(
-        g_big_endian_wb_in   : boolean         := true;
-        g_wpfb               : t_wpfb          := c_wpfb;
-        g_dont_flip_channels : boolean         := false; -- True preserves channel interleaving for pipelined FFT
-        g_use_prefilter      : boolean         := TRUE;
-        g_coefs_file_prefix  : string          := c_pfb_fir_coefs_file; -- File prefix for the coefficients files.
-        g_alt_output         : boolean         := FALSE; -- Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
-        g_fil_ram_primitive  : string          := "block";
-        g_use_variant        : string          := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-        g_use_dsp            : string          := "yes"; --! = "yes" or "no"
-        g_ovflw_behav        : string          := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-        g_round              : t_rounding_mode := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
-        g_fft_ram_primitive  : string          := "block"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-        g_twid_file_stem     : string          := c_twid_file_stem --! file stem for the twiddle coefficients                  
+        g_big_endian_wb_in     : boolean         := true;
+        g_wpfb                 : t_wpfb          := c_wpfb;
+        g_dont_flip_channels   : boolean         := false; -- True preserves channel interleaving for pipelined FFT
+        g_use_prefilter        : boolean         := TRUE;
+        g_pfb_fir_coefs_prefix : string          := c_pfb_fir_coefs_file; -- File prefix for the coefficients files.
+        g_alt_output           : boolean         := FALSE; -- Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
+        g_fil_ram_primitive    : string          := "block";
+        g_use_variant          : string          := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+        g_use_dsp              : string          := "yes"; --! = "yes" or "no"
+        g_ovflw_behav          : string          := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_round                : t_rounding_mode := ROUND; --! = ROUND, ROUNDINF or TRUNCATE - defaults to ROUND if not specified
+        g_fft_ram_primitive    : string          := "block"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+        g_twid_file_stem       : string          := c_twid_file_stem --! file stem for the twiddle coefficients                  
     );
     port(
         clk          : in  std_logic                                                   := '0';
         ce           : in  std_logic                                                   := '1';
         shiftreg     : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (others => '1'); --! Shift register
-        in_sosi_arr  : in  t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-        fil_sosi_arr : out t_fil_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        in_sosi_arr  : in  t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        fil_sosi_arr : out t_pfb_fir_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
         ovflw        : out std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0); --! Ovflw register
         out_sosi_arr : out t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0)
     );
@@ -419,9 +419,9 @@ architecture str of wbpfb_unit_dev is
     signal fft_in_val    : std_logic := '0';
     signal fft_in_sync   : std_logic := '0';
 
-    signal fft_out_re_arr  : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); --(g_wpfb.fft_out_dat_w-1 downto 0);
-    signal fft_out_im_arr  : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); --(g_wpfb.fft_out_dat_w-1 downto 0);
-    signal fft_out_val_arr : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
+    signal fft_out_re_arr   : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); --(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_im_arr   : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); --(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_val_arr  : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
     signal fft_out_sync_arr : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
 
     signal fft_out_sosi     : t_fft_sosi_out;
@@ -430,10 +430,10 @@ architecture str of wbpfb_unit_dev is
     signal pfb_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
 
     type reg_type is record
-        in_sosi_arr : t_fil_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+        in_sosi_arr : t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     end record;
 
-    signal r, rin : reg_type := (others => (others => c_fil_sosi_rst_in));
+    signal r, rin : reg_type := (others => (others => c_pfb_fir_sosi_rst_in));
 
 begin
 
@@ -492,12 +492,12 @@ begin
     gen_prefilter : IF g_use_prefilter generate
         u_pfb_fir : entity casper_pfb_fir_lib.pfb_fir
             generic map(
-                g_big_endian_in    => g_big_endian_wb_in,
-                g_big_endian_out   => false,
-                g_coefs_file       => c_pfb_fir_coefs_file,
-                g_ram_primitive    => g_fil_ram_primitive,
-                g_pfb_fir          => c_fil_ppf, --c_pfb_fir,
-                g_pfb_fir_pipeline => c_pfb_fir_pipeline
+                g_big_endian_in     => g_big_endian_wb_in,
+                g_big_endian_out    => false,
+                g_coefs_file_prefix => g_pfb_fir_coefs_prefix,
+                g_ram_primitive     => g_fil_ram_primitive,
+                g_pfb_fir           => c_fil_ppf, --c_pfb_fir,
+                g_pfb_fir_pipeline  => c_pfb_fir_pipeline
             )
             port map(
                 clk      => clk,
@@ -613,10 +613,10 @@ begin
     -- FFT OUTPUT MAPPING
     ---------------------------------------------------------------
     wire_fft_out_sosi_arr : for I in 0 to g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 generate
-        out_sosi_arr(I).sync <=  fft_out_sync_arr(I);
+        out_sosi_arr(I).sync  <= fft_out_sync_arr(I);
         out_sosi_arr(I).valid <= fft_out_sync_arr(I);
-        out_sosi_arr(I).re <= fft_out_re_arr(I)(c_fft.out_dat_w - 1 downto 0);
-        out_sosi_arr(I).im <= fft_out_im_arr(I)(c_fft.out_dat_w - 1 downto 0);
+        out_sosi_arr(I).re    <= fft_out_re_arr(I)(c_fft.out_dat_w - 1 downto 0);
+        out_sosi_arr(I).im    <= fft_out_im_arr(I)(c_fft.out_dat_w - 1 downto 0);
     end generate;
 
 end str;

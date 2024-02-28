@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="/home/andrew/casper/casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/casper_pfb_fir_vivado_project.xpr">
+<Project Version="7" Minor="49" Path="C:/Users/mybur/Repos/CASPER/dspdevel_designs/casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/casper_pfb_fir_vivado_project.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="592fb8c847814d7c8b8a0d160957445c"/>
@@ -38,7 +38,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="134"/>
+    <Option Name="WTXSimLaunchSim" Val="280"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -67,6 +67,20 @@
   <FileSets Version="1" Minor="31">
     <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
       <Filter Type="Srcs"/>
+      <File Path="$PPRDIR/../../common_pkg/fixed_float_types_c.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_pkg_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_pkg/fixed_pkg_c.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_pkg_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../common_pkg/common_pkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="common_pkg_lib"/>
@@ -321,17 +335,17 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/basic_input_output.wcfg">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/pfb_fir_control.wcfg">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/pfb_fir.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/u1_act.wcfg">
+        <FileInfo>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/u4_rnd_4channels_3streams.wcfg">
         <FileInfo>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -352,6 +366,11 @@
         <Option Name="XSimWcfgFile" Val="$PPRDIR/basic_input_output.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/pfb_fir_control.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/pfb_fir.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_act.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_rnd_3streams.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_act.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u4_rnd_4channles_3streams.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/u4_rnd_4channels_3streams.wcfg"/>
       </Config>
     </FileSet>
     <FileSet Name="utils_1" Type="Utils" RelSrcDir="$PSRCDIR/utils_1">
@@ -372,17 +391,11 @@
     <Simulator Name="Questa">
       <Option Name="Description" Val="Questa Advanced Simulator"/>
     </Simulator>
-    <Simulator Name="IES">
-      <Option Name="Description" Val="Incisive Enterprise Simulator (IES)"/>
-    </Simulator>
-    <Simulator Name="Xcelium">
-      <Option Name="Description" Val="Xcelium Parallel Simulator"/>
-    </Simulator>
-    <Simulator Name="VCS">
-      <Option Name="Description" Val="Verilog Compiler Simulator (VCS)"/>
-    </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
+    </Simulator>
+    <Simulator Name="ActiveHDL">
+      <Option Name="Description" Val="Active-HDL Simulator"/>
     </Simulator>
   </Simulators>
   <Runs Version="1" Minor="11">

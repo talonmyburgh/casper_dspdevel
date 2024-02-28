@@ -35,17 +35,17 @@
 		<link>
 			<name>Common Libraries/IEEE</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/IEEE</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/IEEE</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/IEEE Synopsys</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/IEEE%20Synopsys</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/IEEE%20Synopsys</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/STD</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/STD</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/STD</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/osvvm</name>
@@ -61,6 +61,11 @@
 			<name>Common Libraries/vunit_lib</name>
 			<type>2</type>
 			<locationURI>/tools/vunit/vunit/vhdl</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/xpm</name>
+			<type>2</type>
+			<locationURI>SIGASI_TOOLCHAIN_XILINX_VIVADO/data/ip/xpm</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/vunit_lib/ansi_pkg.vhd</name>
@@ -326,11 +331,6 @@
 			<name>Common Libraries/vunit_lib/vunit_run_context.vhd</name>
 			<type>1</type>
 			<locationURI>/tools/vunit/vunit/vhdl/vunit_run_context.vhd</locationURI>
-		</link>
-		<link>
-			<name>Common Libraries/xpm</name>
-			<type>2</type>
-			<locationURI>/tools/Xilinx/Vivado/2023.2/data/ip/xpm</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/xpm/xpm_VCOMP.vhd</name>

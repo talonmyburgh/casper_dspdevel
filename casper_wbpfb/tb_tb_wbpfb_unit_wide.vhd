@@ -30,10 +30,10 @@
 --   > as 4
 --   > run -all
 
-LIBRARY IEEE, common_pkg_lib, casper_filter_lib, r2sdf_fft_lib;
+LIBRARY IEEE, common_pkg_lib, casper_pfb_fir_lib, r2sdf_fft_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.all;
-USE casper_filter_lib.fil_pkg.all;
+USE casper_pfb_fir_lib.pfb_fir_pkg.all;
 USE r2sdf_fft_lib.rTwoSDFPkg.all;
 library wb_fft_lib;
 use wb_fft_lib.fft_gnrcs_intrfcs_pkg.all; 
@@ -51,143 +51,143 @@ ARCHITECTURE tb OF tb_tb_wbpfb_unit_wide IS
   CONSTANT c_wb1_two_real_1024        : t_wpfb := (1, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync, 
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_two_real             : t_wpfb := (1, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                     
   CONSTANT c_wb1_two_real_4streams    : t_wpfb := (1, 32, 0, 4,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   CONSTANT c_wb1_two_real_4channels   : t_wpfb := (1, 32, 2, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   -- wb 4, two real
   CONSTANT c_wb4_two_real_1024        : t_wpfb := (4, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_stage_dat_extra_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_two_real             : t_wpfb := (4, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                     
   CONSTANT c_wb4_two_real_4streams     : t_wpfb := (4, 32, 0, 4,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                     
   CONSTANT c_wb4_two_real_4channels   : t_wpfb := (4, 32, 2, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, true, 16, 16, 1, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   -- wb 1, complex reordered
   CONSTANT c_wb1_complex_1024         : t_wpfb := (1, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_complex_64           : t_wpfb := (1, 64, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_complex              : t_wpfb := (1, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_complex_4streams     : t_wpfb := (1, 32, 0, 4,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   CONSTANT c_wb1_complex_4channels    : t_wpfb := (1, 32, 2, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   -- wb 1, complex fft_shift
   CONSTANT c_wb1_complex_fft_shift    : t_wpfb := (1, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true,  true, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   -- wb 1, complex without reorder
   CONSTANT c_wb1_complex_flipped_1024 : t_wpfb := (1, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_complex_flipped_64   : t_wpfb := (1, 64, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb1_complex_flipped      : t_wpfb := (1, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                     
   -- wb 4, complex reordered
   CONSTANT c_wb4_complex_1024         : t_wpfb := (4, 1024, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_complex_64           : t_wpfb := (4, 64, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_complex              : t_wpfb := (4, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_complex_4streams     : t_wpfb := (4, 32, 0, 4,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   CONSTANT c_wb4_complex_4channels    : t_wpfb := (4, 32, 2, 1,
                                                    16, 1, 8, 16, 16,
                                                    true, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   -- wb 4, complex fft_shift
   CONSTANT c_wb4_complex_fft_shift    : t_wpfb := (4, 32, 0, 1,
                                                    16, 1, 8, 16, 16,
                                                    true,  true, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                   c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                   c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
 
   -- wb 4, complex without reorder
   CONSTANT c_wb4_complex_flipped_1024     : t_wpfb := (4, 1024, 0, 1,
                                                        16, 1, 8, 16, 16,
                                                        false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                       c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                       c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_complex_flipped_64       : t_wpfb := (4, 64, 0, 1,
                                                        16, 1, 8, 16, 16,
                                                        false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                       c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                       c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
   CONSTANT c_wb4_complex_flipped          : t_wpfb := (4, 32, 0, 1,
                                                        16, 1, 8, 16, 16,
                                                        false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                       c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                       c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                        
   CONSTANT c_wb4_complex_flipped_channels : t_wpfb := (4, 32, 2, 1,
                                                        16, 1, 8, 16, 16,
                                                        false, false, false, 16, 16, 0, c_dsp_mult_w, 18, 8, 2, true, c_pipe_reo_in_place, 56, 2, c_nof_blk_per_sync,
-                                                       c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+                                                       c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
                                                    
   CONSTANT c_dm_1                : natural := 1;  -- diff margin (for stage_dat_w >> c_dsp_mult_w)
   CONSTANT c_dm_3                : natural := 3;  -- diff margin (for 32 point dm=2 appears sufficient, for 1024 point dm=3 is sufficient)
   CONSTANT c_dm_5                : natural := 5;  -- diff margin (for 32 point dm=2 appears sufficient, for 1024 point dm=3 is sufficient)
   
-  CONSTANT c_pre_ab              : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_32points_16b";                 -- original version
-  CONSTANT c_pre_ab_1024         : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1_16taps_1024points_16b";                 -- original version
-  CONSTANT c_pre_ab_v2           : string := "../../../../../data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1_16taps_1024points_16b";              -- next version
-  CONSTANT c_pre_c               : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_32points_16b";
-  CONSTANT c_pre_c_64            : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_64points_16b";
-  CONSTANT c_pre_c_1024          : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1_16taps_1024points_16b";
+  CONSTANT c_pre_ab              : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1";                 -- original version
+  CONSTANT c_pre_ab_1024         : string := "../../../../../data/mem/hex/run_pfb_m_pfir_coeff_fircls1";                 -- original version
+  CONSTANT c_pre_ab_v2           : string := "../../../../../data/mem/hex/run_pfb_m_v2_pfir_coeff_fircls1";              -- next version
+  CONSTANT c_pre_c               : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1";
+  CONSTANT c_pre_c_64            : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1";
+  CONSTANT c_pre_c_1024          : string := "../../../../../data/mem/hex/run_pfb_complex_m_pfir_coeff_fircls1";
   
   -- Real input
   CONSTANT c_sinusoid_chirp_1024 : string := "../../../../../data/run_pfb_m_sinusoid_chirp_8b_16taps_1024points_16b.dat";   -- 204800 lines
@@ -221,7 +221,7 @@ BEGIN
 -- g_wpfb : t_wpfb := (4, 32, 0, 1,
 --                     16, 1, 8, 16, 16,
 --                     false, false, false, 16, 16, 0, c_dsp_mult_w, 2, true, 56, 2, 800000, 
---                     c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);
+--                     c_fft_pipeline, c_fft_pipeline, c_pfb_fir_pipeline);
 -- --  type t_wpfb is record  
 -- --    -- General parameters for the wideband poly phase filter
 -- --    wb_factor         : natural;        -- = default 4, wideband factor
@@ -326,26 +326,26 @@ BEGIN
   -- Complex input data
   -- * 1024 point
   u_act_wb1_complex_chirp_1024  : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_1024,  c_dm_3, c_pre_ab_1024, c_pre_c_1024, c_un, 0, c_un, 0, c_phasor_chirp_1024,  204800, 51200, FALSE, c_twid_file_stem);
-  u_act_wb4_complex_chirp_1024  : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_1024,  c_dm_3, c_pre_ab_1024, c_pre_c_1024, c_un, 0, c_un, 0, c_phasor_chirp_1024,  204800, 51200, FALSE, c_twid_file_stem);
+--  u_act_wb4_complex_chirp_1024  : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_1024,  c_dm_3, c_pre_ab_1024, c_pre_c_1024, c_un, 0, c_un, 0, c_phasor_chirp_1024,  204800, 51200, FALSE, c_twid_file_stem);
   
   -- * 64 point (as in Apertif channel filterbank)
- u_act_wb1_complex_chirp_64         : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_64,         c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_phasor_chirp_64,  12800, 12800, FALSE, c_twid_file_stem);
- u_act_wb4_complex_chirp_64         : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_64,         c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_phasor_chirp_64,  12800, 12800, FALSE, c_twid_file_stem);
- u_act_wb1_complex_flipped_noise_64 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_flipped_64, c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_noise_complex_64,  3200,  3200, FALSE, c_twid_file_stem);
- u_act_wb4_complex_flipped_noise_64 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped_64, c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_noise_complex_64,  3200,  3200, FALSE, c_twid_file_stem);
+-- u_act_wb1_complex_chirp_64         : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_64,         c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_phasor_chirp_64,  12800, 12800, FALSE, c_twid_file_stem);
+-- u_act_wb4_complex_chirp_64         : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_64,         c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_phasor_chirp_64,  12800, 12800, FALSE, c_twid_file_stem);
+-- u_act_wb1_complex_flipped_noise_64 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_flipped_64, c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_noise_complex_64,  3200,  3200, FALSE, c_twid_file_stem);
+-- u_act_wb4_complex_flipped_noise_64 : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped_64, c_dm_3, c_pre_ab, c_pre_c_64, c_un, 0, c_un, 0, c_noise_complex_64,  3200,  3200, FALSE, c_twid_file_stem);
   
   -- * 32 point
- u_act_wb4_complex_chirp            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
- u_act_wb4_complex_flipped          : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped,          c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
- u_rnd_wb4_complex_flipped_channels : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped_channels, c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
- u_rnd_wb1_complex_phasor           : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb4_complex_phasor           : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb1_complex_fft_shift_phasor : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_fft_shift,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb4_complex_fft_shift_phasor : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_fft_shift,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb1_complex_noise            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb1_complex_noise_channels   : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_4channels,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb1_complex_noise_streams    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_4streams,         c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb4_complex_noise            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb4_complex_noise_channels   : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_4channels,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
- u_rnd_wb4_complex_noise_streams    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_4streams,         c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_act_wb4_complex_chirp            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
+-- u_act_wb4_complex_flipped          : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped,          c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
+-- u_rnd_wb4_complex_flipped_channels : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_flipped_channels, c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor_chirp,  6400, 6400, FALSE, c_twid_file_stem);
+-- u_rnd_wb1_complex_phasor           : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb4_complex_phasor           : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb1_complex_fft_shift_phasor : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_fft_shift,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb4_complex_fft_shift_phasor : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_fft_shift,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_phasor,        1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb1_complex_noise            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb1_complex_noise_channels   : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_4channels,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb1_complex_noise_streams    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb1_complex_4streams,         c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb4_complex_noise            : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex,                  c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb4_complex_noise_channels   : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_4channels,        c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
+-- u_rnd_wb4_complex_noise_streams    : ENTITY work.tb_wbpfb_unit_wide GENERIC MAP (c_wb4_complex_4streams,         c_dm_3, c_pre_ab, c_pre_c, c_un, 0, c_un, 0, c_noise_complex, 1600, 1600, TRUE, c_twid_file_stem);
 END tb;

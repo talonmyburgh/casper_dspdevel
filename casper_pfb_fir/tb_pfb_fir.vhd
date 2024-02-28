@@ -64,7 +64,7 @@ entity tb_pfb_fir is
     --  add_latency     : natural; -- = 1, adder latency
     --  conv_latency    : natural; -- = 1, type conversion latency
     --end record;
-    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing_8taps_64points_16b";
+    g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing";
     g_enable_in_val_gaps : boolean := FALSE
   );
   PORT   (
@@ -89,8 +89,8 @@ architecture tb of tb_pfb_fir is
   constant c_nof_valid_per_tap    : natural := c_nof_data_per_tap / g_pfb_fir.wb_factor;
   constant c_nof_bands_per_file   : natural := g_pfb_fir.n_bins / g_pfb_fir.wb_factor;
 
-  constant c_coefs_file_prefix    : string  := g_coefs_file_prefix;
-  constant c_memory_file_prefix   : string  := c_coefs_file_prefix & "_" & integer'image(g_pfb_fir.wb_factor) & "wb";
+  constant c_coefs_file_prefix    : string  := g_coefs_file_prefix & "_" & integer'image(g_pfb_fir.n_taps) & "taps_" & integer'image(g_pfb_fir.n_bins) & "points_" & integer'image(g_pfb_fir.coef_w) & "b";
+  constant c_memory_file_prefix   : string  := g_coefs_file_prefix;
   
   constant c_in_ampl              : natural := 1; -- for now 2**c_fil_lsb_w;                                 -- scale in_dat to compensate for rounding
   
@@ -197,6 +197,8 @@ begin
   begin
     -- Read all coeffs from coefs file
     proc_common_read_integer_file(c_coefs_file_prefix & ".dat", 0, c_nof_coefs, 1, ref_coefs_arr);
+    for C in 0 to (c_nof_coefs/2)-1 loop
+    end loop;
     wait for 1 ns;
     -- Reverse the coeffs per tap
     for J in 0 to g_pfb_fir.n_taps-1 loop
@@ -221,9 +223,9 @@ begin
       for J in 0 to g_pfb_fir.n_taps-1 loop
         -- Read coeffs per wb and per tap from MEMORY file
         if c_tech_select_default = c_tech_stratixiv then
-          proc_common_read_mif_file(c_memory_file_prefix & "_" & integer'image(P*g_pfb_fir.n_taps+J) & ".mif", memory_coefs_arr);
+          proc_common_read_mif_file(c_coefs_file_prefix & "_" & integer'image(g_pfb_fir.wb_factor) & "wb_" & integer'image(P*g_pfb_fir.n_taps+J) & ".mif", memory_coefs_arr);
         elsif c_tech_select_default = c_tech_xpm then
-          proc_common_read_mem_file(c_memory_file_prefix & "_" & integer'image(P*g_pfb_fir.n_taps+J) & ".mem", memory_coefs_arr);
+          proc_common_read_mem_file(c_coefs_file_prefix & "_" & integer'image(g_pfb_fir.wb_factor) & "wb_" & integer'image(P*g_pfb_fir.n_taps+J) & ".mem", memory_coefs_arr);
         end if;
         wait for 1 ns;
         -- Expand the channels (for one stream)
@@ -242,8 +244,11 @@ begin
   ---------------------------------------------------------------  
   u_dut : entity work.pfb_fir 
   generic map (
+    g_big_endian_in     => g_big_endian_wb_in,
+    g_big_endian_out     => g_big_endian_wb_out,
     g_pfb_fir           => g_pfb_fir,
-    g_coefs_file        => c_coefs_file_prefix
+    g_pfb_fir_pipeline  => g_pfb_fir_pipeline,
+    g_coefs_file_prefix => c_memory_file_prefix
   )
   port map (
     clk            => clk,
