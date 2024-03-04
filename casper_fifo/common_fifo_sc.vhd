@@ -123,7 +123,7 @@ BEGIN
 
 		p_init_reg : PROCESS(fifo_rst, clk)
 		BEGIN
-			IF fifo_rst = '1' THEN
+			IF fifo_rst = '1' THEN -- @suppress "Incomplete reset branch: missing asynchronous reset for register 'fifo_wr_dat'"
 				fifo_wr_en <= '0';
 			ELSIF rising_edge(clk) THEN
 				fifo_wr_dat <= nxt_fifo_wr_dat;

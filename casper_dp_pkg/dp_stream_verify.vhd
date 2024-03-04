@@ -102,8 +102,8 @@ ARCHITECTURE tb OF dp_stream_verify IS
   SIGNAL verify_snk_in_increment    : t_dp_sosi_sl := c_dp_sosi_sl_rst;
   SIGNAL verify_snk_in_ctrl         : t_dp_sosi_sl := c_dp_sosi_sl_rst;
 
-  SIGNAL exp_size                   : NATURAL;
-  SIGNAL cnt_size                   : NATURAL;
+  SIGNAL exp_size                   : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
+  SIGNAL cnt_size                   : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
   
 BEGIN
 

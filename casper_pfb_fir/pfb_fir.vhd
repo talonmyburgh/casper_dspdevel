@@ -144,7 +144,7 @@ begin
 
     -- endinanness reordering if needed
     p_wire_input : process(din)
-        variable vW, idx : natural;
+        variable vP, idx : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for W in 0 to g_pfb_fir.wb_factor - 1 loop
             if g_big_endian_in = true then
@@ -158,9 +158,8 @@ begin
         end loop;
     end process;
 
-    -- rewire inputs so that streams of data are separated
     p_unpack_input : process(din_little_endian)
-        variable idx : natural;
+        variable idx : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for W in 0 to g_pfb_fir.wb_factor - 1 loop
             for S in 0 to g_pfb_fir.n_streams - 1 loop
@@ -414,7 +413,7 @@ begin
     end generate;
 
     p_wire_output : process(dout_int)
-        variable vW : natural;
+        variable vP : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
         for W in 0 to g_pfb_fir.wb_factor - 1 loop
             if g_big_endian_out = true then

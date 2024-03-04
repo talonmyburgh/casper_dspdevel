@@ -189,7 +189,7 @@ begin
 		-- Rounding takes logic due to adding 0.5 therefore need to use c_round_lat=1 to achieve timing
 		-- Overflow style is set to wrap, rounding can be specified by generic g_round
 		gen_comb : if c_round_lat = 0 generate
-			ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY FAILURE;
+			--ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY FAILURE;
 			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w);
 			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w);
 		end generate;

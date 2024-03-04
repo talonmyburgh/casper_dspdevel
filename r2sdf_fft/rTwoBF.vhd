@@ -95,14 +95,14 @@ architecture rtl of rTwoBF is
 	--summation svec must be one larger than the largest svec
 	constant c_sum_bit_width : natural := sel_a_b(in_a'length > in_b'length, in_a'length, in_b'length) + 1;
 
-	signal in_a_dly  : std_logic_vector(in_a'range) := (others=>'0');
-	signal out_c_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
-	signal out_d_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
+	signal in_a_dly  : std_logic_vector(in_a'range); -- := (others=>'0');
+	signal out_c_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0); -- := (others=>'0');
+	signal out_d_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0); -- := (others=>'0');
 	signal out_d_ely : std_logic_vector(out_d'range) := (others=>'0');
-	signal ovflw_add  : std_logic_vector(0 downto 0) := "0";
-	signal ovflw_sub  : std_logic_vector(0 downto 0) := "0";
-	signal ovflw_imm  : std_logic_vector(0 downto 0) := "0";
-	signal ovflw_dly  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_add  : std_logic_vector(0 downto 0); -- := "0";
+	signal ovflw_sub  : std_logic_vector(0 downto 0); --:= "0";
+	signal ovflw_imm  : std_logic_vector(0 downto 0);-- := "0";
+	signal ovflw_dly  : std_logic_vector(0 downto 0); -- := "0";
 
 begin
 

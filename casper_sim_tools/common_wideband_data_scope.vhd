@@ -64,7 +64,7 @@ END common_wideband_data_scope;
 ARCHITECTURE beh OF common_wideband_data_scope IS
 
   SIGNAL SCLKi       : STD_LOGIC;  -- sampling clk, for simulation only
-  SIGNAL scope_cnt   : NATURAL;
+  SIGNAL scope_cnt   : NATURAL; -- @suppress "The type of a signal has to be constrained in size"
   SIGNAL scope_dat   : STD_LOGIC_VECTOR(g_dat_w-1 DOWNTO 0);
   
 BEGIN
@@ -79,7 +79,7 @@ BEGIN
   
     -- View in_data at the sample rate using out_dat 
     p_scope_dat : PROCESS(SCLKi)
-      VARIABLE vI : NATURAL;
+      VARIABLE vI : NATURAL; -- @suppress "The type of a variable has to be constrained in size"
     BEGIN
       IF rising_edge(SCLKi) THEN
         IF g_wideband_big_endian=TRUE THEN

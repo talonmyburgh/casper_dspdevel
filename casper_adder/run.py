@@ -82,6 +82,10 @@ generate_tests(TB_GENERATED,
 lib2 = vu.add_library("common_components_lib",allow_duplicate=True)
 lib2.add_source_files(os.path.join(script_dir, "../common_components/*.vhd"))
 
+# TECHNOLOGY Library
+technology_lib = vu.add_library("technology_lib")
+technology_lib.add_source_files(os.path.join(script_dir, "../technology/technology_select_pkg.vhd"))
+
 # XPM Library compile
 lib_xpm = vu.add_library("xpm")
 lib_xpm.add_source_files(os.path.join(script_dir, "../xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd"))
@@ -113,9 +117,6 @@ ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 ip_xpm_file_crw_crw = ip_xpm_ram_lib.add_source_files(os.path.join(script_dir, "../ip_xpm/ram/ip_xpm_rom_r_r.vhd"))
 ip_xpm_file_crw_crw.add_dependency_on(xpm_source_file_tdpram)
 
-# TECHNOLOGY Library
-technology_lib = vu.add_library("technology_lib")
-technology_lib.add_source_files(os.path.join(script_dir, "../technology/technology_select_pkg.vhd"))
 
 casper_ram_lib = vu.add_library("casper_ram_lib")
 casper_ram_lib.add_source_file(os.path.join(script_dir, "../casper_ram/common_ram_pkg.vhd"))
@@ -141,9 +142,12 @@ lib3.add_source_files(os.path.join(script_dir, "../common_pkg/*.vhd"))
 
 
 
+
+
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 #vu.set_sim_option("ghdl.elab_e", True)
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags",["--max-stack-alloc=4096"])
-
+vu.set_compile_option("nvc.a_flags",["--relaxed"])
+vu.set_sim_option("nvc.heap_size", "128m")
 vu.main()

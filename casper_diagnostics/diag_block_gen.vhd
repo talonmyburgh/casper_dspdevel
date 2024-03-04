@@ -115,11 +115,11 @@ begin
     
     p_comb : process(r, rst, ctrl, en_sync, out_siso)
       variable v                    : reg_type;                              
-      variable v_samples_per_packet : natural;   
-      variable v_gapsize            : natural;   
-      variable v_blocks_per_sync    : natural; 
-      variable v_mem_low_adrs       : natural;
-      variable v_mem_high_adrs      : natural;
+      variable v_samples_per_packet : natural;    -- @suppress "The type of a variable has to be constrained in size"
+      variable v_gapsize            : natural;    -- @suppress "The type of a variable has to be constrained in size"
+      variable v_blocks_per_sync    : natural;  -- @suppress "The type of a variable has to be constrained in size"
+      variable v_mem_low_adrs       : natural; -- @suppress "The type of a variable has to be constrained in size"
+      variable v_mem_high_adrs      : natural; -- @suppress "The type of a variable has to be constrained in size"
     begin
     
       v_samples_per_packet := TO_UINT(r.ctrl_reg.samples_per_packet);
