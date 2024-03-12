@@ -207,7 +207,7 @@ begin
 			g_is_xilinx         => false,
 			g_inputA_width      => g_in_a_w,
 			g_inputB_width      => g_in_b_w,
-			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output,
+			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output-1, -- it's not clear why, but the agilex is 1 cycle more latent than the xpm version
 			g_pipe_width        => 1
 		)
 		port map(
@@ -236,7 +236,7 @@ begin
 			g_is_xilinx         => True,
 			g_inputA_width      => g_in_a_w,
 			g_inputB_width      => g_in_b_w,
-			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output,
+			g_desired_pipedelay => g_pipeline_input+g_pipeline_product+g_pipeline_adder+g_pipeline_output-1,
 			g_pipe_width        => 1
 		)
 		port map(

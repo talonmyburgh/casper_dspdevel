@@ -159,7 +159,7 @@ architecture rtl of fil_ppf_wide is
   -- Only the nof_bands is modified. 
   ----------------------------------------------------------
   function func_create_generics_for_ppfs(input: t_fil_ppf) return t_fil_ppf_arr is
-    variable v_nof_bands : natural := input.nof_bands/input.wb_factor;                     -- The nof_bands for the single channel poly phase filters
+    variable v_nof_bands : natural := input.nof_bands/input.wb_factor;                     -- The nof_bands for the single channel poly phase filters -- @suppress "The type of a variable has to be constrained in size"
     variable v_return    : t_fil_ppf_arr(input.wb_factor-1 downto 0) := (others => input); -- Variable that holds the return values
   begin
     for P in 0 to input.wb_factor-1 loop
@@ -214,7 +214,7 @@ begin
   -- );
 
   p_wire_input : process(in_dat_arr)
-    variable vP : natural;
+    variable vP : natural; -- @suppress "The type of a variable has to be constrained in size"
   begin
     for P in 0 to g_fil_ppf.wb_factor-1 loop
       if g_big_endian_wb_in=true then
@@ -256,7 +256,7 @@ begin
   end generate;  
   
   p_wire_output : process(streams_out_arr)
-    variable vP : natural;
+    variable vP : natural; -- @suppress "The type of a variable has to be constrained in size"
   begin
     for P in 0 to g_fil_ppf.wb_factor-1 loop
       if g_big_endian_wb_out=true then

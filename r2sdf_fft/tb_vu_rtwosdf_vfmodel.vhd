@@ -9,6 +9,7 @@ use common_pkg_lib.common_fixed_float_types.all;
 use common_pkg_lib.fixed_pkg.all;
 context vunit_lib.vunit_context;
 use r2sdf_fft_lib.twiddlesPkg.all;
+use r2sdf_fft_lib.rTwoSDFPkg.all;
 use std.textio.all;
 library osvvm;
 use osvvm.RandomPkg.all;
@@ -80,15 +81,15 @@ BEGIN
             g_twid_dat_w        => g_twiddle_width,
             g_max_addr_w        => 10, -- Keep Default size to use Block Ram
             g_twid_file_stem    => "NONE", -- We don't simulate with Twiddle Files, so this should matter
-            -- Keep the default latencys
-            g_stage_lat         => 1,
-            g_weight_lat        => 2,
-            g_mult_lat          => 4,
-            g_bf_lat            => 1,
-            g_bf_use_zdly       => 1,
-            g_bf_in_a_zdly      => 0,
-            g_bf_out_d_zdly     => 0,
-            g_bf_dsp_dly        => 0,
+            -- Keep the default latencys from the package file.
+            g_stage_lat         => c_fft_pipeline.stage_lat,
+            g_weight_lat        => c_fft_pipeline.weight_lat,
+            g_mult_lat          => c_fft_pipeline.mul_lat,
+            g_bf_lat            => c_fft_pipeline.bf_lat,
+            g_bf_use_zdly       => c_fft_pipeline.bf_use_zdly,
+            g_bf_in_a_zdly      => c_fft_pipeline.bf_in_a_zdly,
+            g_bf_out_d_zdly     => c_fft_pipeline.bf_out_d_zdly,
+            g_bf_dsp_dly        => 1,
 
             -- Automaticall choose Ram Primitives.
             g_ram_primitive     => "auto"

@@ -83,8 +83,8 @@ ARCHITECTURE rtl OF common_mem_mux IS
   CONSTANT c_total_addr_w   : NATURAL := c_index_w + g_mult_addr_w;
 
   SIGNAL index_arr : t_natural_arr(0 TO g_rd_latency);
-  SIGNAL index_rw  : NATURAL;  -- read or write access
-  SIGNAL index_rd  : NATURAL;  -- read response
+  SIGNAL index_rw  : NATURAL;  -- read or write access -- @suppress "The type of a signal has to be constrained in size"
+  SIGNAL index_rd  : NATURAL;  -- read response -- @suppress "The type of a signal has to be constrained in size"
 
 BEGIN
 

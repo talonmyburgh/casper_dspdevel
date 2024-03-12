@@ -1,19 +1,22 @@
-image: ghdl/vunit:mcode-master
+image: gcr.io/hdl-containers/sim/scipy:latest
 variables:
   GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/sim/casper_dspdevel
   GIT_SUBMODULE_STRATEGY: recursive
   
 stages:          # List of stages for jobs, and their order of execution
+  - NVCSim
   - VunitSim
   - QuestaSim
   - VivadoSynthesis
+  - VivadoSynthesis
 casper_accumulators_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -28,11 +31,12 @@ casper_accumulators_test:   # This job runs in the test stage.
       
 casper_adders_test:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -46,11 +50,12 @@ casper_adders_test:   # This job runs in the test stage.
 
 counter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -64,11 +69,12 @@ counter:   # This job runs in the test stage.
 
 delay:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -83,11 +89,12 @@ delay:   # This job runs in the test stage.
 
 filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -101,11 +108,12 @@ filter:   # This job runs in the test stage.
 
 flow_control:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -119,11 +127,12 @@ flow_control:   # This job runs in the test stage.
 
 misc:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -137,11 +146,12 @@ misc:   # This job runs in the test stage.
 
 multiplexer:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -155,11 +165,12 @@ multiplexer:   # This job runs in the test stage.
 
 multiplier:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -173,11 +184,12 @@ multiplier:   # This job runs in the test stage.
 
 fifo:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -191,11 +203,12 @@ fifo:   # This job runs in the test stage.
 
 ram:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -209,11 +222,12 @@ ram:   # This job runs in the test stage.
 
 rtwosdf_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -227,11 +241,12 @@ rtwosdf_fft:   # This job runs in the test stage.
 
 rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -246,11 +261,12 @@ rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
 
 pipe_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -265,11 +281,12 @@ pipe_fft:   # This job runs in the test stage.
 
 par_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -283,11 +300,12 @@ par_fft:   # This job runs in the test stage.
 
 wide_fft:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -302,11 +320,12 @@ wide_fft:   # This job runs in the test stage.
 
 single_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -320,11 +339,12 @@ single_filter:   # This job runs in the test stage.
 
 wide_filter:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -338,11 +358,12 @@ wide_filter:   # This job runs in the test stage.
 
 wbpfb:   # This job runs in the test stage.
   stage: VunitSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
   tags: 
     - ghdl
   script:
-    - python3 -m pip install pytest --progress-bar off
-    - python3 -m pip install numpy --progress-bar off
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
     - echo Starting Vunit in python3
@@ -354,9 +375,69 @@ wbpfb:   # This job runs in the test stage.
     reports:
       junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
 
+multiplier_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  needs: []
+  tags: 
+    - ghdl
+  script:
+    #- python3 -m pip install pytest --progress-bar off
+    #- python3 -m pip install numpy --progress-bar off
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - export VUNIT_SIMULATOR=nvc;export VUNIT_NVC_PATH=/usr/local/bin
+    - /usr/bin/python3 casper_multiplier/run.py --xunit-xml ./casper_multiplier/casper_multiplier_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_multiplier/casper_multiplier_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_multiplier/casper_multiplier_report.xml
+casper_adders_test_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  #image: ghcr.io/vunit/dev/nvc:latest
+  #when: manual
+  needs: []
+  tags: 
+    - ghdl
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - export VUNIT_SIMULATOR=nvc;export VUNIT_NVC_PATH=/usr/local/bin
+    - /usr/bin/python3 casper_adder/run.py --xunit-xml ./casper_adder/casper_adder_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_adder/casper_adder_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_adder/casper_adder_report.xml
+
+wbpfb_nvc:   # This job runs in the test stage.
+  stage: NVCSim    # It only starts when the job in the build stage completes successfully.
+  #image: ghcr.io/vunit/dev/nvc:latest
+  #when: manual
+  needs: []
+  tags: 
+    - ghdl
+  script:
+    - echo Attempting to start Vunit Tests
+    - cd $GIT_CLONE_PATH
+    - echo Starting Vunit in python3
+    - export VUNIT_SIMULATOR=nvc;export VUNIT_NVC_PATH=/usr/local/bin
+    - /usr/bin/python3 casper_wbpfb/run.py --xunit-xml ./casper_filter/wbpfb_report.xml
+  artifacts:
+    when: always
+    paths:
+      - $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
+    reports:
+      junit: $GIT_CLONE_PATH/casper_filter/wbpfb_report.xml
+
+
 AllowQuesta:
   stage: QuestaSim
-  image : questasim:2023.1
+  image : questasim:2023.3
   needs: []
   tags:
     - questa
@@ -366,12 +447,13 @@ AllowQuesta:
 
 Questa_casper_accumulators:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -385,12 +467,13 @@ Questa_casper_accumulators:   # This job runs in the test stage.
 
 Questa_casper_adder:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta] # when accumulators starts runs the rest of the sims
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -404,12 +487,13 @@ Questa_casper_adder:   # This job runs in the test stage.
 
 Questa_casper_counter:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -423,12 +507,13 @@ Questa_casper_counter:   # This job runs in the test stage.
 
 Questa_casper_delay:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -443,12 +528,13 @@ Questa_casper_delay:   # This job runs in the test stage.
 
 Questa_casper_filter:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -462,12 +548,13 @@ Questa_casper_filter:   # This job runs in the test stage.
 
 Questa_casper_flow_control:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -481,12 +568,13 @@ Questa_casper_flow_control:   # This job runs in the test stage.
 
 Questa_casper_misc:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -500,12 +588,13 @@ Questa_casper_misc:   # This job runs in the test stage.
 
 Questa_casper_multiplexer:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -519,12 +608,13 @@ Questa_casper_multiplexer:   # This job runs in the test stage.
 
 Questa_casper_multiplier:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -538,12 +628,13 @@ Questa_casper_multiplier:   # This job runs in the test stage.
 
 Questa_casper_fifo:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -557,12 +648,13 @@ Questa_casper_fifo:   # This job runs in the test stage.
 
 Questa_casper_ram:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -576,12 +668,13 @@ Questa_casper_ram:   # This job runs in the test stage.
 
 Questa_r2sdf_fft:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -595,12 +688,13 @@ Questa_r2sdf_fft:   # This job runs in the test stage.
 
 Questa_casper_wb_fft_pipe:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -614,12 +708,13 @@ Questa_casper_wb_fft_pipe:   # This job runs in the test stage.
 
 Questa_casper_wb_fft_par:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -633,12 +728,13 @@ Questa_casper_wb_fft_par:   # This job runs in the test stage.
 
 Questa_casper_wb_fft_wide:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -653,12 +749,13 @@ Questa_casper_wb_fft_wide:   # This job runs in the test stage.
 
 Questa_casper_filter_single:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -672,12 +769,13 @@ Questa_casper_filter_single:   # This job runs in the test stage.
 
 Questa_casper_filter_wide:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
   script:
     - echo Attempting to start Vunit Tests in Questa
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
     - cd $GIT_CLONE_PATH
     - mkdir -p reports
     - echo Starting Vunit in python3
@@ -691,7 +789,7 @@ Questa_casper_filter_wide:   # This job runs in the test stage.
 
 Questa_casper_wbpfb:   # This job runs in the test stage.
   stage: QuestaSim    # It only starts when the job in the build stage completes successfully.
-  image: questasim:2023.1
+  image: questasim:2023.3
   needs: [AllowQuesta]
   tags: 
     - questa
@@ -712,35 +810,27 @@ VivadoSynthesisWBFFT:
     GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_CONCURRENT_ID/vivado/casper_dspdevel
     GIT_SUBMODULE_STRATEGY: recursive
   stage: VivadoSynthesis
-  image : vivado:2022.2
+  image : vivado_vol:2023.2
   needs: []
   tags:
-    - Vivado
+    - vivado_vol
   script :
     - echo Starting Vivado Synthesis WBFFT
-    # Fix any packages out of date, and install the missing libtinfo5
-    - apt update
-    - apt upgrade -y
-    - apt install -y libtinfo5 sudo
-    - useradd -m ci
     - cd /tmp
     - git clone https://github.com/Xilinx/XilinxTclStore.git
-    - chown -R ci $GIT_CLONE_PATH
-    - |     
-      sudo -H -i -u ci /usr/bin/bash -e -x << EOS
-      cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
-      export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
-      export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
-      export XILINX_LOCAL_USER_DATA=NO
-      rm -f *.jou
-      rm -f *.log
-      rm -f synth_output/post_synth.dcp
-      source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
-      LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1 vivado -mode batch -source ngVLA_wbfft_test.tcl
-      EOS
-  after_script:
+    #- chown -R ci $GIT_CLONE_PATH
+    - cd $GIT_CLONE_PATH/casper_wb_fft/ngvla_test_proj
+    - export LM_LICENSE_FILE=2100@cv-flexserverB.ad.nrao.edu:1717@cv-flexserverB.ad.nrao.edu
+    - export XILINX_TCLAPP_REPO=/tmp/XilinxTclStore
+    - export XILINX_LOCAL_USER_DATA=NO
+    - rm -f *.jou
+    - rm -f *.log
+    - rm -f synth_output/post_synth.dcp
+    #- source /export/data_1/Xilinx/Vivado/2022.2/settings64.sh
+    - LD_PRELOAD=/lib/x86_64-linux-gnu/libudev.so.1 vivado -mode batch -source ngVLA_wbfft_test.tcl
+  #after_script:
     # Set files back to root
-    - chown -R root.root $GIT_CLONE_PATH
+  #  - chown -R root.root $GIT_CLONE_PATH
   when: manual
   artifacts:
     when: always

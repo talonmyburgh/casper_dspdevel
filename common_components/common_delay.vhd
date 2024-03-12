@@ -30,6 +30,8 @@ library common_pkg_lib;
 use common_pkg_lib.common_pkg.all;
 library casper_ram_lib;
 use casper_ram_lib.common_ram_pkg.all;
+library casper_ram_lib;
+use casper_ram_lib.common_ram_pkg.all;
 entity common_delay is
 	generic(
 		g_dat_w : NATURAL := 8;         --! need g_dat_w to be able to use (others=>'') assignments for two dimensional unconstraint vector arrays
@@ -55,13 +57,13 @@ architecture rtl of common_delay is
 begin
 
     gen_zero : if g_depth = 0 generate 
-    signal shift_reg : t_dly_arr := (others => (others => '0'));
+    signal shift_reg : t_dly_arr; -- := (others => (others => '0'));
     begin
         shift_reg(0) <= in_dat;
 	    out_dat <= shift_reg(g_depth);
 	end generate;
 	gen_regSR : if g_depth > 0 and g_depth<128 generate -- Use a shift register implementation
-        signal shift_reg : t_dly_arr := (others => (others => '0'));
+        signal shift_reg : t_dly_arr; -- := (others => (others => '0'));
     begin
     
 		shift_reg(0) <= in_dat;
@@ -78,10 +80,10 @@ begin
 	gen_regMEM : if g_depth >= 128 generate -- Use a Memory implementation
 	signal mem_addr_wr 		: unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(g_depth-5,ceil_log2(g_depth));
 	signal mem_addr_rd 		: unsigned(ceil_log2(g_depth-1)-1 downto 0) := to_unsigned(0,ceil_log2(g_depth));
-	signal out_datmem  		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
-	signal out_dat_p 		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
-	signal in_dat_d1		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
-	signal in_dat_d2		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0) := (others => '0'); --! Output value
+	signal out_datmem  		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0); -- := (others => '0'); --! Output value
+	signal out_dat_p 		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0); -- := (others => '0'); --! Output value
+	signal in_dat_d1		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0); -- := (others => '0'); --! Output value
+	signal in_dat_d2		: STD_LOGIC_VECTOR(g_dat_w - 1 downto 0); -- := (others => '0'); --! Output value
 	attribute DONT_TOUCH : string;
 	attribute KEEP : string;
 	attribute KEEP of out_dat_p : signal is "TRUE";  -- try to prevent this signal from being absorbed into the block
