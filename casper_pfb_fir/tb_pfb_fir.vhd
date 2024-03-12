@@ -49,21 +49,6 @@ entity tb_pfb_fir is
     g_big_endian_wb_out : boolean := true;
     g_pfb_fir : t_pfb_fir := (4, 0, 64, 8, 1, 8, 23, 16, 0);
     g_pfb_fir_pipeline : t_pfb_fir_pipeline := (1,1,1,1); 
-    --type t_pfb_fir is record
-    --  wb_factor       : natural; -- = 1, the wideband factor
-    --  n_chans         : natural; -- = 0, number of time multiplexed input signals
-    --  n_bins          : natural; -- = 1024, the number of polyphase channels (= number of FFT bins)
-    --  n_taps          : natural; -- = 16, the number of FIR taps per subband
-    --  n_streams       : natural; -- = 1, the number of streams that are served by the same coefficients.
-    --  din_w           : natural; -- = 8, number of input bits per stream
-    --  dout_w          : natural; -- = 16, number of output bits per stream
-    --  coef_w          : natural; -- = 16, data width of the FIR coefficients
-    --  padding         : natural; -- = 0, padding bits to prevent arithmetic overflow
-    --  mem_latency     : natural; -- = 2, latency through taps and coeff lookup
-    --  mult_latency    : natural; -- = 3, multiplier latency
-    --  add_latency     : natural; -- = 1, adder latency
-    --  conv_latency    : natural; -- = 1, type conversion latency
-    --end record;
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing";
     g_enable_in_val_gaps : boolean := FALSE
   );
@@ -125,7 +110,8 @@ architecture tb of tb_pfb_fir is
   signal ref_coefs_arr   : t_integer_arr(c_nof_coefs-1 downto 0) := (OTHERS=>0);                    -- = PFIR coef for all taps as read from the coefs file
   signal ref_dat_arr2    : t_wb_integer_arr2(0 to g_pfb_fir.wb_factor-1) := (OTHERS=>(OTHERS=>0));  -- = PFIR coef for all taps as read from the coefs file expanded for all channels
   signal ref_dat_arr     : t_integer_arr(0 to g_pfb_fir.wb_factor-1) := (OTHERS=>0);           
-                         
+  
+  signal sync_out_done   : std_logic := '0';                       
 begin
 
   clk <= (not clk) or tb_end after c_clk_period/2;
@@ -147,9 +133,18 @@ begin
     sync_in <= '0';
     proc_common_wait_until_low(clk, rst);         -- Wait until reset has finished
     proc_common_wait_some_cycles(clk, 9);        -- Wait an additional amount of cycles
+    -- sync without valid
     sync_in <= '1';
     proc_common_wait_some_cycles(clk, 1);        -- hold sync high for one cycle
     sync_in <= '0';                              -- lower sync at the same time as data becomes valid
+    proc_common_wait_some_cycles(clk, 7);        -- Wait an additional amount of cycles
+    -- sync aligned with valid
+    sync_in <= '1';
+    in_val <= '1';
+    proc_common_wait_some_cycles(clk, 1);        -- hold sync high for one cycle
+    sync_in <= '0';
+    in_val <= '0';
+    proc_common_wait_some_cycles(clk, 1);                                                     
                                               
     -- Pulse during first tap of all bins
     for I in 0 to c_nof_valid_per_tap-1 loop
@@ -279,6 +274,14 @@ begin
     wait;
   end process;
   
+  p_verify_sync_out : process
+  begin
+    sync_out_done <= '0';
+    proc_common_wait_until_high(clk, sync_out);
+    sync_out_done <= '1';
+    wait;
+  end process;
+  
   in_val_cnt  <= in_val_cnt+1  when rising_edge(clk) and in_val='1'  else in_val_cnt;
   -- we wait on the sync and then count the outputs
   p_gen_out_val_cnt : process(clk)
@@ -287,7 +290,7 @@ begin
       if sync_out = '1' then
         out_val_cnt <= 0;
       else
-        if out_val = '1' then
+        if out_val = '1' and sync_out_done = '1' then
           out_val_cnt <= out_val_cnt+1;
         end if;
       end if;
@@ -306,7 +309,7 @@ begin
     variable v_tmp_val : integer;
   begin
     if rising_edge(clk) then
-      if out_val='1' then
+      if out_val='1' and sync_out_done='1' then
         for P in 0 to g_pfb_fir.wb_factor-1 loop
           -- Adjust index for v_coeff dependend on g_big_endian_wb_out over all wb and streams for out_dat_arr,
           -- because ref_dat_arr for 1 stream uses little endian time [0,1,2,3] to P [0,1,2,3] index mapping

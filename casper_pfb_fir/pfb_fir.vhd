@@ -31,14 +31,21 @@ end pfb_fir;
 
 architecture rtl of pfb_fir is
 
+    ------------------
+    -- input
+    ------------------
+    signal sync_in_filtered : std_logic;
+    
+    ------------------
     -- control logic
+    ------------------
+        
     constant c_tap_length : natural := (g_pfb_fir.n_bins / g_pfb_fir.wb_factor) * (2 ** g_pfb_fir.n_chans);
     constant c_addr_w     : natural := ceil_log2(c_tap_length);
     signal master_counter : std_logic_vector(c_addr_w - 1 downto 0);
 
     -- note that this differs from the delay used by CASPER 
     constant c_sync_delay : natural   := 0; --c_tap_length * 1; --(g_pfb_fir.n_taps-1); 
-    signal sync_pending   : std_logic := '0';
 
     constant c_delay_adder_tree : natural := ceil_log2(g_pfb_fir.n_taps) * g_pfb_fir_pipeline.add_latency;
     constant c_delay_total      : natural := g_pfb_fir_pipeline.mem_latency + g_pfb_fir_pipeline.mult_latency + c_delay_adder_tree + g_pfb_fir_pipeline.conv_latency;
@@ -120,7 +127,6 @@ architecture rtl of pfb_fir is
     constant c_gain_w    : natural := 0; -- no need for adder bit growth so fixed 0, because filter coefficients should have DC gain <= 1.
                                          -- The adder tree bit growth depends on DC gain of FIR coefficients, not on ceil_log2(g_fil_ppf.nof_taps). 
     constant c_sum_w     : natural := c_prod_w + c_gain_w;
-    constant c_ppf_lsb_w : natural := c_sum_w - g_pfb_fir.dout_w;
 
     type t_added_array is array (g_pfb_fir.n_streams - 1 downto 0, g_pfb_fir.wb_factor - 1 downto 0) of std_logic_vector(c_sum_w - 1 downto 0);
     signal adder_out : t_added_array;
@@ -128,6 +134,8 @@ architecture rtl of pfb_fir is
     ------------------
     --requantisation  
     ------------------    
+    constant c_ppf_lsb_w : natural := c_sum_w - g_pfb_fir.dout_w;
+    --constant c_ppf_lsb_w : natural := 0; 
 
     type t_requant_array is array (g_pfb_fir.n_streams - 1 downto 0, g_pfb_fir.wb_factor - 1 downto 0) of std_logic_vector(g_pfb_fir.dout_w - 1 downto 0);
     signal requant_out : t_requant_array;
@@ -141,6 +149,7 @@ architecture rtl of pfb_fir is
     signal dout_int     : t_pfb_fir_array_out((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
 
 begin
+    sync_in_filtered <= sync_in and en;
 
     -- endinanness reordering if needed
     p_wire_input : process(din)
@@ -174,7 +183,7 @@ begin
     proc_master : process(clk)
     begin
         if rising_edge(clk) then        --everything is synchronous 
-            if (sync_in = '1') then
+            if (sync_in_filtered = '1') then
                 master_counter <= (others => '0');
             else
                 if (en = '1') then
@@ -188,7 +197,7 @@ begin
             dvalid_int                           <= en_delay(c_delay_total - 1);
 
             --sync pipeline
-            sync_in_delay(0)                          <= sync_in;
+            sync_in_delay(0)                          <= sync_in_filtered;
             sync_in_delay(c_delay_total - 1 downto 1) <= sync_in_delay(c_delay_total - 2 downto 0);
             sync_out_int                              <= sync_in_delay(c_delay_total - 1);
 
