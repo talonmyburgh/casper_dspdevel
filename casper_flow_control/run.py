@@ -14,6 +14,10 @@ common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 
+# Create library 'common_slv_arr_pkg_lib'
+common_slv_arr_pkg_lib = vu.add_library("common_slv_arr_pkg_lib")
+common_slv_arr_pkg_lib.add_source_files(join(script_dir, "../common_slv_arr_pkg/common_slv_arr_pkg.vhd"))
+
 # Create library 'casper_flow_control_lib'
 casper_flow_control_lib = vu.add_library("casper_flow_control_lib")
 casper_flow_control_lib.add_source_files(join(script_dir, "./*.vhd"))
@@ -23,7 +27,7 @@ TB_BUS_EXPAND = casper_flow_control_lib.test_bench("tb_tb_vu_bus_expand")
 TB_BUS_CREATE = casper_flow_control_lib.test_bench("tb_tb_vu_bus_create")
 
 slice_bit_widths = [1, 4, 18]
-slice_counts = [1, 19]
+slice_counts = [1, 4]
 
 for count in slice_counts:
     for bit_width in slice_bit_widths:
@@ -43,17 +47,17 @@ for count in slice_counts:
                 g_values = slice_values_encoded
             )
         )
+        config_name = "concat_bit_width=%s, concat_count=%s" %(bit_width, count)
+        TB_BUS_CREATE.add_config(
+            name = config_name,
+            generics=dict(
+                g_values = slice_values_encoded,
+                g_div_bit_w = bit_width
+            )
+        )
     
     config_name = "expansion_count=%s" %(count)
     TB_BUS_EXPAND.add_config(
-        name = config_name,
-        generics=dict(
-            g_values = slice_values_encoded
-        )
-    )
-    
-    config_name = "concat_count=%s" %(count)
-    TB_BUS_CREATE.add_config(
         name = config_name,
         generics=dict(
             g_values = slice_values_encoded

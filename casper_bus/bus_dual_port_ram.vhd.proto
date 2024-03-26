@@ -1,0 +1,46 @@
+-- A VHDL implementation of the CASPER bus_dual_port_ram block.
+-- @author: Ross Donnachie.
+-- @company: Mydon Solutions.
+
+LIBRARY IEEE, common_pkg_lib, casper_delay_lib, casper_ram_lib;
+USE IEEE.std_logic_1164.all;
+USE common_pkg_lib.common_pkg.all;
+USE casper_ram_lib.common_ram_pkg.all;
+
+ENTITY bus_dual_port_ram is
+  generic (
+    g_depth : NATURAL := 3;
+    g_ram_latency: NATURAL := 2
+  );
+  port (
+    clk   : in std_logic;
+    ce    : in std_logic;
+    i_addr_a  : in std_logic_vector;
+    i_data    : in std_logic_vector;
+    i_wea     : in std_logic;
+    i_addr_b  : in std_logic_vector;
+    o_data_a  : out std_logic_vector;
+    o_data_b  : out std_logic_vector
+  );
+end ENTITY;
+
+ARCHITECTURE rtl of bus_dual_port_ram is
+BEGIN
+u_bram0 : ENTITY casper_ram_lib.common_ram_r_w
+  GENERIC MAP (
+    g_ram            => c_mem_ram,
+    g_true_dual_port => FALSE,
+    g_ram_primitive  => "block"
+  )
+  PORT MAP(
+    clk     => clk,
+    clken   => ce,
+    wr_en   => s_bram0_we_vector(0),  
+    wr_adr  => s_bram0_addr,
+    wr_dat  => s_data_delayed,
+    rd_en   => '0',
+    rd_adr  => s_bram0_addr,
+    rd_dat  => s_bram0_data,
+    rd_val  => open
+  );
+end ARCHITECTURE;

@@ -9,6 +9,7 @@ context vunit_lib.vunit_context;
 entity tb_tb_vu_bus_create is
     GENERIC(
         g_values : string; -- CSV list of naturals
+				g_div_bit_w : NATURAL;
         runner_cfg              : string
     );
 end tb_tb_vu_bus_create;
@@ -35,9 +36,10 @@ architecture tb of tb_tb_vu_bus_create is
 	CONSTANT c_values : t_natural_arr := decode(g_values);
 BEGIN
 	tb_ut : ENTITY work.tb_bus_create
-        GENERIC MAP(
-            g_values => c_values
-        )
+		GENERIC MAP(
+				g_values => c_values,
+				g_div_bit_w => g_div_bit_w
+		)
 		PORT MAP(
 			o_clk => clk,
 			o_tb_end => tb_end,
