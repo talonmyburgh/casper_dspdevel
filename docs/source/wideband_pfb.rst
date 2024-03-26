@@ -45,6 +45,12 @@ a narrowband factor :math:`>= 1` (:math:`2^{nof\_chan}`).
 * The WPFB does support input flow control using the extra control signals,
   with support for gaps in the time input.
 
+.. _WB Firm Interface:
+
+******************
+Firmware Interface
+******************
+
 =============
 Clock Domains
 =============
@@ -113,6 +119,16 @@ The full set of signals available to the Simulink block are detailed in the tabl
 |                |                 |                           | FFT), or the real part (when doing a complex FFT).             |
 +----------------+-----------------+---------------------------+----------------------------------------------------------------+
 
+The wideband PFB extends the :ref:`_WB FFT` functionality to perform a complex or two real FFT. It further follows the same protocol
+for wb_factor control.
 
+==========
+Parameters
+==========
 
+Control over the PFB's characteristics, data handling and implementation on the FPGA are tabulated below:
+
+--------------
+PFB parameters
+--------------
 
