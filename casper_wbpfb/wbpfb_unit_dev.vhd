@@ -353,7 +353,6 @@ entity wbpfb_unit_dev is
     );
     port(
         clk          : in  std_logic                                                   := '0';
-        ce           : in  std_logic                                                   := '1';
         shiftreg     : in  std_logic_vector(ceil_log2(g_wpfb.nof_points) - 1 DOWNTO 0) := (others => '1'); --! Shift register
         in_sosi_arr  : in  t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
         fil_sosi_arr : out t_pfb_fir_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
@@ -364,12 +363,7 @@ end entity wbpfb_unit_dev;
 
 architecture str of wbpfb_unit_dev is
 
-    constant c_nof_channels : natural := 2 ** g_wpfb.nof_chan;
-
     constant c_nof_stages : natural := ceil_log2(g_wpfb.nof_points);
-
-    constant c_nof_data_per_block  : natural := c_nof_channels * g_wpfb.nof_points;
-    constant c_nof_valid_per_block : natural := c_nof_data_per_block / g_wpfb.wb_factor;
 
     constant c_fil_ppf : t_pfb_fir := (g_wpfb.wb_factor,
                                        g_wpfb.nof_chan,
