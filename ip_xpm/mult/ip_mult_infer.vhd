@@ -73,9 +73,9 @@ architecture rtl of ip_mult_infer is
 	signal reg_p      : signed(c_prod_w - 1 downto 0);
 	signal a          : signed(g_in_a_w - 1 downto 0);
 	signal b          : signed(g_in_b_w - 1 downto 0);
-	signal reg_a      : signed(g_in_a_w - 1 downto 0);
-	signal reg_b      : signed(g_in_b_w - 1 downto 0);
-	signal reg_result : signed(g_out_p_w - 1 downto 0);
+	signal reg_a      : signed(g_in_a_w - 1 downto 0) := (others=>'0');
+	signal reg_b      : signed(g_in_b_w - 1 downto 0) := (others=>'0');
+	signal reg_result : signed(g_out_p_w - 1 downto 0) := (others=>'0');
 
 begin
 
