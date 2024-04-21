@@ -63,11 +63,11 @@ architecture rtl of pfb_fir is
 
     --interally we group all inputs from the same stream
     type t_dint_array is array (g_pfb_fir.n_streams - 1 downto 0, g_pfb_fir.wb_factor - 1 downto 0) of std_logic_vector(g_pfb_fir.din_w - 1 downto 0);
-
-    signal din_internal : t_dint_array;
+    constant c_dint_array_rst : t_dint_array := (others => (others => (others => '0'))); 
+    signal din_internal : t_dint_array := c_dint_array_rst;
 
     type t_din_delay is array (g_pfb_fir_pipeline.mem_latency - 1 downto 0) of t_dint_array;
-    signal din_delay : t_din_delay;
+    signal din_delay : t_din_delay  := (others => c_dint_array_rst);
 
     --we get the tap with delay of 0 for free                                          
     type t_taps_array is array (natural range <>) of t_dint_array;
