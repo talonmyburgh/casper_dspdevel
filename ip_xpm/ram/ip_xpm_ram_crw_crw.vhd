@@ -18,7 +18,9 @@ ENTITY ip_xpm_ram_crw_crw IS
 		g_nof_words     : NATURAL := 2**5;
 		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
+		g_ram_primitive : STRING  := "auto"; --choose auto, distributed, block, ultra
+		g_write_mode_a 	: STRING  := "write_first"; --choose write_first, read_first
+		g_write_mode_b 	: STRING  := "write_first" --choose write_first, read_first
 	);
 	PORT(
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
@@ -83,8 +85,8 @@ begin
 			WAKEUP_TIME             => "disable_sleep", --STRING
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
 			WRITE_DATA_WIDTH_B      => g_dat_w, --DECIMAL
-			WRITE_MODE_A            => "write_first", --STRING
-			WRITE_MODE_B            => "write_first" --STRING
+			WRITE_MODE_A            => g_write_mode_a, --STRING
+			WRITE_MODE_B            => g_write_mode_b --STRING
 		)
 		port map(
 			dbiterra       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence

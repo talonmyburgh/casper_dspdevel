@@ -34,7 +34,9 @@ ENTITY tech_memory_ram_crw_crw IS
 		g_nof_words     : NATURAL := 2**5;
 		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto"
+		g_ram_primitive : STRING  := "auto";
+		g_write_mode_a  : STRING  := "write_first";
+		g_write_mode_b  : STRING  := "write_first"
 	);
 	PORT(
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
@@ -65,7 +67,9 @@ BEGIN
 				g_nof_words     => g_nof_words,
 				g_rd_latency    => g_rd_latency,
 				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_ram_primitive => g_ram_primitive,
+				g_write_mode_a  => g_write_mode_a,
+				g_write_mode_b  => g_write_mode_b
 			)
 			port map(
 				address_a => address_a,

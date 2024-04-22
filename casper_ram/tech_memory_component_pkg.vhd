@@ -170,7 +170,9 @@ PACKAGE tech_memory_component_pkg IS
 			g_nof_words     : NATURAL;
 			g_rd_latency    : NATURAL;
 			g_init_file     : STRING;
-			g_ram_primitive : STRING
+			g_ram_primitive : STRING;
+			g_write_mode_a  : STRING;
+			g_write_mode_b  : STRING
 		);
 		port(
 			address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);

@@ -255,7 +255,9 @@ begin
             g_ram            => c_taps_mem,
             g_init_file      => "UNUSED", -- assume block RAM gets initialized to '0' by default in simulation
             g_true_dual_port => TRUE,
-            g_ram_primitive  => g_ram_primitive
+            g_ram_primitive  => g_ram_primitive,
+            g_write_mode_a   => "read_first",
+            g_write_mode_b   => "read_first"
         )
         port map(
             clk    => clk,

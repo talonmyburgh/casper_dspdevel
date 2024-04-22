@@ -28,7 +28,9 @@ ENTITY common_ram_crw_crw IS
 		g_ram            : t_c_mem := c_mem_ram;
 		g_init_file      : STRING  := "UNUSED";
 		g_true_dual_port : BOOLEAN := TRUE;
-		g_ram_primitive  : STRING  := "auto"
+		g_ram_primitive  : STRING  := "auto";
+		g_write_mode_a   : STRING := "write_first";
+		g_write_mode_b   : STRING := "write_first"
 	);
 	PORT(
 		clk_a    : IN  STD_LOGIC;
@@ -80,7 +82,9 @@ BEGIN
 				g_nof_words     => g_ram.nof_dat,
 				g_rd_latency    => c_rd_latency,
 				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_ram_primitive => g_ram_primitive,
+				g_write_mode_a 	=> g_write_mode_a,
+				g_write_mode_b 	=> g_write_mode_b
 			)
 			PORT MAP(
 				clock_a   => clk_a,
