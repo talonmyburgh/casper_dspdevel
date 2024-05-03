@@ -21,15 +21,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="115280fs"></ZoomStartTime>
-      <ZoomEndTime time="239881fs"></ZoomEndTime>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="1000001fs"></ZoomEndTime>
       <Cursor1Time time="1000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="231"></NameColumnWidth>
-      <ValueColumnWidth column_width="100"></ValueColumnWidth>
+      <ValueColumnWidth column_width="96"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="25" />
+   <WVObjectSize size="27" />
    <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/sync_in">
       <obj_property name="ElementShortName">sync_in</obj_property>
       <obj_property name="ObjectShortName">sync_in</obj_property>
@@ -42,6 +42,14 @@
       <obj_property name="ElementShortName">din[0:0][7:0]</obj_property>
       <obj_property name="ObjectShortName">din[0:0][7:0]</obj_property>
       <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="divider67" type="divider">
+      <obj_property name="label">Control</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/master_counter">
+      <obj_property name="ElementShortName">master_counter[5:0]</obj_property>
+      <obj_property name="ObjectShortName">master_counter[5:0]</obj_property>
    </wvobject>
    <wvobject fp_name="divider222" type="divider">
       <obj_property name="label">Coeffs</obj_property>
@@ -88,7 +96,6 @@
    <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/product_vec">
       <obj_property name="ElementShortName">product_vec[7:0,0:0,0:0][22:0]</obj_property>
       <obj_property name="ObjectShortName">product_vec[7:0,0:0,0:0][22:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject fp_name="divider666" type="divider">
       <obj_property name="label">Adder trees</obj_property>
@@ -103,12 +110,12 @@
       <obj_property name="DisplayName">label</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/\gen_add_quantise(0)\/\gen_streams(0)\/requant_out_dat">
-      <obj_property name="ElementShortName">requant_out_dat[22:0]</obj_property>
-      <obj_property name="ObjectShortName">requant_out_dat[22:0]</obj_property>
+      <obj_property name="ElementShortName">requant_out_dat[15:0]</obj_property>
+      <obj_property name="ObjectShortName">requant_out_dat[15:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/dout_int">
-      <obj_property name="ElementShortName">dout_int[0:0][22:0]</obj_property>
-      <obj_property name="ObjectShortName">dout_int[0:0][22:0]</obj_property>
+      <obj_property name="ElementShortName">dout_int[0:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">dout_int[0:0][15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="divider671" type="divider">
@@ -120,8 +127,8 @@
       <obj_property name="ObjectShortName">sync_out</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/dout">
-      <obj_property name="ElementShortName">dout[0:0][22:0]</obj_property>
-      <obj_property name="ObjectShortName">dout[0:0][22:0]</obj_property>
+      <obj_property name="ElementShortName">dout[0:0][15:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[0:0][15:0]</obj_property>
       <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/tb_tb_pfb_fir/u1_act/u_dut/dvalid">

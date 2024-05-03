@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="/home/andrew/casper/casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/casper_pfb_fir_vivado_project.xpr">
+<Project Version="7" Minor="49" Path="/home/andrew/casper/casper_dspdevel_temp/casper_pfb_fir/casper_pfb_fir_vivado_project/casper_pfb_fir_vivado_project.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="592fb8c847814d7c8b8a0d160957445c"/>
@@ -35,10 +35,10 @@
     <Option Name="IPCachePermission" Val="write"/>
     <Option Name="EnableCoreContainer" Val="FALSE"/>
     <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
-    <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
+    <Option Name="IPUserFilesDir" Val="$PPRDIR/../../../casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/casper_pfb_fir_vivado_project.ip_user_files"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="343"/>
+    <Option Name="WTXSimLaunchSim" Val="354"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -358,8 +358,8 @@
         <Option Name="PamSignalDriverFile" Val="xil_bypass_driver"/>
         <Option Name="PamPseudoTop" Val="pseudo_tb"/>
         <Option Name="SrcSet" Val="sources_1"/>
-        <Option Name="XSimWcfgFile" Val="$PPRDIR/basic_input_output.wcfg"/>
-        <Option Name="XSimWcfgFile" Val="$PPRDIR/pfb_fir_control.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/../../../casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/basic_input_output.wcfg"/>
+        <Option Name="XSimWcfgFile" Val="$PPRDIR/../../../casper_dspdevel/casper_pfb_fir/casper_pfb_fir_vivado_project/pfb_fir_control.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/pfb_fir.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_act.wcfg"/>
         <Option Name="XSimWcfgFile" Val="$PPRDIR/u1_rnd_3streams.wcfg"/>
