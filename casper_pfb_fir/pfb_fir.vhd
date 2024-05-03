@@ -42,7 +42,7 @@ architecture rtl of pfb_fir is
         
     constant c_tap_length : natural := (g_pfb_fir.n_bins / g_pfb_fir.wb_factor) * (2 ** g_pfb_fir.n_chans);
     constant c_addr_w     : natural := ceil_log2(c_tap_length);
-    signal master_counter : std_logic_vector(c_addr_w - 1 downto 0);
+    signal master_counter : std_logic_vector(c_addr_w - 1 downto 0) := (others => '0');
 
     -- note that this differs from the delay used by CASPER 
     constant c_sync_delay : natural   := 0; --c_tap_length * 1; --(g_pfb_fir.n_taps-1); 
@@ -83,7 +83,7 @@ architecture rtl of pfb_fir is
                                                     init_sl => '0'); -- use '0' instead of 'X' to avoid RTL RAM simulation warnings due to read before write
     signal taps_wr_dat, taps_rd_dat : std_logic_vector(c_taps_mem_data_w - 1 downto 0);
     signal taps_wren                : std_logic := '0';
-    signal taps_rdaddr, taps_wraddr : std_logic_vector(c_addr_w - 1 downto 0);
+    signal taps_rdaddr, taps_wraddr : std_logic_vector(c_addr_w - 1 downto 0) := (others=> '0');
 
     ------------------
     -- coefficients
@@ -144,9 +144,9 @@ architecture rtl of pfb_fir is
     --output 
     ------------------
 
-    signal sync_out_int : std_logic;
-    signal dvalid_int   : std_logic;
-    signal dout_int     : t_pfb_fir_array_out((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0);
+    signal sync_out_int : std_logic := '0';
+    signal dvalid_int   : std_logic := '0';
+    signal dout_int     : t_pfb_fir_array_out((g_pfb_fir.wb_factor * g_pfb_fir.n_streams) - 1 downto 0) := (others => (others => '0'));
 
 begin
     sync_in_filtered <= sync_in and en;
