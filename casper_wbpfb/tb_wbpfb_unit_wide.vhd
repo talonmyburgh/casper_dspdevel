@@ -297,6 +297,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal fil_re_data  : std_logic_vector(g_wpfb.wb_factor * c_fil_dat_w - 1 DOWNTO 0); -- scope data only for stream 0
   signal fil_im_data  : std_logic_vector(g_wpfb.wb_factor * c_fil_dat_w - 1 DOWNTO 0); -- scope data only for stream 0
   signal fil_val      : std_logic := '0'; -- for parallel output
+  signal fil_sync      : std_logic := '0'; -- for parallel output
 
   signal fil_out_cnt : natural := 0;
 
@@ -491,6 +492,7 @@ begin
     end loop;
   end process;
   fil_val <= fil_sosi_arr(0).valid;
+  fil_sync <= fil_sosi_arr(0).sync;
 
   p_out_sosi_arr : process(out_sosi_arr)
   begin
@@ -500,6 +502,8 @@ begin
     end loop;
   end process;
   out_val <= out_sosi_arr(0).valid;
+
+  out_sync <= out_sosi_arr(0).sync;
 
   -- Data valid count
   in_val_cnt  <= in_val_cnt + 1 when rising_edge(clk) and in_val = '1' and in_sync ='0' else in_val_cnt;
@@ -532,12 +536,12 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
-  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val = '1' and fil_out_cnt < g_data_file_nof_lines - 1 else fil_out_cnt;
+  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val = '1' and fil_out_cnt < g_data_file_nof_lines - 1 and fil_sync = '0' else fil_out_cnt;
 
-  exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1';
-  exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1';
+  exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1' and fil_sync = '0';
+  exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1' and fil_sync = '0';
 
-  out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c = '1' else out_cnt;
+  out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c = '1' and out_sync='0' else out_cnt;
 
   out_blk_time <= (out_cnt / c_nof_channels) / g_wpfb.nof_points;
 
