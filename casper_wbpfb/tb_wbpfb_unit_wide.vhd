@@ -262,6 +262,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal in_val         : std_logic                                                                    := '0';
   signal dut_val        : std_logic                                                                    := '0';
   signal dat_val        : std_logic                                                                    := '0';
+  signal fil_dat_val    : std_logic                                                                    := '0';
   signal in_sync        : std_logic                                                                    := '0';
   signal in_val_cnt     : natural                                                                      := 0;
   signal in_blk_val     : std_logic;
@@ -376,6 +377,7 @@ begin
   in_sync  <= rst;
   dut_val  <= in_val when in_sync = '0' else '0';
   dat_val  <= out_val when out_sync = '0' else '0';
+  fil_dat_val  <= fil_val when fil_sync = '0' else '0';
 
   in_sosi_0  <= in_sosi_arr(0);
   out_sosi_0 <= out_sosi_arr(0);
@@ -536,12 +538,18 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
-  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val = '1' and fil_out_cnt < g_data_file_nof_lines - 1 and fil_sync = '0' else fil_out_cnt;
+  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val_scope = '1' and fil_out_cnt < g_data_file_nof_lines - 1 else fil_out_cnt;
 
-  exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1' and fil_sync = '0';
-  exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1' and fil_sync = '0';
+  gen_fil_c_scopes : if c_in_complex generate
+    exp_fil_re_scope <= exp_filter_data_c_re_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+    exp_fil_im_scope <= exp_filter_data_c_im_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+  end generate;
+  gen_fil_re_scopes : if not c_in_complex generate
+    exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+    exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+  end generate;
 
-  out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c = '1' and out_sync='0' else out_cnt;
+  out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c = '1' else out_cnt;
 
   out_blk_time <= (out_cnt / c_nof_channels) / g_wpfb.nof_points;
 
@@ -753,7 +761,7 @@ begin
 
       -- Streaming input data
       in_data => in_re_data,
-      in_val  => dat_val,
+      in_val  => in_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => in_re_scope,
@@ -793,7 +801,7 @@ begin
 
       -- Streaming input data
       in_data => fil_re_data,
-      in_val  => fil_val,
+      in_val  => fil_dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => fil_re_scope,
@@ -813,7 +821,7 @@ begin
 
       -- Streaming input data
       in_data => fil_im_data,
-      in_val  => fil_val,
+      in_val  => fil_dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => fil_im_scope,
@@ -833,7 +841,7 @@ begin
 
       -- Streaming input data
       in_data => out_re_data,
-      in_val  => out_val,
+      in_val  => dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => out_re_scope,
@@ -853,7 +861,7 @@ begin
 
       -- Streaming input data
       in_data => out_im_data,
-      in_val  => out_val,
+      in_val  => dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => out_im_scope,

@@ -634,7 +634,7 @@ begin
 
     -- Streaming input data
     in_data   => out_im_data,
-    in_val    => out_val,
+    in_val    => dat_val,
 
     -- Scope output samples
     out_dat   => OPEN,

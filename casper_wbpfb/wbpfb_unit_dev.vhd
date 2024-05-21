@@ -418,11 +418,6 @@ architecture str of wbpfb_unit_dev is
     signal fft_out_val_arr  : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
     signal fft_out_sync_arr : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
 
-    signal fft_out_sosi     : t_fft_sosi_out;
-    signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
-
-    signal pfb_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
-
     type reg_type is record
         in_sosi_arr : t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     end record;
