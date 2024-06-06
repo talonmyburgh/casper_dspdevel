@@ -12,6 +12,7 @@ IP Cores:
    accumulators
    delay
    flow_control
+   multiplier
    misc
    r2sdf_fft
    wideband_fft
