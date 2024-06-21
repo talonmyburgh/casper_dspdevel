@@ -14,6 +14,7 @@ entity free_run_down_counter is
         clk     : in std_logic;
         ce      : in std_logic;
         reset   : in std_logic;
+        enable  : in std_logic := '1';
         count   : out std_logic_vector(g_cnt_w - 1 DOWNTO 0)
     );
 end entity free_run_down_counter;
@@ -30,7 +31,7 @@ begin
         begin
             if (reset = '1') then
                 cnt := c_max_count;
-            elsif (rising_edge(clk) and ce = '1') then
+            elsif (rising_edge(clk) and ce = '1' and enable = '1') then
                 cnt := cnt - 1;
             end if;
             s_count <= std_logic_vector(to_signed(cnt, g_cnt_w));

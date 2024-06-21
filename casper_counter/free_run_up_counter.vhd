@@ -13,6 +13,7 @@ ENTITY free_run_up_counter is
         clk     : in std_logic;
         ce      : in std_logic;
         reset   : in std_logic;
+        enable  : in std_logic := '1';
         count   : out std_logic_vector(g_cnt_w - 1 DOWNTO 0)
     );
 END ENTITY;
@@ -29,7 +30,7 @@ BEGIN
     BEGIN
         IF (reset = '1') THEN
             cnt := 0;
-        ELSIF (rising_edge(clk) and ce = '1') THEN
+        ELSIF (rising_edge(clk) and ce = '1' and enable = '1') THEN
             cnt := cnt + 1;
         END IF;
         s_count <= STD_LOGIC_VECTOR(TO_SIGNED(cnt, g_cnt_w));
