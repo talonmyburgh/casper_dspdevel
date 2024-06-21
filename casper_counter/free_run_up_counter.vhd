@@ -1,6 +1,6 @@
 -- A VHDL free-running up-counter module with asynch reset.
--- @author: Mydon Solutions
-
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.numeric_std.all;
