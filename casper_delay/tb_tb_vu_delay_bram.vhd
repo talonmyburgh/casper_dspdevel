@@ -1,3 +1,6 @@
+-- VUnit testbench for delaybram.vhd.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE, common_pkg_lib, vunit_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;

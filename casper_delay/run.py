@@ -85,6 +85,7 @@ DELAY_BRAM_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
 DELAY_BRAM_EN_PLUS_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_en_plus")
 DELAY_BRAM_PROG_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog")
 DELAY_BRAM_PROG_DP_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog_dp")
+SYNC_DELAY_TB = casper_delay_lib.test_bench("tb_tb_vu_sync_delay")
 
 # no maths done, so some random picks are fine
 delay_arr = [4, 10, 50]
@@ -92,31 +93,33 @@ bram_latencies = [1, 2]
 dat_widths = [4, 18, 32]
 latencies = [2,8]
 
-# for delay, latency, dat_w in product(delay_arr, bram_latencies, dat_widths):
-#     db_config_name = "DELAY_BRAM: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
-#     DELAY_BRAM_TB.add_config(
-#         name = db_config_name,
-#         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
-#     )
-# for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
-#     db_en_plus_config_name = "DELAY_BRAM EN PLUS: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
-#     DELAY_BRAM_EN_PLUS_TB.add_config(
-#         name = db_en_plus_config_name,
-#         generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
-#     )
-testnum = 1
 for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
-    # db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    #db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    db_prog_dp_config_name = "Testnum%d"%(testnum)
-    testnum = testnum + 1
-    # DELAY_BRAM_PROG_TB.add_config(
-    #     name = db_prog_config_name,
-    #     generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
-    # )
+    db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_en_plus_config_name = "DELAY_BRAM EN PLUS: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    db_config_name = "DELAY_BRAM: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    DELAY_BRAM_EN_PLUS_TB.add_config(
+        name = db_en_plus_config_name,
+        generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
+    DELAY_BRAM_PROG_TB.add_config(
+        name = db_prog_config_name,
+        generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
+    )
     DELAY_BRAM_PROG_DP_TB.add_config(
         name = db_prog_dp_config_name,
         generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
+    )
+    DELAY_BRAM_TB.add_config(
+        name = db_config_name,
+        generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
+
+for delay in delay_arr:
+    ds_config_name = "DELAY_SYNC: delay=%s" % (delay)
+    SYNC_DELAY_TB.add_config(
+        name = ds_config_name,
+        generics=dict(g_delay=delay)
     )
 
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "-Wno-hide"])

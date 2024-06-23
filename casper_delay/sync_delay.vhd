@@ -23,11 +23,11 @@ architecture RTL of sync_delay is
     constant c_ceil_log2 : NATURAL := ceil_log2(g_delay);
     constant c_cnt_w     : NATURAL := sel_a_b(2 > c_ceil_log2, 2, c_ceil_log2); --max(2, ceil_log2(g_delay)
 
-    signal s_count    : std_logic_vector(c_cnt_w - 1 downto 0);
+    signal s_count    : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(2**c_cnt_w, c_cnt_w);
     signal s_cnt_load : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(g_delay, c_cnt_w);
-    signal s_or_out   : std_logic;
-    signal s_a_neq_b  : std_logic;
-    signal s_a_eq_b   : std_logic;
+    signal s_or_out   : std_logic := '0';
+    signal s_a_neq_b  : std_logic := '0';
+    signal s_a_eq_b   : std_logic := '0';
     signal s_zero     : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(0, c_cnt_w);
     signal s_one      : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(1, c_cnt_w);
     signal s_sel      : std_logic                              := sel_a_b(g_delay = 0, '0', '1'); --bypass logic for zero delay
@@ -36,7 +36,7 @@ begin
     -- COUNTER
     counter : entity casper_counter_lib.common_counter
         generic map(
-            g_latency   => 0,
+            g_latency   => 1,
             g_init      => 0,
             g_width     => c_cnt_w,
             g_max       => 0,
