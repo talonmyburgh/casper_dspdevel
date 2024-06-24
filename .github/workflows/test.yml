@@ -24,6 +24,7 @@ jobs:
       multiplier: ${{ steps.multiplier.outputs.any_changed }}
       fifo: ${{ steps.fifo.outputs.any_changed }}
       ram: ${{ steps.ram.outputs.any_changed }}
+      reorder: ${{ steps.reorder.outputs.any_changed }}
       r2sdf_fft: ${{ steps.r2sdf_fft.outputs.any_changed }}
       pipe_fft: ${{ steps.pipe_fft.outputs.any_changed }}
       par_fft: ${{ steps.par_fft.outputs.any_changed }}
@@ -102,6 +103,13 @@ jobs:
           files: |
             casper_flow_control/.*\.vhd$
             casper_flow_control/run.py
+      - name: Assess reorder files changes
+        id: reorder
+        uses: tj-actions/changed-files@v1.2.0
+        with:
+          files: |
+            casper_reorder/.*\.vhd$
+            casper_reorder/run.py
       - name: Assess misc files changes
         id: misc
         uses: tj-actions/changed-files@v41.0.0
@@ -498,6 +506,56 @@ jobs:
         with:
           name: casper_flow_control_report
           path: ./casper_flow_control/casper_flow_control_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+  reorder:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: true # needs.files_changed.outputs.reorder == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_reorder_test
+        run: python3 casper_reorder/run.py --xunit-xml ./casper_reorder/casper_reorder_report.xml
+
+      - name: Note casper_reorder_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_reorder
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_reorder_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_reorder_test Success
+        if: ${{ steps.casper_reorder_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_reorder
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_reorder_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_reorder_report
+          path: ./casper_reorder/casper_reorder_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
 
   misc:

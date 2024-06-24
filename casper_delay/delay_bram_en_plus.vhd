@@ -36,6 +36,8 @@ ENTITY delay_bram_en_plus is
     SIGNAL s_valid     : STD_LOGIC_VECTOR(0 DOWNTO 0);
   
   begin
+    s_en(0) <= en;
+    valid <= s_valid(0);
   
     ASSERT c_max_cnt > 0 REPORT "Delay value must be greater than BRAM latency + 1!" severity FAILURE;
   
@@ -97,19 +99,21 @@ ENTITY delay_bram_en_plus is
     -------------------------------------------------------
     -- Bram_value delay
     -------------------------------------------------------
-    bram_value_delay : ENTITY common_components_lib.common_delay
-    generic map (
-        g_dat_w => c_dat_w,
-        g_depth => g_latency - 2
-    )
-    port map (
-        clk     => clk,
-        in_val  => '1',
-        in_dat  => s_ram_out,
-        out_dat => dout
-    );
-
-    s_en(0) <= en;
-    valid <= s_valid(0);
+    gen_ram_out_direct : IF g_latency < 2 GENERATE
+        dout <= s_ram_out;
+    end GENERATE;
+    gen_ram_out_delay : IF g_latency >= 2 GENERATE
+        bram_value_delay : ENTITY common_components_lib.common_delay
+        generic map (
+            g_dat_w => c_dat_w,
+            g_depth => g_latency - 2
+        )
+        port map (
+            clk     => clk,
+            in_val  => '1',
+            in_dat  => s_ram_out,
+            out_dat => dout
+        );
+    end GENERATE;
 
 end ARCHITECTURE;
