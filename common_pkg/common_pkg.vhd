@@ -133,6 +133,7 @@ PACKAGE common_pkg IS
 	CONSTANT c_boolean_arr     : t_boolean_arr     := (TRUE, FALSE); -- array all possible values that can be iterated over
 	CONSTANT c_nat_boolean_arr : t_nat_boolean_arr := (TRUE, FALSE); -- array all possible values that can be iterated over
 
+	TYPE t_natural_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF NATURAL;
 	TYPE t_integer_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF INTEGER;
 	TYPE t_boolean_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF BOOLEAN;
 	TYPE t_sl_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF STD_LOGIC;

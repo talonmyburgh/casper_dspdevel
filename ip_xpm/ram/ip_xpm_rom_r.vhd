@@ -43,9 +43,13 @@ architecture Behavioral of ip_xpm_rom_r is
 	SIGNAL sub_wire0    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
 	-- CONSTANT c_memsize  : NATURAL := g_nof_words * g_dat_w;
-	CONSTANT c_memsize  : NATURAL := (2**g_adr_w -1) * g_dat_w;
+	CONSTANT c_memsize  : NATURAL := 2**g_adr_w * g_dat_w;
 
 begin
+	assert 2**g_adr_w >= g_nof_words
+	report "Address width "&natural'image(g_adr_w)&" does not cover the number of words " &natural'image(g_nof_words)
+	severity failure;
+
 	q    <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 
 	-- xpm_memory_sprom: Single Port ROM
