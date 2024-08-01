@@ -86,3 +86,75 @@ Parameters
 | Bram Primitive | String  | "block"| Dictates how the bram is placed on the FPGA. Options are       |   
 |                |         |        | "block", "auto", "distributed" and "ultra".                    |
 +----------------+---------+--------+----------------------------------------------------------------+
+
+===============
+Bram Delay Prog
+===============
+A delay block that uses BRAM for its storage and has a run-time programmable
+delay.  When delay is changed, some randomly determined samples will
+be inserted/dropped from the buffered stream.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                     |
++================+=================+===========================+=================================================================+
+| din            | std_logic_vector| any                       | The input signal to be delayed by the delay parameter provided. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| delay          | std_logic       | 1                         | This port will asynchronously enable (1) or disable (0) the     |
+|                |                 |                           | block.                                                          |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| dout           | std_logic_vector| Width of din              | The delayed din signal delayed by :math:`bram_latency + delay`. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Max Delay      | Natural | 7      | Maximum 2^max_delay number of clock cycles by which you want   |
+|                |         |        | to delay din.                                                  |      
++----------------+---------+--------+----------------------------------------------------------------+
+| BRAM Latency   | Natural | 5      | The bram latency delay.                                        |
++----------------+---------+--------+----------------------------------------------------------------+
+| Bram Primitive | String  | "block"| Dictates how the bram is placed on the FPGA. Options are       |   
+|                |         |        | "block", "auto", "distributed" and "ultra".                    |
++----------------+---------+--------+----------------------------------------------------------------+
+
+==================
+Bram Delay Prog DP
+==================
+A delay module that uses a dual port BRAM to delay the input by the delay period provided.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                     |
++================+=================+===========================+=================================================================+
+| din            | std_logic_vector| any                       | The input signal to be delayed by the delay parameter provided. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| delay          | std_logic       | 1                         | This port will asynchronously enable (1) or disable (0) the     |
+|                |                 |                           | block.                                                          |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| dout           | std_logic_vector| Width of din              | The delayed din signal delayed by :math:`bram_latency + delay`. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Max Delay      | Natural | 7      | Maximum 2^max_delay number of clock cycles by which you want   |
+|                |         |        | to delay din.                                                  |      
++----------------+---------+--------+----------------------------------------------------------------+
+| BRAM Latency   | Natural | 5      | The bram latency delay.                                        |
++----------------+---------+--------+----------------------------------------------------------------+
+| Bram Primitive | String  | "block"| Dictates how the bram is placed on the FPGA. Options are       |   
+|                |         |        | "block", "auto", "distributed" and "ultra".                    |
++----------------+---------+--------+----------------------------------------------------------------+
+| Is Asynchronous| Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
++----------------+---------+--------+----------------------------------------------------------------+
