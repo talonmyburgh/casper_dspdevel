@@ -1,5 +1,6 @@
 -- A VHDL implementation of the CASPER c_to_ri block.
--- @author: Mydon Solutions.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;

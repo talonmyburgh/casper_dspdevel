@@ -1,3 +1,6 @@
+-- A VHDL implementation of the CASPER armed_trigger block.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE common_pkg_lib.common_pkg.ALL;
