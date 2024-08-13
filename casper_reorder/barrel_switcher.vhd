@@ -14,6 +14,7 @@ entity barrel_switcher is
   port (
     clk     : IN std_logic;
     ce      : IN std_logic;
+    en      : IN std_logic := '1'; -- for supposed async mode, but really dubious reference implementation
     i_sel   : IN std_logic_vector; -- 'HIGH=MSB, 'LOW=LSB, regardless of direction (downto=LE, to=BE)
     i_sync  : IN std_logic;
     i_data  : IN t_slv_arr;
@@ -130,6 +131,7 @@ begin
         port map (
           clk => clk,
           ce => ce,
+          en => en,
           i_sel => s_sel_delayed(layer_index),
           i_data_0 => s_i_data_0,
           i_data_1 => s_i_data_1,

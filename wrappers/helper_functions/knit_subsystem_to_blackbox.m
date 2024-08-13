@@ -5,18 +5,15 @@ function knit_subsystem_to_blackbox(black_box_name)
     % Unlink block, otherwise we're not allowed to modify it
     set_param(sys_path, 'LinkStatus', 'inactive');
 
-    % Should not wipe all subsystem-ports because some
-    % may be static and wired particularly:
-    %  e.g. barrel-switcher inverts the port order of i_sel and i_sync
-
     % Get bb port name to handle map, in order to add signals
     [bb_port_table, bb_port_handles] = get_blackbox_port_table(bb_path);
     sys_port_table = get_subsystem_port_table(sys_path);
     
-    % drop any subsystem ports that don't match the black-box
-    sys_port_table = delete_excess_subsystem_ports(sys_port_table, bb_port_table);
-    
-    % add any missing subsystem ports to match the black-box
+    % drop all subsystem ports
+    sys_port_table = delete_all_subsystem_ports(sys_port_table);
+
+    % add all missing subsystem ports to match the black-box
+    % these are added in the order in which they are declared in the block configuration m-function
     sys_port_table = add_missing_subsystem_ports(sys_port_table, sys_path, bb_port_table, bb_port_handles, get_param(bb_path, 'Position'));
     
     neaten_subsystem_ports(sys_path, sys_port_table, bb_port_table, get_param(bb_path, 'Position'), bb_port_handles);
@@ -64,21 +61,19 @@ function port_table = get_subsystem_port_table(subsystem_path)
     port_table = table(types', paths', 'VariableNames', {'type', 'path'}, 'RowNames', names');
 end
 
-function sys_port_table = delete_excess_subsystem_ports(sys_port_table, bb_port_table)
+function sys_port_table = delete_all_subsystem_ports(sys_port_table)
     for sys_port_name = sys_port_table.Row(:)'
-        if ~any(contains(bb_port_table.Row(:), sys_port_name{1}))
-            port_path = sys_port_table.path(sys_port_name{1});
+        port_path = sys_port_table.path(sys_port_name{1});
 
-            port_lh = get_param(port_path, 'LineHandles');
-            if port_lh.Inport
-              delete_line(port_lh.Inport);
-            end
-            if port_lh.Outport
-              delete_line(port_lh.Outport);
-            end
-            delete_block(port_path);
-            sys_port_table(sys_port_name{1}, :) = [];
+        port_lh = get_param(port_path, 'LineHandles');
+        if port_lh.Inport
+            delete_line(port_lh.Inport);
         end
+        if port_lh.Outport
+            delete_line(port_lh.Outport);
+        end
+        delete_block(port_path);
+        sys_port_table(sys_port_name{1}, :) = [];
     end
 end
 
@@ -220,4 +215,22 @@ function position = calculate_subsystem_port_position(port_type_str, port_positi
         port_position_left+port_width,
         bb_top_edge + (port_position_index-0.5)*port_vertical_step + 0.5*port_height
     ];
+end
+
+function sys_port_table = delete_excess_subsystem_ports(sys_port_table, bb_port_table)
+    for sys_port_name = sys_port_table.Row(:)'
+        if ~any(contains(bb_port_table.Row(:), sys_port_name{1}))
+            port_path = sys_port_table.path(sys_port_name{1});
+
+            port_lh = get_param(port_path, 'LineHandles');
+            if port_lh.Inport
+              delete_line(port_lh.Inport);
+            end
+            if port_lh.Outport
+              delete_line(port_lh.Outport);
+            end
+            delete_block(port_path);
+            sys_port_table(sys_port_name{1}, :) = [];
+        end
+    end
 end

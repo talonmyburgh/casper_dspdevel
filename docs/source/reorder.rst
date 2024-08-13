@@ -41,7 +41,9 @@ Parameters
 | Generic             | Type             | Description                                                |
 +=====================+==================+============================================================+
 | Asynchronous        | Boolean          | Whether or not the underlying multiplexers are             |
-|                     |                  | combinatoral or not.                                       |
+|                     |                  | sensitive to clk/ce or 'en'. If asynchronous, the datapath |
+|                     |                  | should be correct but the control signals will not be      |
+|                     |                  | valuable.                                                  |
 +---------------------+------------------+------------------------------------------------------------+
 
 ===========

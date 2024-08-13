@@ -9,30 +9,33 @@ function barrel_switcher_config(this_block)
   inout_port_count = 2^str2double(get_param(barrel_switcher_blk_parent, 'number_of_ports_2exp'));
   inout_port_bit_width = str2double(get_param(barrel_switcher_blk_parent, 'port_bit_width'));
   is_async = checkbox2bool(get_param(barrel_switcher_blk_parent,'async'));
-  if is_async
-    % Inform System Generator that the entity has a combinational feed through; 
-    this_block.tagAsCombinational;
-  end
 
   [vhdlfile, entityname] = barrel_switcher_code_gen(barrel_switcher_blk_parent_name, inout_port_count, inout_port_bit_width);
   this_block.setTopLevelLanguage('VHDL');
   this_block.setEntityName(entityname);
 
-  %Output signals
+  %Control signals
+  this_block.addSimulinkInport('i_sel');
+  i_sel_port = this_block.port('i_sel');
+  i_sel_port_type = sprintf('Ufix_%d_0', ceil(log2(inout_port_count)));
+  i_sel_port.setType(i_sel_port_type);
+  
   this_block.addSimulinkInport('i_sync');
   i_sync_port = this_block.port('i_sync');
   i_sync_port.setType('Ufix_1_0');
   i_sync_port.useHDLVector(false);
+  
+  if is_async
+    this_block.addSimulinkInport('en');
+    en_port = this_block.port('en');
+    en_port.setType('Ufix_1_0');
+    en_port.useHDLVector(false);
+  end
 
   this_block.addSimulinkOutport('o_sync');
   o_sync_port = this_block.port('o_sync');
   o_sync_port.setType('Ufix_1_0');
   o_sync_port.useHDLVector(false);
-
-  this_block.addSimulinkInport('i_sel');
-  i_sel_port = this_block.port('i_sel');
-  i_sel_port_type = sprintf('Ufix_%d_0', ceil(log2(inout_port_count)));
-  i_sel_port.setType(i_sel_port_type);
 
   %Data ports
   for data_i = 1:inout_port_count
