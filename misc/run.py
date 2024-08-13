@@ -3,6 +3,28 @@ from os.path import dirname, join
 from itertools import product
 import random
 
+def concat_re_im(re, im):
+    return (re << 16) | im
+
+def split_re_im(val):
+    return (val >> 16) & 0xFFFF, val & 0xFFFF
+
+def a_plus_b(a, b):
+    """
+    A and B are complex numbers where
+    If a = w + ix, b = y + iz then 
+    a+b = (w+y)/2 + i(x+z)/2 
+    """
+    return round((a.real + b.real) / 2), round((a.imag + b.imag) / 2)
+
+def a_minus_b(a, b):
+    """
+    A and B are complex numbers where
+    If a = w + ix, b = y + iz then 
+    a-b = (w-y)/2 + i(x-z)/2 
+    """
+    return round((a.real - b.real) / 2), round((a.imag - b.imag) / 2)
+
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 vu.add_vhdl_builtins()

@@ -24,33 +24,33 @@ end entity complex_addsub;
 
 architecture behavioural of complex_addsub is
 
-    signal s_inst1_re : std_logic_vector(g_bit_width - 1 downto 0);
-    signal s_inst1_im : std_logic_vector(g_bit_width - 1 downto 0);
-    signal s_inst2_re : std_logic_vector(g_bit_width - 1 downto 0);
-    signal s_inst2_im : std_logic_vector(g_bit_width - 1 downto 0);
+    signal s_a_re : std_logic_vector(g_bit_width - 1 downto 0) := (others=>'0');
+    signal s_a_im : std_logic_vector(g_bit_width - 1 downto 0) := (others=>'0');
+    signal s_b_re : std_logic_vector(g_bit_width - 1 downto 0) := (others=>'0');
+    signal s_b_im : std_logic_vector(g_bit_width - 1 downto 0) := (others=>'0');
 
-    signal s_addsub1 : std_logic_vector(g_bit_width downto 0);
-    signal s_addsub2 : std_logic_vector(g_bit_width downto 0);
-    signal s_addsub3 : std_logic_vector(g_bit_width downto 0);
-    signal s_addsub4 : std_logic_vector(g_bit_width downto 0);
+    signal s_add_re : std_logic_vector(g_bit_width downto 0);
+    signal s_add_im : std_logic_vector(g_bit_width downto 0);
+    signal s_sub_re : std_logic_vector(g_bit_width downto 0);
+    signal s_sub_im : std_logic_vector(g_bit_width downto 0);
 
-    signal s_scale1 : std_logic_vector(g_bit_width downto 0);    
-    signal s_scale2 : std_logic_vector(g_bit_width downto 0);
-    signal s_scale3 : std_logic_vector(g_bit_width downto 0);
-    signal s_scale4 : std_logic_vector(g_bit_width downto 0);
+    signal s_scale_add_re : std_logic_vector(g_bit_width downto 0);    
+    signal s_scale_sub_re : std_logic_vector(g_bit_width downto 0);
+    signal s_scale_sub_im : std_logic_vector(g_bit_width downto 0);
+    signal s_scale_add_im : std_logic_vector(g_bit_width downto 0);
 
-    signal s_round1 : std_logic_vector(g_bit_width - 1 downto 0);    
-    signal s_round2 : std_logic_vector(g_bit_width - 1 downto 0);
-    signal s_round3 : std_logic_vector(g_bit_width - 1 downto 0);
-    signal s_round4 : std_logic_vector(g_bit_width - 1 downto 0);
+    signal s_round_add_re : std_logic_vector(g_bit_width - 1 downto 0);    
+    signal s_round_sub_re : std_logic_vector(g_bit_width - 1 downto 0);
+    signal s_round_sub_im : std_logic_vector(g_bit_width - 1 downto 0);
+    signal s_round_add_im : std_logic_vector(g_bit_width - 1 downto 0);
     
-    signal s_round_buf1 : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');    
-    signal s_round_buf2 : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
-    signal s_round_buf3 : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
-    signal s_round_buf4 : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
+    signal s_round_buf_add_re : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');    
+    signal s_round_buf_sub_re : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
+    signal s_round_buf_sub_im : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
+    signal s_round_buf_add_im : std_logic_vector(g_bit_width - 1 downto 0) := (others => '0');
     
-    signal s_out1 : std_logic_vector(2*g_bit_width - 1 downto 0) := (others => '0');
-    signal s_out2 : std_logic_vector(2*g_bit_width - 1 downto 0) := (others => '0');
+    signal s_out_a_plus_b : std_logic_vector(2*g_bit_width - 1 downto 0) := (others => '0');
+    signal s_out_a_minus_b : std_logic_vector(2*g_bit_width - 1 downto 0) := (others => '0');
 
     constant c_addsub_input_latency : integer := sel_a_b(g_add_latency > 1, 1, 0);
     constant c_addsub_output_latency : integer := sel_a_b(g_add_latency = 0, 0, g_add_latency - c_addsub_input_latency);
@@ -69,8 +69,8 @@ begin
             clk    => clk,
             ce     => ce,
             c_in   => a,
-            re_out => s_inst1_re,
-            im_out => s_inst1_im
+            re_out => s_a_re,
+            im_out => s_a_im
         );
 
     c_to_ri_inst2 : entity work.c_to_ri
@@ -82,8 +82,8 @@ begin
             clk    => clk,
             ce     => ce,
             c_in   => b,
-            re_out => s_inst2_re,
-            im_out => s_inst2_im
+            re_out => s_b_re,
+            im_out => s_b_im
         );
     
     ----------------Addition and Subtraction----------------
@@ -99,9 +99,9 @@ begin
         port map(
             clk     => clk,
             clken   => ce,
-            in_a    => s_inst1_re,
-            in_b    => s_inst2_re,
-            result  => s_addsub1
+            in_a    => s_a_re,
+            in_b    => s_b_re,
+            result  => s_add_re
         );
     common_add_sub_inst2 : entity casper_adder_lib.common_add_sub
         generic map(
@@ -115,9 +115,9 @@ begin
         port map(
             clk     => clk,
             clken   => ce,
-            in_a    => s_inst2_re,
-            in_b    => s_inst1_re,
-            result  => s_addsub2
+            in_a    => s_a_re,
+            in_b    => s_b_re,
+            result  => s_sub_re
         );
     common_add_sub_inst3 : entity casper_adder_lib.common_add_sub
         generic map(
@@ -131,9 +131,9 @@ begin
         port map(
             clk     => clk,
             clken   => ce,
-            in_a    => s_inst1_im,
-            in_b    => s_inst2_im,
-            result  => s_addsub3
+            in_a    => s_a_im,
+            in_b    => s_b_im,
+            result  => s_sub_im
         );
     common_add_sub_inst4 : entity casper_adder_lib.common_add_sub
         generic map(
@@ -147,22 +147,16 @@ begin
         port map(
             clk     => clk,
             clken   => ce,
-            in_a    => s_inst1_im,
-            in_b    => s_inst2_im,
-            result  => s_addsub4
+            in_a    => s_a_im,
+            in_b    => s_b_im,
+            result  => s_add_im
         );
-    
-    ----------------Scale the values by 0.5----------------
-    s_scale1 <= std_logic_vector(signed(s_addsub1) / 2);
-    s_scale2 <= std_logic_vector(signed(s_addsub2) / 2);
-    s_scale3 <= std_logic_vector(signed(s_addsub3) / 2);
-    s_scale4 <= std_logic_vector(signed(s_addsub4) / 2);
 
-    ----------------Resize and Round the value to correct bit widths----------------
-    s_round1 <= s_round(s_scale1, 1, FALSE, c_round_style);
-    s_round1 <= s_round(s_scale1, 1, FALSE, c_round_style);
-    s_round1 <= s_round(s_scale1, 1, FALSE, c_round_style);
-    s_round1 <= s_round(s_scale1, 1, FALSE, c_round_style);
+    ----------------Resize (scale by 0.5) and Round the value to correct bit widths----------------
+    s_round_add_re <= s_round(s_add_re, 1, FALSE, c_round_style);
+    s_round_sub_re <= s_round(s_sub_re, 1, FALSE, c_round_style);
+    s_round_sub_im <= s_round(s_sub_im, 1, FALSE, c_round_style);
+    s_round_add_im <= s_round(s_add_im, 1, FALSE, c_round_style);
 
     ----------------Buffer the signals by g_add_latency----------------
     delay_simple_inst1 : entity casper_delay_lib.delay_simple
@@ -172,8 +166,8 @@ begin
         port map(
             clk    => clk,
             ce     => ce,
-            i_data => s_round1,
-            o_data => s_round_buf1
+            i_data => s_round_add_re,
+            o_data => s_round_buf_add_re
         );
     delay_simple_inst2 : entity casper_delay_lib.delay_simple
         generic map(
@@ -182,8 +176,8 @@ begin
         port map(
             clk    => clk,
             ce     => ce,
-            i_data => s_round2,
-            o_data => s_round_buf2
+            i_data => s_round_sub_re,
+            o_data => s_round_buf_sub_re
         );
     delay_simple_inst3 : entity casper_delay_lib.delay_simple
         generic map(
@@ -192,8 +186,8 @@ begin
         port map(
             clk    => clk,
             ce     => ce,
-            i_data => s_round3,
-            o_data => s_round_buf3
+            i_data => s_round_sub_im,
+            o_data => s_round_buf_sub_im
         );
     delay_simple_inst4 : entity casper_delay_lib.delay_simple
         generic map(
@@ -202,8 +196,8 @@ begin
         port map(
             clk    => clk,
             ce     => ce,
-            i_data => s_round4,
-            o_data => s_round_buf4
+            i_data => s_round_add_im,
+            o_data => s_round_buf_add_im
         );
 
     ----------------Real Imaginary to Complex Conversion----------------
@@ -214,9 +208,9 @@ begin
         port map(
             clk   => clk,
             ce    => ce,
-            re_in => s_round_buf1,
-            im_in => s_round_buf3,
-            c_out => s_out1
+            re_in => s_round_buf_add_re,
+            im_in => s_round_buf_add_im,
+            c_out => s_out_a_plus_b
         );
 
     ri_to_c_inst2 : entity work.ri_to_c
@@ -226,13 +220,13 @@ begin
         port map(
             clk   => clk,
             ce    => ce,
-            re_in => s_round_buf4,
-            im_in => s_round_buf2,
-            c_out => s_out2
+            re_in => s_round_buf_sub_re,
+            im_in => s_round_buf_sub_im,
+            c_out => s_out_a_minus_b
         );
     
-    a_plus_b <= s_out1;
-    a_minus_b <= s_out2;
+    a_plus_b <= s_out_a_plus_b;
+    a_minus_b <= s_out_a_minus_b;
     
 
 end architecture behavioural;
