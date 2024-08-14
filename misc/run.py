@@ -35,12 +35,25 @@ common_pkg_lib = vu.add_library("common_pkg_lib")
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_float_types_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/fixed_pkg_c.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
+
+# Create library 'casper_pipeline_lib'
+casper_pipeline_lib = vu.add_library("casper_pipeline_lib")
+casper_pipeline_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
 
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
 casper_counter_lib.add_source_file(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
 casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_counter.vhd"))
+
+# Create library 'casper_adder_lib'
+casper_adder_lib = vu.add_library("casper_adder_lib")
+casper_adder_lib.add_source_files(join(script_dir, "../casper_adder/casper_add_sub.vhd"))
+
+# Creat library 'casper_delay_lib'
+casper_delay_lib = vu.add_library("casper_delay_lib")
+casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_simple.vhd"))
 
 #MISC Library compile
 casper_misc_lib = vu.add_library("casper_misc_lib")
