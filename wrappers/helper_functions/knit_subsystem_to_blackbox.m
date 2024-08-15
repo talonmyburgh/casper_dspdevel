@@ -9,8 +9,9 @@ function knit_subsystem_to_blackbox(black_box_name)
     [bb_port_table, bb_port_handles] = get_blackbox_port_table(bb_path);
     sys_port_table = get_subsystem_port_table(sys_path);
     
-    % drop all subsystem ports
-    sys_port_table = delete_all_subsystem_ports(sys_port_table);
+    % drop excess and out-of-order ports subsystem ports
+    % this leaves static ports in place and connected
+    sys_port_table = delete_out_of_order_and_excess_subsystem_ports(sys_port_table, bb_port_table);
 
     % add all missing subsystem ports to match the black-box
     % these are added in the order in which they are declared in the block configuration m-function
@@ -46,6 +47,7 @@ function port_table = get_subsystem_port_table(subsystem_path)
     names = strings(0);
     paths = strings(0);
     types = strings(0);
+    indices = [];
     index = 1;
 
     for port_type = {'Inport', 'Outport'}
@@ -55,25 +57,29 @@ function port_table = get_subsystem_port_table(subsystem_path)
             names{index} = tokens{1}{1};
             paths{index} = port_paths{i};
             types{index} = port_type{1};
+            indices(length(indices)+1) = i;
             index = index + 1;
         end
     end
-    port_table = table(types', paths', 'VariableNames', {'type', 'path'}, 'RowNames', names');
+    port_table = table(types', paths', indices', 'VariableNames', {'type', 'path', 'handle_index'}, 'RowNames', names');
 end
 
-function sys_port_table = delete_all_subsystem_ports(sys_port_table)
+function sys_port_table = delete_out_of_order_and_excess_subsystem_ports(sys_port_table, bb_port_table)
     for sys_port_name = sys_port_table.Row(:)'
-        port_path = sys_port_table.path(sys_port_name{1});
+        contained = contains(bb_port_table.Row(:), sys_port_name{1});
+        if ~any(contained) || sys_port_table.handle_index(sys_port_name{1}) ~= bb_port_table.handle_index(sys_port_name{1})
+            port_path = sys_port_table.path(sys_port_name{1});
 
-        port_lh = get_param(port_path, 'LineHandles');
-        if port_lh.Inport
-            delete_line(port_lh.Inport);
+            port_lh = get_param(port_path, 'LineHandles');
+            if port_lh.Inport
+              delete_line(port_lh.Inport);
+            end
+            if port_lh.Outport
+              delete_line(port_lh.Outport);
+            end
+            delete_block(port_path);
+            sys_port_table(sys_port_name{1}, :) = [];
         end
-        if port_lh.Outport
-            delete_line(port_lh.Outport);
-        end
-        delete_block(port_path);
-        sys_port_table(sys_port_name{1}, :) = [];
     end
 end
 
@@ -82,10 +88,11 @@ function sys_port_table = add_missing_subsystem_ports(sys_port_table, sys_path, 
     names = strings(0);
     paths = strings(0);
     types = strings(0);
+    indices = [];
     index = 1;
 
-    % bb_inport_count = sum(strcmp(bb_port_table.type, 'Inport'));
-    % bb_outport_count = sum(strcmp(bb_port_table.type, 'Outport'));
+    sys_inport_count = sum(strcmp(sys_port_table.type, 'Inport'));
+    sys_outport_count = sum(strcmp(sys_port_table.type, 'Outport'));
 
     for bb_port_name = bb_port_table.Row(:)'
         if ~any(contains(sys_port_table.Row(:), bb_port_name{1}))
@@ -111,11 +118,18 @@ function sys_port_table = add_missing_subsystem_ports(sys_port_table, sys_path, 
             names{index} = bb_port_name{1};
             paths{index} = port_path;
             types{index} = convertStringsToChars(port_type_str);
+            if strcmp(port_type_str, 'Inport')
+                sys_inport_count = sys_inport_count+1;
+                indices(length(indices)+1) = sys_inport_count;
+            elseif strcmp(port_type_str, 'Outport')
+                sys_outport_count = sys_outport_count+1;
+                indices(length(indices)+1) = sys_outport_count;
+            end
             index = index + 1;
         end
 
     end
-    added_port_table = table(types', paths', 'VariableNames', {'type', 'path'}, 'RowNames', names');
+    added_port_table = table(types', paths', indices', 'VariableNames', {'type', 'path', 'handle_index'}, 'RowNames', names');
     sys_port_table = [sys_port_table;added_port_table];
 end
 
@@ -232,5 +246,21 @@ function sys_port_table = delete_excess_subsystem_ports(sys_port_table, bb_port_
             delete_block(port_path);
             sys_port_table(sys_port_name{1}, :) = [];
         end
+    end
+end
+
+function sys_port_table = delete_all_subsystem_ports(sys_port_table)
+    for sys_port_name = sys_port_table.Row(:)'
+        port_path = sys_port_table.path(sys_port_name{1});
+
+        port_lh = get_param(port_path, 'LineHandles');
+        if port_lh.Inport
+            delete_line(port_lh.Inport);
+        end
+        if port_lh.Outport
+            delete_line(port_lh.Outport);
+        end
+        delete_block(port_path);
+        sys_port_table(sys_port_name{1}, :) = [];
     end
 end
