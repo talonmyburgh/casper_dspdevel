@@ -1,6 +1,22 @@
 
 function sync_delay_config(this_block)
 
+  function boolval =  checkbox2bool(bxval)
+    if strcmp(bxval, 'on')
+     boolval= true;
+    elseif strcmp(bxval, 'off')
+     boolval= false;
+    end 
+  end
+
+  function strval =  checkbox2str(bxval)
+    if strcmp(bxval, 'on')
+    strval= 'TRUE';
+    elseif strcmp(bxval, 'off')
+    strval= 'FALSE';
+    end 
+  end
+
   this_block.setTopLevelLanguage('VHDL');
 
   this_block.setEntityName('sync_delay');
@@ -9,9 +25,18 @@ function sync_delay_config(this_block)
   sync_delay = this_block.blockName;
   sync_delay_parent = get_param(sync_delay,'Parent');
   delay = get_param(sync_delay_parent,'DelayLen');
+  async = checkbox2bool(get_param(sync_delay_parent,'async'));
+  async_str = checkbox2str(get_param(sync_delay_parent,'async'));
 
   this_block.addSimulinkInport('din');
   din_port = this_block.port('din');
+
+  if async
+    this_block.addSimulinkInport('en');
+    en_port = this_block.port('en');
+    en_port.setType('Bool');
+    en_port.useHDLVector(false);
+  end
 
   this_block.addSimulinkOutport('dout');
   dout_port = this_block.port('dout');
@@ -40,6 +65,7 @@ function sync_delay_config(this_block)
     uniqueInputRates = unique(this_block.getInputRates);
 
   this_block.addGeneric('g_delay','NATURAL',delay);
+  this_block.addGeneric('g_async','BOOLEAN',async_str);
 
   this_block.addFileToLibrary([filepath '/../../casper_delay/sync_delay.vhd'], 'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
