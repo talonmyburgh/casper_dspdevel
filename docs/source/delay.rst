@@ -136,8 +136,7 @@ Ports
 +================+=================+===========================+=================================================================+
 | din            | std_logic_vector| any                       | The input signal to be delayed by the delay parameter provided. |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
-| delay          | std_logic       | 1                         | This port will asynchronously enable (1) or disable (0) the     |
-|                |                 |                           | block.                                                          |
+| delay          | std_logic_vector| Max Delay                 | The programmable delay value of length Max Delay.               |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
 | dout           | std_logic_vector| Width of din              | The delayed din signal delayed by :math:`bram_latency + delay`. |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
@@ -157,4 +156,44 @@ Parameters
 |                |         |        | "block", "auto", "distributed" and "ultra".                    |
 +----------------+---------+--------+----------------------------------------------------------------+
 | Is Asynchronous| Boolean | False  | If checked, the block provides an asynchronous enable/disable  |
++----------------+---------+--------+----------------------------------------------------------------+
+
+
+==========
+Delay Sync
+==========
+Delay an infrequent boolean pulse by  a run-time programmable number or provided parameter of enabled clocks.  
+If the input pulse repeats before the output pulse is generated, an internal counter
+resets and that output pulse is never generated. When delay is changed, some randomly determined 
+samples will be inserted/dropped from the buffered stream.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                     |
++================+=================+===========================+=================================================================+
+| din            | std_logic_vector| any                       | The input signal to be delayed by the delay parameter provided. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| en             | std_logic       | 1                         | This port will drive the delay process when operating           |
+|                |                 |                           | asynchronously (optional).                                      |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| delay          | std_logic_vector| any                       | The programmable delay value (optional).                        |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| dout           | std_logic_vector| Width of din              | The delayed din signal delayed by :math:`bram_latency + delay`. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Delay length   | Natural | 4      | Delay number of clock cycles by which you want                 |
+|                |         |        | to delay din.                                                  |      
++----------------+---------+--------+----------------------------------------------------------------+
+| Asynchronous   | Boolean | False  | If checked, the block provides an asynchronous enable/disable. |
++----------------+---------+--------+----------------------------------------------------------------+
+| Use delay load | Boolean | False  | If checked, the block provides a port to programmatically      |
+|                |         |        | load the delay.                                                |
 +----------------+---------+--------+----------------------------------------------------------------+
