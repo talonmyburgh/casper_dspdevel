@@ -8,25 +8,29 @@ use common_pkg_lib.common_pkg.all;
 
 entity sync_delay is
     generic(
-        g_delay : natural := 4;
-        g_async : boolean := false
+        g_delay          : natural := 4;
+        g_async          : boolean := false;
+        g_use_delay_port : boolean := false
     );
     port(
-        clk  : in  std_logic;
-        ce   : in  std_logic;
-        en   : in  std_logic := '0';
-        din  : in  std_logic;
-        dout : out std_logic
+        clk   : in  std_logic;
+        ce    : in  std_logic;
+        en    : in  std_logic        := '0';
+        din   : in  std_logic;
+        delay : in  std_logic_vector := (others => '0');
+        dout  : out std_logic
     );
 end entity sync_delay;
 
 architecture RTL of sync_delay is
 
-    constant c_ceil_log2 : NATURAL := ceil_log2(g_delay);
-    constant c_cnt_w     : NATURAL := sel_a_b(2 > c_ceil_log2, 2, c_ceil_log2); --max(2, ceil_log2(g_delay)
+    constant c_ceil_log2 : NATURAL := sel_a_b(g_use_delay_port, delay'length, ceil_log2(g_delay)); --when using delay port, use its width, otherwise use the width of the delay value
+    constant c_cnt_gen_w : NATURAL := sel_a_b(2 > c_ceil_log2, 2, c_ceil_log2); --max(2, ceil_log2(g_delay))
+    constant c_cnt_w     : NATURAL := sel_a_b(g_use_delay_port, delay'length, c_cnt_gen_w); --when using delay port, use its width, otherwise use the width of the delay value
 
     signal s_count         : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(2 ** c_cnt_w, c_cnt_w);
-    signal s_cnt_load      : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(g_delay, c_cnt_w);
+    signal s_cnt_gen_load  : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(g_delay, c_cnt_w);
+    signal s_cnt_load      : std_logic_vector(c_cnt_w - 1 downto 0);
     signal s_or_out        : std_logic                              := '0';
     signal s_a_neq_b       : std_logic                              := '0';
     signal s_cnt_en        : std_logic                              := '0';
@@ -36,6 +40,7 @@ architecture RTL of sync_delay is
     signal s_one           : std_logic_vector(c_cnt_w - 1 downto 0) := TO_UVEC(1, c_cnt_w);
     signal s_sel           : std_logic                              := sel_a_b(g_delay = 0, '0', '1'); --bypass logic for zero delay
 begin
+    s_cnt_load <= sel_a_b(g_use_delay_port, delay, s_cnt_gen_load);
     ------------------------------------------------------------
     -- COUNTER
     counter : entity casper_counter_lib.common_counter
@@ -57,7 +62,7 @@ begin
     ------------------------------------------------------------
     ------------------------------------------------------------
     -- OR
-    s_or_out <= din or s_a_neq_b;
+    s_or_out   <= din or s_a_neq_b;
 
     -- NEQ
     s_a_neq_b <= sel_a_b(s_zero = s_count, '0', '1');

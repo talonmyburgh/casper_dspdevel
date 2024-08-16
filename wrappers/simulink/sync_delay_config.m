@@ -27,6 +27,8 @@ function sync_delay_config(this_block)
   delay = get_param(sync_delay_parent,'DelayLen');
   async = checkbox2bool(get_param(sync_delay_parent,'async'));
   async_str = checkbox2str(get_param(sync_delay_parent,'async'));
+  use_delay_port = checkbox2bool(get_param(sync_delay_parent,'use_delay_port'));
+  use_delay_port_str = checkbox2str(get_param(sync_delay_parent,'use_delay_port'));
 
   this_block.addSimulinkInport('din');
   din_port = this_block.port('din');
@@ -36,6 +38,12 @@ function sync_delay_config(this_block)
     en_port = this_block.port('en');
     en_port.setType('Bool');
     en_port.useHDLVector(false);
+  end
+
+  if use_delay_port
+    this_block.addSimulinkInport('delay');
+    delay_port = this_block.port('delay');
+    delay_port.useHDLVector(true);
   end
 
   this_block.addSimulinkOutport('dout');
@@ -66,6 +74,7 @@ function sync_delay_config(this_block)
 
   this_block.addGeneric('g_delay','NATURAL',delay);
   this_block.addGeneric('g_async','BOOLEAN',async_str);
+  this_block.addGeneric('g_use_delay_port','BOOLEAN',use_delay_port_str);
 
   this_block.addFileToLibrary([filepath '/../../casper_delay/sync_delay.vhd'], 'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
