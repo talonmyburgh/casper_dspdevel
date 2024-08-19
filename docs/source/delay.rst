@@ -197,3 +197,30 @@ Parameters
 | Use delay load | Boolean | False  | If checked, the block provides a port to programmatically      |
 |                |         |        | load the delay.                                                |
 +----------------+---------+--------+----------------------------------------------------------------+
+
+========
+Pipeline
+========
+An explicitly laid-out delay line for use in pipelining to help achieve timing closure. This is behavioural model design so tools 
+will design how it is internally implemented.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                     |
++================+=================+===========================+=================================================================+
+| d              | std_logic_vector| any                       | The input signal to be pipelined by the provided latency        |
+|                |                 |                           | parameter                                                       |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| q              | std_logic_vector| Width of din              | The delayed d signal                                            |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+     
+| pipeline_len   | Natural | 4      | The natural number of clock cycles to pipeline in input by     |
++----------------+---------+--------+----------------------------------------------------------------+
