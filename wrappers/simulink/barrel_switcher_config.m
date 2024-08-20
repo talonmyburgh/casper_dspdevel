@@ -24,13 +24,6 @@ function barrel_switcher_config(this_block)
   i_sync_port = this_block.port('i_sync');
   i_sync_port.setType('Ufix_1_0');
   i_sync_port.useHDLVector(false);
-  
-  if is_async
-    this_block.addSimulinkInport('en');
-    en_port = this_block.port('en');
-    en_port.setType('Ufix_1_0');
-    en_port.useHDLVector(false);
-  end
 
   this_block.addSimulinkOutport('o_sync');
   o_sync_port = this_block.port('o_sync');
@@ -45,6 +38,19 @@ function barrel_switcher_config(this_block)
     port_name = sprintf('o_data_%d',data_i);
     this_block.addSimulinkOutport(port_name);
   end
+
+  if is_async
+    this_block.addSimulinkInport('en');
+    en_port = this_block.port('en');
+    en_port.setType('Ufix_1_0');
+    en_port.useHDLVector(false);
+
+    this_block.addSimulinkOutport('dvalid');
+    dvalid_port = this_block.port('dvalid');
+    dvalid_port.setType('Ufix_1_0');
+    dvalid_port.useHDLVector(false);
+  end
+
 
   % -----------------------------
   if (this_block.inputTypesKnown)
