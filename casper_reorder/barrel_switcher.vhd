@@ -20,7 +20,7 @@ entity barrel_switcher is
     i_data : IN  t_slv_arr;
     o_sync : OUT std_logic := '0';
     o_data : OUT t_slv_arr;
-    dvalid : IN  std_logic              -- for supposed async mode, but really dubious reference implementation
+    dvalid : OUT  std_logic              -- for supposed async mode, but really dubious reference implementation
   );
 end barrel_switcher;
 
