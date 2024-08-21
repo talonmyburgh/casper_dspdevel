@@ -1,5 +1,6 @@
 -- A VHDL implementation of the CASPER delay_bram (sync) block.
--- @author: Mydon Solutions.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 -- TODO: add ability to implement counter using dsp48 blocks.
 
 LIBRARY IEEE, common_pkg_lib, casper_counter_lib, casper_ram_lib;

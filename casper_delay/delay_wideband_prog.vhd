@@ -1,3 +1,6 @@
+-- A VHDL implementation of the CASPER delay_wideband_prog block.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 library ieee, common_pkg_lib, casper_reorder_lib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
