@@ -20,13 +20,14 @@ USE work.variable_mux_pkg.ALL;
 entity variable_mux is
     generic(
         g_async     : BOOLEAN := FALSE;
-        g_num_ports : integer := 2      -- Number of i_data ports
+        g_num_ports : integer := 2;      -- Number of i_data ports
+        g_mux_latency : integer := 4 -- Maximum latency
     );
     port(
         clk    : IN  std_logic := '0';
         ce     : IN  std_logic := '1';
         en     : IN  std_logic := '1';
-        i_sel  : IN  std_logic_vector(g_num_ports - 1 downto 0);
+        i_sel  : IN  std_logic_vector;
         i_data : IN  t_mux_data_array(g_num_ports - 1 downto 0);
         o_data : out std_logic_vector
     );
@@ -34,6 +35,8 @@ end variable_mux;
 
 architecture rtl of variable_mux is
     signal s_int_i_sel : integer range 0 to g_num_ports - 1;
+    type shift_reg_type is array (0 to g_mux_latency-1) of std_logic_vector(c_mux_data_width - 1 downto 0);
+    signal shift_reg : shift_reg_type;
 begin
     s_int_i_sel <= to_integer(unsigned(i_sel));
     --------------------------------------------------------
@@ -43,7 +46,11 @@ begin
         sync_process : PROCESS(en)
         begin
             if rising_edge(en) THEN
-                o_data <= i_data(s_int_i_sel);
+                shift_reg(0) <= i_data(s_int_i_sel);
+                for i in 1 to g_mux_latency loop
+                    shift_reg(i) <= shift_reg(i - 1);
+                end loop;
+                o_data <= shift_reg(g_mux_latency-1);
             end if;
         end PROCESS;
     END GENERATE;
@@ -56,7 +63,11 @@ begin
         sync_process : PROCESS(clk)
         begin
             if rising_edge(clk) and ce = '1' THEN
-                o_data <= i_data(s_int_i_sel);
+                shift_reg(0) <= i_data(s_int_i_sel);
+                for i in 1 to g_mux_latency loop
+                    shift_reg(i) <= shift_reg(i - 1);
+                end loop;
+                o_data <= shift_reg(g_mux_latency-1);
             end if;
         end PROCESS;
     END GENERATE;
