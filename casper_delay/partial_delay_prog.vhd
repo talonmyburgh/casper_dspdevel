@@ -28,9 +28,9 @@ architecture RTL of partial_delay_prog is
 
     constant c_mux_latency : natural := sel_a_b(g_mux_latency > 0, g_mux_latency - 1, 0); -- overall mux latency must always be at least 1
 
-    signal s_delay_din : t_mux_data_array(g_num_ports - 1 downto 0);
+    signal s_delay_din : t_mux_data_array(g_num_ports - 1 downto 0) := (others => (others => '0')); -- delayed din
     signal s_mux_din   : t_mux_data_array(g_num_ports * g_num_ports - 1 downto 0); -- all of the input data ports for the mux's
-    signal s_mux_dout  : t_mux_data_array(g_num_ports - 1 downto 0); -- all of the output data ports for the mux's
+    signal s_mux_dout  : t_mux_data_array(g_num_ports - 1 downto 0) := (others => (others=>'0')); -- all of the output data ports for the mux's
 
 begin
 
@@ -54,11 +54,9 @@ begin
                 ce     => ce,
                 en     => en,
                 i_sel  => delay,
-                i_data => s_mux_din(i * g_num_ports to (i + 1) * g_num_ports - 1), -- all of the input data ports for the mux's
+                i_data => s_mux_din((i + 1) * g_num_ports - 1 DOWNTO i * g_num_ports), -- all of the input data ports for the mux's
                 o_data => s_mux_dout(i)
             );
-
-        s_mux_din(i * g_num_ports) <= s_delay_din(i);
     end generate create_muxs;
 
     -- Connect the input data ports to the mux's bus interface:
@@ -67,6 +65,7 @@ begin
         if rising_edge(clk) then
             if ce = '1' then
                 for j in 0 to g_num_ports - 1 loop
+                    s_mux_din(j * g_num_ports) <= s_delay_din(j);
                     for k in 1 to g_num_ports - 1 loop
                         if j + k <= g_num_ports - 1 then
                             s_mux_din(j * g_num_ports + k) <= s_delay_din(j + k); --delayed din
