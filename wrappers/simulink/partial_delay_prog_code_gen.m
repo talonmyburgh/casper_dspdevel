@@ -14,7 +14,7 @@ function [partial_delay_prog_file, variable_mux_file] = partial_delay_prog_code_
         "use ieee.numeric_std.all;"
         "use common_pkg_lib.common_pkg.all;"
         "use casper_reorder_lib.variable_mux_pkg.all;"
-        "entity partial_delay_prog_gen is"
+        "entity partial_delay_prog_top is"
         "    generic("
         "        g_async       : boolean := FALSE;"
         "        g_num_ports   : integer := 2;"
@@ -28,9 +28,9 @@ function [partial_delay_prog_file, variable_mux_file] = partial_delay_prog_code_
     ];
     midlines = [
     "    );"
-    "end entity partial_delay_prog_gen;"
+    "end entity partial_delay_prog_top;"
     ""
-    "architecture RTL of partial_delay_prog_gen is"
+    "architecture RTL of partial_delay_prog_top is"
     "    signal s_din : t_mux_data_array(g_num_ports - 1 downto 0);"
     "    signal s_dout : t_mux_data_array(g_num_ports - 1 downto 0);"
     "begin"

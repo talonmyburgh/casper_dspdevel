@@ -2,7 +2,7 @@
 -- @author: Talon Myburgh
 -- @company: Mydon Solutions
 
-library ieee, common_pkg_lib, casper_reorder_lib, casper_delay_lib;
+library ieee, common_pkg_lib, casper_reorder_lib;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use common_pkg_lib.common_pkg.all;

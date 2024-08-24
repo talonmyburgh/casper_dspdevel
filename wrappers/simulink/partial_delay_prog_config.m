@@ -1,11 +1,13 @@
 
 function partial_delay_prog_config(this_block)
-
   this_block.setTopLevelLanguage('VHDL');
   filepath = fileparts(which('partial_delay_prog_config'));
   this_block.setEntityName('partial_delay_prog_top');
   partial_delay_prog_blk = this_block.blockName;
   partial_delay_prog_blk_parent = get_param(partial_delay_prog_blk, 'Parent');
+
+  %set some width defaults to avoid errors
+  din_width = 10;
 
   function boolval =  checkbox2bool(bxval)
     if strcmp(bxval, 'on')
@@ -31,38 +33,39 @@ function partial_delay_prog_config(this_block)
 
 
   this_block.addSimulinkInport('delay');
+  delay_port = this_block.port('delay');
   if is_async
-      this_block.addSimulinkInport('en');
+    this_block.addSimulinkInport('en');
   end
   for i = 1:num_ports_dbl
-      this_block.addSimulinkInport(sprintf('din_%d', i));
-      this_block.addSimulinkOutport(sprintf('dout_%d', i));
+    this_block.addSimulinkInport(sprintf('din_%d', i));
+    this_block.addSimulinkOutport(sprintf('dout_%d', i));
   end
 
   % -----------------------------
   if (this_block.inputTypesKnown)
     % do input type checking, dynamic output type and generic setup in this code block.
-
-    if (this_block.port('en').width ~= 1);
+    
+    if (this_block.port('en').width ~= 1) && is_async
       this_block.setError('Input data type for port "en" must have width=1.');
+      this_block.port('en').setType('Bool');
     end
+    delay_port.useHDLVector(true);
 
-    this_block.port('en').useHDLVector(false);
-
-    % (!) Port 'delay' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-    % (!) Port 'din_1' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-    % (!) Port 'din_2' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-    % (!) Port 'din_3' appeared to have dynamic type in the HDL -- please add type checking as appropriate;
-
-  % (!) Port 'dout_1' appeared to have dynamic type in the HDL
-  % --- you must add an appropriate type setting for this port
-  % (!) Port 'dout_2' appeared to have dynamic type in the HDL
-  % --- you must add an appropriate type setting for this port
-  % (!) Port 'dout_3' appeared to have dynamic type in the HDL
-  % --- you must add an appropriate type setting for this port
+    for i=1:num_ports_dbl
+      din_port = this_block.port(sprintf('din_%d', i));
+      if i == 1
+        din_width = din_port.getWidth;
+      else
+        if din_port.width ~= din_width
+          this_block.setError('All input data ports must have the same width.');
+        end
+      end
+      dout_port = this_block.port(sprintf('dout_%d', i));
+      dout_port.setWidth(din_width);
+      din_port.useHDLVector(true);
+      dout_port.useHDLVector(true);
+    end
   end  % if(inputTypesKnown)
   % -----------------------------
 
@@ -72,29 +75,20 @@ function partial_delay_prog_config(this_block)
    end  % if(inputRatesKnown)
   % -----------------------------
 
-    uniqueInputRates = unique(this_block.getInputRates);
-
   this_block.addGeneric('g_async','boolean',is_async_str);
   this_block.addGeneric('g_num_ports','integer',num_ports);
   this_block.addGeneric('g_mux_latency','natural',latency);
 
-  % Add addtional source files as needed.
-  %  |-------------
-  %  | Add files in the order in which they should be compiled.
-  %  | If two files "a.vhd" and "b.vhd" contain the entities
-  %  | entity_a and entity_b, and entity_a contains a
-  %  | component of type entity_b, the correct sequence of
-  %  | addFile() calls would be:
-  %  |    this_block.addFile('b.vhd');
-  %  |    this_block.addFile('a.vhd');
-  %  |-------------
+  [partial_delay_prog_top_file, var_mux_update_file] = partial_delay_prog_code_gen(num_ports_dbl, din_width);
 
-  %    this_block.addFile('');
-  %    this_block.addFile('');
-  this_block.addFile('C:/Users/mybur/Repos/CASPER/dspdevel_designs/casper_dspdevel/casper_delay/partial_delay_prog_blk_partial_delay_prog_top.vhd');
-
+  this_block.addFileToLibrary(partial_delay_prog_top_file, 'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '../../casper_delay/partial_delay_prog.vhd'], 'xil_defaultlib');
+  this_block.addFileToLibrary(var_mux_update_file, 'casper_reoder_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 return;
-
+end
 
 % ------------------------------------------------------------
 
@@ -119,6 +113,6 @@ function setup_as_single_rate(block,clkname,cename)
   end 
   block.addClkCEPair(clkname,cename,theInputRate); 
   return; 
-
+end
 % ------------------------------------------------------------
 
