@@ -1,5 +1,6 @@
 from vunit import VUnit
-from os.path import dirname, join
+from os.path import join, abspath, split,realpath,dirname
+import numpy as np
 from itertools import product
 import random
 
@@ -28,7 +29,7 @@ def a_minus_b(a, b):
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 vu.add_vhdl_builtins()
-script_dir = dirname(__file__)
+script_dir,_ = split(abspath(__file__))
 
 # Create library 'common_pkg_lib'
 common_pkg_lib = vu.add_library("common_pkg_lib")
@@ -38,9 +39,28 @@ common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/float_pkg_c.vhd"
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_str_pkg.vhd"))
 common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/common_pkg.vhd"))
 
-# Create library 'casper_pipeline_lib'
-casper_pipeline_lib = vu.add_library("casper_pipeline_lib")
-casper_pipeline_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
+# Create library 'common_components_lib'
+common_components_lib = vu.add_library("common_components_lib")
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
+
+# TECHNOLOGY Library
+technology_lib = vu.add_library("technology_lib",allow_duplicate = True)
+technology_lib.add_source_files(script_dir + "/../technology/technology_select_pkg.vhd")
+
+# XPM Multiplier library
+ip_xpm_mult_lib = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
+ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/*.vhd")
+
+# STRATIXIV Multiplier library
+ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
+ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
+
+# Multiplier Library
+mult_lib = vu.add_library("casper_multiplier_lib")
+mult_lib.add_source_files(join(script_dir, "../casper_multiplier/common_mult.vhd"))
+mult_lib.add_source_files(join(script_dir, "../casper_multiplier/tech_mult.vhd"))
+mult_lib.add_source_files(join(script_dir, "../casper_multiplier/tech_mult_component.vhd"))
 
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
@@ -49,7 +69,8 @@ casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_co
 
 # Create library 'casper_adder_lib'
 casper_adder_lib = vu.add_library("casper_adder_lib")
-casper_adder_lib.add_source_files(join(script_dir, "../casper_adder/casper_add_sub.vhd"))
+print(join(script_dir, "../casper_adder/casper_add_sub.vhd"))
+casper_adder_lib.add_source_file(join(script_dir,"../casper_adder/common_add_sub.vhd"))
 
 # Creat library 'casper_delay_lib'
 casper_delay_lib = vu.add_library("casper_delay_lib")
@@ -57,7 +78,14 @@ casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_simple
 
 #MISC Library compile
 casper_misc_lib = vu.add_library("casper_misc_lib")
-casper_misc_lib.add_source_files(join(script_dir, "./*.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./concat.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*ri_to_c.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*c_to_ri.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*bit_reverse.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*edge_detect.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*armed_trigger.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*pulse_ext.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*power.vhd"))
 
 RI_TO_C_TB = casper_misc_lib.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_misc_lib.test_bench("tb_tb_vu_c_to_ri")
@@ -65,10 +93,11 @@ BIT_REVERSE = casper_misc_lib.test_bench("tb_tb_vu_bit_reverse")
 EDGE_DETECT = casper_misc_lib.test_bench("tb_tb_vu_edge_detect")
 ARMED_TRIGGER = casper_misc_lib.test_bench("tb_tb_vu_armed_trigger")
 PULSE_EXT = casper_misc_lib.test_bench("tb_tb_vu_pulse_ext")
+POWER = casper_misc_lib.test_bench("tb_tb_vu_power")
 
 async_arr = [True, False]
 bit_w = [8,18]
-input_val = [-4, 12]
+input_val = np.random.randint(0, 255, 2).tolist()
 
 for async_val, bit_w_val, input_v in product(async_arr, bit_w, input_val):
     ri_to_c_config_name = "RI_TO_C: async=%r, bit_w=%d, re/im_input_val=%d" % (async_val, bit_w_val, input_v)
@@ -104,8 +133,18 @@ for pulse_extension in [1] + random.sample(range(2,10), 1):
 ARMED_TRIGGER.add_config(
     name = "ARMED_TRIGGER"
 )
+
+for b_w in bit_w:
+    power_config_name = "POWER: bit_w=%d" % (b_w)
+    POWER.add_config(
+        name = power_config_name,
+        generics=dict(g_bit_width_in = b_w,
+                      g_value_re = input_val[0],
+                      g_value_im = input_val[1])
+    )
     
-vu.set_compile_option("ghdl.a_flags", ["-frelaxed"])
-vu.set_sim_option("ghdl.elab_flags", ["-frelaxed"])
+vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
+vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
 vu.set_sim_option("ghdl.sim_flags", ["--ieee-asserts=disable"])
+vu.set_sim_option("modelsim.vsim_flags.gui",["-voptargs=+acc"])
 vu.main()
