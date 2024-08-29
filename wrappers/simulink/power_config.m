@@ -65,7 +65,7 @@ function power_config(this_block)
   this_block.addGeneric('g_mult_latency','NATURAL',mult_latency);
   this_block.addGeneric('g_use_dsp','STRING',use_dsp_str);
 
-  this_block.addFile('C:/Users/mybur/Repos/CASPER/dspdevel_designs/casper_dspdevel/misc/power.vhd');
+  this_block.addFileToLibrary([filepath '/../../misc/power.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../misc/c_to_ri.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../misc/concat.vhd'],'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_mult.vhd'],'casper_multiplier_lib');

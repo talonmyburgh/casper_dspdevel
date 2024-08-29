@@ -86,6 +86,7 @@ casper_misc_lib.add_source_files(join(script_dir, "./*edge_detect.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*armed_trigger.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*pulse_ext.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*power.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*freeze_cntr.vhd"))
 
 RI_TO_C_TB = casper_misc_lib.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_misc_lib.test_bench("tb_tb_vu_c_to_ri")
@@ -94,10 +95,11 @@ EDGE_DETECT = casper_misc_lib.test_bench("tb_tb_vu_edge_detect")
 ARMED_TRIGGER = casper_misc_lib.test_bench("tb_tb_vu_armed_trigger")
 PULSE_EXT = casper_misc_lib.test_bench("tb_tb_vu_pulse_ext")
 POWER = casper_misc_lib.test_bench("tb_tb_vu_power")
+FREEZE_CNTR = casper_misc_lib.test_bench("tb_tb_vu_freeze_cntr")
 
 async_arr = [True, False]
 bit_w = [8,18]
-input_val = np.random.randint(0, 255, 2).tolist()
+input_val = np.random.randint(0, 127, 2).tolist()
 
 for async_val, bit_w_val, input_v in product(async_arr, bit_w, input_val):
     ri_to_c_config_name = "RI_TO_C: async=%r, bit_w=%d, re/im_input_val=%d" % (async_val, bit_w_val, input_v)
@@ -141,6 +143,11 @@ for b_w in bit_w:
         generics=dict(g_bit_width_in = b_w,
                       g_value_re = input_val[0],
                       g_value_im = input_val[1])
+    )
+    freeze_config_name = "FREEZE_CNTR: bit_w=%d" % (b_w)
+    FREEZE_CNTR.add_config(
+        name = freeze_config_name,
+        generics=dict(g_num_cntr_bits = b_w)
     )
     
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
