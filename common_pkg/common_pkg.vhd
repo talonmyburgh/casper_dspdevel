@@ -177,6 +177,7 @@ PACKAGE common_pkg IS
 
 	FUNCTION true_log2(n : NATURAL) RETURN NATURAL; -- true_log2(n) = log2(n)
 	FUNCTION ceil_log2(n : NATURAL) RETURN NATURAL; -- ceil_log2(n) = log2(n), but force ceil_log2(1) = 1
+	FUNCTION next_pow2(n : NATURAL) RETURN NATURAL; -- next_pow2(n) = next power of two that is >= n
 
 	FUNCTION floor_log10(n : NATURAL) RETURN NATURAL;
 
@@ -525,6 +526,17 @@ PACKAGE BODY common_pkg IS
 			RETURN true_log2(n);
 		END IF;
 	END;
+
+	FUNCTION next_pow2(n : NATURAL) return NATURAL is
+        variable pow : NATURAL := 1;
+		variable result : NATURAL;
+    begin
+        while pow < n loop
+            pow := pow * 2;
+        end loop;
+		result := ceil_log2(pow);
+        return result;
+    end FUNCTION;
 
 	FUNCTION floor_log10(n : NATURAL) RETURN NATURAL IS
 	BEGIN
