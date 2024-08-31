@@ -23,6 +23,10 @@ casper_delay_lib = vu.add_library("casper_delay_lib")
 casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_simple.vhd"))
 casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_bram_en_plus.vhd"))
 
+# Create library 'casper_accumulators_lib'
+casper_accumulators_lib = vu.add_library("casper_accumulators_lib")
+casper_accumulators_lib.add_source_files(join(script_dir, "../casper_accumulators/simple_accumulator.vhd"))
+
 
 # CASPER BUS Library
 casper_bus_lib = vu.add_library("casper_bus_lib")
@@ -40,6 +44,12 @@ for delays in [0,1,2]:
                     "g_bit_width": input_width
                 }
             )
+
+TB_BUS_ACC = casper_bus_lib.test_bench("tb_tb_vu_bus_accumulator")
+TB_BUS_ACC.add_config(
+    name = f"Bus Accumulator",
+    generics={}
+)
 
 vu.set_compile_option("ghdl.a_flags", ["-Wno-hide", "-frelaxed","-fsynopsys","-fexplicit"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])
