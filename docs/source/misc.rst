@@ -85,9 +85,9 @@ Ports
 | trig_out       | std_logic       | 1                         | Output boolean signal                                          |  
 +----------------+-----------------+---------------------------+----------------------------------------------------------------+
 
-=========================
+==============
 Pulse Extender
-=========================
+==============
 Extend the high-duration of a pulse by a number of clock periods, from the rising edge.
 
 -----
@@ -239,9 +239,30 @@ Parameters
 | num_cntr_bits  | Natural | 8      | Value at which the counter will freeze = 2^num_cntr_bits       |
 +----------------+---------+--------+----------------------------------------------------------------+
 
-==============
+=========
+Stopwatch
+=========
+A stopwatch is an stop/start counter which starts counting when start goes high and holds 
+its final value after stop goes high until it is reset.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                    |
++================+=================+===========================+================================================================+
+| reset          | std_logic       | 1                         | Module reset signal                                            |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| start          | std_logic       | 1                         | Module start signal                                            |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| stop           | std_logic       | 1                         | Module stop signal                                             |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| count          | std_logic_vector| any                       | Counter value                                                  |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+
+=================
 Triggered Counter
-==============
+=================
 A triggered counter is a counter starts counting at the rising edge of a trigger signal and counts up to run length -1.
 Valid signal goes low when counter has reached that value.
 

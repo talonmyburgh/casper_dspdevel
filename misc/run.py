@@ -88,6 +88,7 @@ casper_misc_lib.add_source_files(join(script_dir, "./*pulse_ext.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*power.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*freeze_cntr.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*triggered_counter.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*stopwatch.vhd"))
 
 RI_TO_C_TB = casper_misc_lib.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_misc_lib.test_bench("tb_tb_vu_c_to_ri")
@@ -98,6 +99,7 @@ PULSE_EXT = casper_misc_lib.test_bench("tb_tb_vu_pulse_ext")
 POWER = casper_misc_lib.test_bench("tb_tb_vu_power")
 FREEZE_CNTR = casper_misc_lib.test_bench("tb_tb_vu_freeze_cntr")
 TRIGGERED_COUNTER = casper_misc_lib.test_bench("tb_tb_vu_triggered_counter")
+STOPWATCH = casper_misc_lib.test_bench("tb_tb_vu_stopwatch")
 
 async_arr = [True, False]
 bit_w = [8,18]
@@ -151,10 +153,15 @@ for b_w in bit_w:
         name = freeze_config_name,
         generics=dict(g_num_cntr_bits = b_w)
     )
-    triggered_config_name = "TRIGGERED_COUNTER: bit_w=%d" % (b_w)
+    triggered_config_name = "TRIGGERED_COUNTER: run_length=%d" % (b_w)
     TRIGGERED_COUNTER.add_config(
         name = triggered_config_name,
         generics=dict(g_run_length = b_w)
+    )
+    stopwatch_config_name = "STOPWATCH: num_clocks=%d" % (b_w)
+    STOPWATCH.add_config(
+        name = stopwatch_config_name,
+        generics=dict(g_num_clocks = b_w)
     )
     
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
