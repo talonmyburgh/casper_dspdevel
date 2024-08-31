@@ -72,7 +72,7 @@ begin
         WAIT UNTIL rising_edge(clk);
         v_test_pass := s_addr = s_dout_golden;
         if not v_test_pass then
-            v_test_msg  := pad("Pulse extension failed. Expected: " & to_hstring(s_dout_golden) & " but got: " & to_hstring(s_addr), o_test_msg'length, '.');
+            v_test_msg  := pad("Freeze counter failed. Expected: " & to_hstring(s_dout_golden) & " but got: " & to_hstring(s_addr), o_test_msg'length, '.');
             REPORT v_test_msg severity failure;
             o_test_msg  <= v_test_msg;
             o_test_pass <= v_test_pass;

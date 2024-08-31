@@ -64,7 +64,7 @@ begin
         WAIT UNTIL falling_edge(s_valid);
         v_test_pass := s_count = s_dout_golden;
         if not v_test_pass then
-            v_test_msg  := pad("Pulse extension failed. Expected: " & to_hstring(s_dout_golden) & " but got: " & to_hstring(s_count), o_test_msg'length, '.');
+            v_test_msg  := pad("Triggered counter failed. Expected: " & to_hstring(s_dout_golden) & " but got: " & to_hstring(s_count), o_test_msg'length, '.');
             REPORT v_test_msg severity failure;
             o_test_msg  <= v_test_msg;
             o_test_pass <= v_test_pass;
