@@ -89,6 +89,7 @@ casper_misc_lib.add_source_files(join(script_dir, "./*power.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*freeze_cntr.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*triggered_counter.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "./*stopwatch.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "./*complex_addsub.vhd"))
 
 RI_TO_C_TB = casper_misc_lib.test_bench("tb_tb_vu_ri_to_c")
 C_TO_RI_TB = casper_misc_lib.test_bench("tb_tb_vu_c_to_ri")
@@ -100,6 +101,7 @@ POWER = casper_misc_lib.test_bench("tb_tb_vu_power")
 FREEZE_CNTR = casper_misc_lib.test_bench("tb_tb_vu_freeze_cntr")
 TRIGGERED_COUNTER = casper_misc_lib.test_bench("tb_tb_vu_triggered_counter")
 STOPWATCH = casper_misc_lib.test_bench("tb_tb_vu_stopwatch")
+COMPLEX_ADDSUB = casper_misc_lib.test_bench("tb_tb_vu_complex_addsub")
 
 async_arr = [True, False]
 bit_w = [8,18]
@@ -163,6 +165,11 @@ for b_w in bit_w:
         name = stopwatch_config_name,
         generics=dict(g_num_clocks = b_w)
     )
+
+COMPLEX_ADDSUB.add_config(
+    name = "COMPLEX_ADDSUB",
+    generics=dict(g_a = 119, g_b = 85)
+)
     
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed","-fsynopsys","-fexplicit","-Wno-hide"])
 vu.set_sim_option("ghdl.elab_flags", ["-frelaxed","-fsynopsys","-fexplicit","--syn-binding"])

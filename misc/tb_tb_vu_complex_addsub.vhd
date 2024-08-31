@@ -5,11 +5,9 @@ context vunit_lib.vunit_context;
 
 ENTITY tb_tb_vu_complex_addsub IS
 	GENERIC(
-        g_a : NATURAL := 425;
-        g_b : NATURAL := 297;
-        g_a_plus_b : NATURAL := 8;
-        g_a_minus_b : NATURAL := 8;
-        g_bit_width : NATURAL := 8;
+        g_a           : NATURAL := 119;
+        g_b           : NATURAL := 85;
+        g_bit_width   : NATURAL := 4;
         g_add_latency : INTEGER := 4;
 		runner_cfg : string
 	);
@@ -30,8 +28,6 @@ BEGIN
         generic map(
             g_a           => g_a,
             g_b           => g_b,
-            g_a_plus_b    => g_a_plus_b,
-            g_a_minus_b   => g_a_minus_b,
             g_bit_width   => g_bit_width,
             g_add_latency => g_add_latency
         )
