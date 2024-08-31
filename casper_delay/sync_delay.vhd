@@ -17,7 +17,7 @@ entity sync_delay is
         ce    : in  std_logic;
         en    : in  std_logic        := '0';
         din   : in  std_logic;
-        delay : in  std_logic_vector := (others => '0');
+        delay : in  std_logic_vector;
         dout  : out std_logic
     );
 end entity sync_delay;

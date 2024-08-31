@@ -44,8 +44,9 @@ begin
             g_delay => g_delay
         )
         port map(
-            clk  => clk,
-            ce   => ce,
+            clk   => clk,
+            ce    => ce,
+            delay => "0000",
             din  => s_din,
             dout => s_dout
         );

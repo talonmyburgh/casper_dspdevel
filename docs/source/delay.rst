@@ -173,12 +173,12 @@ Ports
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
 | Signal         | Type            | Size                      | Description                                                     |
 +================+=================+===========================+=================================================================+
-| din            | std_logic_vector| any                       | The input signal to be delayed by the delay parameter provided. |
+| din            | std_logic_vector| 1                         | The input signal to be delayed by the delay parameter provided. |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
 | en             | std_logic       | 1                         | This port will drive the delay process when operating           |
 |                |                 |                           | asynchronously (optional).                                      |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
-| delay          | std_logic_vector| any                       | The programmable delay value (optional).                        |
+| delay          | std_logic_vector| 1                         | The programmable delay value (optional).                        |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
 | dout           | std_logic_vector| Width of din              | The delayed din signal delayed by :math:`bram_latency + delay`. |
 +----------------+-----------------+---------------------------+-----------------------------------------------------------------+
@@ -196,6 +196,33 @@ Parameters
 +----------------+---------+--------+----------------------------------------------------------------+
 | Use delay load | Boolean | False  | If checked, the block provides a port to programmatically      |
 |                |         |        | load the delay.                                                |
++----------------+---------+--------+----------------------------------------------------------------+
+
+============
+Window Delay
+============
+Delay a 1 bit pulse by a specified number of clock cycles. 
+The output pulse will be delayed by the number of clock cycles specified by the delay parameter.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                     |
++================+=================+===========================+=================================================================+
+| din            | std_logic_vector| 1                         | The input signal to be delayed by the delay parameter provided. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+| dout           | std_logic_vector| 1                         | The delayed din signal delayed by :math:`bram_latency + delay`. |
++----------------+-----------------+---------------------------+-----------------------------------------------------------------+
+
+----------
+Parameters
+----------
++----------------+---------+--------+----------------------------------------------------------------+
+| Generic        | Type    | Value  | Description                                                    |
++================+=========+========+================================================================+
+| Delay length   | Natural | 4      | Delay number of clock cycles by which you want                 |
+|                |         |        | to delay din.                                                  |      
 +----------------+---------+--------+----------------------------------------------------------------+
 
 ========
