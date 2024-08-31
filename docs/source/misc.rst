@@ -355,3 +355,23 @@ Parameters
 +----------------+---------+--------+----------------------------------------------------------------+
 | csp_latency    | Natural | 2      | The required clock cycles the block needs to take for convert  |
 +----------------+---------+--------+----------------------------------------------------------------+
+
+====
+Conv
+====
+Converts an (8-bit) unsigned number to 2's complement.
+This block should eventually be able to handle arbitrary 
+width inputs.
+Block produces the same results as the original block but cannot be verified in VHDL as it depends
+on the Simulink Fixpoint representation.
+
+-----
+Ports
+-----
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| Signal         | Type            | Size                      | Description                                                    |
++================+=================+===========================+================================================================+
+| din            | std_logic_vector| 8                         | The input vector to be converted signal                        |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
+| din            | std_logic_vector| 8                         | The output signal of type Fix(8,7)                             |
++----------------+-----------------+---------------------------+----------------------------------------------------------------+
