@@ -1,4 +1,6 @@
-
+%% A Simulink wrapper the HDL CASPER complex_convert.
+%% @author: Talon Myburgh
+%% @company: Mydon Solutions
 function complex_addsub_config(this_block)
 
   this_block.setTopLevelLanguage('VHDL');
