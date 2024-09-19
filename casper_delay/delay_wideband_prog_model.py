@@ -25,8 +25,13 @@ def delay_wideband_prog_model(simultaneous_input_bits, delay_cycles):
     zero_pad = np.zeros(delay_cycles, dtype=int)
     out_stream_data = np.concatenate((zero_pad, aranged_data))
     output_len = out_stream_data.size
-    output_data = np.vstack([out_stream_data for _ in range(nof_streams)])
-    output_data = np.atleast_2d(output_data.copy()).T  # Ensure input_data is at least 2D and transpose to get the correct shape
+    remainder = output_len % nof_streams
+    if remainder != 0:
+        padding = np.zeros(nof_streams - remainder, dtype=int)
+        out_stream_data = np.concatenate((out_stream_data, padding))
+    output_data = out_stream_data.reshape((-1, nof_streams))
+    output_data = np.atleast_2d(output_data.copy())  # Ensure input_data is at least 2D and transpose to get the correct shape
+    print(output_data.shape)
 
     # Write only nof_values/wideband_factor lines to file. Columns are nof_values/wideband_factor long and there are nof_streams*wideband_factor columns
     input_filename = f"delay_input_{nof_streams}_{delay_cycles}.dat"
@@ -38,7 +43,7 @@ def delay_wideband_prog_model(simultaneous_input_bits, delay_cycles):
     # Write output data to file. Rows are 500 + delay_cycles long, columns are nof_streams long and values are comma separated
     output_filename = f"delay_output_{nof_streams}_{delay_cycles}.dat"
     with open(output_filename, 'w') as f:
-        for i in range(output_len):
+        for i in range(output_data.shape[0]):
             o_dat = output_data[i,:]
             f.write(','.join(map(str, o_dat)) + '\n')
 

@@ -19,7 +19,7 @@ USE common_slv_arr_pkg_lib.common_slv_arr_pkg.all;
 
 entity delay_wideband_prog is
     generic(
-        g_max_delay_bits          : natural := 10;
+        g_max_delay_bits     : natural := 10;
         g_simultaneous_input_bits : natural := 2;
         g_bram_latency            : natural := 2;
         g_true_dual_port          : boolean := true;
@@ -31,7 +31,7 @@ entity delay_wideband_prog is
         ce       : in  std_logic;
         sync     : in  std_logic;
         en       : in  std_logic := '1';
-        delay    : in  std_logic_vector(g_max_delay_bits - 1 DOWNTO 0);
+        delay    : in  std_logic_vector;
         ld_delay : in  std_logic;
         data_in  : in  t_wideband_delay_prog_inout_bus(0 to 2 ** g_simultaneous_input_bits - 1);
         sync_out : out std_logic;
@@ -43,9 +43,10 @@ end entity delay_wideband_prog;
 architecture RTL of delay_wideband_prog is
 
     constant c_nof_inputs   : natural := 2 ** g_simultaneous_input_bits;
-    constant c_latency      : natural := sel_a_b(g_true_dual_port, g_bram_latency + 1, g_bram_latency + 2);
-    constant c_ram_bits     : natural := ceil_log2(g_max_delay_bits / (2 ** g_simultaneous_input_bits));
-    constant c_sync_latency : natural := sel_a_b(g_true_dual_port, c_latency + (g_bram_latency + 1) * 2 ** g_simultaneous_input_bits, c_latency);
+    constant c_latency      : natural := sel_a_b(g_true_dual_port, g_bram_latency + 2, g_bram_latency + 3);
+    constant c_max_delay    : natural := 2 ** g_max_delay_bits - 1;
+    constant c_ram_bits     : natural := ceil_log2(c_max_delay / (2 ** g_simultaneous_input_bits));
+    constant c_sync_latency : natural := sel_a_b(not g_true_dual_port, c_latency + (g_bram_latency + 1) * 2 ** g_simultaneous_input_bits, c_latency);
 
     signal s_en                     : std_logic_vector(0 DOWNTO 0)                                                       := "1";
     signal s_en_delay               : std_logic_vector(0 DOWNTO 0)                                                       := "1";
@@ -64,6 +65,7 @@ architecture RTL of delay_wideband_prog is
     type t_ab_signal_array is array (1 to c_nof_inputs - 1) of std_logic_vector(c_ram_bits downto 0);
     signal s_delay_a_g_b_sum        : t_ab_signal_array                                                                  := (others => (others => '0'));
     signal s_delay_dout             : t_wideband_delay_prog_inout_bus(0 to c_nof_inputs - 1)                             := (others => (others => '0'));
+    signal s_dvalid                : std_logic                                                                          := '0';
 
 begin
     s_sync(0) <= sync;
@@ -83,10 +85,10 @@ begin
     s_shift_sel     <= s_delay_reg(g_simultaneous_input_bits - 1 downto 0);
     s_bram_rd_addrs <= s_delay_reg(c_ram_bits + g_simultaneous_input_bits - 1 DOWNTO g_simultaneous_input_bits);
 
-    ---------------DELAY SHIFT SELECT BY g_simultaneous_inputs-----------------------
+    ---------------DELAY SHIFT SELECT BY c_latency-----------------------
     delay_simple_inst : entity work.delay_simple
         generic map(
-            g_delay => g_simultaneous_input_bits
+            g_delay => c_latency
         )
         port map(
             clk    => clk,
@@ -95,7 +97,7 @@ begin
             o_data => s_delay_sel
         );
 
-    -------------DELAY SYNC BY g_simultaneous_inputs---------------------------------
+    -------------DELAY SYNC BY c_sync_latency---------------------------------
     delay_sync_inst : entity work.delay_simple
         generic map(
             g_delay => c_sync_latency
@@ -107,7 +109,7 @@ begin
             o_data => s_barrel_switcher_sync
         );
 
-    -------------DELAY SYNC BY g_simultaneous_inputs---------------------------------
+    -------------DELAY SYNC BY c_sync_latency---------------------------------
     delay_en_inst : entity work.delay_simple
         generic map(
             g_delay => c_sync_latency
@@ -121,7 +123,7 @@ begin
 
     ------------------GENERATE BARREL SWITCHER INPUTS--------------------------------
     gen_delay_input_2_onwards : for i in 1 to c_nof_inputs - 1 generate
-        s_a_g_b_value(i)     <= "1" when unsigned(s_shift_sel) > to_unsigned(i, g_simultaneous_input_bits) else "0";
+        s_a_g_b_value(i)     <= "1" when unsigned(s_shift_sel) > to_unsigned(c_nof_inputs - i - 1, g_simultaneous_input_bits) else "0";
         -- now delay s_a_g_b_value by 1 clock cycle:
         process(clk)
         begin
@@ -131,7 +133,7 @@ begin
                 end if;
             end if;
         end process;
-        s_delay_a_g_b_sum(i) <= std_logic_vector(unsigned(s_delay_a_g_b_value(i)) + unsigned(s_bram_rd_addrs));
+        s_delay_a_g_b_sum(i) <= RESIZE_UVEC(std_logic_vector(unsigned(s_delay_a_g_b_value(i)) + unsigned(s_bram_rd_addrs)),c_ram_bits+1);
     end generate gen_delay_input_2_onwards;
 
     gen_delays : for i in 0 to c_nof_inputs - 1 generate
@@ -146,9 +148,9 @@ begin
                     port map(
                         clk   => clk,
                         ce    => ce,
-                        din   => data_in(c_nof_inputs - 1 - i),
+                        din   => data_in(i),
                         delay => s_bram_rd_addrs,
-                        en    => en,
+                        en    => '1',
                         dout  => s_delay_dout(i)
                     );
             end generate gen_dp_bram_delay;
@@ -162,7 +164,7 @@ begin
                     port map(
                         clk   => clk,
                         ce    => ce,
-                        din   => data_in(c_nof_inputs - 1 - i),
+                        din   => data_in(i),
                         delay => s_bram_rd_addrs,
                         dout  => s_delay_dout(i)
                     );
@@ -180,9 +182,9 @@ begin
                     port map(
                         clk   => clk,
                         ce    => ce,
-                        din   => data_in(c_nof_inputs - 1 - i),
+                        din   => data_in(i),
                         delay => s_delay_a_g_b_sum(i),
-                        en    => en,
+                        en    => '1',
                         dout  => s_delay_dout(i)
                     );
             end generate gen_dp_bram_delay;
@@ -196,18 +198,17 @@ begin
                     port map(
                         clk   => clk,
                         ce    => ce,
-                        din   => data_in(c_nof_inputs - 1 - i),
+                        din   => data_in(i),
                         delay => s_delay_a_g_b_sum(i),
                         dout  => s_delay_dout(i)
                     );
             end generate gen_sp_bram_delay;
         end generate gen_din_others;
-        -- slv_arr_set(s_barrel_switcher_input, i, s_delay_dout(i));
     end generate gen_delays;
 
     gen_map_barrel_switcher_input : for i in 0 to c_nof_inputs - 1 generate
         gen_map_bits_to_slv : for j in 0 to c_delay_wideband_prog_bit_width - 1 generate
-            s_barrel_switcher_input(i, j) <= s_delay_dout(i)(j);
+            s_barrel_switcher_input(i, j) <= s_delay_dout(c_nof_inputs - i - 1)(j);
         end generate gen_map_bits_to_slv;
     end generate gen_map_barrel_switcher_input;
 
@@ -226,9 +227,10 @@ begin
             i_data => s_barrel_switcher_input,
             o_data => s_barrel_switcher_output,
             o_sync => sync_out,
-            dvalid => dvalid
+            dvalid => s_dvalid
         );
 
+    dvalid <= sel_a_b(g_async, s_dvalid, '0');
     gen_reorder_output : for i in 0 to c_nof_inputs - 1 generate
         data_out(i) <= slv_arr_index(s_barrel_switcher_output, c_nof_inputs - 1 - i);
     end generate gen_reorder_output;

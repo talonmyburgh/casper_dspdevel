@@ -143,7 +143,6 @@ PACKAGE common_ram_pkg IS
 		dat_w   : NATURAL;
 		nof_dat : NATURAL;              -- optional, nof dat words <= 2**adr_w
 		init_sl : STD_LOGIC;            -- optional, init all dat words to std_logic '0', '1' or 'X'
-		--init_file : STRING;     -- "UNUSED", unconstrained length can not be in record 
 	END RECORD;
 
 	CONSTANT c_mem_ram_rd_latency : NATURAL := 2; -- note common_ram_crw_crw(stratix4) now also supports read latency 1
