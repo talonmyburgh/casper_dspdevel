@@ -8,7 +8,6 @@ USE IEEE.std_logic_1164.all;
 
 package common_slv_arr_pkg is
   type t_slv_arr is array(natural range <>, natural range <>) of std_logic;
-  constant c_slv_arr_default : t_slv_arr := (others => (others => '0'));
 
   procedure slv_arr_set(signal slv_arr : out t_slv_arr; constant idx : natural; signal slv : in std_logic_vector);
   procedure slv_arr_set_variable(signal slv_arr : out t_slv_arr; constant idx : natural; variable slv : in std_logic_vector);

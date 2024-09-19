@@ -33,9 +33,9 @@ entity delay_wideband_prog is
         en       : in  std_logic := '1';
         delay    : in  std_logic_vector(g_max_delay_bits - 1 DOWNTO 0);
         ld_delay : in  std_logic;
-        data_in  : in  t_wideband_delay_prog_inout_bus(0 to g_simultaneous_input_bits - 1);
+        data_in  : in  t_wideband_delay_prog_inout_bus(0 to 2 ** g_simultaneous_input_bits - 1);
         sync_out : out std_logic;
-        data_out : out t_wideband_delay_prog_inout_bus(0 to g_simultaneous_input_bits - 1);
+        data_out : out t_wideband_delay_prog_inout_bus(0 to 2 ** g_simultaneous_input_bits - 1);
         dvalid   : out std_logic := '1'
     );
 end entity delay_wideband_prog;
@@ -54,8 +54,8 @@ architecture RTL of delay_wideband_prog is
     signal s_shift_sel              : std_logic_vector(g_simultaneous_input_bits - 1 downto 0)                           := (others => '0');
     signal s_delay_sel              : std_logic_vector(g_simultaneous_input_bits - 1 downto 0)                           := (others => '0');
     signal s_sync                   : std_logic_vector(0 DOWNTO 0)                                                       := (others => '0');
-    signal s_barrel_switcher_input  : t_slv_arr(c_nof_inputs - 1 DOWNTO 0, c_delay_wideband_prog_bit_width - 1 DOWNTO 0) := c_slv_arr_default;
-    signal s_barrel_switcher_output : t_slv_arr(c_nof_inputs - 1 DOWNTO 0, c_delay_wideband_prog_bit_width - 1 DOWNTO 0) := c_slv_arr_default;
+    signal s_barrel_switcher_input  : t_slv_arr(c_nof_inputs - 1 DOWNTO 0, c_delay_wideband_prog_bit_width - 1 DOWNTO 0) := (others => (others => '0'));
+    signal s_barrel_switcher_output : t_slv_arr(c_nof_inputs - 1 DOWNTO 0, c_delay_wideband_prog_bit_width - 1 DOWNTO 0) := (others => (others => '0'));
     signal s_barrel_switcher_sync   : std_logic_vector(0 DOWNTO 0)                                                       := (others => '0');
     signal s_bram_rd_addrs          : std_logic_vector(c_ram_bits - 1 downto 0)                                          := (others => '0');
     type t_signal_array is array (0 to c_nof_inputs - 1) of std_logic_vector(0 downto 0);
@@ -63,7 +63,7 @@ architecture RTL of delay_wideband_prog is
     signal s_delay_a_g_b_value      : t_signal_array                                                                     := (others => (others => '0'));
     type t_ab_signal_array is array (1 to c_nof_inputs - 1) of std_logic_vector(c_ram_bits downto 0);
     signal s_delay_a_g_b_sum        : t_ab_signal_array                                                                  := (others => (others => '0'));
-    signal s_delay_dout             : t_wideband_delay_prog_inout_bus(0 to g_simultaneous_input_bits - 1)                := (others => (others => '0'));
+    signal s_delay_dout             : t_wideband_delay_prog_inout_bus(0 to c_nof_inputs - 1)                             := (others => (others => '0'));
 
 begin
     s_sync(0) <= sync;
@@ -202,8 +202,14 @@ begin
                     );
             end generate gen_sp_bram_delay;
         end generate gen_din_others;
-        slv_arr_set(s_barrel_switcher_input, i, s_delay_dout(i));
+        -- slv_arr_set(s_barrel_switcher_input, i, s_delay_dout(i));
     end generate gen_delays;
+
+    gen_map_barrel_switcher_input : for i in 0 to c_nof_inputs - 1 generate
+        gen_map_bits_to_slv : for j in 0 to c_delay_wideband_prog_bit_width - 1 generate
+            s_barrel_switcher_input(i, j) <= s_delay_dout(i)(j);
+        end generate gen_map_bits_to_slv;
+    end generate gen_map_barrel_switcher_input;
 
     s_en_delay_sl <= s_en_delay(0);
 

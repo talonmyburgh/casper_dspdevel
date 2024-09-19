@@ -61,7 +61,7 @@ s_minuend <= RESIZE_SVEC(delay,g_max_delay);
 --------------------------------------------------------
 -- a >= b
 --------------------------------------------------------
-s_count_rst <= '1' when signed(s_count_val) >= signed(s_difference) else '0';
+s_count_rst <= '1' when unsigned(s_count_val) >= unsigned(s_difference) else '0';
 
 --------------------------------------------------------
 -- Counter
