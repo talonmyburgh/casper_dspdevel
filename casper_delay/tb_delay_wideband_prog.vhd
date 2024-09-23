@@ -12,11 +12,11 @@ entity tb_delay_wideband_prog is
         g_max_delay_bits          : NATURAL := 8;
         g_simultaneous_input_bits : NATURAL := 2;
         g_true_dual_port          : BOOLEAN := TRUE;
-        g_delay_cycles            : NATURAL := 9;
+        g_delay_cycles            : NATURAL := 2;
         g_input_file_nof_lines    : NATURAL := 500;
-        g_input_file              : STRING  := "C:\Users\mybur\Repos\CASPER\dspdevel_designs\casper_dspdevel\casper_delay\delay_input_4_3.dat";
-        g_output_file_nof_lines   : NATURAL := 505;
-        g_output_file             : STRING  := "C:\Users\mybur\Repos\CASPER\dspdevel_designs\casper_dspdevel\casper_delay\delay_output_4_3.dat"
+        g_input_file              : STRING  := "C:\Users\mybur\Repos\CASPER\dspdevel_designs\casper_dspdevel\casper_delay\delay_input_4_1.dat";
+        g_output_file_nof_lines   : NATURAL := 502;
+        g_output_file             : STRING  := "C:\Users\mybur\Repos\CASPER\dspdevel_designs\casper_dspdevel\casper_delay\delay_output_4_1.dat"
     );
     port(
         o_clk       : out std_logic;
@@ -30,6 +30,10 @@ architecture tb_arch of tb_delay_wideband_prog is
     constant c_nof_inputs             : natural                                                := 2 ** g_simultaneous_input_bits;
     constant c_delimeter              : character                                              := ',';
     SIGNAL s_data_input_integer_array : t_nat_integer_matrix(0 TO g_input_file_nof_lines - 1, 0 TO c_nof_inputs - 1);
+    SIGNAL s_data_output_integer_array_golden_matrix : t_nat_integer_matrix(0 TO g_output_file_nof_lines - 1, 0 TO c_nof_inputs - 1) := (others => (others => 0));
+    SIGNAL s_data_output_integer_array_scope : t_nat_integer_arr(0 TO c_nof_inputs - 1):= (others => 0);
+    SIGNAL s_data_output_integer_array_golden : t_nat_integer_arr(0 TO c_nof_inputs - 1) := (others => 0);
+    SIGNAL s_data_output_integer_array_diff : t_nat_integer_arr(0 TO c_nof_inputs - 1) := (others => 0);
     SIGNAL s_data_din_slv             : t_wideband_delay_prog_inout_bus(0 TO c_nof_inputs - 1) := (others => (others => '0'));
     SIGNAL s_delay_wb_prog_dout       : t_wideband_delay_prog_inout_bus(0 TO c_nof_inputs - 1);
     SIGNAL s_dvalid                   : std_logic;
@@ -75,6 +79,49 @@ begin
             wait FOR c_clk_period;      -- Adjust timing as needed
         end loop;
     end process p_read_input;
+
+    -----------------------------------------------
+    -- Read output file for comparison
+    -----------------------------------------------
+    p_read_output : process
+        VARIABLE v_data_output_integer_array_golden : t_nat_integer_matrix(0 TO g_output_file_nof_lines - 1, 0 TO c_nof_inputs - 1);
+    begin
+        csv_open_and_read_file(g_output_file, v_data_output_integer_array_golden, g_output_file_nof_lines, c_delimeter);
+        wait for c_clk_period;
+        s_data_output_integer_array_golden_matrix <= v_data_output_integer_array_golden;   
+    end process p_read_output;
+
+    -----------------------------------------------
+    -- Compare output with golden output
+    -----------------------------------------------
+    p_compare_output : process(clk)
+        VARIABLE v_data_output_integer_array : t_nat_integer_arr(0 TO c_nof_inputs - 1) := (others => 0);
+        VARIABLE v_cnt : NATURAL := 0;
+        VARIABLE v_test_pass : BOOLEAN := TRUE;
+    begin
+        if rising_edge(clk) and s_sync_out = '1' then
+            FOR I in 0 to c_nof_inputs - 1 loop
+                IF s_data_output_integer_array_diff(I) = 0 then
+                    v_test_pass := v_test_pass and TRUE;
+                ELSE
+                    v_test_pass := v_test_pass and FALSE;
+                end if;
+                v_data_output_integer_array(I) := TO_SINT(s_delay_wb_prog_dout(I));
+                s_data_output_integer_array_golden(I) <= s_data_output_integer_array_golden_matrix(v_cnt,I);
+                s_data_output_integer_array_diff(I) <= s_data_output_integer_array_scope(I) - s_data_output_integer_array_golden(I);
+                -- v_test_pass :=v_test_pass or s_data_output_integer_array_golden(I,0)  = s_data_output_integer_array(I,0);
+            END LOOP;
+            v_cnt := v_cnt + 1;
+        end if;
+        if v_test_pass then
+            report "Test Passed" severity note;
+        else
+            report "Test Failed" severity failure;
+        end if;
+        s_data_output_integer_array_scope <= v_data_output_integer_array;
+        o_test_pass <= TRUE;
+       
+    end process p_compare_output;
 
     ---------------------------------------------------------------------
     -- PARTIAL DELAY PROG module
