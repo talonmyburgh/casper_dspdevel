@@ -17,10 +17,12 @@
   <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
   <Mappings Location="casper_ram" Library="casper_ram_lib"/>
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
+  <Mappings Location="casper_reorder" Library="casper_reorder_lib"/>
   <Mappings Location="casper_sim_tools" Library="casper_sim_tools_lib"/>
   <Mappings Location="casper_statistics" Library="casper_statistics_lib"/>
   <Mappings Location="common_components" Library="common_components_lib"/>
   <Mappings Location="common_pkg" Library="common_pkg_lib"/>
+  <Mappings Location="common_slv_arr_pkg" Library="common_slv_arr_pkg_lib"/>
   <Mappings Location="casper_dp_components" Library="dp_components_lib"/>
   <Mappings Location="casper_dp_pkg" Library="dp_pkg_lib"/>
   <Mappings Location="Common Libraries/IEEE" Library="ieee"/>
@@ -61,4 +63,10 @@
   <Mappings Location="" Library="work"/>
   <Mappings Location="casper_wbpfb" Library="wpfb_lib"/>
   <Mappings Location="Common Libraries/xpm/xpm_VCOMP.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd" Library="xpm"/>
 </com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>

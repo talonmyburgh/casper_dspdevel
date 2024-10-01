@@ -13,12 +13,14 @@ use ieee.numeric_std.all;
 
 ENTITY ip_xpm_ram_crw_crw IS
 	GENERIC(
-		g_adr_w         : NATURAL := 5;
-		g_dat_w         : NATURAL := 8;
-		g_nof_words     : NATURAL := 2**5;
-		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
-		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
+		g_adr_w             : NATURAL := 5;
+		g_dat_w             : NATURAL := 8;
+		g_nof_words         : NATURAL := 2 ** 5;
+		g_rd_latency        : NATURAL := 2; -- choose 1 or 2
+		g_init_file         : STRING  := "UNUSED";
+		g_ram_primitive     : STRING  := "auto"; --choose auto, distributed, block, ultra
+		g_port_a_write_mode : STRING  := "write_first";
+		g_port_b_write_mode : STRING  := "write_first"
 	);
 	PORT(
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
@@ -48,8 +50,8 @@ architecture Behavioral of ip_xpm_ram_crw_crw is
 	SIGNAL we_b      : STD_LOGIC_VECTOR(1 DOWNTO 1);
 
 begin
-	assert 2**g_adr_w >= g_nof_words
-	report "Address width "&natural'image(g_adr_w)&" does not cover the number of words " &natural'image(g_nof_words)
+	assert 2 ** g_adr_w >= g_nof_words
+	report "Address width " & natural'image(g_adr_w) & " does not cover the number of words " & natural'image(g_nof_words)
 	severity failure;
 
 	we_a <= (others => wren_a);
@@ -86,8 +88,8 @@ begin
 			WAKEUP_TIME             => "disable_sleep", --STRING
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
 			WRITE_DATA_WIDTH_B      => g_dat_w, --DECIMAL
-			WRITE_MODE_A            => "write_first", --STRING
-			WRITE_MODE_B            => "write_first" --STRING
+			WRITE_MODE_A            => g_port_a_write_mode, --STRING
+			WRITE_MODE_B            => g_port_b_write_mode --STRING
 		)
 		port map(
 			dbiterra       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence

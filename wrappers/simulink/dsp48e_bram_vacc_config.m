@@ -76,6 +76,8 @@ function dsp48e_bram_vacc_config(this_block)
   this_block.addGeneric('g_dsp48_version','NATURAL',dspversion);
 
   this_block.addFileToLibrary([filepath '/../../casper_accumulators/dsp48e_bram_vacc.vhd'],'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../misc/edge_detect.vhd'],'casper_misc_lib');
   this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'],'casper_counter_lib');

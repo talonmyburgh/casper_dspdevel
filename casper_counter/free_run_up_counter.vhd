@@ -1,6 +1,6 @@
 -- A VHDL free-running up-counter module with asynch reset.
--- @author: Mydon Solutions
-
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.numeric_std.all;
@@ -16,6 +16,7 @@ ENTITY free_run_up_counter is
         clk     : in std_logic;
         ce      : in std_logic;
         reset   : in std_logic;
+        enable  : in std_logic := '1';
         count   : out std_logic_vector(g_cnt_w - 1 DOWNTO 0)
     );
 END ENTITY;

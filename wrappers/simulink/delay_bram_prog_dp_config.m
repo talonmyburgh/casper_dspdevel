@@ -52,6 +52,8 @@ function delay_bram_prog_dp_config(this_block)
   this_block.addGeneric('g_ram_latency','NATURAL',bram_latency);
   
   this_block.addFileToLibrary([filepath '/../../casper_delay/delay_bram_prog_dp.vhd'],'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');

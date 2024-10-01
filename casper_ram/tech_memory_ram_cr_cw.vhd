@@ -29,12 +29,13 @@ LIBRARY ip_stratixiv_ram_lib;
 
 ENTITY tech_memory_ram_cr_cw IS
 	GENERIC(
-		g_adr_w         : NATURAL := 10;
-		g_dat_w         : NATURAL := 22;
-		g_nof_words     : NATURAL := 2**5;
-		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
-		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto"
+		g_adr_w             : NATURAL := 10;
+		g_dat_w             : NATURAL := 22;
+		g_nof_words         : NATURAL := 2 ** 5;
+		g_rd_latency        : NATURAL := 2; -- choose 1 or 2
+		g_init_file         : STRING  := "UNUSED";
+		g_ram_primitive     : STRING  := "auto";
+		g_port_b_write_mode : STRING  := "write_first"
 	);
 	PORT(
 		data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
@@ -53,15 +54,16 @@ ARCHITECTURE str OF tech_memory_ram_cr_cw IS
 
 BEGIN
 
-	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default=c_tech_versal) GENERATE  -- Xilinx
+	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal) GENERATE -- Xilinx
 		u1 : ip_xpm_ram_cr_cw
 			generic map(
-				g_adr_w         => g_adr_w,
-				g_dat_w         => g_dat_w,
-				g_nof_words     => g_nof_words,
-				g_rd_latency    => g_rd_latency,
-				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_adr_w             => g_adr_w,
+				g_dat_w             => g_dat_w,
+				g_nof_words         => g_nof_words,
+				g_rd_latency        => g_rd_latency,
+				g_init_file         => g_init_file,
+				g_ram_primitive     => g_ram_primitive,
+				g_port_b_write_mode => g_port_b_write_mode
 			)
 			port map(
 				data      => data,
@@ -76,7 +78,7 @@ BEGIN
 			);
 	END GENERATE;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE  -- Intel Altera on UniBoard1
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE -- Intel Altera on UniBoard1
 		u0 : ip_stratixiv_ram_cr_cw
 			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
 			PORT MAP(data, rdaddress, rdclock, rdclocken, wraddress, wrclock, wrclocken, wren, q);

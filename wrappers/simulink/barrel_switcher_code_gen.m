@@ -30,9 +30,11 @@ function [vhdlfile, entityname] = barrel_switcher_code_gen(unique_prefix, inout_
     "port ("
     "  clk   : in std_logic;"
     "  ce    : in std_logic;"
+    "  en    : in std_logic := '1';"
     sprintf("  i_sel   : IN std_logic_vector(%d-1 downto 0);", ceil(log2(inout_port_count)))
     "  i_sync  : IN std_logic;"
     "  o_sync  : OUT std_logic;"
+    "  dvalid  : OUT std_logic;"
     ];
 
     midlines = [
@@ -65,11 +67,13 @@ function [vhdlfile, entityname] = barrel_switcher_code_gen(unique_prefix, inout_
     "    port map ("
     "      clk => clk,"
     "      ce => ce,"
+    "      en => en,"
     "      i_sel => i_sel,"
     "      i_sync => i_sync,"
     "      i_data => slv_arr_in,"
     "      o_sync => o_sync,"
-    "      o_data => slv_arr_out"
+    "      o_data => slv_arr_out,"
+    "      dvalid => dvalid"
     "    );"
     ""
     "end ARCHITECTURE;"

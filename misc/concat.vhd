@@ -1,3 +1,6 @@
+-- A VHDL implementation of the CASPER concat block.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
