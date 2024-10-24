@@ -2,9 +2,244 @@ from vunit import VUnit, VUnitCLI
 from vunit.sim_if.factory import SIMULATOR_FACTORY
 from os.path import join, abspath, split,realpath,dirname
 from importlib.machinery import SourceFileLoader
-# load the r2sdf fix point accurate model from r2sdf module.
-r2sdf_fft_py = SourceFileLoader("r2sdf_fft_py",f"{realpath(dirname(__file__))}/../r2sdf_fft/r2sdf_fft_py/__init__.py").load_module()
+from casper_r2sdf_fft import twiddle_gen,pfft,roundsat
+from pathlib import Path
 import numpy as np
+
+
+def make_twiddle_post_check(fftsize, g_twiddle_width,use_vhdl_magic_file):
+    """
+    Return a check function to verify test case output
+    """
+
+    def post_check(output_path):
+        # generate the expected twiddles for this case
+        # Note if you put a magic file into revision control for a twiddle size, it will then trust
+        # that size is correct, if you change the twiddle generation you'll need to delete the old magic files!
+        twiddles=(2**(g_twiddle_width-1))*twiddle_gen(fftsize,g_twiddle_width,1,1,use_vhdl_magic_file,Path(output_path))
+        
+        output_file = Path(output_path) / f"twiddlepkg_twidth{g_twiddle_width}_fftsize{fftsize}.txt"
+        data = np.loadtxt(output_file,dtype="int")
+        print("Post check: %s" % str(output_file))
+        cdata = data[0:data.size:2]+1j*data[1:data.size:2]
+
+        if np.array_equal(cdata,twiddles):
+            print('Twiddles are exactly the same!')
+            return True
+        else:
+            diffreal=np.abs(np.real(twiddles)-np.real(cdata))
+            diffimag=np.abs(np.imag(twiddles)-np.imag(cdata))
+            if np.max(diffreal)>1:
+                print("Twiddle Real Values are more than 1 different!");
+                return False
+            if np.max(diffimag)>1:
+                print("Twiddle Imag Values are more than 1 different!");
+                return False               
+            print("Twiddle Values were +/- 1 from expected!")
+            # these line can help create the magic files if left uncommented but shouldn't be uncommented normally
+            #import shutil
+            #shutil.copy2(output_file,os.path.realpath(os.path.dirname(__file__)))
+            return True
+
+    return post_check
+def tb_twiddle_package_setup(ui):
+   
+    testbench=ui.test_bench("tb_vu_twiddlepkg")
+    for fftsizelog2 in range(1,16): # this was originally 1,21 and passed on March 24, 2023, but reduced to make execution faster
+        for bidx in range(16,19): #this was originally 12,26, but to save time was converted to16:19
+            fftsize=2**fftsizelog2
+            testbench.add_config(
+                name=f"TwiddlePython_w{bidx}b_{fftsize}",
+                generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
+                post_check=make_twiddle_post_check(fftsize,bidx,0))
+            #testbench.add_config(
+            #    name=f"TwiddleMagic_w{bidx}b_{fftsize}",
+            #    generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
+            #    post_check=make_twiddle_post_check(fftsize,bidx,1))           
+
+
+
+def make_fft_preconfig(g_fftsize_log2, g_in_dat_w,scale_sched,data):
+    """
+    Return a precheck function that will generate input data.
+    """
+
+    def pre_config(output_path):
+        output_file = Path(output_path) / f"input_data.txt"
+        f = open(output_file,'w')
+        header = np.zeros(8,dtype=np.uint32)
+        header[0] = 2**g_fftsize_log2
+        header[1] = g_in_dat_w
+        header[2] = data.size
+        header[3] = scale_sched
+        header[7] = 2122219905
+        np.savetxt(f,header,fmt='%u')
+        data_to_write = np.zeros(2*data.size,dtype=np.int32)
+        data_to_write[0::2] = np.real(data)
+        data_to_write[1::2] = np.imag(data)
+        
+        np.savetxt(f,data_to_write,fmt='%d')
+        f.close()
+        return True
+    return pre_config
+
+def make_fft_postcheck(g_use_reorder,g_in_dat_w,g_out_dat_w,g_stage_dat_w,g_guard_w,g_twiddle_width,g_fftsize_log2,g_do_rounding,g_do_saturation,scale_sched):
+    """
+    Return a precheck function that will generate input data.
+    """
+    
+    def post_check(output_path):
+        # Read the data created by the pre_config script
+        input_file = Path(output_path) / f"input_data.txt"
+        input_data = np.loadtxt(input_file,dtype="int")
+        header = input_data    
+        input_cdata = input_data[8:input_data.size:2]+1j*input_data[9:input_data.size:2]
+        if header[0] != (2**g_fftsize_log2):
+            print("Bad Header in input data")
+            return False
+        if header[1] != (g_in_dat_w):
+            print("Input Data width mismatch")
+            return False
+        if header[2] != input_cdata.size:
+            print("Input Data size mismatch")
+            return False  
+        if header[3] != scale_sched:
+            print("Input Data Scale Mismatch")
+            return False
+        if header[7] != 2122219905:
+            print("Input Data Magic Word Mismatch")
+            return False
+        
+        # Read the stage data files (if they exist)
+        #stage_data = np.zeros((input_cdata.size,g_fftsize_log2+1),dtype=np.complex128)
+        #for stageidx in range(0,g_fftsize_log2+1):
+            #stage_file = Path(output_path) / f"stage_data{stageidx}.txt"
+            #data = np.loadtxt(stage_file,dtype="int32")
+            #stage_cdata = data[0:data.size:2]+1j*data[1:data.size:2]
+            #stage_data[:,stageidx] = stage_cdata
+        
+
+        output_file = Path(output_path) / f"output_data.txt"
+        data = np.loadtxt(output_file,dtype="int32")
+        print("Post check: %s" % str(output_file))
+        vhdl_cdata = data[0:data.size:2]+1j*data[1:data.size:2]
+        if input_cdata.shape != vhdl_cdata.shape:
+            print("Fft Post check: Unexpected Data length")
+            return False
+        import shutil
+        # Copy the download twiddle lookup tables into the script directory so they get used.
+        #for twididx in range(0,g_fftsize_log2):
+        #    twid_size = 2**twididx
+        #    twid_file = Path(output_path) / f"twiddlepkg_twidth{g_twiddle_width}_fftsize{twid_size}.txt"
+        #    shutil.copy2(twid_file,os.path.realpath(os.path.dirname(__file__)))
+
+        # VHDL only support DIF, and is configured to do bitrev
+        if g_use_reorder==True:
+            do_output_bit_rev = 1
+        else:
+            do_output_bit_rev = 0
+        g_bits_to_round_off = np.zeros(g_fftsize_log2)
+        g_output_width = g_out_dat_w * np.ones(g_fftsize_log2)
+        for bit_idx in range(0,g_fftsize_log2):
+            bit = (scale_sched >> bit_idx) & 1
+            if bit==1:
+                g_bits_to_round_off[bit_idx]=1
+            else:
+                g_bits_to_round_off[bit_idx]=0
+        
+        expected_cdata,stagedebug=pfft(input_cdata,g_fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,1,0,do_output_bit_rev,Path(output_path))
+
+        file_path = Path(output_path) / f"matdata_debug.mat"
+        matdict = {}
+        matdict['expected_cdata'] = expected_cdata
+        matdict['stagedebug'] = stagedebug
+        matdict['vhdl_cdata'] = vhdl_cdata
+        #matdict['stage_data'] = stage_data
+        matdict['input_cdata'] = input_cdata
+        #io.savemat(file_path, matdict)
+
+
+        if np.array_equal(expected_cdata[:,0],vhdl_cdata):
+            print("VHDL Matched Python!")
+            print("Test Passed!")
+            return True
+        else:
+            print("Data Did not match!")
+            return False
+        
+
+    return post_check
+
+def tb_vu_trwosdf_vfmodel_setup(ui):
+   
+    testbench=ui.test_bench("tb_vu_trwosdf_vfmodel")
+    use_reorder = True
+    in_dat_w = 18
+    out_dat_w = 18
+    stage_dat_w = 18
+    guard_w = 0
+    twiddle_width = 18
+    fftsize_log2 = 13
+    
+    do_rounding = 1
+    do_saturation = 1
+    enable_pattern = 2 #every other clock
+    # Decode some of those for VHDL
+    if do_rounding==1:
+        use_round = "ROUND"
+        use_mult_round = "ROUND"
+    if do_saturation==1:
+        ovflw_behav = "SATURATE"
+
+    scale_sched = 0
+    for stage in range(0,fftsize_log2):
+        if (stage % 2)==1:
+            scale_sched = scale_sched + 2**stage
+        # scale at Stage 0
+        if stage==0:
+            scale_sched = scale_sched + 2**stage
+        if stage==2:
+            scale_sched = scale_sched + 2**stage
+    
+
+    d_indices = np.arange(0,2*(2**fftsize_log2))
+    # Generate a full scale cw with 12-bits
+    data = 2047*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
+    noise = np.random.normal(0, 5.5, size=(data.shape[0]))
+    data = data + noise
+    data = roundsat(data,1,in_dat_w,0,1,1,1)
+
+    enable_pattern = 0
+    testbench.add_config(
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTR2SDF_E0_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 1
+    testbench.add_config(
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTR2SDF_Erandom_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 2
+    testbench.add_config(
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTR2SDF_E10Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+    enable_pattern = 3
+    testbench.add_config(
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        name=f"FFTR2SDF_E100Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
+        generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
+        
+
+
+            #    name=f"TwiddleMagic_w{bidx}b_{fftsize}",
+            #    generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
+            #    post_check=make_twiddle_post_check(fftsize,bidx,1))     
+
 
 def tb_vu_wb_fft_vfmodel_setup(ui):
    
@@ -43,30 +278,30 @@ def tb_vu_wb_fft_vfmodel_setup(ui):
     data = 2047*np.exp(1.0j * 2*np.pi * d_indices*(-2e9/7e9))
     #noise = np.random.normal(0, 5.5, size=(data.shape[0]))
     #data = data + noise
-    data = r2sdf_fft_py.roundsat(data,1,in_dat_w,0,1,1,1)
+    data = roundsat(data,1,in_dat_w,0,1,1,1)
 
     enable_pattern = 0
     testbench.add_config(
-        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
-        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
         name=f"FFTWIDE_E0_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
         generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
     enable_pattern = 1
     testbench.add_config(
-        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
-        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
         name=f"FFTWIDE_Erandom_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
         generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
     enable_pattern = 2
     testbench.add_config(
-        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
-        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
         name=f"FFTWIDE_E10Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
         generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
     enable_pattern = 3
     testbench.add_config(
-        pre_config=r2sdf_fft_py.make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
-        post_check=r2sdf_fft_py.make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
+        pre_config=make_fft_preconfig(fftsize_log2,in_dat_w,scale_sched,data),
+        post_check=make_fft_postcheck(use_reorder,in_dat_w,out_dat_w,stage_dat_w,guard_w,twiddle_width,fftsize_log2,do_rounding,do_saturation,scale_sched),
         name=f"FFTWIDE_E100Clocks_s{fftsize_log2}_reorder{use_reorder}_din{in_dat_w}_dout{out_dat_w}_stagew{stage_dat_w}_guardw{guard_w}_doround{do_rounding}_dosaturation{do_saturation}_scale{scale_sched}",
         generics=dict(g_use_reorder=use_reorder,g_in_dat_w=in_dat_w,g_out_dat_w=out_dat_w,g_stage_dat_w=stage_dat_w,g_guard_w=guard_w,g_twiddle_width=twiddle_width,g_fftsize_log2=fftsize_log2,g_ovflw_behav=ovflw_behav,g_use_round=use_round,g_use_mult_round=use_mult_round,g_enable_pattern=enable_pattern))
         
