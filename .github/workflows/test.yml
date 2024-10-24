@@ -764,6 +764,12 @@ jobs:
           apt-get update
           apt-get install git -y
           git --version
+      - name: Install numpy
+        run: pip3 install numpy
+      - name: Install casper-r2sdf-fft
+        run: pip3 install casper-r2sdf-fft
+      - name: Install pytest
+        run: pip3 install pytest
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
@@ -816,6 +822,8 @@ jobs:
           git --version
       - name: Install numpy
         run: pip3 install numpy
+      - name: Install casper-r2sdf-fft
+        run: pip3 install casper-r2sdf-fft
       - name: Install pytest
         run: pip3 install pytest
           # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
@@ -870,8 +878,10 @@ jobs:
           git --version
       - name: Install numpy
         run: pip3 install numpy
+      - name: Install casper-r2sdf-fft
+        run: pip3 install casper-r2sdf-fft
       - name: Install pytest
-        run: pip3 install pytest      
+        run: pip3 install pytest     
           # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
@@ -924,8 +934,10 @@ jobs:
           git --version
       - name: Install numpy
         run: pip3 install numpy
+      - name: Install casper-r2sdf-fft
+        run: pip3 install casper-r2sdf-fft
       - name: Install pytest
-        run: pip3 install pytest      
+        run: pip3 install pytest   
   
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
