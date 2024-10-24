@@ -6,7 +6,7 @@ package pfb_fir_pkg is
 
     --UPDATED BY MATLAB CODE
     CONSTANT c_pfb_fir_din_w      : natural := 8;
-    CONSTANT c_pfb_fir_dout_w     : natural := 16;
+    CONSTANT c_pfb_fir_dout_w     : natural := 23;
     CONSTANT c_pfb_fir_coef_w     : natural := 16;
     CONSTANT c_pfb_fir_coefs_file : string  := "../../../../../data/mem/hex/run_pfir_coeff_m_incrementing"; --must be prefix as file will append required detail
 
@@ -18,20 +18,26 @@ package pfb_fir_pkg is
     CONSTANT c_pfb_fir_n_streams : natural := 1;
     CONSTANT c_pfb_fir_padding   : natural := 0;
 
-    CONSTANT c_pfb_fir_mem_latency  : natural := 1;
-    CONSTANT c_pfb_fir_mult_latency : natural := 1;
-    CONSTANT c_pfb_fir_add_latency  : natural := 1;
-    CONSTANT c_pfb_fir_conv_latency : natural := 1;
+    CONSTANT c_pfb_fir_mem_latency        : natural := 1;
+    CONSTANT c_pfb_fir_mult_latency       : natural := 1;
+    CONSTANT c_pfb_fir_add_latency        : natural := 1;
+    CONSTANT c_pfb_fir_conv_latency       : natural := 1;
+    CONSTANT c_pfb_fir_requant_remove_lsb : natural := 1;
+    CONSTANT c_pfb_fir_requant_remove_msb : natural := 0;
     
     type t_pfb_fir_pipeline is record
-        mem_latency  : natural;         -- = 2, latency through taps and coeff lookup
-        mult_latency : natural;         -- = 3, multiplier latency
-        add_latency  : natural;         -- = 1, adder latency
-        conv_latency : natural;         -- = 1, type conversion latency
+        mem_latency         : natural;     -- = 2, latency through taps and coeff lookup
+        mult_latency        : natural;     -- = 3, multiplier latency
+        add_latency         : natural;     -- = 1, adder latency
+        conv_latency        : natural;     -- = 1, type conversion latency
+        --generics for quantiser 
+        requant_remove_lsb  : natural;     -- = 1
+        requant_remove_msb  : natural;     -- = 0        
     end record;
-    
+        
     constant c_pfb_fir_pipeline : t_pfb_fir_pipeline := (c_pfb_fir_mem_latency, c_pfb_fir_mult_latency,
-                                                         c_pfb_fir_add_latency, c_pfb_fir_conv_latency);
+                                                         c_pfb_fir_add_latency, c_pfb_fir_conv_latency,
+                                                         c_pfb_fir_requant_remove_lsb, c_pfb_fir_requant_remove_msb);
 
     -- Parameters for the (wideband) poly phase filter. 
     type t_pfb_fir is record

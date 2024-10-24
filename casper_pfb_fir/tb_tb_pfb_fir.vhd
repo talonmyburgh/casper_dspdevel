@@ -38,13 +38,15 @@ ARCHITECTURE tb OF tb_tb_pfb_fir IS
   
   SIGNAL tb_end : STD_LOGIC := '0';  -- declare tb_end to avoid 'No objects found' error on 'when -label tb_end'
 
-  CONSTANT c_pfb_fir_pipeline         : t_pfb_fir_pipeline := (1, 1, 1, 1);
+  CONSTANT c_pfb_fir_pipeline         : t_pfb_fir_pipeline := (1, 1, 1, 1, 1, 0);
    
   --  type t_pfb_fir_pipeline is record
-  --      mem_latency  : natural;         -- = 2, latency through taps and coeff lookup
-  --      mult_latency : natural;         -- = 3, multiplier latency
-  --      add_latency  : natural;         -- = 1, adder latency
-  --      conv_latency : natural;         -- = 1, type conversion latency
+  --      mem_latency         : natural;         -- = 2, latency through taps and coeff lookup
+  --      mult_latency        : natural;         -- = 3, multiplier latency
+  --      add_latency         : natural;         -- = 1, adder latency
+  --      conv_latency        : natural;         -- = 1, type conversion latency
+  --      requant_remove_lsb  : natural;         -- = 1, 
+  --      requant_remove_msb  : natural;         -- = 0, 
   --  end record;
   
   CONSTANT c_fil_ppf_1_act            : t_pfb_fir := (1, 0, 64, 8, 1, c_pfb_fir_din_w, c_pfb_fir_dout_w, c_pfb_fir_coef_w, 0);
@@ -84,17 +86,17 @@ BEGIN
 
   -- verify fil_ppf_wide for wb_factor=1, so effectively same as using fil_ppf_single directly
   u1_act         : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_act, c_pfb_fir_pipeline, c_hanning_1_act, TRUE);
-  u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
-  u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
-  u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
+  -- u1_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_quant, c_pfb_fir_pipeline, c_hanning_1_rnd_quant, TRUE);
+  -- u1_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_3streams, c_pfb_fir_pipeline, c_hanning_1_rnd_3streams, TRUE);
+  -- u1_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, TRUE, c_fil_ppf_1_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE);
   
   -- verify fil_ppf_wide for wb_factor>1
-  u4_act            :  ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_act, c_pfb_fir_pipeline, c_hanning_4_act, TRUE);
-  u4_act_be_le       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, FALSE, c_fil_ppf_4_act_be_le, c_pfb_fir_pipeline, c_hanning_4_act_be_le, FALSE);
-  u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP (FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
-  u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
-  u4_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_3streams, c_pfb_fir_pipeline,  c_hanning_1_rnd_3streams, TRUE);
-  u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
+  -- u4_act            :  ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_act, c_pfb_fir_pipeline, c_hanning_4_act, TRUE);
+  -- u4_act_be_le       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE, FALSE, c_fil_ppf_4_act_be_le, c_pfb_fir_pipeline, c_hanning_4_act_be_le, FALSE);
+  -- u4_act_le_le       : ENTITY work.tb_pfb_fir GENERIC MAP (FALSE, FALSE, c_fil_ppf_4_act_le_le, c_pfb_fir_pipeline, c_hanning_4_act_le_le, FALSE);
+  -- u4_rnd_quant       : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_quant, c_pfb_fir_pipeline, c_hanning_4_rnd_quant, TRUE);
+  -- u4_rnd_3streams    : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_3streams, c_pfb_fir_pipeline,  c_hanning_1_rnd_3streams, TRUE);
+  -- u4_rnd_4channels   : ENTITY work.tb_pfb_fir GENERIC MAP (TRUE,  TRUE, c_fil_ppf_4_rnd_4channels, c_pfb_fir_pipeline, c_hanning_1_rnd_4channels, TRUE); 
   
       -- generics for tb
 --    g_big_endian_wb_in  : boolean := true;

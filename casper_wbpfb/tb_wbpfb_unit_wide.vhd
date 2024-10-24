@@ -262,6 +262,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal in_val         : std_logic                                                                    := '0';
   signal dut_val        : std_logic                                                                    := '0';
   signal dat_val        : std_logic                                                                    := '0';
+  signal fil_dat_val    : std_logic                                                                    := '0';
   signal in_sync        : std_logic                                                                    := '0';
   signal in_val_cnt     : natural                                                                      := 0;
   signal in_blk_val     : std_logic;
@@ -297,6 +298,7 @@ architecture tb of tb_wbpfb_unit_wide is
   signal fil_re_data  : std_logic_vector(g_wpfb.wb_factor * c_fil_dat_w - 1 DOWNTO 0); -- scope data only for stream 0
   signal fil_im_data  : std_logic_vector(g_wpfb.wb_factor * c_fil_dat_w - 1 DOWNTO 0); -- scope data only for stream 0
   signal fil_val      : std_logic := '0'; -- for parallel output
+  signal fil_sync      : std_logic := '0'; -- for parallel output
 
   signal fil_out_cnt : natural := 0;
 
@@ -375,6 +377,7 @@ begin
   in_sync  <= rst;
   dut_val  <= in_val when in_sync = '0' else '0';
   dat_val  <= out_val when out_sync = '0' else '0';
+  fil_dat_val  <= fil_val when fil_sync = '0' else '0';
 
   in_sosi_0  <= in_sosi_arr(0);
   out_sosi_0 <= out_sosi_arr(0);
@@ -491,6 +494,7 @@ begin
     end loop;
   end process;
   fil_val <= fil_sosi_arr(0).valid;
+  fil_sync <= fil_sosi_arr(0).sync;
 
   p_out_sosi_arr : process(out_sosi_arr)
   begin
@@ -500,6 +504,8 @@ begin
     end loop;
   end process;
   out_val <= out_sosi_arr(0).valid;
+
+  out_sync <= out_sosi_arr(0).sync;
 
   -- Data valid count
   in_val_cnt  <= in_val_cnt + 1 when rising_edge(clk) and in_val = '1' and in_sync ='0' else in_val_cnt;
@@ -532,10 +538,16 @@ begin
   ---------------------------------------------------------------
   -- DATA OUTPUT CONTROL IN SCLK DOMAIN
   ---------------------------------------------------------------
-  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val = '1' and fil_out_cnt < g_data_file_nof_lines - 1 else fil_out_cnt;
+  fil_out_cnt <= fil_out_cnt + 1 when rising_edge(sclk) and fil_val_scope = '1' and fil_out_cnt < g_data_file_nof_lines - 1 else fil_out_cnt;
 
-  exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1';
-  exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_val = '1';
+  gen_fil_c_scopes : if c_in_complex generate
+    exp_fil_re_scope <= exp_filter_data_c_re_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+    exp_fil_im_scope <= exp_filter_data_c_im_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+  end generate;
+  gen_fil_re_scopes : if not c_in_complex generate
+    exp_fil_re_scope <= exp_filter_data_a_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+    exp_fil_im_scope <= exp_filter_data_b_arr(fil_out_cnt) when rising_edge(sclk) and fil_dat_val = '1';
+  end generate;
 
   out_cnt <= out_cnt + 1 when rising_edge(sclk) and out_val_c = '1' else out_cnt;
 
@@ -749,7 +761,7 @@ begin
 
       -- Streaming input data
       in_data => in_re_data,
-      in_val  => dat_val,
+      in_val  => in_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => in_re_scope,
@@ -789,7 +801,7 @@ begin
 
       -- Streaming input data
       in_data => fil_re_data,
-      in_val  => fil_val,
+      in_val  => fil_dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => fil_re_scope,
@@ -809,7 +821,7 @@ begin
 
       -- Streaming input data
       in_data => fil_im_data,
-      in_val  => fil_val,
+      in_val  => fil_dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => fil_im_scope,
@@ -829,7 +841,7 @@ begin
 
       -- Streaming input data
       in_data => out_re_data,
-      in_val  => out_val,
+      in_val  => dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => out_re_scope,
@@ -849,7 +861,7 @@ begin
 
       -- Streaming input data
       in_data => out_im_data,
-      in_val  => out_val,
+      in_val  => dat_val,
       -- Scope output samples
       out_dat => OPEN,
       out_int => out_im_scope,

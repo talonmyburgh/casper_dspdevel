@@ -48,7 +48,7 @@ entity tb_pfb_fir is
     g_big_endian_wb_in  : boolean := true;
     g_big_endian_wb_out : boolean := true;
     g_pfb_fir : t_pfb_fir := (4, 0, 64, 8, 1, 8, 23, 16, 0);
-    g_pfb_fir_pipeline : t_pfb_fir_pipeline := (1,1,1,1); 
+    g_pfb_fir_pipeline : t_pfb_fir_pipeline := (1, 1, 1, 1, 1, 0); 
     g_coefs_file_prefix  : string  := "run_pfir_coeff_m_incrementing";
     g_enable_in_val_gaps : boolean := FALSE
   );

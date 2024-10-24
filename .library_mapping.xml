@@ -9,13 +9,13 @@
   <Mappings Location="casper_diagnostics" Library="casper_diagnostics_lib"/>
   <Mappings Location="casper_fifo" Library="casper_fifo_lib"/>
   <Mappings Location="casper_filter" Library="casper_filter_lib"/>
-  <Mappings Location="casper_pfb_fir" Library="casper_pfb_fir_lib"/>
-  <Mappings Location="casper_pfb_fir/pfb_fir.vhd" Library="casper_pfb_fir_lib"/>
   <Mappings Location="casper_flow_control" Library="casper_flow_control_lib"/>
   <Mappings Location="misc" Library="casper_misc_lib"/>
   <Mappings Location="casper_mm" Library="casper_mm_lib"/>
   <Mappings Location="casper_multiplexer" Library="casper_multiplexer_lib"/>
   <Mappings Location="casper_multiplier" Library="casper_multiplier_lib"/>
+  <Mappings Location="casper_pfb_fir" Library="casper_pfb_fir_lib"/>
+  <Mappings Location="casper_pfb_fir/pfb_fir.vhd" Library="casper_pfb_fir_lib"/>
   <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
   <Mappings Location="casper_ram" Library="casper_ram_lib"/>
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
@@ -63,4 +63,10 @@
   <Mappings Location="" Library="work"/>
   <Mappings Location="casper_wbpfb" Library="wpfb_lib"/>
   <Mappings Location="Common Libraries/xpm/xpm_VCOMP.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_VCOMP.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_base.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_dprom.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sdpram.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_sprom.vhd" Library="xpm"/>
+  <Mappings Location="xilinx/xpm_vhdl/src/xpm/xpm_memory/hdl/xpm_memory_tdpram.vhd" Library="xpm"/>
 </com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>

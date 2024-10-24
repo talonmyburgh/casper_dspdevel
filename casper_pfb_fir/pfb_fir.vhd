@@ -401,8 +401,8 @@ begin
                     g_lsb_round_clip      => FALSE,
                     g_msb_clip            => FALSE,
                     g_msb_clip_symmetric  => FALSE,
-                    g_pipeline_remove_lsb => 1, --hardcoded for now 
-                    g_pipeline_remove_msb => 0, --hardcoded for now
+                    g_pipeline_remove_lsb => g_pfb_fir_pipeline.requant_remove_lsb, 
+                    g_pipeline_remove_msb => g_pfb_fir_pipeline.requant_remove_msb,
                     g_in_dat_w            => c_sum_w,
                     g_out_dat_w           => g_pfb_fir.dout_w
                 )

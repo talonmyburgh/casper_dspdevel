@@ -418,11 +418,6 @@ architecture str of wbpfb_unit_dev is
     signal fft_out_val_arr  : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
     signal fft_out_sync_arr : std_logic_vector(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => '0');
 
-    signal fft_out_sosi     : t_fft_sosi_out;
-    signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
-
-    signal pfb_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
-
     type reg_type is record
         in_sosi_arr : t_pfb_fir_sosi_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     end record;
@@ -465,6 +460,7 @@ begin
     wire_fil_sosi_streams : for S in 0 to g_wpfb.nof_wb_streams - 1 generate
         wire_fil_sosi_wideband : for P in 0 to g_wpfb.wb_factor - 1 generate
             fil_sosi_arr(S * g_wpfb.wb_factor + P).valid <= fil_out_val;
+            fil_sosi_arr(S * g_wpfb.wb_factor + P).sync  <= fil_out_sync;
             fil_sosi_arr(S * g_wpfb.wb_factor + P).re    <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex);
             fil_sosi_arr(S * g_wpfb.wb_factor + P).im    <= fil_out_arr(P * g_wpfb.nof_wb_streams * c_nof_complex + S * c_nof_complex + 1);
         end generate;
@@ -608,7 +604,7 @@ begin
     ---------------------------------------------------------------
     wire_fft_out_sosi_arr : for I in 0 to g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 generate
         out_sosi_arr(I).sync  <= fft_out_sync_arr(I);
-        out_sosi_arr(I).valid <= fft_out_sync_arr(I);
+        out_sosi_arr(I).valid <= fft_out_val_arr(I);
         out_sosi_arr(I).re    <= fft_out_re_arr(I)(c_fft.out_dat_w - 1 downto 0);
         out_sosi_arr(I).im    <= fft_out_im_arr(I)(c_fft.out_dat_w - 1 downto 0);
     end generate;

@@ -469,7 +469,7 @@ begin
   ---------------------------------------------------------------
   -- VERIFY OUTPUT DATA
   ---------------------------------------------------------------
-  verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
+  verify_data : process(clk)
     VARIABLE v_test_pass : BOOLEAN := TRUE;
     VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
@@ -634,7 +634,7 @@ begin
 
     -- Streaming input data
     in_data   => out_im_data,
-    in_val    => out_val,
+    in_val    => dat_val,
 
     -- Scope output samples
     out_dat   => OPEN,
