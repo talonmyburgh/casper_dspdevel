@@ -83,7 +83,7 @@ BEGIN
             -- Keep the default latencys
             g_stage_lat         => 1,
             g_weight_lat        => 2,
-            g_mult_lat          => 4,
+            g_mult_lat          => 5,
             g_bf_lat            => 1,
             g_bf_use_zdly       => 1,
             g_bf_in_a_zdly      => 0,
