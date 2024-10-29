@@ -1,6 +1,6 @@
 [project]
 name = "casper_r2sdf_fft"
-version = "0.0.3"
+version = "0.0.4"
 authors = [
   { name="Matthew Schiller", email="mschille@nrao.edu" },
 ]

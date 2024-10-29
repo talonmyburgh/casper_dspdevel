@@ -61,8 +61,11 @@ def roundsat(data,signednum,integer_bits,fractional_bits,g_do_rounding,g_do_satu
         dataout = np.where(dataout>maxpos,maxpos,dataout)
     return dataout
 
-def twiddle_gen(fftsize,g_twiddle_width,g_do_rounding,g_do_saturation,g_use_vhdl,coef_base):
-    coefpath = Path(f"{coef_base}/twiddlepkg_twidth{g_twiddle_width}_fftsize{fftsize}.txt")
+def twiddle_gen(fftsize,g_twiddle_width,g_do_rounding,g_do_saturation,g_do_ifft,g_use_vhdl,coef_base):
+    if g_do_ifft:
+        coefpath = Path(f"{coef_base}/twiddlepkg_twidth{g_twiddle_width}_ifftsize{fftsize}.txt")
+    else:
+        coefpath = Path(f"{coef_base}/twiddlepkg_twidth{g_twiddle_width}_fftsize{fftsize}.txt")
     if (g_use_vhdl and Path(coefpath).is_file()) :
         # the VHDL twiddle generator uses VHDL SIN/COS which aren't exactly the same
         # as the python SIN/COS
@@ -84,7 +87,10 @@ def twiddle_gen(fftsize,g_twiddle_width,g_do_rounding,g_do_saturation,g_use_vhdl
     else:
         print("Using Python Coefficient Generation")
         coeff_indices = np.arange(0,fftsize)
-        coeffs = np.exp(np.multiply(coeff_indices,1.0j * -2*np.pi / (2*fftsize)))
+        if g_do_ifft:
+            coeffs = np.exp(np.multiply(coeff_indices,1.0j * 2*np.pi / (2*fftsize)))
+        else:    
+            coeffs = np.exp(np.multiply(coeff_indices,1.0j * -2*np.pi / (2*fftsize)))
         coeffs = roundsat(coeffs,1,0,g_twiddle_width-1,g_do_rounding,g_do_saturation,0)  # coeffs will still be floating point, but will have the precision indicated by g_twiddle_width
         return coeffs
 
@@ -109,7 +115,7 @@ def fft_butterfly(xa,xb,twiddle,g_do_rounding,g_do_saturation,g_output_width,g_b
     yb = roundsat(yb,1,g_output_width-1,0,g_do_rounding,g_do_saturation,1)
     return ya,yb
 
-def fft_stage(stage_in,fft_size_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,coef_base):
+def fft_stage(stage_in,fft_size_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_ifft,coef_base):
     # Make sure input is the length
     if fft_size_log2==0:
         stage_out=stage_in
@@ -124,7 +130,7 @@ def fft_stage(stage_in,fft_size_log2,g_twiddle_width,g_do_rounding,g_do_saturati
         xa  = data[0:2**(fft_size_log2-1),:]
         xb = data[2**(fft_size_log2-1):,:]
         # Twiddle values are always rounded and saturated.
-        twiddle = twiddle_gen(2**(fft_size_log2-1),g_twiddle_width,1,1,1,coef_base)
+        twiddle = twiddle_gen(2**(fft_size_log2-1),g_twiddle_width,1,1,g_do_ifft,1,coef_base)
         twiddle = np.tile(np.transpose(np.atleast_2d(twiddle)),(1,np.shape(xa)[1]))
         ya,yb = fft_butterfly(xa,xb,twiddle,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif)
         stage_out = np.zeros(data.shape,np.complex128)
@@ -137,7 +143,7 @@ def fft_stage(stage_in,fft_size_log2,g_twiddle_width,g_do_rounding,g_do_saturati
         data = np.reshape(stage_in,(pow(2,fft_size_log2),np.shape(stage_in)[0]/(pow(2,fft_size_log2))));
         xa  = data[0:2^(fft_size_log2-1),:]
         xb = data[2^(fft_size_log2-1):,:]
-        twiddle = twiddle_gen(pow(2,(fft_size_log2-1)),g_twiddle_width,1,1,1,coef_base)
+        twiddle = twiddle_gen(pow(2,(fft_size_log2-1)),g_twiddle_width,1,1,g_do_ifft,1,coef_base)
         twiddle = np.tile(twiddle,(1,np.shape(xa)[1]))
         ya,yb = fft_butterfly(xa,xb,twiddle,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif)
         stage_out = np.zeros(data.shape,np.complex128)
@@ -177,7 +183,7 @@ def bitrevorder(a):
     return get_bit_reversed_list_no_generator(a)
 
 
-def pfft(data,fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_bit_rev_input,g_do_bit_rev_output,coef_base):
+def pfft(data,fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,g_do_dif,g_do_bit_rev_input,g_do_bit_rev_output,g_do_ifft,coef_base):
     # enforce that input data is a multiple of the FFTsize
     if np.mod(data.shape[0],pow(2,fftsize_log2))>0:
         data = data[1:(pow(2,fftsize_log2)*np.floor(data.shape[1]/pow(2,fftsize_log2)))]
@@ -205,7 +211,7 @@ def pfft(data,fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_outpu
     stagedebug =np.zeros((data.size,idxlog2range.size),dtype=np.complex128)
     for idxlog2 in idxlog2range:
         print("Processing Stage %d of %d\n"%(stage_num,len(idxlog2range)))
-        stageout = fft_stage(stageout,int(idxlog2),g_twiddle_width,g_do_rounding,g_do_saturation,int(g_output_width[idxlog2-1]),int(g_bits_to_round_off[idxlog2-1]),g_do_dif,coef_base)
+        stageout = fft_stage(stageout,int(idxlog2),g_twiddle_width,g_do_rounding,g_do_saturation,int(g_output_width[idxlog2-1]),int(g_bits_to_round_off[idxlog2-1]),g_do_dif,g_do_ifft,coef_base)
         stagedebug[:,stage_num] = stageout[:,0]
         stage_num = stage_num + 1
 

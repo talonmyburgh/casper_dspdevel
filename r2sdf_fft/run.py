@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 # Create VUnit instance by parsing command line arguments
 
-def make_twiddle_post_check(fftsize, g_twiddle_width,use_vhdl_magic_file):
+def make_twiddle_post_check(fftsize, g_twiddle_width,g_do_ifft,use_vhdl_magic_file):
     """
     Return a check function to verify test case output
     """
@@ -15,9 +15,12 @@ def make_twiddle_post_check(fftsize, g_twiddle_width,use_vhdl_magic_file):
         # generate the expected twiddles for this case
         # Note if you put a magic file into revision control for a twiddle size, it will then trust
         # that size is correct, if you change the twiddle generation you'll need to delete the old magic files!
-        twiddles=(2**(g_twiddle_width-1))*twiddle_gen(fftsize,g_twiddle_width,1,1,use_vhdl_magic_file,Path(output_path))
-        
-        output_file = Path(output_path) / f"twiddlepkg_twidth{g_twiddle_width}_fftsize{fftsize}.txt"
+        print(f"g_do_ifft = {g_do_ifft}")
+        twiddles=(2**(g_twiddle_width-1))*twiddle_gen(fftsize,g_twiddle_width,1,1,g_do_ifft,use_vhdl_magic_file,Path(output_path))
+        if g_do_ifft:
+            output_file = Path(output_path) / f"twiddlepkg_twidth{g_twiddle_width}_ifftsize{fftsize}.txt"
+        else:
+            output_file = Path(output_path) / f"twiddlepkg_twidth{g_twiddle_width}_fftsize{fftsize}.txt"
         data = np.loadtxt(output_file,dtype="int")
         print("Post check: %s" % str(output_file))
         cdata = data[0:data.size:2]+1j*data[1:data.size:2]
@@ -48,14 +51,17 @@ def tb_twiddle_package_setup(ui):
         for bidx in range(16,19): #this was originally 12,26, but to save time was converted to16:19
             fftsize=2**fftsizelog2
             testbench.add_config(
-                name=f"TwiddlePython_w{bidx}b_{fftsize}",
-                generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
-                post_check=make_twiddle_post_check(fftsize,bidx,0))
+                name=f"TwiddlePythonFFT_w{bidx}b_{fftsize}",
+                generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2,g_do_ifft=False),
+                post_check=make_twiddle_post_check(fftsize,bidx,False,0))
+            testbench.add_config(
+                name=f"TwiddlePythonIFFT_w{bidx}b_{fftsize}",
+                generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2,g_do_ifft=True),
+                post_check=make_twiddle_post_check(fftsize,bidx,True,0))
             #testbench.add_config(
             #    name=f"TwiddleMagic_w{bidx}b_{fftsize}",
             #    generics=dict(g_twiddle_width=bidx,g_fftsize_log2=fftsizelog2),
-            #    post_check=make_twiddle_post_check(fftsize,bidx,1))           
-
+            #    post_check=make_twiddle_post_check(fftsize,bidx,1))     
 
 
 def make_fft_preconfig(g_fftsize_log2, g_in_dat_w,scale_sched,data):
@@ -146,7 +152,7 @@ def make_fft_postcheck(g_use_reorder,g_in_dat_w,g_out_dat_w,g_stage_dat_w,g_guar
             else:
                 g_bits_to_round_off[bit_idx]=0
         
-        expected_cdata,stagedebug=pfft(input_cdata,g_fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,1,0,do_output_bit_rev,Path(output_path))
+        expected_cdata,stagedebug=pfft(input_cdata,g_fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_output_width,g_bits_to_round_off,1,0,do_output_bit_rev,False,Path(output_path))
 
         file_path = Path(output_path) / f"matdata_debug.mat"
         matdict = {}
