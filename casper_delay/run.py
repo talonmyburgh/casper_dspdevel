@@ -76,16 +76,25 @@ casper_misc_lib = vu.add_library("casper_misc_lib")
 casper_misc_lib.add_source_files(join(script_dir, "../misc/ri_to_c.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "../misc/c_to_ri.vhd"))
 casper_misc_lib.add_source_files(join(script_dir, "../misc/concat.vhd"))
+casper_misc_lib.add_source_files(join(script_dir, "../misc/edge_detect.vhd"))
 
 # Create library 'casper_delay_lib'
 casper_delay_lib = vu.add_library("casper_delay_lib")
-casper_delay_lib.add_source_files(join(script_dir, "./*.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*delay_simple.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*delay_bram.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*delay_bram_en_plus.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*delay_bram_prog.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*delay_bram_prog_dp.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*sync_delay.vhd"))
+casper_delay_lib.add_source_files(join(script_dir, "./*window_delay.vhd"))
 
 DELAY_SIMPLE_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_simple")
 DELAY_BRAM_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram")
 DELAY_BRAM_EN_PLUS_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_en_plus")
 DELAY_BRAM_PROG_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog")
 DELAY_BRAM_PROG_DP_TB = casper_delay_lib.test_bench("tb_tb_vu_delay_bram_prog_dp")
+SYNC_DELAY_TB = casper_delay_lib.test_bench("tb_tb_vu_sync_delay")
+WINDOW_DELAY_TB = casper_delay_lib.test_bench("tb_tb_vu_window_delay")
 
 # no maths done, so some random picks are fine
 delay_arr = [4, 10, 50]
@@ -114,17 +123,37 @@ for delay, dat_w in product(delay_arr, dat_widths):
 #     )
 testnum = 1
 for delay, latency, dat_w in product(delay_arr, latencies, dat_widths):
-    # db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    #db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
-    db_prog_dp_config_name = "Testnum%d"%(testnum)
-    testnum = testnum + 1
-    # DELAY_BRAM_PROG_TB.add_config(
-    #     name = db_prog_config_name,
-    #     generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
-    # )
+    db_prog_config_name = "DELAY_BRAM PROG: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_prog_dp_config_name = "DELAY_BRAM PROG_DP: delay=%s, latency=%s, dat_w=%s" %(delay,latency,dat_w)
+    db_en_plus_config_name = "DELAY_BRAM EN PLUS: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    db_config_name = "DELAY_BRAM: delay=%s, latency=%s, dat_w=%s" %(delay, latency, dat_w)
+    DELAY_BRAM_EN_PLUS_TB.add_config(
+        name = db_en_plus_config_name,
+        generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
+    DELAY_BRAM_PROG_TB.add_config(
+        name = db_prog_config_name,
+        generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
+    )
     DELAY_BRAM_PROG_DP_TB.add_config(
         name = db_prog_dp_config_name,
         generics=dict(g_max_delay = np.ceil(np.log2(delay)).astype(np.int64), g_ram_latency = latency, g_vec_w = dat_w)
+    )
+    DELAY_BRAM_TB.add_config(
+        name = db_config_name,
+        generics=dict(g_delay=delay, g_latency=latency, g_vec_w = dat_w)
+    )
+
+for delay in delay_arr:
+    ds_config_name = "DELAY_SYNC: delay=%s" % (delay)
+    SYNC_DELAY_TB.add_config(
+        name = ds_config_name,
+        generics=dict(g_delay=delay)
+    )
+    wndow_config_name = "DELAY_WINDOW: delay=%s" % (delay)
+    WINDOW_DELAY_TB.add_config(
+        name = wndow_config_name,
+        generics=dict(g_delay=delay)
     )
 
 vu.set_compile_option("ghdl.a_flags", ["-frelaxed", "-fsynopsys", "-fexplicit", "-Wno-hide"])

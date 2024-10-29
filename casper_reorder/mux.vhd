@@ -13,6 +13,7 @@ entity mux is
     port (
         clk : IN std_logic := '0';
         ce :  IN std_logic := '1';
+        en :  IN std_logic := '1';
         i_sel : IN std_logic;
         i_data_0 : IN std_logic_vector;
         i_data_1 : IN std_logic_vector;
@@ -26,7 +27,16 @@ begin
     -- Asynchronous operation
     --------------------------------------------------------
     async : IF g_async = TRUE GENERATE
-        o_data <= i_data_1 when i_sel = '1' else i_data_0;
+        sync_process: PROCESS (en)
+        begin
+            if rising_edge(en) THEN
+              if i_sel = '1' then
+                o_data <= i_data_1;
+              else
+                o_data <= i_data_0;
+              end if;
+            end if;
+        end PROCESS;
     END GENERATE;
 
     --------------------------------------------------------

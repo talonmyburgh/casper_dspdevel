@@ -38,6 +38,8 @@ function pulse_ext_config(this_block)
   this_block.addGeneric('g_extension','NATURAL',extension);
 
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../misc/edge_detect.vhd'],'misc_lib');
   this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'],'casper_counter_lib');
   this_block.addFileToLibrary([filepath '/../../misc/pulse_ext.vhd'],'misc_lib');

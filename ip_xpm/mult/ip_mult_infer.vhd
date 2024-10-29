@@ -65,17 +65,17 @@ architecture rtl of ip_mult_infer is
 
 	CONSTANT c_prod_w : NATURAL := g_in_a_w + g_in_b_w;
 
-	signal nxt_a      : signed(g_in_a_w - 1 downto 0);
-	signal nxt_b      : signed(g_in_b_w - 1 downto 0);
-	signal nxt_p      : signed(c_prod_w - 1 downto 0);
-	signal nxt_result : signed(g_out_p_w - 1 downto 0);
-	signal prod_a_b   : signed(c_prod_w - 1 downto 0);
-	signal reg_p      : signed(c_prod_w - 1 downto 0);
-	signal a          : signed(g_in_a_w - 1 downto 0);
-	signal b          : signed(g_in_b_w - 1 downto 0);
-	signal reg_a      : signed(g_in_a_w - 1 downto 0);
-	signal reg_b      : signed(g_in_b_w - 1 downto 0);
-	signal reg_result : signed(g_out_p_w - 1 downto 0);
+	signal nxt_a      : signed(g_in_a_w - 1 downto 0) := (others=>'0');
+	signal nxt_b      : signed(g_in_b_w - 1 downto 0) := (others=>'0');
+	signal nxt_p      : signed(c_prod_w - 1 downto 0) := (others=>'0');
+	signal nxt_result : signed(g_out_p_w - 1 downto 0) := (others=>'0');
+	signal prod_a_b   : signed(c_prod_w - 1 downto 0) := (others=>'0');
+	signal reg_p      : signed(c_prod_w - 1 downto 0) := (others=>'0');
+	signal a          : signed(g_in_a_w - 1 downto 0) := (others=>'0');
+	signal b          : signed(g_in_b_w - 1 downto 0) := (others=>'0');
+	signal reg_a      : signed(g_in_a_w - 1 downto 0) := (others=>'0');
+	signal reg_b      : signed(g_in_b_w - 1 downto 0) := (others=>'0');
+	signal reg_result : signed(g_out_p_w - 1 downto 0) := (others=>'0');
 
 begin
 
@@ -86,13 +86,11 @@ begin
 				reg_a      <= (OTHERS => '0');
 				reg_p      <= (OTHERS => '0');
 				reg_b      <= (OTHERS => '0');
-				reg_p      <= (others => '0');
 				reg_result <= (others => '0');
 
 			elsif ce = '1' then
 				reg_a      <= nxt_a;
 				reg_b      <= nxt_b;
-				reg_p      <= nxt_p;
 				reg_p      <= nxt_p;
 				reg_result <= nxt_result;
 			end if;
