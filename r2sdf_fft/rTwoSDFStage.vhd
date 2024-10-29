@@ -46,6 +46,7 @@ entity rTwoSDFStage is
 		g_use_mult_round : t_rounding_mode  := TRUNCATE;		--! ROUND, ROUNDINF or TRUNCATE
 		g_ram_primitive  : string		  	:= "block";			--! BRAM primitive for the Weights
 		g_twid_file_stem : string  		  	:= "UNUSED";		--! Path stem for the twiddle coefficient files
+		g_do_ifft	     : boolean			:= False;
 		g_pipeline       : t_fft_pipeline 	:= c_fft_pipeline	--! internal pipeline settings
 	);
 	port(
@@ -175,6 +176,8 @@ begin
 			g_wb_inst		 	=> g_wb_inst,
 			g_twid_file_stem  	=> c_coefs_file_stem,
 			g_ram_primitive	 	=> c_ram_primitive,
+			g_do_ifft 			=> g_do_ifft,
+			g_use_inferred_ram 	=> True,
 			g_ram			 	=> c_ram
 		)
 		port map(

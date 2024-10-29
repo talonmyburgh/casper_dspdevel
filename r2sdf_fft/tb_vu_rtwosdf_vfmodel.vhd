@@ -16,6 +16,7 @@ use osvvm.RandomPkg.all;
 entity tb_vu_trwosdf_vfmodel is
     GENERIC(
         g_use_reorder       : boolean                   := true;  -- TRUE = "FFTorder", False = "BitRevorder"
+        g_do_ifft           : boolean                   := False;
         g_in_dat_w          : integer range 1 to 32     := 14;
         g_out_dat_w         : integer range 1 to 32     := 18;
         g_stage_dat_w       : integer range 1 to 32     := 18;
@@ -67,6 +68,7 @@ BEGIN
         generic map(
             g_nof_chan          => 0, -- at this time this test bench only processed a single channel
             g_use_reorder       => g_use_reorder,
+            g_do_ifft           => g_do_ifft,
             g_in_dat_w          => g_in_dat_w,
             g_out_dat_w         => g_out_dat_w,
             g_stage_dat_w       => g_stage_dat_w,
