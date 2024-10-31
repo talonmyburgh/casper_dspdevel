@@ -1,6 +1,6 @@
 [project]
 name = "casper_r2sdf_fft"
-version = "0.0.4"
+version = "0.0.5"
 authors = [
   { name="Matthew Schiller", email="mschille@nrao.edu" },
 ]
@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: Apache Software License",
+    'License :: OSI Approved :: BSD License',
     "Operating System :: OS Independent",
 ]
 

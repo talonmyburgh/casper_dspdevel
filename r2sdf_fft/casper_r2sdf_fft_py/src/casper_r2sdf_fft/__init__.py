@@ -2,31 +2,44 @@
 #-- Fixed point model of the FFT + testbench generation
 #-- Able to be imported as a module in other designs.
 #-------------------------------------
-#--Author	: M. Schiller (NRAO)
+#--Author	: M. Schiller (AUI/NRAO)
 #--Date    : 23-March-2023
 #
 #--------------------------------------------------------------------------------
-#-- Copyright NRAO March 23, 2023
+#-- Copyright © 2023 Associated Universities, Inc. Washington DC, USA
 #--------------------------------------------------------------------------------
-#-- License
-#-- Licensed under the Apache License, Version 2.0 (the "License");
-#-- you may not use this file except in compliance with the License.
-#-- You may obtain a copy of the License at
-#-- 
-#--     http://www.apache.org/licenses/LICENSE-2.0
-#-- 
-#-- Unless required by applicable law or agreed to in writing, software
-#-- distributed under the License is distributed on an "AS IS" BASIS,
-#-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#-- See the License for the specific language governing permissions and
-#-- limitations under the License.
-#--
+#BSD-3-Clause
+#####################################
+#Redistribution and use in source and binary forms, with or without modification, are permitted provided
+#that the following conditions are met:
+#1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+#the following disclaimer.
+#2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+#and the following disclaimer in the documentation and/or other materials provided with the
+#distribution.
+#3. Neither the name of the copyright holder nor the names of its contributors may be used to
+#endorse or promote products derived from this software without specific prior written
+#permission.
+#THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS”
+#AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+#WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+#FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+#DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+#AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+#SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
 import numpy as np
 #import matplotlib.pyplot as plt
 from vunit import VUnit
 from pathlib import Path
 import os
+import logging
 #from scipy import io
+logger = logging.getLogger(__name__)
 
 def roundsat(data,signednum,integer_bits,fractional_bits,g_do_rounding,g_do_saturation,print_saturation):
     if (integer_bits+fractional_bits)==0:
@@ -52,10 +65,10 @@ def roundsat(data,signednum,integer_bits,fractional_bits,g_do_rounding,g_do_satu
     sathighcount = np.count_nonzero(np.greater(dataout,maxpos))
     if print_saturation==1:
         if sathighcount>0:
-            print("Saturating values to Max positive")
+            logging.warning("Saturating values to Max positive")
         satlowcount = np.count_nonzero(np.less(dataout,maxneg))
         if satlowcount>0:
-            print("Saturating Values to Max negative")
+            logging.warning("Saturating Values to Max negative")
     if g_do_saturation==1:
         dataout = np.where(dataout<maxneg,maxneg,dataout)
         dataout = np.where(dataout>maxpos,maxpos,dataout)
@@ -78,14 +91,14 @@ def twiddle_gen(fftsize,g_twiddle_width,g_do_rounding,g_do_saturation,g_do_ifft,
         # 3) find the output file Vunit creates eg:
         # /export/home/creon/mschiller_ngvla_project/casper_dspdevel/r2sdf_fft/vunit_out/test_output/r2sdf_fft_lib.tb_vu_twiddlepkg.Twiddle_w18b_8192_a070bdfd1c276c4964716de8a2ae80049f2966b7/fortwidddlepkg_twidth18_fftsize8192.txt
         # Add the file to Source control inside the directory that contains this script
-        print("Using Prestored VHDL coefficients for this size")
+        logging.debug("Using Prestored VHDL coefficients for this size")
         data = np.loadtxt(coefpath,dtype="int")
-        print("Loading Twiddles from: %s" % str(coefpath))
+        logging.debug(f"Loading Twiddles from: {str(coefpath)}")
         coeffs = data[0:data.size:2]+1j*data[1:data.size:2]
         coeffs = coeffs / (2**(g_twiddle_width-1))
         return coeffs
     else:
-        print("Using Python Coefficient Generation")
+        logging.debug("Using Python Coefficient Generation")
         coeff_indices = np.arange(0,fftsize)
         if g_do_ifft:
             coeffs = np.exp(np.multiply(coeff_indices,1.0j * 2*np.pi / (2*fftsize)))
@@ -210,7 +223,7 @@ def pfft(data,fftsize_log2,g_twiddle_width,g_do_rounding,g_do_saturation,g_outpu
         return 1
     stagedebug =np.zeros((data.size,idxlog2range.size),dtype=np.complex128)
     for idxlog2 in idxlog2range:
-        print("Processing Stage %d of %d\n"%(stage_num,len(idxlog2range)))
+        logging.debug(f"Processing Stage {stage_num} of {len(idxlog2range)}\n")
         stageout = fft_stage(stageout,int(idxlog2),g_twiddle_width,g_do_rounding,g_do_saturation,int(g_output_width[idxlog2-1]),int(g_bits_to_round_off[idxlog2-1]),g_do_dif,g_do_ifft,coef_base)
         stagedebug[:,stage_num] = stageout[:,0]
         stage_num = stage_num + 1
