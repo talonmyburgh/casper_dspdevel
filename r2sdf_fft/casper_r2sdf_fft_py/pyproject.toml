@@ -1,6 +1,6 @@
 [project]
 name = "casper_r2sdf_fft"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Matthew Schiller", email="mschille@nrao.edu" },
 ]
@@ -12,7 +12,11 @@ classifiers = [
     'License :: OSI Approved :: BSD License',
     "Operating System :: OS Independent",
 ]
-
+dependencies = [
+  "numpy",
+  "pathlib",
+  "logging",
+]
 [project.urls]
 Homepage = "https://github.com/talonmyburgh/casper_dspdevelt"
 Issues = "https://github.com/talonmyburgh/casper_dspdevel/issues"
