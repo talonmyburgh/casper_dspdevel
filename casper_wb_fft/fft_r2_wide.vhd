@@ -77,6 +77,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_wide is
     generic(
         g_fft            : t_fft           := c_fft; --! generics for the FFT
+        g_do_ifft        : boolean         := false;
         g_pft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
         g_fft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
         g_alt_output     : boolean         := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
@@ -221,7 +222,8 @@ begin
                 g_round          => g_round,
                 g_use_mult_round => g_use_mult_round,
                 g_ram_primitive  => g_ram_primitive,
-                g_twid_file_stem => g_twid_file_stem
+                g_twid_file_stem => g_twid_file_stem,
+                g_do_ifft        => g_do_ifft
             )
             port map(
                 clken    => clken,
@@ -257,6 +259,7 @@ begin
         u_fft_r2_par : entity work.fft_r2_par
             generic map(
                 g_fft            => g_fft,
+                g_do_ifft        => g_do_ifft,
                 g_pipeline       => g_fft_pipeline,
                 g_use_variant    => g_use_variant,
                 g_use_dsp        => g_use_dsp,
@@ -306,7 +309,8 @@ begin
                     g_round          => g_round,
                     g_use_mult_round => g_use_mult_round,
                     g_ram_primitive  => g_ram_primitive,
-                    g_twid_file_stem => g_twid_file_stem
+                    g_twid_file_stem => g_twid_file_stem,
+                    g_do_ifft            => g_do_ifft
                 )
                 port map(
                     clken    => clken,
@@ -354,6 +358,7 @@ begin
         u_fft : entity work.fft_r2_par
             generic map(
                 g_fft            => c_fft_r2_par, -- generics for the FFT
+                g_do_ifft        => g_do_ifft,
                 g_pipeline       => g_fft_pipeline, -- pipeline generics for the parallel FFT
                 g_use_variant    => g_use_variant,
                 g_use_dsp        => g_use_dsp,

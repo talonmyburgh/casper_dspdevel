@@ -45,6 +45,7 @@ entity fft_r2_bf_par is
 		g_element      	 : natural        	:= 1;
 		
 		g_twiddle_width	 : natural			:= 18;
+		g_do_ifft        : boolean			:= false;
 		-- internal pipeline settings
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
@@ -295,8 +296,8 @@ begin
 	-- fetch twiddle coefficient values
 	------------------------------------------------------------------------------
 
-	weight_re <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,true));
-	weight_im <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,false));
+	weight_re <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,g_do_ifft,true));
+	weight_im <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,g_do_ifft,false));
 
 	--print_str("Parallel: [stage = " & integer'image(g_stage) & " [element = " & integer'image(g_element) & "] " & "[index = " & integer'image(wMap(g_element, g_stage)) & "] ");
 
