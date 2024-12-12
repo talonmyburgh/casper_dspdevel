@@ -75,8 +75,8 @@ ARCHITECTURE add_sub OF common_add_sub IS
 
 	CONSTANT c_res_w : NATURAL := g_in_dat_w + 1;
 
-	SIGNAL in_a_p : STD_LOGIC_VECTOR(in_a'RANGE);
-	SIGNAL in_b_p : STD_LOGIC_VECTOR(in_b'RANGE);
+	SIGNAL in_a_p : STD_LOGIC_VECTOR(in_a'RANGE) := (OTHERS => '0');
+	SIGNAL in_b_p : STD_LOGIC_VECTOR(in_b'RANGE) := (OTHERS => '0');
 
 	SIGNAL in_add    : STD_LOGIC;
 	SIGNAL sel_add_p : STD_LOGIC;

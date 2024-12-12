@@ -23,12 +23,13 @@ use ieee.numeric_std.all;
 
 entity ip_xpm_ram_cr_cw is
 	GENERIC(
-		g_adr_w         : NATURAL := 10;
-		g_dat_w         : NATURAL := 22;
-		g_nof_words     : NATURAL := 2**5;
-		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
-		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
+		g_adr_w             : NATURAL := 10;
+		g_dat_w             : NATURAL := 22;
+		g_nof_words         : NATURAL := 2 ** 5;
+		g_rd_latency        : NATURAL := 2; -- choose 1 or 2
+		g_init_file         : STRING  := "UNUSED";
+		g_ram_primitive     : STRING  := "auto"; --choose auto, distributed, block, ultra
+		g_port_b_write_mode : STRING  := "write_first"
 	);
 	PORT(
 		data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
@@ -52,6 +53,10 @@ architecture Behavioral of ip_xpm_ram_cr_cw is
 	SIGNAL we_a : STD_LOGIC_VECTOR(0 DOWNTO 0);
 
 begin
+	assert 2 ** g_adr_w >= g_nof_words
+	report "Address width " & natural'image(g_adr_w) & " does not cover the number of words " & natural'image(g_nof_words)
+	severity failure;
+
 	we_a <= (others => wren);
 	q    <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 
@@ -78,7 +83,7 @@ begin
 			USE_MEM_INIT            => 1, --DECIMAL
 			WAKEUP_TIME             => "disable_sleep", --String
 			WRITE_DATA_WIDTH_A      => g_dat_w, --DECIMAL
-			WRITE_MODE_B            => "read_first" --String
+			WRITE_MODE_B            => g_port_b_write_mode --String
 		)
 		port map(
 			dbiterrb       => open,     -- 1-bit output: Status signal to indicate double bit error occurrence
@@ -118,6 +123,6 @@ begin
 			-- synchronously write only bits [15-8] of dina when WRITE_DATA_WIDTH_A
 			-- is 32, wea would be 4'b0010.
 		);
-		-- End of xpm_memory_sdpram_inst instantiation
+	-- End of xpm_memory_sdpram_inst instantiation
 
 end Behavioral;

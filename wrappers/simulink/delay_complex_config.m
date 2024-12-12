@@ -58,6 +58,8 @@ function delay_complex_config(this_block)
   % Include files in relavent order
   this_block.addFileToLibrary([filepath '/../../casper_delay/delay_complex.vhd'], 'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../casper_delay/delay_bram.vhd'], 'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'], 'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'], 'casper_counter_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'], 'common_components_lib');

@@ -105,12 +105,13 @@ BEGIN
 	gen_simple_dual_port : IF g_true_dual_port = FALSE GENERATE
 		u_ram : ENTITY work.tech_memory_ram_cr_cw
 			GENERIC MAP(
-				g_adr_w         => g_ram.adr_w,
-				g_dat_w         => g_ram.dat_w,
-				g_nof_words     => g_ram.nof_dat,
-				g_rd_latency    => c_rd_latency,
-				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_adr_w             => g_ram.adr_w,
+				g_dat_w             => g_ram.dat_w,
+				g_nof_words         => g_ram.nof_dat,
+				g_rd_latency        => c_rd_latency,
+				g_init_file         => g_init_file,
+				g_ram_primitive     => g_ram_primitive,
+				g_port_b_write_mode => g_port_b_write_mode
 			)
 			PORT MAP(
 				wrclock   => clk_a,

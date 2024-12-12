@@ -35,8 +35,8 @@ PACKAGE tech_memory_component_pkg IS
 			g_dat_a_w     : NATURAL := 32;
 			g_adr_b_w     : NATURAL := 7;
 			g_dat_b_w     : NATURAL := 8;
-			g_nof_words_a : NATURAL := 2**5;
-			g_nof_words_b : NATURAL := 2**7;
+			g_nof_words_a : NATURAL := 2 ** 5;
+			g_nof_words_b : NATURAL := 2 ** 7;
 			g_rd_latency  : NATURAL := 2; -- choose 1 or 2
 			g_init_file   : STRING  := "UNUSED"
 		);
@@ -62,7 +62,7 @@ PACKAGE tech_memory_component_pkg IS
 		GENERIC(
 			g_adr_w      : NATURAL := 5;
 			g_dat_w      : NATURAL := 8;
-			g_nof_words  : NATURAL := 2**5;
+			g_nof_words  : NATURAL := 2 ** 5;
 			g_rd_latency : NATURAL := 2; -- choose 1 or 2
 			g_init_file  : STRING  := "UNUSED"
 		);
@@ -88,7 +88,7 @@ PACKAGE tech_memory_component_pkg IS
 		GENERIC(
 			g_adr_w      : NATURAL := 5;
 			g_dat_w      : NATURAL := 8;
-			g_nof_words  : NATURAL := 2**5;
+			g_nof_words  : NATURAL := 2 ** 5;
 			g_rd_latency : NATURAL := 2; -- choose 1 or 2
 			g_init_file  : STRING  := "UNUSED"
 		);
@@ -109,7 +109,7 @@ PACKAGE tech_memory_component_pkg IS
 		GENERIC(
 			g_adr_w     : NATURAL := 5;
 			g_dat_w     : NATURAL := 8;
-			g_nof_words : NATURAL := 2**5;
+			g_nof_words : NATURAL := 2 ** 5;
 			g_init_file : STRING  := "UNUSED"
 		);
 		PORT(
@@ -148,7 +148,8 @@ PACKAGE tech_memory_component_pkg IS
 			g_nof_words     : NATURAL;
 			g_rd_latency    : NATURAL;
 			g_init_file     : STRING;
-			g_ram_primitive : STRING
+			g_ram_primitive : STRING;
+			g_port_b_write_mode : STRING
 		);
 		port(
 			data      : IN  STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
@@ -226,7 +227,7 @@ PACKAGE tech_memory_component_pkg IS
 		generic(
 			g_adr_w         : NATURAL := 10;
 			g_dat_w         : NATURAL := 22;
-			g_nof_words     : NATURAL := 2**5;
+			g_nof_words     : NATURAL := 2 ** 5;
 			g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 			g_init_file     : STRING  := "UNUSED";
 			g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra
@@ -235,7 +236,7 @@ PACKAGE tech_memory_component_pkg IS
 			address : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
 			clock   : IN  STD_LOGIC;
 			clocken : IN  STD_LOGIC := '1';
-			q         : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
+			q       : OUT STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0)
 		);
 	end component ip_xpm_rom_r;
 
@@ -244,7 +245,7 @@ PACKAGE tech_memory_component_pkg IS
 			g_adr_a_w       : NATURAL := 10;
 			g_adr_b_w       : NATURAL := 10;
 			g_dat_w         : NATURAL := 22;
-			g_nof_words     : NATURAL := 2**5;
+			g_nof_words     : NATURAL := 2 ** 5;
 			g_rd_latency    : NATURAL := 2; -- choose 1 or 2
 			g_init_file     : STRING  := "UNUSED";
 			g_ram_primitive : STRING  := "auto" --choose auto, distributed, block, ultra

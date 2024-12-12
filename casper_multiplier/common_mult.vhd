@@ -56,7 +56,7 @@ ENTITY common_mult IS
     in_a       : IN  STD_LOGIC_VECTOR(g_in_a_w-1 DOWNTO 0);
     in_b       : IN  STD_LOGIC_VECTOR(g_in_b_w-1 DOWNTO 0);
     in_val     : IN  STD_LOGIC := '1';        -- only propagate valid, not used internally
-    result     : OUT STD_LOGIC_VECTOR(g_out_p_w-1 DOWNTO 0);
+    result     : OUT STD_LOGIC_VECTOR(g_out_p_w-1 DOWNTO 0) := (others=>'0');
     out_val    : OUT STD_LOGIC
   );
 END common_mult;
@@ -68,7 +68,7 @@ ARCHITECTURE str OF common_mult IS
   -- Extra output pipelining using common_pipeline is only needed when g_pipeline_output > 1
   CONSTANT c_pipeline_output : NATURAL := sel_a_b(g_pipeline_output>0, g_pipeline_output-1, 0);
 
-  SIGNAL out_p        : STD_LOGIC_VECTOR(result'RANGE);                      -- stage dependent on g_pipeline_output  being 0 or 1
+  SIGNAL out_p        : STD_LOGIC_VECTOR(result'RANGE) := (others=>'0');                      -- stage dependent on g_pipeline_output  being 0 or 1
 
 BEGIN
 

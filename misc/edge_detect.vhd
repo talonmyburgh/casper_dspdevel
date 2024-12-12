@@ -1,3 +1,6 @@
+-- A VHDL implementation of the CASPER edge_detect block.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.ALL;
 
