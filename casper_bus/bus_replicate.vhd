@@ -2,7 +2,7 @@
 -- @author: Ross Donnachie
 -- @company: Mydon Solutions
 
-LIBRARY IEEE, common_slv_arr_pkg_lib, casper_control_flow_lib;
+LIBRARY IEEE, common_slv_arr_pkg_lib, casper_flow_control_lib;
 USE IEEE.std_logic_1164.all;
 USE common_slv_arr_pkg_lib.common_slv_arr_pkg.all;
 
@@ -35,7 +35,7 @@ begin
       o_data => s_in
     );
 
-  u_bus_create : entity casper_control_flow_lib.bus_create
+  u_bus_create : entity casper_flow_control_lib.bus_create
   port map (
       clk => clk,
       ce => ce,

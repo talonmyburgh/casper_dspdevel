@@ -18,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     # Map a step output to a job output
     outputs:
+      accumulators: ${{ steps.accumulators.outputs.any_changed }}
       adder: ${{ steps.adder.outputs.any_changed }}
+      bus: ${{ steps.bus.outputs.any_changed }}
       counter: ${{ steps.counter.outputs.any_changed }}
       multiplexer: ${{ steps.multiplexer.outputs.any_changed }}
       multiplier: ${{ steps.multiplier.outputs.any_changed }}
@@ -54,6 +56,13 @@ jobs:
           files: |
             casper_adder/.*\.vhd$
             casper_adder/run.py
+      - name: Assess bus files changes
+        id: counter
+        uses: tj-actions/changed-files@v41.0.0
+        with:
+          files: |
+            casper_bus/.*\.vhd$
+            casper_bus/run.py
       - name: Assess counter files changes
         id: counter
         uses: tj-actions/changed-files@v41.0.0
@@ -302,6 +311,57 @@ jobs:
         with:
           name: casper_adder_report
           path: ./casper_adder/casper_adder_report.xml
+          if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
+          
+
+  bus:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    container: ghdl/vunit:llvm-master
+    needs: [files_changed]
+    if: needs.files_changed.outputs.bus == 'true'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Update git
+        run: |
+          apt-get update
+          apt-get install git -y
+          git --version
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.TOKEN }}
+      - id: casper_bus_test
+        run: python3 casper_bus/run.py --xunit-xml ./casper_bus/casper_bus_report.xml
+
+      - name: Note casper_bus_test Failure
+        if: ${{ failure() }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_bus
+          message: failing
+          message-color: "C74D1F"
+          file-name: casper_bus_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Note casper_bus_test Success
+        if: ${{ steps.casper_bus_test.outcome == 'success' }}
+        uses: action-badges/core@0.2.2
+        with:
+          label: casper_bus
+          message: passing
+          message-color: "4DC71F"
+          file-name: casper_bus_test.svg
+          badge-branch: badges
+          style: flat
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: casper_bus_report
+          path: ./casper_bus/casper_bus_report.xml
           if-no-files-found: 'warn' # ['warn', 'error', 'ignore']
           
   counter:
