@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: This unit performs the reordering and the separation for the two real
 --          input option of the complex fft.
@@ -52,10 +56,11 @@ entity fft_reorder_sepa_pipe is
 	port(
 		clken   : in  std_logic := '1';
 		clk     : in  std_logic;
-		rst     : in  std_logic;
+		in_sync : in  std_logic;
 		in_dat  : in  std_logic_vector;
 		in_val  : in  std_logic;
 		out_dat : out std_logic_vector;
+        out_sync: out std_logic;
 		out_val : out std_logic
 	);
 end entity fft_reorder_sepa_pipe;
@@ -69,7 +74,6 @@ architecture rtl of fft_reorder_sepa_pipe is
 	constant c_adr_chan_w   : natural := g_nof_chan;
 	constant c_adr_tot_w    : natural := c_adr_points_w + c_adr_chan_w;
 
-    constant c_sep_latency : natural := 3;
     constant c_buf_latency : natural := 1;
 
     -- goodness VHDL is verbose
@@ -90,6 +94,11 @@ architecture rtl of fft_reorder_sepa_pipe is
         end if;    
     end function;
     constant c_rd_start_page : natural := f_rd_start_page(g_in_place);
+
+    signal rst : std_logic := '0';
+    signal start_of_frame : std_logic := '0';
+    signal reject_data : std_logic := '0';
+    signal out_val_p1 : std_logic := '0';
   
 	signal adr_points_cnt : std_logic_vector(c_adr_points_w - 1 downto 0);
 	signal adr_chan_cnt   : std_logic_vector(c_adr_chan_w - 1 downto 0);
@@ -115,10 +124,11 @@ architecture rtl of fft_reorder_sepa_pipe is
     signal buf_rd_val, buf_rd_val_d1                    : std_logic; 
 
     -- separate ports
-    signal sep_in_dat, sep_out_dat      : std_logic_vector(c_dat_w - 1 downto 0);
-    signal sep_in_val, sep_out_val      : std_logic;
+    signal sep_in_dat      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_in_val      : std_logic;
 
     signal sep_out_dat_i      : std_logic_vector(c_dat_w - 1 downto 0);
+    signal sep_out_dat_ii      : std_logic_vector(c_dat_w - 1 downto 0);
     signal sep_out_val_i      : std_logic;
     
     signal not_first_spectrum     : std_logic := '0';
@@ -132,11 +142,6 @@ architecture rtl of fft_reorder_sepa_pipe is
 	signal rd_adr_up   : std_logic_vector(c_adr_points_w downto 0);
 	signal rd_adr_down : std_logic_vector(c_adr_points_w downto 0); -- use intermediate rd_adr_down that has 1 bit extra to avoid truncation warning with TO_UVEC()
 	signal rd_adr      : std_logic_vector(c_adr_tot_w - 1 downto 0);
-	signal rd_dat      : std_logic_vector(c_dat_w - 1 downto 0);
-	signal rd_val      : std_logic;
-
-	signal out_dat_i : std_logic_vector(c_dat_w - 1 downto 0);
-	signal out_val_i : std_logic;
 
 	type state_type is (s_idle, s_run_separate, s_run_normal);
 
@@ -160,6 +165,10 @@ architecture rtl of fft_reorder_sepa_pipe is
 	signal r, rin : reg_type := c_reg_type;
 
 begin
+
+    rst <= '1' when in_sync='1' and in_val='1' else '0';
+    start_of_frame  <= '0' when (unsigned(out_counter)=0 or out_counter'length=0) else '1';
+
     u_adr_chan_cnt : entity casper_counter_lib.common_counter
         generic map(
             g_latency => 1,
@@ -174,10 +183,10 @@ begin
         );    
     -- Generate on c_nof_channels to avoid simulation warnings on TO_UINT(adr_chan_cnt) when adr_chan_cnt is a NULL array
     one_chan : if c_nof_channels = 1 generate
-        cnt_ena <= '1' when in_val = '1' else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' else '0';
     end generate;
     more_chan : if c_nof_channels > 1 generate
-        cnt_ena <= '1' when in_val = '1' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
+        cnt_ena <= '1' when in_val = '1' and in_sync = '0' and TO_UINT(adr_chan_cnt) = c_nof_channels - 1 else '0';
     end generate;
 
     base_cnt : entity casper_counter_lib.common_counter
@@ -294,14 +303,14 @@ begin
     end generate;
     
     adr_tot_cnt <= adr_points_cnt & adr_chan_cnt;
-    next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' else '0';
+    next_page <= '1' when unsigned(adr_tot_cnt) = c_page_size - 1 and in_val = '1' and in_sync ='0' else '0';
     gen_not_in_place_buf_next_page : if g_in_place = false generate
         buf_wr_next_page <= next_page;
         buf_rd_next_page <= next_page;
     end generate;    
         
     buf_wr_dat <= in_dat;
-    buf_wr_en <= in_val;
+    buf_wr_en <= in_val and not in_sync;
         
     u_buff_inplace : entity casper_ram_lib.common_paged_ram_r_w
         generic map(
@@ -527,14 +536,57 @@ begin
     count_out_en <= not(not_first_spectrum) and sep_out_val_i;        
 
     not_first_spectrum <= out_counter(c_adr_points_w);       
-    gen_in_place_reorder : if g_in_place = true generate
-        out_val <= sep_out_val_i and not_first_spectrum;        
-    end generate;
-    
-    gen_not_in_place_reorder : if g_in_place = false generate
-        out_val <= sep_out_val_i;        
-    end generate;
-    
-    out_dat <= sep_out_dat_i;
+
+    out_val_proc : process (clk)
+    begin
+        if rising_edge(clk) then
+            if g_in_place then
+                out_val_p1 <= sep_out_val_i and not_first_spectrum;
+            else
+                out_val_p1 <= sep_out_val_i; 
+            end if;
+        end if;
+    end process out_val_proc;
+
+
+    -- delay data out by one clock cycle as we want sync to appear one clock cycle before
+	out_dat_delay : entity common_components_lib.common_pipeline
+		generic map(
+			g_pipeline => 1,
+            g_in_dat_w => c_dat_w,
+            g_out_dat_w => c_dat_w
+		)
+		port map(
+			clk     => clk,
+			in_dat  => sep_out_dat_i,
+			out_dat => sep_out_dat_ii
+		);
+
+    final_reg : process (clk)
+	begin
+		if rising_edge(clk) then
+			if rst='1' then
+				out_val 			<= '1';
+				out_sync			<= '1';
+				reject_data		    <= '1';
+                out_dat             <= std_logic_vector(to_unsigned(0,out_dat'length));
+			else
+				if reject_data='1' then
+					if start_of_frame='1' and out_val_p1='1' then
+						out_val			<= out_val_p1;
+						out_sync		<= '0';
+						reject_data	    <= '0';
+                        out_dat         <= sep_out_dat_ii;
+					end if;
+				else
+					-- not syncing pass data.
+					reject_data		    <= '0';
+					out_sync            <= '0';
+					out_val				<= out_val_p1;
+                    out_dat             <= sep_out_dat_ii;
+				end if;
+			end if;
+		end if;
+	end process final_reg;
 end rtl;
 

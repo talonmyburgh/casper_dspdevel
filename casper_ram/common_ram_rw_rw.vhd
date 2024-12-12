@@ -29,8 +29,8 @@ ENTITY common_ram_rw_rw IS
 		g_init_file      : STRING  := "UNUSED";
 		g_true_dual_port : BOOLEAN := TRUE;
 		g_ram_primitive  : STRING  := "auto";
-		g_port_a_write_mode : STRING  := "write_first";
-		g_port_b_write_mode : STRING  := "write_first"
+		g_write_mode_a   : STRING  := "write_first";
+		g_write_mode_b   : STRING  := "write_first"
 	);
 	PORT(
 		clk      : IN  STD_LOGIC;
@@ -62,8 +62,8 @@ BEGIN
 			g_init_file      => g_init_file,
 			g_true_dual_port => g_true_dual_port,
 			g_ram_primitive  => g_ram_primitive,
-			g_port_a_write_mode => g_port_a_write_mode,
-			g_port_b_write_mode => g_port_b_write_mode
+			g_write_mode_a   => g_write_mode_a,
+			g_write_mode_b   => g_write_mode_b
 		)
 		PORT MAP(
 			clk_a    => clk,

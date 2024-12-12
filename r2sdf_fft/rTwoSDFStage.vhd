@@ -16,13 +16,19 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 
 library ieee, common_pkg_lib, casper_ram_lib, common_components_lib, casper_counter_lib, casper_requantize_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
 use work.rTwoSDFPkg.all;
 use casper_ram_lib.common_ram_pkg.all;
+use ieee.numeric_std.all; 
+
 
 entity rTwoSDFStage is
 	generic(
@@ -44,7 +50,8 @@ entity rTwoSDFStage is
 	);
 	port(
 		clk     		 : in  std_logic;        				--! Input clock
-		rst     		 : in  std_logic;        				--! Input reset
+		--rst     		 : in  std_logic;        				--! Input reset
+		in_sync      : in std_logic;								-- drive high with in_val to indicate the NEXT sample should be the first sample of the frame.  Internally will create a reset.		
 		in_re   		 : in  std_logic_vector; 				--! Real input value
 		in_im   		 : in  std_logic_vector; 				--! Imaginary input value
 		scale 			 : in  std_logic;						--! Scale (1) or not (0)
@@ -52,7 +59,8 @@ entity rTwoSDFStage is
 		out_re  		 : out std_logic_vector; 				--! Output real value
 		out_im  		 : out std_logic_vector; 				--! Output imaginary value
 		ovflw   		 : out std_logic;						--! Overflow detected in butterfly add/sub
-		out_val 		 : out std_logic         				--! Output value select
+		out_val 		 : out std_logic;        				--! Output value select
+		out_sync     : out std_logic
 	);
 end entity rTwoSDFStage;
 
@@ -97,8 +105,15 @@ architecture str of rTwoSDFStage is
 
 	signal quant_out_re : std_logic_vector(out_re'range);
 	signal quant_out_im : std_logic_vector(out_im'range);
-	
+	signal rst					: std_logic;
+  signal valid_int		: std_logic;
+	signal out_val_p1		: std_logic;
+	signal start_of_frame	: std_logic;
+	signal start_of_frame_op1 : std_logic;
+	signal reject_data				: std_logic;
 begin
+	rst 					<= '1' when in_sync='1' and in_val='1' else '0';
+	valid_int 			    <= in_val when in_sync='0' else '0';
 
 	------------------------------------------------------------------------------
 	-- stage counter
@@ -114,7 +129,7 @@ begin
 			clken  => std_logic'('1'),
 			rst    => rst,
 			clk    => clk,
-			cnt_en => in_val,
+			cnt_en => valid_int,
 			count  => ctrl_sel
 		);
 
@@ -137,7 +152,7 @@ begin
             rst     => rst,
             in_re   => in_re,
             in_im   => in_im,
-            in_val  => in_val,
+            in_val  => valid_int,
             in_sel  => in_sel,
             out_re  => bf_re,
             out_im  => bf_im,
@@ -149,7 +164,9 @@ begin
 	-- get twiddles
 	------------------------------------------------------------------------------
 	-- This ought to render weight_addr as having address width g_stage - 1 
-	weight_addr <= ctrl_sel(g_stage + g_nof_chan - 1 downto g_nof_chan + 1);
+	weight_addr 		<= ctrl_sel(g_stage + g_nof_chan - 1 downto g_nof_chan + 1);
+	start_of_frame	<= '1' when (unsigned(weight_addr)=0 or weight_addr'length=0) else '0';
+
 
 	u_weights : entity work.rTwoWeights
 		generic map(
@@ -264,11 +281,46 @@ begin
 
 	u_val_lat : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_pipeline.stage_lat
+			g_pipeline => g_pipeline.stage_lat-1
 		)
 		port map(
 			clk     => clk,
 			in_dat  => mul_out_val,
-			out_dat => out_val
+			out_dat => out_val_p1
 		);
+
+	sof_delay : entity common_components_lib.common_pipeline_sl
+		generic map(
+			g_pipeline => g_pipeline.stage_lat+g_pipeline.mul_lat+c_ram.latency-1
+		)
+		port map(
+			clk     => clk,
+			in_dat  => start_of_frame,
+			out_dat => start_of_frame_op1
+		);
+
+
+	final_reg : process (clk)
+	begin
+		if rising_edge(clk) then
+			if rst='1' then
+				out_val 			<= '1';
+				out_sync			<= '1';
+				reject_data		<= '1';
+			else
+				if reject_data='1' then
+					if start_of_frame_op1='1' and out_val_p1='1' then
+						out_val			<= out_val_p1;
+						out_sync		<= '0';
+						reject_data	<= '0';
+					end if;
+				else
+					-- not syncing pass data.
+					reject_data		<= '0';
+					out_sync      <= '0';
+					out_val				<= out_val_p1;
+				end if;
+			end if;
+		end if;
+	end process final_reg;
 end str;

@@ -16,11 +16,16 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 
-library ieee, common_pkg_lib, common_components_lib;
+library ieee, common_pkg_lib, common_components_lib, technology_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
+USE technology_lib.technology_select_pkg.ALL;
 
 entity rTwoBFStage is
 	generic(
@@ -31,7 +36,7 @@ entity rTwoBFStage is
 		-- generics for rTwoBF
 		g_bf_use_zdly   : natural := 1; --! >= 1. Stage high downto g_bf_use_zdly will will use g_bf_in_a_zdly and g_bf_out_zdly
 		g_bf_in_a_zdly  : natural := 0; --! g_bf_in_a_zdly+g_bf_out_d_zdly must be <= the stage z^(-1) delay, note that stage 1 has only one z^(-1) delay
-		g_bf_out_d_zdly : natural := 0  --! The stage z^(-1) delays are ..., 4, 2, 1.
+		g_bf_out_d_zdly : natural := 0 --! The stage z^(-1) delays are ..., 4, 2, 1.
 	);
 	port(
 		clk     : in  std_logic;        --! Input clock source
@@ -54,7 +59,7 @@ architecture str of rTwoBFStage is
 	constant c_bf_in_a_zdly  : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_in_a_zdly, 0);
 	constant c_bf_out_b_zdly : natural := sel_a_b(g_stage >= g_bf_use_zdly, g_bf_out_d_zdly, 0);
 
-	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly;
+	constant c_bf_zdly       : natural := c_bf_in_a_zdly + c_bf_out_b_zdly ;
 	constant c_feedback_zdly : natural := pow2(g_stage - 1);
 
 	-- The BF adds, subtracts or passes the data on, so typically c_out_dat_w = c_in_dat_w + 1
@@ -177,9 +182,9 @@ begin
             out_bit => bf_val_dly
 		);
 
+
 	-- after the z^(-1) stage delay the bf_val_dly goes high and remains high and acts as an enable for in_val to out_val
 	stage_val <= in_val and bf_val_dly;
-
 	------------------------------------------------------------------------------
 	-- stage output pipelining
 	------------------------------------------------------------------------------

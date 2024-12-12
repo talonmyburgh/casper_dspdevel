@@ -29,29 +29,16 @@ entity wideband_fft_top is
 	port(
 		clk : in std_logic := '1';
 		ce : in std_logic := '1';
-		rst : in std_logic := '0';
 		in_sync : in std_logic := '1';
 		in_valid : in std_logic := '1';
 		in_shiftreg : in std_logic_vector(ceil_log2(nof_points) -1 DOWNTO 0) := (others=>'1');
-        out_sync : out std_logic;
-        out_valid : out std_logic;
-        out_ovflw : out STD_LOGIC_VECTOR(ceil_log2(nof_points) -1 DOWNTO 0);
-        in_bsn : in STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0) := (others=>'0');
-		in_sop : in std_logic :='1';
-		in_eop : in std_logic :='1';
-		in_empty : in STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0) := (others=>'0');
-		in_err : in STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0) := (others=>'0');
-		in_channel : STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0) := (others=>'0');
-		out_bsn : out STD_LOGIC_VECTOR(c_dp_stream_bsn_w-1 DOWNTO 0);
-		out_sop : out std_logic;
-		out_eop : out std_logic;
-		out_empty : out STD_LOGIC_VECTOR(c_dp_stream_empty_w-1 DOWNTO 0);
-		out_err : out STD_LOGIC_VECTOR(c_dp_stream_error_w-1 DOWNTO 0);
-		out_channel : out STD_LOGIC_VECTOR(c_dp_stream_channel_w-1 DOWNTO 0);
+    out_sync : out std_logic;
+    out_valid : out std_logic;
+    out_ovflw : out STD_LOGIC_VECTOR(ceil_log2(nof_points) -1 DOWNTO 0);
 		in_im_0 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0) := (others=>'0');
-        in_re_0 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0) := (others=>'0');
-        out_im_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
-        out_re_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0));
+    in_re_0 : in STD_LOGIC_VECTOR(in_dat_w-1 DOWNTO 0) := (others=>'0');
+    out_im_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0);
+    out_re_0 : out STD_LOGIC_VECTOR(out_dat_w-1 DOWNTO 0));
         
 end entity wideband_fft_top;
 
@@ -70,7 +57,7 @@ architecture RTL of wideband_fft_top is
         g_fft_pipeline => c_fft_pipeline)
         port map (
         clken        => ce,
-        rst       => rst,
+--        rst       => rst,
         clk       => clk,
         shiftreg => in_shiftreg,
         in_fft_sosi_arr  => in_fft_sosi_arr,
@@ -79,23 +66,11 @@ architecture RTL of wideband_fft_top is
         
         otherinprtmap: for j in 0 to wb_factor-1 generate
         in_fft_sosi_arr(j).sync <= in_sync;
-        in_fft_sosi_arr(j).bsn <= in_bsn;
         in_fft_sosi_arr(j).valid <= in_valid;
-        in_fft_sosi_arr(j).sop <= in_sop;
-        in_fft_sosi_arr(j).eop <= in_eop;
-        in_fft_sosi_arr(j).empty <= in_empty;
-        in_fft_sosi_arr(j).channel <= in_channel;
-        in_fft_sosi_arr(j).err <= in_err;
         end generate;
         otheroutprtmap: for k in 0 to wb_factor-1 generate
         out_sync <= out_fft_sosi_arr(k).sync;
-        out_bsn <= out_fft_sosi_arr(k).bsn;
-        out_valid <= out_fft_sosi_arr(k).valid ;
-        out_sop <= out_fft_sosi_arr(k).sop;
-        out_eop <= out_fft_sosi_arr(k).eop;
-        out_empty <= out_fft_sosi_arr(k).empty;
-        out_channel <= out_fft_sosi_arr(k).channel;
-        out_err <= out_fft_sosi_arr(k).err;
+        out_valid <= out_fft_sosi_arr(k).valid;
         end generate;
         
         in_fft_sosi_arr(0).re <= RESIZE_SVEC(in_re_0, in_fft_sosi_arr(0).re'length);

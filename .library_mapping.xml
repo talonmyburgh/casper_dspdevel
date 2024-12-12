@@ -14,10 +14,11 @@
   <Mappings Location="casper_mm" Library="casper_mm_lib"/>
   <Mappings Location="casper_multiplexer" Library="casper_multiplexer_lib"/>
   <Mappings Location="casper_multiplier" Library="casper_multiplier_lib"/>
+  <Mappings Location="casper_pfb_fir" Library="casper_pfb_fir_lib"/>
+  <Mappings Location="casper_pfb_fir/pfb_fir.vhd" Library="casper_pfb_fir_lib"/>
   <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
   <Mappings Location="casper_ram" Library="casper_ram_lib"/>
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
-  <Mappings Location="casper_reorder" Library="casper_reorder_lib"/>
   <Mappings Location="casper_sim_tools" Library="casper_sim_tools_lib"/>
   <Mappings Location="casper_statistics" Library="casper_statistics_lib"/>
   <Mappings Location="common_components" Library="common_components_lib"/>

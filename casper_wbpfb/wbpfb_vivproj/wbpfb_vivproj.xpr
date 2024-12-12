@@ -3,11 +3,11 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="49" Path="/export/home/creon/mschiller_ngvla_project/casper_dspdevel/casper_wbpfb/wbpfb_vivproj/wbpfb_vivproj.xpr">
+<Project Version="7" Minor="49" Path="C:/Users/mybur/Repos/CASPER/dspdevel_designs/casper_dspdevel/casper_wbpfb/wbpfb_vivproj/wbpfb_vivproj.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="5815c11848de4e8fb9af4eff96f040e3"/>
-    <Option Name="Part" Val="xc7z020clg400-1"/>
+    <Option Name="Part" Val="xc7k160tfbg484-2"/>
     <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
     <Option Name="CompiledLibDirXSim" Val=""/>
     <Option Name="CompiledLibDirModelSim" Val="$PCACHEDIR/compile_simlib/modelsim"/>
@@ -38,7 +38,7 @@
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="UseIPStaticLibs" Val="0"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="476"/>
+    <Option Name="WTXSimLaunchSim" Val="501"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -172,6 +172,27 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../casper_ram/common_ram_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_component_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_cr_cw.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_ram_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../../common_components/common_delay.vhd">
         <FileInfo>
           <Attr Name="Library" Val="common_components_lib"/>
@@ -193,28 +214,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_ram/common_ram_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_ram/tech_memory_component_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_crw_crw.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_ram/tech_memory_ram_cr_cw.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -245,13 +245,6 @@
       <File Path="$PPRDIR/../../casper_ram/common_paged_ram_r_w.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_ram_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../common_components/common_paged_reg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="common_components_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -319,30 +312,9 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../common_components/common_switch.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="common_components_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../casper_multiplexer/common_zip.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplexer_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_dp_pkg/dp_stream_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="dp_pkg_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../r2sdf_fft/rTwoSDFPkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
@@ -354,56 +326,14 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../wbpfb_gnrcs_intrfcs_pkg.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="wpfb_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_ctrl.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="dp_components_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_dp_components/dp_hold_input.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="dp_components_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_pipeline/dp_pipeline.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_pipeline_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../dp_bsn_restore_global.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="wpfb_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../dp_block_gen_valid_arr.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="wpfb_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../r2sdf_fft/twiddlesPkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="r2sdf_fft_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../r2sdf_fft/rTwoSDFPkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="r2sdf_fft_lib"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -501,34 +431,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_ctrl.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_filter.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_single.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_filter/fil_ppf_wide.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="casper_filter_lib"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../../ip_xpm/mult/ip_cmult_rtl_3dsp.vhd">
         <FileInfo>
           <Attr Name="Library" Val="casper_multiplier_lib"/>
@@ -571,6 +473,27 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../../casper_pfb_fir/pfb_fir_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_pfb_fir_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../casper_pfb_fir/pfb_fir.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="casper_pfb_fir_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../wbpfb_gnrcs_intrfcs_pkg.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="wpfb_lib"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../wbpfb_unit_dev.vhd">
         <FileInfo>
           <Attr Name="Library" Val="wpfb_lib"/>
@@ -578,9 +501,17 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../../casper_fifo/tech_fifo_component_pkg.vhd">
+      <File Path="$PPRDIR/../../common_components/common_paged_reg.vhd">
         <FileInfo>
-          <Attr Name="Library" Val="casper_fifo_lib"/>
+          <Attr Name="Library" Val="common_components_lib"/>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../../common_components/common_switch.vhd">
+        <FileInfo>
+          <Attr Name="Library" Val="common_components_lib"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -589,14 +520,6 @@
       <File Path="$PPRDIR/../../common_pkg/common_lfsr_sequences_pkg.vhd">
         <FileInfo>
           <Attr Name="Library" Val="common_pkg_lib"/>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PPRDIR/../../casper_dp_components/dp_block_gen.vhd">
-        <FileInfo>
-          <Attr Name="Library" Val="dp_components_lib"/>
           <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -734,44 +657,45 @@
     <Simulator Name="Questa">
       <Option Name="Description" Val="Questa Advanced Simulator"/>
     </Simulator>
-    <Simulator Name="IES">
-      <Option Name="Description" Val="Incisive Enterprise Simulator (IES)"/>
-    </Simulator>
-    <Simulator Name="Xcelium">
-      <Option Name="Description" Val="Xcelium Parallel Simulator"/>
-    </Simulator>
-    <Simulator Name="VCS">
-      <Option Name="Description" Val="Verilog Compiler Simulator (VCS)"/>
-    </Simulator>
     <Simulator Name="Riviera">
       <Option Name="Description" Val="Riviera-PRO Simulator"/>
     </Simulator>
+    <Simulator Name="ActiveHDL">
+      <Option Name="Description" Val="Active-HDL Simulator"/>
+    </Simulator>
   </Simulators>
   <Runs Version="1" Minor="11">
-    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" Dir="$PRUNDIR/synth_1" IncludeInArchive="true">
+    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7k160tfbg484-2" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2019"/>
-        <Step Id="synth_design"/>
+        <Step Id="synth_design">
+          <Option Id="MoreOptsStr"><![CDATA[-mode out_of_context]]></Option>
+        </Step>
       </Strategy>
-      <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
       <ReportStrategy Name="Vivado Synthesis Default Reports" Flow="Vivado Synthesis 2019"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>
-    <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Default settings for Implementation." AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" SynthRun="synth_1" IncludeInArchive="true" GenFullBitstream="true">
+    <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7k160tfbg484-2" ConstrsSet="constrs_1" Description="Includes alternate algorithms for timing-driven optimization" AutoIncrementalCheckpoint="false" WriteIncrSynthDcp="false" State="current" SynthRun="synth_1" IncludeInArchive="true" GenFullBitstream="true">
       <Strategy Version="1" Minor="2">
-        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2019"/>
+        <StratHandle Name="Performance_ExtraTimingOpt" Flow="Vivado Implementation 2020"/>
         <Step Id="init_design"/>
         <Step Id="opt_design"/>
         <Step Id="power_opt_design"/>
-        <Step Id="place_design"/>
+        <Step Id="place_design">
+          <Option Id="Directive">8</Option>
+        </Step>
         <Step Id="post_place_power_opt_design"/>
-        <Step Id="phys_opt_design"/>
-        <Step Id="route_design"/>
+        <Step Id="phys_opt_design">
+          <Option Id="Directive">0</Option>
+        </Step>
+        <Step Id="route_design">
+          <Option Id="Directive">1</Option>
+        </Step>
         <Step Id="post_route_phys_opt_design"/>
         <Step Id="write_bitstream"/>
       </Strategy>
-      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2019"/>
+      <ReportStrategy Name="Vivado Implementation Default Reports" Flow="Vivado Implementation 2020"/>
       <Report Name="ROUTE_DESIGN.REPORT_METHODOLOGY" Enabled="1"/>
       <RQSFiles/>
     </Run>

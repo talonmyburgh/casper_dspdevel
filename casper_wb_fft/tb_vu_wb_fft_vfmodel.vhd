@@ -68,6 +68,7 @@ signal out_re               : t_slv_64_arr(c_fft_test.wb_factor - 1 downto 0);
 signal out_im               : t_slv_64_arr(c_fft_test.wb_factor - 1 downto 0);
 signal ovflw                : std_logic_vector(g_fftsize_log2-1 downto 0);
 signal out_val              : std_logic;
+signal out_sync             : std_logic;
 signal endsim               : std_logic := '0';
 shared variable rv          : RandomPType;
 signal data_cnt             : integer := 0;
@@ -98,7 +99,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
   port map(
     clken               => '1', -- let's not use clock enables...
     clk                 => clk,
-    rst                 => rst,
+    --rst                 => rst,
+    in_sync             => rst,
     shiftreg            => shiftreg,
     in_re_arr           => in_re,
     in_im_arr           => in_im,
@@ -106,7 +108,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     out_re_arr          => out_re,
     out_im_arr          => out_im,
     ovflw               => ovflw,
-    out_val             => out_val
+    out_val             => out_val,
+    out_sync            => out_sync
   );
 
 
@@ -166,7 +169,7 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     endsim  <= '0';
     in_re   <= (others => (others => '0'));
     in_im   <= (others => (others => '0'));
-    in_val  <= '0';
+    in_val  <= '1';
     shiftreg <= (others => '0');
     -- before we start the simulation create the Twiddle refernce binaries for all the stages of this fft
     -- We'll need these files for 100% bit accurate simulation
@@ -195,7 +198,9 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
       file_close(text_file);
       --file_close(textR_file);
     end loop;
-    wait for 1000 nS;
+    wait for 100 ns;
+    in_val  <= '0';
+    wait for 900 nS;
     rst <= '0';
     wait until rising_edge(clk);
     wait until rising_edge(clk);
@@ -289,7 +294,8 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     for n in 1 to (16*g_fftsize_log2) loop
       wait until rising_edge(clk);
     end loop;
-
+    report "Words Expected=" & integer'image(words_expected) & " Data Cnt=" & integer'image(data_cnt) severity note;
+    wait until rising_edge(clk);
     check(data_cnt>=words_expected,"tb_vu_rtwosdf_vfmodel: Data output count less than input data");
     endsim  <= '1';
 		test_runner_cleanup(runner);
@@ -308,7 +314,7 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
     file_open(output_file,output_path & "/" & "output_data.txt",WRITE_MODE);
     loop
       exit when endsim='1';
-      wait until falling_edge(clk) and out_val='1'; -- read data on falling clocks to avoid delta issues.
+      wait until falling_edge(clk) and out_val='1' and out_sync='0'; -- read data on falling clocks to avoid delta issues.
       for widx in 0 to (c_fft_test.wb_factor-1) loop
         temp_number     := to_integer(signed(out_re(widx)));
         write(line_var,temp_number);

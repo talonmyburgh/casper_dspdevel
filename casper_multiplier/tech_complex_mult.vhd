@@ -202,7 +202,7 @@ begin
   
 
   begin
-	tech_agilex_versal_cmult_inst : entity casper_multiplier_lib.tech_agilex_versal_cmult
+	tech_agilex_versal_cmult_inst : entity work.tech_agilex_versal_cmult
 		generic map(
 			g_is_xilinx         => false,
 			g_inputA_width      => g_in_a_w,
@@ -231,7 +231,7 @@ begin
   
 
   begin
-	tech_agilex_versal_cmult_inst : entity casper_multiplier_lib.tech_agilex_versal_cmult
+	tech_agilex_versal_cmult_inst : entity work.tech_agilex_versal_cmult
 		generic map(
 			g_is_xilinx         => True,
 			g_inputA_width      => g_in_a_w,

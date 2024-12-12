@@ -2,7 +2,7 @@ from vunit import VUnit
 from itertools import product
 from random import sample, choice
 import glob
-from os.path import dirname, abspath
+from os.path import join, abspath, split,realpath,dirname
 # Create VUnit instance by parsing command line arguments
 vu = VUnit.from_argv()
 vu.add_vhdl_builtins()
@@ -25,7 +25,7 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
     """
     Generate test by varying the generics of common_counter:
         in_dat_w : int {4,5,6,7,8}
-        conjugate_b : int {TRUE,FALSE}
+        conjugate_b : bool [TRUE,FALSE]
         out_dat_w : int {2*in_dat_w}
         out_pipeline : >=0
         inp_pipeline : {0,1}
@@ -63,7 +63,7 @@ def generate_tests(obj, in_dat_w, inp_pipeline,product_pipeline, out_pipeline, c
                 g_pipeline_output=out_pipeline, g_a_val_min=a_v_min, g_a_val_max=a_v_max, g_b_val_min=b_v_min, g_b_val_max=b_v_max)
             )
 
-script_dir = abspath(dirname(__file__))
+script_dir,_ = split(abspath(__file__))
 
 # CASPER MUlTIPLIER Library
 casper_multiplier_lib = vu.add_library("casper_multiplier_lib", allow_duplicate=True)
@@ -74,28 +74,28 @@ for x in txt:
 
 # COMMON COMPONENTS Library 
 common_components_lib = vu.add_library("common_components_lib",allow_duplicate=True)
-common_components_lib.add_source_files(script_dir + "/../common_components/common_pipeline.vhd")
-common_components_lib.add_source_files(script_dir + "/../common_components/common_pipeline_sl.vhd")
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline.vhd"))
+common_components_lib.add_source_files(join(script_dir, "../common_components/common_pipeline_sl.vhd"))
 
 # COMMON PACKAGE Library
 common_pkg_lib = vu.add_library("common_pkg_lib",allow_duplicate = True)
-common_pkg_lib.add_source_files(script_dir + "/../common_pkg/*.vhd")
-common_pkg_lib.add_source_files(script_dir + "/../common_pkg/tb_common_pkg.vhd")
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/*.vhd"))
+common_pkg_lib.add_source_files(join(script_dir, "../common_pkg/tb_common_pkg.vhd"))
 
 # TECHNOLOGY Library
 technology_lib = vu.add_library("technology_lib",allow_duplicate = True)
-technology_lib.add_source_files(script_dir + "/../technology/technology_select_pkg.vhd")
+technology_lib.add_source_files(join(script_dir, "../technology/technology_select_pkg.vhd"))
 
 # XPM Multiplier library
 ip_xpm_mult_lib = vu.add_library("ip_xpm_mult_lib", allow_duplicate=True)
-ip_xpm_mult_lib.add_source_files(script_dir + "/../ip_xpm/mult/*.vhd")
+ip_xpm_mult_lib.add_source_files(join(script_dir, "../ip_xpm/mult/*.vhd"))
 
 # STRATIXIV Multiplier library
 ip_stratixiv_mult_lib = vu.add_library("ip_stratixiv_mult_lib", allow_duplicate=True)
-ip_stratixiv_mult_lib.add_source_files(script_dir + "/../ip_stratixiv/mult/*rtl.vhd")
+ip_stratixiv_mult_lib.add_source_files(join(script_dir, "../ip_stratixiv/mult/*rtl.vhd"))
 
 inp_pipeline_values = 1
-product_pipeline_values = 0
+product_pipeline_values = 1
 adder_pipeline_values = 1
 out_pipeline_values = 1 
 in_dat_w_values = [18] + sample(range(4, 8), 1) 
@@ -119,7 +119,9 @@ generate_tests(
     in_dat_w_values,
     inp_pipeline_values,
     product_pipeline_values,
-    out_pipeline_values
+    out_pipeline_values,
+    None,
+    adder_pipeline_values
 )
 
 # RUN

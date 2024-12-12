@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: The fft_r2_bf_par describes a parallel complex butterfly.
 --
@@ -52,18 +56,19 @@ entity fft_r2_bf_par is
 	);
 	port(
 		clk      : in  std_logic;
-		rst      : in  std_logic;
 		scale    : in  std_logic;
 		x_in_re  : in  std_logic_vector;
 		x_in_im  : in  std_logic_vector;
 		y_in_re  : in  std_logic_vector;
 		y_in_im  : in  std_logic_vector;
+		in_sync  : in  std_logic;
 		in_val   : in  std_logic;
 		x_out_re : out std_logic_vector;
 		x_out_im : out std_logic_vector;
 		y_out_re : out std_logic_vector;
 		y_out_im : out std_logic_vector;
 		ovflw	 : out std_logic;
+		out_sync : out  std_logic;
 		out_val  : out std_logic
 	);
 end entity fft_r2_bf_par;
@@ -101,12 +106,18 @@ architecture str of fft_r2_bf_par is
 	signal mul_quant_im : std_logic_vector(y_out_im'range);
 	signal mul_out_val  : std_logic;
 	signal mul_in_val   : std_logic;
+	signal out_val_tmp1 : std_logic;
+	signal out_val_tmp2 : std_logic;
+	signal mul_in_rst   : std_logic;
+	signal valid_int    : std_logic;
 
 	signal ovflw_det	: std_logic_vector(1 DOWNTO 0); -- record overflow in any of the requantizings
     attribute keep_hierarchy : string;
     attribute keep_hierarchy of str : architecture is "yes";
 begin
 
+	mul_in_rst 					<= '1' when in_sync='1' and in_val='1' else '0';
+	valid_int 			    	<= in_val when in_sync='0' else '0';
 	------------------------------------------------------------------------------
 	-- complex butterfly
 	------------------------------------------------------------------------------
@@ -120,7 +131,7 @@ begin
 			in_a   => x_in_re,
 			in_b   => y_in_re,
 			in_sel => '1',
-			in_val => in_val,
+			in_val => valid_int,
 			ovflw  => ovflw_det(0),
 			out_c  => sum_re,
 			out_d  => dif_re
@@ -136,7 +147,7 @@ begin
 			in_a   => x_in_im,
 			in_b   => y_in_im,
 			in_sel => '1',
-			in_val => in_val,
+			in_val => valid_int,
 			ovflw  => ovflw_det(1),
 			out_c  => sum_im,
 			out_d  => dif_im
@@ -233,9 +244,27 @@ begin
 		)
 		port map(
 			clk     => clk,
-			in_dat  => in_val,
+			in_dat  => valid_int,
 			out_dat => mul_in_val
 		);
+	u_val_lat : entity common_components_lib.common_pipeline_sl
+		generic map(
+			g_pipeline => g_pipeline.bf_lat + g_pipeline.mul_lat + g_pipeline.stage_lat
+		)
+		port map(
+			clk     => clk,
+			in_dat  => in_val,
+			out_dat => out_val_tmp1
+		);
+   u_sync_lat : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => g_pipeline.bf_lat + g_pipeline.mul_lat + g_pipeline.stage_lat
+        )
+        port map(
+            clk     => clk,
+            in_dat  => in_sync,
+            out_dat => out_sync
+        );
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
@@ -250,7 +279,7 @@ begin
 		)
 		port map(
 			clk       	 	=> clk,
-			rst       	 	=> rst,
+			rst       	 	=> mul_in_rst,
 			weight_re 	 	=> weight_re,
 			weight_im 	 	=> weight_im,
 			in_re     	 	=> dif_out_re,
@@ -338,6 +367,7 @@ begin
 		port map(
 			clk     	=> clk,
 			in_dat  	=> mul_out_val,
-			out_dat 	=> out_val
+			out_dat 	=> out_val_tmp2
 		);
+	out_val <= out_val_tmp1 or out_val_tmp2;
 end str;

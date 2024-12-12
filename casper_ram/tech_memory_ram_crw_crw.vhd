@@ -29,14 +29,14 @@ LIBRARY ip_stratixiv_ram_lib;
 
 ENTITY tech_memory_ram_crw_crw IS
 	GENERIC(
-		g_adr_w             : NATURAL := 10;
-		g_dat_w             : NATURAL := 18;
-		g_nof_words         : NATURAL := 2 ** 5;
-		g_rd_latency        : NATURAL := 2; -- choose 1 or 2
-		g_init_file         : STRING  := "UNUSED";
-		g_ram_primitive     : STRING  := "auto";
-		g_port_a_write_mode : STRING  := "write_first";
-		g_port_b_write_mode : STRING  := "write_first"
+		g_adr_w         : NATURAL := 10;
+		g_dat_w         : NATURAL := 18;
+		g_nof_words     : NATURAL := 2**5;
+		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
+		g_init_file     : STRING  := "UNUSED";
+		g_ram_primitive : STRING  := "auto";
+		g_write_mode_a  : STRING  := "write_first";
+		g_write_mode_b  : STRING  := "write_first"
 	);
 	PORT(
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
@@ -62,14 +62,14 @@ BEGIN
 	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal) GENERATE -- Xilinx
 		u1 : ip_xpm_ram_crw_crw
 			generic map(
-				g_adr_w             => g_adr_w,
-				g_dat_w             => g_dat_w,
-				g_nof_words         => g_nof_words,
-				g_rd_latency        => g_rd_latency,
-				g_init_file         => g_init_file,
-				g_ram_primitive     => g_ram_primitive,
-				g_port_a_write_mode => g_port_a_write_mode,
-				g_port_b_write_mode => g_port_b_write_mode
+				g_adr_w         => g_adr_w,
+				g_dat_w         => g_dat_w,
+				g_nof_words     => g_nof_words,
+				g_rd_latency    => g_rd_latency,
+				g_init_file     => g_init_file,
+				g_ram_primitive => g_ram_primitive,
+				g_write_mode_a  => g_write_mode_a,
+				g_write_mode_b  => g_write_mode_b
 			)
 			port map(
 				address_a => address_a,

@@ -219,6 +219,9 @@ architecture tb of tb_fft_r2_par is
   signal in_re_arr              : t_slv_44_arr(g_fft.nof_points-1 downto 0);
   signal in_im_arr              : t_slv_44_arr(g_fft.nof_points-1 downto 0);
   signal in_val                 : std_logic:= '0';
+  signal dut_val                : std_logic:= '0';
+  signal dat_val                : std_logic:= '0';
+  signal in_sync                : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_gap                 : std_logic := '0';
 
@@ -231,6 +234,7 @@ architecture tb of tb_fft_r2_par is
   signal out_channel            : natural := 0;     -- not used for parallel FFT, set at default 0
   signal out_val_a              : std_logic:= '0';  -- for real A
   signal out_val_b              : std_logic:= '0';  -- for real B
+  signal out_sync               : std_logic:= '0';
   signal out_val_c              : std_logic:= '0';  -- for complex(A,B)
   signal out_cnt                : natural := 0;
   signal out_bin_cnt            : natural := 0;
@@ -284,6 +288,9 @@ begin
 
   o_clk <= clk;
   o_rst <= rst;
+  in_sync <= rst;
+  dut_val <= in_val when in_sync ='0' else '0';
+  dat_val <= out_val when out_sync = '0' else '0';
   o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
@@ -302,6 +309,8 @@ begin
     wait for 1 ns;
     in_re_arr <= (others=>(others=>'0'));
     in_im_arr <= (others=>(others=>'0'));
+    in_val <= '1';
+    wait for 2*c_clk_period;
     in_val <= '0';
     proc_common_wait_until_low(dut_clk, rst);         -- Wait until reset has finished
     proc_common_wait_some_cycles(dut_clk, 10);        -- Wait an additional amount of cycles
@@ -344,7 +353,7 @@ begin
   )
   port map(
     clk        => dut_clk,
-    rst        => rst,
+    in_sync    => in_sync,
     in_re_arr  => in_re_arr,
     in_im_arr  => in_im_arr,
     shiftreg   => (0=>'0', 1=>'0', others=>'1'),
@@ -352,12 +361,13 @@ begin
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,
     ovflw      => open,
+    out_sync   => out_sync,
     out_val    => out_val
   );
   
   -- Block count
-  in_val_cnt  <= in_val_cnt+1  when rising_edge(dut_clk) and in_val='1'  else in_val_cnt;
-  out_val_cnt <= out_val_cnt+1 when rising_edge(dut_clk) and out_val='1' else out_val_cnt;
+  in_val_cnt  <= in_val_cnt+1  when rising_edge(dut_clk) and in_val='1' and in_sync ='0'  else in_val_cnt;
+  out_val_cnt <= out_val_cnt+1 when rising_edge(dut_clk) and out_val = '1' and out_sync ='0' else out_val_cnt;
 
   -- Block count t_blk
   t_blk <= in_val_cnt;
@@ -366,7 +376,7 @@ begin
   p_capture_output : process(dut_clk)
   begin
     if rising_edge(dut_clk) then
-      if out_val='1' then
+      if out_val='1' and out_sync='0' then
         if c_in_complex then
           for I in 0 to g_fft.nof_points-1 loop
             output_data_c_re_arr(out_val_cnt*g_fft.nof_points + I) <= TO_SINT(out_re_arr(I));
@@ -456,8 +466,8 @@ begin
   begin
     -- Wait until tb_end_dut
     proc_common_wait_until_high(tb_clk, tb_end_dut);
-    assert in_val_cnt > 0           report "Test did not run, no valid input data"  severity failure;
-    assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity failure;
+    assert in_val_cnt > 0           report "Test did not run, no valid input data"  severity error;
+    assert out_val_cnt = in_val_cnt report "Unexpected number of valid output data" severity error;
     wait;
   end process;
 
@@ -496,22 +506,22 @@ begin
           v_test_pass := diff_re_a_scope >= -g_diff_margin and diff_re_a_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data A real error, expected: " & integer'image(exp_re_a_scope) & "but got: " & integer'image(out_re_a_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_a_scope >= -g_diff_margin and diff_im_a_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data A imag error, expected: " & integer'image(exp_im_a_scope) & "but got: " & integer'image(out_im_a_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_re_b_scope >= -g_diff_margin and diff_re_b_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data B real error, expected: " & integer'image(exp_re_b_scope) & "but got: " & integer'image(out_re_b_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_b_scope >= -g_diff_margin and diff_im_b_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data B imag error, expected: " & integer'image(exp_im_b_scope) & "but got: " & integer'image(out_im_b_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
         end if;
       else
@@ -519,12 +529,12 @@ begin
           v_test_pass := diff_re_c_scope >= -g_diff_margin and diff_re_c_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data C real error, expected: " & integer'image(exp_re_c_scope) & "but got: " & integer'image(out_re_c_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
           v_test_pass := diff_im_c_scope >= -g_diff_margin and diff_im_c_scope <= g_diff_margin;
           if not v_test_pass then
             v_test_msg := pad("Output data C imag error, expected: " & integer'image(exp_im_c_scope) & "but got: " & integer'image(out_im_c_scope),o_test_msg'length,'.');
-            report v_test_msg severity failure;
+            report v_test_msg severity error;
           end if;
         end if;
       end if;

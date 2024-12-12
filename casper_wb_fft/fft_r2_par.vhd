@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 -- Purpose: The fft_r2_par unit performs a complex parallel FFT.
 --
 --          There are two optional features: 
@@ -52,7 +56,7 @@ entity fft_r2_par is
     );
     port(
         clk        : in  std_logic;     --! Clock
-        rst        : in  std_logic := '0'; --! Reset
+        in_sync    : in  std_logic := '0'; --! Sync signal in
         in_re_arr  : in  t_slv_44_arr(g_fft.nof_points - 1 downto 0);--(g_fft.stage_dat_w-1 downto 0); --! Input real data (nof_points wide)
         in_im_arr  : in  t_slv_44_arr(g_fft.nof_points - 1 downto 0);--g_fft.stage_dat_w-1 downto 0); --! Input imag data (nof_points wide)
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long shiftreg
@@ -60,6 +64,7 @@ entity fft_r2_par is
         out_re_arr : out t_slv_64_arr(g_fft.nof_points - 1 downto 0); --! Output real data (nof_points wide)
         out_im_arr : out t_slv_64_arr(g_fft.nof_points - 1 downto 0); --! Output imag data (nof_points wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 downto 0); --! Par stage long ovflw register
+        out_sync   : out std_logic; --! Sync signal out
         out_val    : out std_logic      --! Out data valid
     );
 end entity fft_r2_par;
@@ -144,6 +149,7 @@ architecture str of fft_r2_par is
     type t_stage_sum_arr is array (integer range <>) of std_logic_vector(g_fft.stage_dat_w downto 0);
     type t_data_arr2 is array (c_nof_stages downto 0) of t_stage_dat_arr(g_fft.nof_points - 1 downto 0);
     type t_val_arr is array (c_nof_stages downto 0) of std_logic_vector(g_fft.nof_points - 1 downto 0);
+    constant c_val_arr : t_val_arr := (others=>(others=>'0'));
 
     -- Handle the overflow from multiple BFs per stage
     type t_par_slv_arr_bf_ovflw IS ARRAY (c_nof_stages - 1 DOWNTO 0) OF STD_LOGIC_VECTOR(c_nof_bf_per_stage - 1 downto 0);
@@ -151,7 +157,8 @@ architecture str of fft_r2_par is
 
     signal data_re    : t_data_arr2;
     signal data_im    : t_data_arr2;
-    signal data_val   : t_val_arr;
+    signal data_val   : t_val_arr := c_val_arr;
+    signal data_sync  : t_val_arr := c_val_arr;
     signal int_re_arr : t_stage_dat_arr(g_fft.nof_points - 1 downto 0);
     signal int_im_arr : t_stage_dat_arr(g_fft.nof_points - 1 downto 0);
     signal fft_re_arr : t_stage_dat_arr(g_fft.nof_points - 1 downto 0);
@@ -159,6 +166,8 @@ architecture str of fft_r2_par is
     signal add_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
     signal sub_arr    : t_stage_sum_arr(g_fft.nof_points - 1 downto 0);
     signal int_val    : std_logic;
+    signal int_sync   : std_logic;
+    signal fft_sync    : std_logic;
     signal fft_val    : std_logic;
     attribute keep_hierarchy : string; -- don't optimize across units, to allow for faster speed
     attribute keep_hierarchy of str : architecture is "yes";
@@ -176,6 +185,7 @@ begin
         data_im(c_nof_stages)(2 * I)     <= scale_and_resize_svec(in_im_arr(I), c_in_scale_w, g_fft.stage_dat_w);
         data_im(c_nof_stages)(2 * I + 1) <= scale_and_resize_svec(in_im_arr(I + g_fft.nof_points / 2), c_in_scale_w, g_fft.stage_dat_w);
         data_val(c_nof_stages)(I)        <= in_val;
+        data_sync(c_nof_stages)(I)       <= in_sync;
     end generate;
 
     ------------------------------------------------------------------------------
@@ -197,18 +207,19 @@ begin
                 )
                 port map(
                     clk      => clk,
-                    rst      => rst,
                     scale    => shiftreg(stage - 1), -- Scale or not at stage
                     x_in_re  => data_re(stage)(2 * element),
                     x_in_im  => data_im(stage)(2 * element),
                     y_in_re  => data_re(stage)(2 * element + 1),
                     y_in_im  => data_im(stage)(2 * element + 1),
+                    in_sync  => data_sync(stage)(element),
                     in_val   => data_val(stage)(element),
                     x_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
                     x_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element, stage - 1, g_fft.nof_points)),
                     y_out_re => data_re(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
                     y_out_im => data_im(stage - 1)(func_butterfly_connect(2 * element + 1, stage - 1, g_fft.nof_points)),
                     ovflw    => fft_par_bf_ovflw_arr(stage - 1)(element), -- Record if overflow occured at stage
+                    out_sync => data_sync(stage -1)(element),
                     out_val  => data_val(stage - 1)(element)
                 );
         end generate;
@@ -240,6 +251,7 @@ begin
         int_im_arr <= data_im(0);
     end generate;
     int_val <= data_val(0)(0);
+    int_sync <= data_sync(0)(0);
 
     --------------------------------------------------------------------------------
     -- Optional separate 
@@ -439,6 +451,15 @@ begin
                 in_dat  => int_val,
                 out_dat => fft_val
             );
+            u_seperate_fft_sync : entity common_components_lib.common_pipeline_sl
+            generic map(
+                g_pipeline => c_pipeline_add_sub
+            )
+            port map(
+                clk     => clk,
+                in_dat  => int_sync,
+                out_dat => fft_sync
+            );
     end generate;
 
     no_separate : if g_fft.use_separate = false generate
@@ -447,6 +468,7 @@ begin
             fft_im_arr(I) <= int_im_arr(I);
         end generate;
         fft_val <= int_val;
+        fft_sync <= int_sync;
     end generate;
 
     ------------------------------------------------------------------------------
@@ -502,9 +524,19 @@ begin
             g_pipeline => c_pipeline_remove_lsb
         )
         port map(
-            rst     => rst,
+            rst     => '0',
             clk     => clk,
             in_dat  => fft_val,
             out_dat => out_val
+        );
+    u_out_sync : entity common_components_lib.common_pipeline_sl
+        generic map(
+            g_pipeline => c_pipeline_remove_lsb
+        )
+        port map(
+            rst     => '0',
+            clk     => clk,
+            in_dat  => fft_sync,
+            out_dat => out_sync
         );
 end str;

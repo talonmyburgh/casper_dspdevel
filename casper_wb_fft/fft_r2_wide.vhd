@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 -- Purpose: The fft_r2_wide unit performs a complex FFT that is partly pipelined 
 --          and partly parallel. 
 --
@@ -72,22 +76,22 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 
 entity fft_r2_wide is
     generic(
-        g_fft            : t_fft            := c_fft; --! generics for the FFT
-        g_pft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
-        g_fft_pipeline   : t_fft_pipeline   := c_fft_pipeline; --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
-        g_alt_output     : boolean          := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
-        g_use_variant    : string           := "3DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
-        g_use_dsp        : string           := "yes"; --! = "yes" or "no"
-        g_ovflw_behav    : string           := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-        g_round          : t_rounding_mode  := ROUND; --! = ROUND, ROUNDINF or TRUNCATE will default to TRUNCATE if invalid option used
-        g_use_mult_round : t_rounding_mode  := TRUNCATE;
-        g_ram_primitive  : string           := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
-        g_twid_file_stem : string           := "UNUSED" --! twid file stem location
+        g_fft            : t_fft           := c_fft; --! generics for the FFT
+        g_pft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
+        g_fft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
+        g_alt_output     : boolean         := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
+        g_use_variant    : string          := "3DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
+        g_use_dsp        : string          := "yes"; --! = "yes" or "no"
+        g_ovflw_behav    : string          := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
+        g_round          : t_rounding_mode := ROUND; --! = ROUND, ROUNDINF or TRUNCATE will default to TRUNCATE if invalid option used
+        g_use_mult_round : t_rounding_mode := TRUNCATE;
+        g_ram_primitive  : string          := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
+        g_twid_file_stem : string          := "UNUSED" --! twid file stem location
     );
     port(
         clken      : in  std_logic;     --! Clock enable
         clk        : in  std_logic;     --! Clock
-        rst        : in  std_logic := '0'; --! Reset
+        in_sync    : in  std_logic := '0'; --! Input sync
         shiftreg   : in  std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Shift register
         in_re_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input real data (wb_factor wide)
         in_im_arr  : in  t_slv_44_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.in_dat_w-1 downto 0); --! Input imag data (wb_factor wide)
@@ -95,6 +99,7 @@ entity fft_r2_wide is
         out_re_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output real data (wb_factor wide)
         out_im_arr : out t_slv_64_arr(g_fft.wb_factor - 1 downto 0); --(g_fft.out_dat_w-1 downto 0); --! Output imag data (wb_factor wide)
         ovflw      : out std_logic_vector(ceil_log2(g_fft.nof_points) - 1 DOWNTO 0); --! Overflow register
+        out_sync   : out std_logic;     --! Output sync
         out_val    : out std_logic      --! Out data valid
     );
 end entity fft_r2_wide;
@@ -150,7 +155,7 @@ architecture rtl of fft_r2_wide is
         return v_return;
     end;
 
-    constant c_clip  : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);
+    constant c_clip : boolean := sel_a_b(g_ovflw_behav = "SATURATE", true, false);
 
     constant c_pipeline_remove_lsb : natural := 0;
 
@@ -169,9 +174,9 @@ architecture rtl of fft_r2_wide is
     type t_fft_slv_arr_ovflw_wb IS ARRAY (c_nof_stages_pipe - 1 DOWNTO 0) OF STD_LOGIC_VECTOR(g_fft.wb_factor - 1 downto 0);
     signal fft_pipe_ovflw_arr    : t_fft_slv_arr_ovflw;
     signal fft_pipe_ovflw_wb_arr : t_fft_slv_arr_ovflw_wb;
-    type t_stage_data_width is array (g_fft.wb_factor - 1 downto 0) of std_logic_vector(g_fft.stage_dat_w-1 downto 0);
-    signal in_fft_pipe_re_arr : t_stage_data_width;
-    signal in_fft_pipe_im_arr : t_stage_data_width;
+    type t_stage_data_width is array (g_fft.wb_factor - 1 downto 0) of std_logic_vector(g_fft.stage_dat_w - 1 downto 0);
+    signal in_fft_pipe_re_arr    : t_stage_data_width;
+    signal in_fft_pipe_im_arr    : t_stage_data_width;
 
     signal out_fft_pipe_re_arr : t_stage_data_width;
     signal out_fft_pipe_im_arr : t_stage_data_width;
@@ -185,17 +190,22 @@ architecture rtl of fft_r2_wide is
     signal fft_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal fft_out_val    : std_logic;
+    signal fft_out_sync   : std_logic;
 
     signal sep_out_re_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_im_arr : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal sep_out_val    : std_logic;
+    signal sep_out_sync   : std_logic;
 
     signal par_stg_fft_re_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
     signal par_stg_fft_im_in  : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
     signal par_stg_fft_re_out : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
     signal par_stg_fft_im_out : t_slv_64_arr(g_fft.wb_factor - 1 downto 0);
 
-    signal int_val : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_val    : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_sync   : std_logic_vector(g_fft.wb_factor - 1 downto 0);
+    signal int_val_d  : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others => '0');
+    signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others => '0');
 
 begin
 
@@ -216,7 +226,7 @@ begin
             port map(
                 clken    => clken,
                 clk      => clk,
-                rst      => rst,
+                in_sync  => in_sync,
                 shiftreg => shiftreg,   -- full length shiftreg here since stages = log2(pts)
                 in_re    => in_re_arr(0)(g_fft.in_dat_w - 1 downto 0),
                 in_im    => in_im_arr(0)(g_fft.in_dat_w - 1 downto 0),
@@ -224,11 +234,12 @@ begin
                 out_re   => fft_pipe_out_re,
                 out_im   => fft_pipe_out_im,
                 ovflw    => ovflw,
+                out_sync => out_sync,
                 out_val  => out_val
             );
 
-        out_re_arr(0) <= RESIZE_SVEC(fft_pipe_out_re,64);
-        out_im_arr(0) <= RESIZE_SVEC(fft_pipe_out_im,64);
+        out_re_arr(0) <= RESIZE_SVEC(fft_pipe_out_re, 64);
+        out_im_arr(0) <= RESIZE_SVEC(fft_pipe_out_im, 64);
     end generate;
 
     -- Default to fft_r2_par when g_fft.wb_factor=g_fft.nof_points
@@ -245,17 +256,17 @@ begin
 
         u_fft_r2_par : entity work.fft_r2_par
             generic map(
-                g_fft         => g_fft,
-                g_pipeline    => g_fft_pipeline,
-                g_use_variant => g_use_variant,
-                g_use_dsp     => g_use_dsp,
-                g_ovflw_behav => g_ovflw_behav,
+                g_fft            => g_fft,
+                g_pipeline       => g_fft_pipeline,
+                g_use_variant    => g_use_variant,
+                g_use_dsp        => g_use_dsp,
+                g_ovflw_behav    => g_ovflw_behav,
                 g_use_mult_round => g_use_mult_round,
-                g_round      => g_round
+                g_round          => g_round
             )
             port map(
                 clk        => clk,
-                rst        => rst,
+                in_sync    => in_sync,
                 in_re_arr  => par_stg_fft_re_in,
                 in_im_arr  => par_stg_fft_im_in,
                 shiftreg   => shiftreg,
@@ -263,6 +274,7 @@ begin
                 out_re_arr => par_stg_fft_re_out,
                 out_im_arr => par_stg_fft_im_out,
                 ovflw      => ovflw,
+                out_sync   => out_sync,
                 out_val    => out_val
             );
     end generate;
@@ -299,7 +311,7 @@ begin
                 port map(
                     clken    => clken,
                     clk      => clk,
-                    rst      => rst,
+                    in_sync  => in_sync,
                     shiftreg => shiftreg(c_nof_stages - 1 DOWNTO c_nof_stages_par), -- Only c_nof_stages_pipe of shiftreg
                     in_re    => in_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
                     in_im    => in_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).in_dat_w - 1 downto 0),
@@ -307,6 +319,7 @@ begin
                     out_re   => out_fft_pipe_re_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
                     out_im   => out_fft_pipe_im_arr(I)(c_fft_r2_pipe_arr(I).out_dat_w - 1 downto 0),
                     ovflw    => fft_pipe_ovflw_arr(I),
+                    out_sync => int_sync(I),
                     out_val  => int_val(I)
                 );
         end generate;
@@ -325,33 +338,40 @@ begin
 
         -- Create input for parallel FFT
         gen_inputs_for_par : for I in g_fft.wb_factor - 1 downto 0 generate
-        
-            in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
-            in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0),44);
+            reg_pipe_par : process(clk)
+            begin
+                if rising_edge(clk) then
+                    int_sync_d(I)        <= int_sync(I);
+                    int_val_d(I)         <= int_val(I);
+                    in_fft_par_re_arr(I) <= RESIZE_SVEC(out_fft_pipe_re_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                    in_fft_par_im_arr(I) <= RESIZE_SVEC(out_fft_pipe_im_arr(I)(g_fft.stage_dat_w - 1 downto 0), 44);
+                end if;
+            end process;
         end generate;
 
         -- The g_fft.wb_factor outputs of the pipelined fft's are offered
         -- to the input of a single parallel FFT. 
         u_fft : entity work.fft_r2_par
             generic map(
-                g_fft         => c_fft_r2_par, -- generics for the FFT
-                g_pipeline    => g_fft_pipeline, -- pipeline generics for the parallel FFT
-                g_use_variant => g_use_variant,
-                g_use_dsp     => g_use_dsp,
-                g_ovflw_behav => g_ovflw_behav,
-                g_use_mult_round=>g_use_mult_round,
-                g_round       => g_round
+                g_fft            => c_fft_r2_par, -- generics for the FFT
+                g_pipeline       => g_fft_pipeline, -- pipeline generics for the parallel FFT
+                g_use_variant    => g_use_variant,
+                g_use_dsp        => g_use_dsp,
+                g_ovflw_behav    => g_ovflw_behav,
+                g_use_mult_round => g_use_mult_round,
+                g_round          => g_round
             )
             port map(
                 clk        => clk,
-                rst        => rst,
                 in_re_arr  => in_fft_par_re_arr,
                 in_im_arr  => in_fft_par_im_arr,
                 shiftreg   => shiftreg(c_nof_stages_par - 1 DOWNTO 0), -- Only c_stage_par of shiftreg
-                in_val     => int_val(0),
+                in_val     => int_val_d(0),
+                in_sync    => int_sync_d(0),
                 out_re_arr => fft_out_re_arr,
                 out_im_arr => fft_out_im_arr,
                 ovflw      => ovflw(c_nof_stages_par - 1 DOWNTO 0),
+                out_sync   => fft_out_sync,
                 out_val    => fft_out_val
             );
 
@@ -361,6 +381,7 @@ begin
         -- When the separate functionality is required:
 
         gen_separate : if g_fft.use_separate generate
+
             u_separator : entity work.fft_sepa_wide
                 generic map(
                     g_fft           => g_fft,
@@ -370,12 +391,13 @@ begin
                 port map(
                     clken      => clken,
                     clk        => clk,
-                    rst        => rst,
+                    in_sync    => fft_out_sync,
                     in_re_arr  => fft_out_re_arr,
                     in_im_arr  => fft_out_im_arr,
                     in_val     => fft_out_val,
                     out_re_arr => sep_out_re_arr,
                     out_im_arr => sep_out_im_arr,
+                    out_sync   => sep_out_sync,
                     out_val    => sep_out_val
                 );
         end generate;
@@ -385,6 +407,7 @@ begin
             sep_out_re_arr <= fft_out_re_arr;
             sep_out_im_arr <= fft_out_im_arr;
             sep_out_val    <= fft_out_val;
+            sep_out_sync   <= fft_out_sync;
         end generate;
 
         ---------------------------------------------------------------
@@ -441,13 +464,28 @@ begin
                 g_out_invert  => FALSE
             )
             port map(
-                rst     => rst,
+                rst     => '0',
                 clk     => clk,
                 clken   => clken,
                 in_clr  => '0',
                 in_en   => '1',
                 in_dat  => sep_out_val,
                 out_dat => out_val
+            );
+        u_out_sync : entity common_components_lib.common_pipeline_sl
+            generic map(
+                g_pipeline    => c_pipeline_remove_lsb,
+                g_reset_value => 0,
+                g_out_invert  => FALSE
+            )
+            port map(
+                rst     => '0',
+                clk     => clk,
+                clken   => clken,
+                in_clr  => '0',
+                in_en   => '1',
+                in_dat  => sep_out_sync,
+                out_dat => out_sync
             );
 
     end generate;

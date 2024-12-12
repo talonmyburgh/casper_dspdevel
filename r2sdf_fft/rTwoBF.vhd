@@ -19,8 +19,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
---! Libraries: IEEE, common_pkg_lib, common_components_lib
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 library ieee, common_pkg_lib, common_components_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;
@@ -89,11 +92,17 @@ end;
 
 architecture rtl of rTwoBF is
 
-	signal in_a_dly  : std_logic_vector(in_a'range);
-	signal out_c_buf : std_logic_vector(out_c'range);
-	signal out_d_ely : std_logic_vector(out_d'range);
-	signal ovflw_imm  : std_logic_vector(0 downto 0);
-	signal ovflw_dly  : std_logic_vector(0 downto 0);
+	--summation svec must be one larger than the largest svec
+	constant c_sum_bit_width : natural := sel_a_b(in_a'length > in_b'length, in_a'length, in_b'length) + 1;
+
+	signal in_a_dly  : std_logic_vector(in_a'range) := (others=>'0');
+	signal out_c_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
+	signal out_d_buf : std_logic_vector(c_sum_bit_width - 1 DOWNTO 0) := (others=>'0');
+	signal out_d_ely : std_logic_vector(out_d'range) := (others=>'0');
+	signal ovflw_add  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_sub  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_imm  : std_logic_vector(0 downto 0) := "0";
+	signal ovflw_dly  : std_logic_vector(0 downto 0) := "0";
 
 begin
 
@@ -135,15 +144,34 @@ begin
 		);
 
 	------------------------------------------------------------------------------------
-	-- PRE-EMPT overflow in addition and subtraction
+	-- DETECT overflow in addition and subtraction
 	------------------------------------------------------------------------------------
-	ovflw_imm(0) <= (S_ADD_OVFLW_DET(in_a_dly, in_b, out_c_buf) or S_SUB_OVFLW_DET(in_a_dly, in_b, out_d_ely))
-	                   when in_sel = '1' else '0';
+	
+	p_det_ovflw : process(clk)
+	begin
+		if rising_edge(clk) then
+			ovflw_add(0) <= '0';
+			for checkbit in out_c_buf'length-1 downto out_c'length loop
+				if out_c_buf(checkbit) /= out_c_buf(out_c'length-1) then
+					ovflw_add(0) <= '1';
+				end if;
+			end loop;
+			ovflw_sub(0) <= '0';
+			for checkbit in out_d_buf'length-1 downto out_d'length loop
+				if out_d_buf(checkbit) /= out_d_buf(out_d'length-1) then
+					ovflw_sub(0) <= '1';
+				end if;
+			end loop;
+			ovflw_imm(0) <= ovflw_add(0) or ovflw_sub(0);
+		end if;
+	end process;
+
 	ovflw <= ovflw_dly(0) when in_val = '1' else ovflw_imm(0);
 
 	-- BF function: add, subtract or pass the data on dependent on in_sel
-	out_c_buf <= ADD_SVEC(in_a_dly, in_b, out_c'length) when in_sel = '1' else in_a_dly;
-	out_c 		<= out_c_buf;
-	out_d_ely <= SUB_SVEC(in_a_dly, in_b, out_d'length) when in_sel = '1' else in_b;
+	out_c_buf <= ADD_SVEC(in_a_dly, in_b, c_sum_bit_width) when in_sel = '1' else RESIZE_SVEC(in_a_dly, c_sum_bit_width);
+	out_c 		<= RESIZE_SVEC(out_c_buf, out_c'length);
+	out_d_buf <= SUB_SVEC(in_a_dly, in_b, c_sum_bit_width) when in_sel = '1' else RESIZE_SVEC(in_b, c_sum_bit_width);
+	out_d_ely <= RESIZE_SVEC(out_d_buf, out_d'length);	
 
 end rtl;

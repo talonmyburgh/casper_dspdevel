@@ -83,11 +83,13 @@ BEGIN
             -- Keep the default latencys
             g_stage_lat         => 1,
             g_weight_lat        => 2,
-            g_mult_lat          => 5,
+            g_mult_lat          => 4,
             g_bf_lat            => 1,
             g_bf_use_zdly       => 1,
             g_bf_in_a_zdly      => 0,
             g_bf_out_d_zdly     => 0,
+            g_bf_dsp_dly        => 0,
+
             -- Automaticall choose Ram Primitives.
             g_ram_primitive     => "auto"
         )
@@ -280,7 +282,7 @@ BEGIN
     for n in 1 to (16*g_fftsize_log2) loop
       wait until rising_edge(clk);
     end loop;
-
+    report "Data_cnt=" & integer'image(data_cnt) & " words_expected=" & integer'image(words_expected) severity note;
     check(data_cnt>=words_expected,"tb_vu_rtwosdf_vfmodel: Data output count less than input data");
     endsim  <= '1';
 		test_runner_cleanup(runner);

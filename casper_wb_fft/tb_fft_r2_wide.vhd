@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+-- Adapted for use in the CASPER ecosystem by Talon Myburgh under Mydon Solutions
+-- myburgh.talon@gmail.com
+-- https://github.com/talonmyburgh | https://github.com/MydonSolutions
+---------------------------------------------------------------------------------
 --
 -- Purpose: Test bench for fft_r2_wide.vhd using file data
 --
@@ -228,6 +232,9 @@ architecture tb of tb_fft_r2_wide is
   signal in_re_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_im_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_val                 : std_logic:= '0';
+  signal dut_val                : std_logic:= '0';
+  signal dat_val                : std_logic:= '0';
+  signal in_sync                : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_gap                 : std_logic := '0';
 
@@ -241,6 +248,7 @@ architecture tb of tb_fft_r2_wide is
   signal out_im_arr             : t_slv_64_arr(g_fft.wb_factor-1 downto 0);
   signal out_re_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_im_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
+  signal out_sync               : std_logic:= '0';
   signal out_val                : std_logic:= '0';  -- for parallel output
   signal out_val_cnt            : natural := 0;
   
@@ -296,6 +304,9 @@ begin
 
   o_clk <= clk;
   o_rst <= rst;
+  in_sync <= rst;
+  dut_val <= in_val when in_sync ='0' else '0';
+  dat_val <= out_val when out_sync = '0' else '0';
   o_tb_end <= tb_end;
 
   ---------------------------------------------------------------
@@ -313,6 +324,8 @@ begin
     wait for 1 ns;
     in_re_arr <= (others=>(others=>'0'));
     in_im_arr <= (others=>(others=>'0'));
+    in_val <= '1';
+    wait for 2*c_clk_period;
     in_val <= '0';
     proc_common_wait_until_low(clk, rst);         -- Wait until reset has finished
     proc_common_wait_some_cycles(clk, 10);        -- Wait an additional amount of cycles
@@ -365,7 +378,7 @@ begin
   port map(
     clk        => clk,
     clken      => '1',
-    rst        => rst,
+    in_sync    => in_sync,
     shiftreg   => (0=>'0', 1=>'0', others=>'1'),
     in_re_arr  => in_re_arr44,
     in_im_arr  => in_im_arr44,
@@ -373,12 +386,13 @@ begin
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,
     ovflw      => open,
+    out_sync   => out_sync,
     out_val    => out_val
   );
   
   -- Data valid count
-  in_val_cnt  <= in_val_cnt+1  when rising_edge(clk) and in_val='1'  else in_val_cnt;
-  out_val_cnt <= out_val_cnt+1 when rising_edge(clk) and out_val='1' else out_val_cnt;
+  in_val_cnt  <= in_val_cnt+1  when rising_edge(clk) and in_val='1' and in_sync ='0'  else in_val_cnt;
+  out_val_cnt <= out_val_cnt+1 when rising_edge(clk) and out_val = '1' and out_sync ='0' else out_val_cnt;
 
   -- Block count t_blk time axis
   t_blk <= in_val_cnt / (g_fft.nof_points /g_fft.wb_factor);                       
@@ -455,7 +469,7 @@ begin
   ---------------------------------------------------------------
   -- VERIFY OUTPUT DATA
   ---------------------------------------------------------------
-  verify_data : process(rst,clk,out_val_a,out_val_b,out_val_c)
+  verify_data : process(clk)
     VARIABLE v_test_pass : BOOLEAN := TRUE;
     VARIABLE v_test_msg : STRING( 1 to 80 ) := (others => '.');  
   begin
@@ -599,7 +613,7 @@ begin
 
     -- Streaming input data
     in_data   => out_re_data,
-    in_val    => out_val,
+    in_val    => dat_val,
 
     -- Scope output samples
     out_dat   => OPEN,
@@ -620,7 +634,7 @@ begin
 
     -- Streaming input data
     in_data   => out_im_data,
-    in_val    => out_val,
+    in_val    => dat_val,
 
     -- Scope output samples
     out_dat   => OPEN,
