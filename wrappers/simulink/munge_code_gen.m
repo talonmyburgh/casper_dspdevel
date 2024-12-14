@@ -9,6 +9,7 @@ function vhdlfile = munge_code_gen(number_of_divisions, division_size_bits, pack
     %and what it will be named
     vhdlfile = fullfile(vhdlfilefolder, [bdroot '_munge_static.vhd']);              %filename for vhd file
 
+    inout_port_count = number_of_divisions*division_size_bits;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%upperdec%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     upperlines = [
     "LIBRARY IEEE, common_pkg_lib, casper_flow_control_lib;"
@@ -18,8 +19,8 @@ function vhdlfile = munge_code_gen(number_of_divisions, division_size_bits, pack
     "  port ("
     "    clk   : in std_logic := '1';"
     "    ce    : in std_logic := '1';"
-    "    din   : in std_logic_vector;"
-    "    dout  : out std_logic_vector"
+    sprintf("    din   : in std_logic_vector(%d-1 downto 0);", inout_port_count)
+    sprintf("    dout  : out std_logic_vector(%d-1 downto 0)", inout_port_count)
     "  );"
     "end ENTITY;"
     "ARCHITECTURE rtl of munge_static is"
