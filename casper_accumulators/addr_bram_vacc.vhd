@@ -101,7 +101,8 @@ port map(
 --------------------------------------------------------------
 -- resize din signal
 --------------------------------------------------------------
-s_a <= RESIZE_SVEC(s_delay_din, g_bit_w);
+
+s_a <= RESIZE_SVEC(s_delay_din, g_bit_w) when g_output_type = "SIGNED" else RESIZE_UVEC(s_delay_din, g_bit_w);
 
 --------------------------------------------------------------
 -- adder block

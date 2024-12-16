@@ -50,7 +50,7 @@ function addr_bram_vacc_config(this_block)
 
   this_block.addSimulinkOutport('we');
   we_port = this_block.port('we');
-  we_port.setType('Ufix_1_0');
+  we_port.setType('Bool');
   we_port.useHDLVector(false);
 
   % -----------------------------
