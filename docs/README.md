@@ -1,0 +1,1 @@
+Only the `sphinx` python module is required to `make` the documentation. On windows the following is executed: `./make.bat html`.
