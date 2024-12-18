@@ -57,7 +57,7 @@ jobs:
             casper_adder/.*\.vhd$
             casper_adder/run.py
       - name: Assess bus files changes
-        id: counter
+        id: bus
         uses: tj-actions/changed-files@v41.0.0
         with:
           files: |
