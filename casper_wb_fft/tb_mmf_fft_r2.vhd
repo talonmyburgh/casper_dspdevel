@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 --
 -- Purpose: Testbench for the radix-2 FFT.
 --

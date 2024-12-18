@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 -- Purpose: Composition of the SOSI output streams for the fft_wide_unit. 
 --
 -- Description: This unit monitors the in_val signal. Based on the assertion of the 
