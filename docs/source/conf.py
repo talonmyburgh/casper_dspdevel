@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'casper_dspdevel'
-copyright = '2020, Talon Myburgh'
+copyright = '2024, Talon Myburgh'
 author = 'Talon Myburgh'
 
 # The full version, including alpha/beta/rc tags
