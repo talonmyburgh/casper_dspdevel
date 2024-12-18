@@ -573,7 +573,7 @@ jobs:
     runs-on: ubuntu-latest
     container: ghdl/vunit:llvm-master
     needs: [files_changed]
-    if: true # needs.files_changed.outputs.reorder == 'true'
+    if: needs.files_changed.outputs.reorder == 'true'
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:

@@ -288,8 +288,8 @@ begin
 
         -- Inputs are prepared/scaled for the pipelined ffts
         gen_fft_pipe_inputs : for I in 0 to g_fft.wb_factor - 1 generate
-            in_fft_pipe_re_arr(I) <= scale_and_resize_svec(in_re_arr(I), c_in_scale_w, 44);
-            in_fft_pipe_im_arr(I) <= scale_and_resize_svec(in_im_arr(I), c_in_scale_w, 44);
+            in_fft_pipe_re_arr(I) <= scale_and_resize_svec(in_re_arr(I), c_in_scale_w, g_fft.stage_dat_w);
+            in_fft_pipe_im_arr(I) <= scale_and_resize_svec(in_im_arr(I), c_in_scale_w, g_fft.stage_dat_w);
         end generate;
 
         -- The first stage of the wideband fft consist of the generation of g_fft.wb_factor
