@@ -34,7 +34,7 @@ casper_flow_control_lib.add_source_files(join(script_dir, "../casper_flow_contro
 
 # CASPER BUS Library
 casper_bus_lib = vu.add_library("casper_bus_lib")
-casper_bus_lib.add_source_file(join(script_dir, "../casper_bus/*.vhd"))
+casper_bus_lib.add_source_file(join(script_dir, "./*.vhd"))
 
 TB_BUS_MUX = casper_bus_lib.test_bench("tb_tb_vu_bus_mux")
 for delays in [0,1,2]:
