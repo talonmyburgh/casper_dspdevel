@@ -27,6 +27,10 @@ casper_delay_lib.add_source_files(join(script_dir, "../casper_delay/delay_bram_e
 casper_accumulators_lib = vu.add_library("casper_accumulators_lib")
 casper_accumulators_lib.add_source_files(join(script_dir, "../casper_accumulators/simple_accumulator.vhd"))
 
+# Create library 'casper_flow_control_lib'
+casper_flow_control_lib = vu.add_library("casper_flow_control_lib")
+casper_flow_control_lib.add_source_files(join(script_dir, "../casper_flow_control/bus_create.vhd"))
+
 
 # CASPER BUS Library
 casper_bus_lib = vu.add_library("casper_bus_lib")
@@ -44,6 +48,18 @@ for delays in [0,1,2]:
                     "g_bit_width": input_width
                 }
             )
+
+TB_REPLICATE = casper_bus_lib.test_bench("tb_tb_vu_replicate")
+for delay in [0,1,2]:
+    for replication_factor in [2, 3]:
+        TB_REPLICATE.add_config(
+            name = f"Replicate (x{replication_factor}) with delay {delay}",
+            generics={
+                "g_replication_factor": replication_factor,
+                "g_latency": delay,
+                "g_replicated_value": 6
+            }
+        )
 
 TB_BUS_ACC = casper_bus_lib.test_bench("tb_tb_vu_bus_accumulator")
 TB_BUS_ACC.add_config(
