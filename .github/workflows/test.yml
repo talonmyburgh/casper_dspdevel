@@ -37,7 +37,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out only the latest commit to assess which files changed
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
@@ -213,7 +213,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -246,7 +246,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_accumulators_report
           path: ./casper_accumulators/casper_accumulators_report.xml
@@ -267,7 +267,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -296,7 +296,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_adder_report
           path: ./casper_adder/casper_adder_report.xml
@@ -318,7 +318,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -347,7 +347,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_bus_report
           path: ./casper_bus/casper_bus_report.xml
@@ -368,7 +368,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -397,7 +397,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_counter_report
           path: ./casper_counter/casper_counter_report.xml
@@ -418,7 +418,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -451,7 +451,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_delay_report
           path: ./casper_delay/casper_delay_report.xml
@@ -472,7 +472,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -501,7 +501,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_filter_report
           path: ./casper_filter/casper_filter_report.xml
@@ -522,7 +522,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -551,7 +551,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_flow_control_report
           path: ./casper_flow_control/casper_flow_control_report.xml
@@ -572,7 +572,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -601,7 +601,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_reorder_report
           path: ./casper_reorder/casper_reorder_report.xml
@@ -622,7 +622,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -651,7 +651,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: misc_report
           path: ./misc/misc_report.xml
@@ -672,7 +672,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -701,7 +701,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_multiplexer_report
           path: ./casper_multiplexer/casper_multiplexer_report.xml
@@ -722,7 +722,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -751,7 +751,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_multiplier_report
           path: ./casper_multiplier/casper_multiplier_report.xml
@@ -772,7 +772,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -801,7 +801,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_fifo_report
           path: ./casper_fifo/casper_fifo_report.xml
@@ -822,7 +822,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -851,7 +851,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: casper_ram_report
           path: ./casper_ram/casper_ram_report.xml
@@ -872,7 +872,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -901,7 +901,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: r2sdf_fft_report
           path: ./r2sdf_fft/r2sdf_fft_report.xml
@@ -926,7 +926,7 @@ jobs:
       - name: Install pytest
         run: pip3 install pytest
           # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -955,7 +955,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: pipe_fft_report
           path: ./casper_wb_fft/pipe_fft_report.xml
@@ -980,7 +980,7 @@ jobs:
       - name: Install pytest
         run: pip3 install pytest      
           # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -1009,7 +1009,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: par_fft_report
           path: ./casper_wb_fft/par_fft_report.xml
@@ -1035,7 +1035,7 @@ jobs:
         run: pip3 install pytest      
   
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -1064,7 +1064,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: wide_fft_report
           path: ./casper_wb_fft/wide_fft_report.xml
@@ -1084,7 +1084,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -1113,7 +1113,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: single_filter_report
           path: ./casper_filter/single_filter_report.xml
@@ -1133,7 +1133,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -1162,7 +1162,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: wide_filter_report
           path: ./casper_filter/wide_filter_report.xml
@@ -1182,7 +1182,7 @@ jobs:
           apt-get install git -y
           git --version
       # Checks-out your repository (and submodules) under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           token: ${{ secrets.TOKEN }}
@@ -1211,7 +1211,7 @@ jobs:
           badge-branch: badges
           style: flat
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: wbpfb_report
           path: ./casper_wbpfb/wbpfb_report.xml
