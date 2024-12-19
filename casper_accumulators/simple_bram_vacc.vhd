@@ -57,7 +57,7 @@ s_mux_out <=  s_delay_bram_out when s_pulse_ext_out = '0' else
 --------------------------------------------------------------
 -- resize din signal
 --------------------------------------------------------------
-s_a <= RESIZE_SVEC(din, g_bit_w);
+s_a <= RESIZE_SVEC(din, g_bit_w) when g_output_type = "SIGNED" else RESIZE_UVEC(din, g_bit_w);
 
 --------------------------------------------------------------
 -- adder block
