@@ -36,11 +36,7 @@ function dsp48e_bram_vacc_config(this_block)
 
   this_block.addSimulinkInport('din');
 
-  this_block.addSimulinkOutport('valid');
-  valid_port = this_block.port('valid');
-  valid_port.setType('Ufix_1_0');
-  valid_port.useHDLVector(false);
-
+  
   this_block.addSimulinkOutport('dout');
   dout_port = this_block.port('dout');
   if is_signed
@@ -48,9 +44,10 @@ function dsp48e_bram_vacc_config(this_block)
   else
     dout_port.setType(sprintf('Ufix_%s_%s',output_bit_w,output_bin_pt))
   end
-
+  
+  this_block.addSimulinkOutport('valid');
   valid_port = this_block.port('valid');
-  valid_port.setType('UFix_1_0');
+  valid_port.setType('Bool');
   valid_port.useHDLVector(false);
 
   % -----------------------------
@@ -59,7 +56,7 @@ function dsp48e_bram_vacc_config(this_block)
     if (new_acc_port.width ~= 1)
       this_block.setError('Input data type for port "new_acc" must have width=1.');
     end
-    new_acc_port.setType('Ufix_1_0');
+    new_acc_port.setType('Bool');
     new_acc_port.useHDLVector(false);
   end  % if(inputTypesKnown)
   % -----------------------------
