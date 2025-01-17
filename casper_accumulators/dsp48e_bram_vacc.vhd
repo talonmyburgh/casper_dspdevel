@@ -13,6 +13,7 @@ entity dsp48e_bram_vacc is
     generic(
         g_vector_length : NATURAL := 16;
         g_dsp48_version : NATURAL := 1;
+        g_output_type   : STRING  := "SIGNED";
         g_bit_w         : NATURAL := 32
     );
     port (
@@ -96,14 +97,9 @@ port map (
 );
 
 --------------------------------------------------------------
--- slice the output of the delay bram
---------------------------------------------------------------
-s_dout <= s_delay_bram_out(g_bit_w - 1 DOWNTO 0);
-
---------------------------------------------------------------
 -- resize s_dout
 --------------------------------------------------------------
-s_dout_cast <= RESIZE_SVEC(s_dout, 48);
+s_dout_cast <= RESIZE_SVEC(s_delay_bram_out, 48);
 
 --------------------------------------------------------------
 -- populate s_a and s_b
@@ -114,7 +110,7 @@ s_b <= s_dout_cast(17 DOWNTO 0);
 --------------------------------------------------------------
 -- populate outports
 --------------------------------------------------------------
-dout <= s_dout;
+dout <= RESIZE_SVEC(s_delay_bram_out, g_bit_w) when g_output_type = "SIGNED" else RESIZE_UVEC(s_delay_bram_out, g_bit_w);
 valid <= s_pulse_ext_out;
 
 --------------------------------------------------------------

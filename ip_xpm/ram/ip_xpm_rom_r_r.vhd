@@ -47,9 +47,14 @@ architecture Behavioral of ip_xpm_rom_r_r is
 	SIGNAL sub_wire1    : STD_LOGIC_VECTOR(g_dat_w - 1 DOWNTO 0);
 	CONSTANT c_initfile : STRING  := sel_a_b(g_init_file = "UNUSED", "none", g_init_file);
 	-- CONSTANT c_memsize  : NATURAL := g_nof_words * g_dat_w;
-	CONSTANT c_memsize  : NATURAL := (2**sel_a_b( g_adr_a_w >= g_adr_b_w, g_adr_a_w, g_adr_b_w)) * g_dat_w ;
+	CONSTANT c_larger_adr_w : NATURAL := sel_a_b( g_adr_a_w >= g_adr_b_w, g_adr_a_w, g_adr_b_w);
+	CONSTANT c_memsize  : NATURAL := 2**c_larger_adr_w * g_dat_w ;
 
 begin
+	assert 2**c_larger_adr_w >= g_nof_words
+	report "Largest address width, between "&natural'image(g_adr_a_w)&" and "&natural'image(g_adr_b_w)&", does not cover the number of words " &natural'image(g_nof_words)
+	severity failure;
+
 	q_a <= sub_wire0(g_dat_w - 1 DOWNTO 0);
 	q_b <= sub_wire1(g_dat_w - 1 DOWNTO 0);
 

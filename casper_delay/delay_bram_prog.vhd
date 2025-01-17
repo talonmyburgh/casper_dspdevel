@@ -1,5 +1,6 @@
 -- A VHDL implementation of the CASPER delay_bram_prog block.
--- @author: Mydon Solutions.
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
 
 LIBRARY IEEE, common_pkg_lib, casper_counter_lib, casper_ram_lib, casper_adder_lib, common_components_lib;
 USE IEEE.std_logic_1164.all;
@@ -25,9 +26,11 @@ end ENTITY;
 
 ARCHITECTURE rtl of delay_bram_prog is
     CONSTANT c_dat_w       : NATURAL := din'LENGTH;
-    CONSTANT c_delay_w     : NATURAL := delay'LENGTH;
-    CONSTANT c_cnt_max_val : NATURAL := 2**g_max_delay -1;
-    CONSTANT c_mem_ram     : t_c_mem := (1, g_max_delay, c_dat_w, c_cnt_max_val, '0');
+    CONSTANT c_mem_ram     : t_c_mem := (latency => g_ram_latency,
+                                        adr_w => g_max_delay,
+                                        dat_w => c_dat_w,
+                                        nof_dat => 2**g_max_delay,
+                                        init_sl => '0');
     
     SIGNAL s_count_val  : STD_LOGIC_VECTOR(g_max_delay - 1 DOWNTO 0);
     SIGNAL s_ram_out    : STD_LOGIC_VECTOR(din'RANGE);
@@ -60,14 +63,15 @@ s_minuend <= RESIZE_SVEC(delay,g_max_delay);
 --------------------------------------------------------
 -- a >= b
 --------------------------------------------------------
-s_count_rst <= '1' when signed(s_count_val) >= signed(s_difference) else '0';
+s_count_rst <= '1' when unsigned(s_count_val) >= unsigned(s_difference) else '0';
 
 --------------------------------------------------------
 -- Counter
 --------------------------------------------------------
   addr_cntr : ENTITY casper_counter_lib.free_run_up_counter
   GENERIC MAP (
-      g_cnt_w => g_max_delay
+      g_cnt_w => g_max_delay,
+      g_cnt_signed => FALSE
   )
   PORT MAP (
       clk     => clk,
@@ -83,7 +87,9 @@ s_count_rst <= '1' when signed(s_count_val) >= signed(s_difference) else '0';
     GENERIC MAP (
       g_ram            => c_mem_ram,
       g_true_dual_port => FALSE,
-      g_ram_primitive  => g_ram_primitive
+      g_ram_primitive  => g_ram_primitive,
+      g_port_a_write_mode => "read_first",
+      g_port_b_write_mode => "read_first"
     )
     PORT MAP(
       clk     => clk,
@@ -100,15 +106,5 @@ s_count_rst <= '1' when signed(s_count_val) >= signed(s_difference) else '0';
 --------------------------------------------------------
 -- Send value out
 --------------------------------------------------------
-    bram_value_delay : ENTITY common_components_lib.common_delay
-    generic map (
-        g_dat_w => c_dat_w,
-        g_depth => g_ram_latency - 1 -- subtract difference latency and bram latency
-    )
-    port map (
-        clk     => clk,
-        in_val  => '1',
-        in_dat  => s_ram_out,
-        out_dat => dout
-    );
+  dout <= s_ram_out;
 end ARCHITECTURE;

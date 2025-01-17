@@ -117,14 +117,14 @@ architecture rtl of fft_r2_wide is
     -- Most imortant in the settings the nof_points.
     ----------------------------------------------------------
     function func_create_generic_for_pipe_fft(input : t_fft) return t_fft_arr is
-        variable v_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages
+        constant c_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages
         variable v_return     : t_fft_arr(input.wb_factor - 1 downto 0) := (others => input); -- Variable that holds the return values
     begin
         for I in 0 to input.wb_factor - 1 loop
             v_return(I).use_reorder   := input.use_reorder; -- Reorder should only happen on the parallel FFT when using both like this.
             v_return(I).use_fft_shift := false; -- FFT shift function is forced to false
             v_return(I).use_separate  := false; -- Separate function is forced to false. 
-            v_return(I).nof_points    := v_nof_points; -- Set the nof points 
+            v_return(I).nof_points    := c_nof_points; -- Set the nof points 
             v_return(I).in_dat_w      := input.stage_dat_w; -- Set the input width  
             v_return(I).out_dat_w     := input.stage_dat_w; -- Set the output width.
             v_return(I).stage_dat_w   := input.stage_dat_w; -- Set stage data width 
@@ -250,10 +250,10 @@ begin
     gen_fft_r2_par : if g_fft.wb_factor = g_fft.nof_points generate
         --RESIZE
         gen_fft_pipe_inputs : for I in 0 to g_fft.wb_factor - 1 generate
-            par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), g_fft.stage_dat_w);
-            par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), g_fft.stage_dat_w);
-            out_re_arr(I)        <= RESIZE_SVEC(par_stg_fft_re_out(I), g_fft.out_dat_w);
-            out_im_arr(I)        <= RESIZE_SVEC(par_stg_fft_im_out(I), g_fft.out_dat_w);
+            par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), 44);
+            par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), 44);
+            out_re_arr(I)        <= RESIZE_SVEC(par_stg_fft_re_out(I), 64);
+            out_im_arr(I)        <= RESIZE_SVEC(par_stg_fft_im_out(I), 64);
         end generate;
 
         u_fft_r2_par : entity work.fft_r2_par
