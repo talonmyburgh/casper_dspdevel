@@ -27,20 +27,20 @@ end ENTITY;
 
 ARCHITECTURE rtl of delay_bram_prog_dp is
   CONSTANT c_dat_w   : NATURAL := din'LENGTH;
-  CONSTANT c_mem_ram : t_c_mem := (latency           => g_ram_latency,
-                                   adr_w             => g_max_delay,
-                                   dat_w             => c_dat_w,
-                                   nof_dat           => 2 ** g_max_delay,
-                                   init_sl           => '0');
+  CONSTANT c_mem_ram : t_c_mem := (latency => g_ram_latency,
+                                   adr_w   => g_max_delay,
+                                   dat_w   => c_dat_w,
+                                   nof_dat => 2 ** g_max_delay,
+                                   init_sl => '0');
 
   SIGNAL s_count_val  : STD_LOGIC_VECTOR(g_max_delay - 1 DOWNTO 0) := (OTHERS => '0');
-  SIGNAL s_ram_out    : STD_LOGIC_VECTOR(din'RANGE) := (OTHERS => '0');
+  SIGNAL s_ram_out    : STD_LOGIC_VECTOR(din'RANGE)                := (OTHERS => '0');
   SIGNAL s_subtrahend : STD_LOGIC_VECTOR(g_max_delay - 1 DOWNTO 0) := (OTHERS => '0');
   SIGNAL s_minuend    : STD_LOGIC_VECTOR(g_max_delay - 1 DOWNTO 0) := (OTHERS => '0');
   SIGNAL s_difference : STD_LOGIC_VECTOR(g_max_delay - 1 DOWNTO 0) := (OTHERS => '0');
 
 begin
-  s_subtrahend <= RESIZE_SVEC(delay, g_max_delay);
+  s_subtrahend <= RESIZE_UVEC(delay, g_max_delay);
   s_minuend    <= s_count_val;
   --------------------------------------------------------
   -- Subtraction
@@ -50,7 +50,9 @@ begin
       g_direction       => "SUB",
       g_pipeline_output => 1,
       g_in_dat_w        => g_max_delay,
-      g_out_dat_w       => g_max_delay
+      g_out_dat_w       => g_max_delay,
+      g_representation  => "UNSIGNED",
+      g_pipeline_input  => 0
     )
     port map(
       clk    => clk,
@@ -66,6 +68,7 @@ begin
   addr_cntr : entity casper_counter_lib.free_run_up_counter
     generic map(
       g_cnt_w             => g_max_delay,
+      g_cnt_up_not_down   => TRUE,
       g_cnt_initial_value => 0,
       g_cnt_signed        => FALSE
     )
@@ -73,7 +76,7 @@ begin
       clk    => clk,
       ce     => ce,
       reset  => '0',
-      enable => '1',
+      enable => en,
       count  => s_count_val
     );
 
@@ -82,10 +85,12 @@ begin
   --------------------------------------------------------
   delay_dpram : ENTITY casper_ram_lib.common_ram_rw_rw
     GENERIC MAP(
-      g_ram           => c_mem_ram,
-      g_ram_primitive => g_ram_primitive,
-      g_port_a_write_mode => "write_first",
-      g_port_b_write_mode => "read_first"
+      g_ram            => c_mem_ram,
+      g_ram_primitive  => g_ram_primitive,
+      g_write_mode_a   => "write_first",
+      g_write_mode_b   => "read_first",
+      g_init_file      => "UNUSED",
+      g_true_dual_port => TRUE
     )
     PORT MAP(
       clk      => clk,
