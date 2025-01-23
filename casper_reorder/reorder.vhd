@@ -280,7 +280,7 @@ BEGIN
       constant c_latency : NATURAL := setup_latency(g_double_buffer, g_reorder_order, g_map_latency, c_rep_latency);
     BEGIN
 
-      u_counter : entity casper_counter_lib.free_run_up_counter
+      u_counter : entity casper_counter_lib.free_run_counter
         generic map (
           g_cnt_w => s_order2_counter_out'LENGTH,
           g_cnt_signed => FALSE
@@ -442,7 +442,7 @@ BEGIN
         SIGNAL s_dsync_out, s_dmap_src_out, s_den_out : std_logic;
         SIGNAL s_counter_msb_falling_edge, s_map_src_out : std_logic_vector(0 downto 0);
       BEGIN
-        u_counter : entity casper_counter_lib.free_run_up_counter
+        u_counter : entity casper_counter_lib.free_run_counter
           generic map (
             g_cnt_w => s_counter_out'LENGTH,
             g_cnt_signed => FALSE

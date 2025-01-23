@@ -64,7 +64,7 @@ mult_lib.add_source_files(join(script_dir, "../casper_multiplier/tech_mult_compo
 
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
-casper_counter_lib.add_source_file(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
+casper_counter_lib.add_source_file(join(script_dir,"../casper_counter/free_run_counter.vhd"))
 casper_counter_lib.add_source_file(join(script_dir, "../casper_counter/common_counter.vhd"))
 
 # Create library 'casper_adder_lib'

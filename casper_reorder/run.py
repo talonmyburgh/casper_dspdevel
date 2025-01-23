@@ -27,7 +27,7 @@ common_components_lib.add_source_files(join(script_dir, "../common_components/co
 
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
-casper_counter_lib.add_source_files(join(script_dir, "../casper_counter/free_run_up_counter.vhd"))
+casper_counter_lib.add_source_files(join(script_dir, "../casper_counter/free_run_counter.vhd"))
 casper_counter_lib.add_source_files(join(script_dir, "../casper_counter/common_counter.vhd"))
 
 # Create library 'casper_delay_lib'

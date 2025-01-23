@@ -24,7 +24,7 @@ altera_mf_source_file = lib_altera_mf.add_source_files(join(script_dir, "../inte
 # Create library 'casper_counter_lib'
 casper_counter_lib = vu.add_library("casper_counter_lib")
 casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/common_counter.vhd"))
-casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_up_counter.vhd"))
+casper_counter_lib.add_source_files(join(script_dir,"../casper_counter/free_run_counter.vhd"))
 
 # Create library 'common_pkg_lib'
 common_pkg_lib = vu.add_library("common_pkg_lib")

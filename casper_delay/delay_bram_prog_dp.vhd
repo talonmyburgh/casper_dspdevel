@@ -65,7 +65,7 @@ begin
   --------------------------------------------------------
   -- Counter
   --------------------------------------------------------
-  addr_cntr : entity casper_counter_lib.free_run_up_counter
+  addr_cntr : entity casper_counter_lib.free_run_counter
     generic map(
       g_cnt_w             => g_max_delay,
       g_cnt_up_not_down   => TRUE,

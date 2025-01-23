@@ -58,7 +58,7 @@ function delay_bram_prog_dp_config(this_block)
   this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_components_pkg.vhd'],'common_components_lib');
-  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'],'casper_counter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_counter.vhd'],'casper_counter_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../casper_ram/common_ram_pkg.vhd'],'casper_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_ram/tech_memory_component_pkg.vhd'],'casper_ram_lib');

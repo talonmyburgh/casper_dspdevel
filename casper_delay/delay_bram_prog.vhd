@@ -68,7 +68,7 @@ s_count_rst <= '1' when unsigned(s_count_val) >= unsigned(s_difference) else '0'
 --------------------------------------------------------
 -- Counter
 --------------------------------------------------------
-  addr_cntr : ENTITY casper_counter_lib.free_run_up_counter
+  addr_cntr : ENTITY casper_counter_lib.free_run_counter
   GENERIC MAP (
       g_cnt_w => g_max_delay,
       g_cnt_signed => FALSE

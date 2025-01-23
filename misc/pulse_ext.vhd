@@ -44,7 +44,7 @@ BEGIN
       out_sig => s_count_rst
   );
 
-  u_counter : ENTITY casper_counter_lib.free_run_up_counter
+  u_counter : ENTITY casper_counter_lib.free_run_counter
     generic map (
       g_cnt_w => c_counter_bit_w
     )
