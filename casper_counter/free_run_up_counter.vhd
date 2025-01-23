@@ -34,13 +34,15 @@ BEGIN
         IF (reset = '1') THEN
             cnt := g_cnt_initial_value;
         ELSIF (rising_edge(clk) and ce = '1') THEN
-            IF g_cnt_up_not_down THEN
-                cnt := cnt + 1;
-            ELSE
-                IF (cnt = 0) THEN
-                    cnt := c_max_count;
+            IF enable = '1' THEN
+                IF g_cnt_up_not_down THEN
+                    cnt := cnt + 1;
                 ELSE
-                    cnt := cnt - 1;
+                    IF (cnt = 0) THEN
+                        cnt := c_max_count;
+                    ELSE
+                        cnt := cnt - 1;
+                    END IF;
                 END IF;
             END IF;
         END IF;
