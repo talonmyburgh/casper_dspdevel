@@ -114,6 +114,8 @@ cross_mult : entity work.cross_multiplier
         port map(
             clk  => clk,
             ce   => ce,
+            sync_in => '0',
+            sync_out => open,
             din  => din,
             dout => dout
         );

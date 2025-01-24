@@ -88,8 +88,8 @@ s_count_rst <= '1' when unsigned(s_count_val) >= unsigned(s_difference) else '0'
       g_ram            => c_mem_ram,
       g_true_dual_port => FALSE,
       g_ram_primitive  => g_ram_primitive,
-      g_port_a_write_mode => "read_first",
-      g_port_b_write_mode => "read_first"
+      g_write_mode_a   => "read_first",
+      g_write_mode_b   => "read_first"
     )
     PORT MAP(
       clk     => clk,

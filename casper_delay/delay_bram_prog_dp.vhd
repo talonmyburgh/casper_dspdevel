@@ -84,8 +84,8 @@ begin
     GENERIC MAP(
       g_ram           => c_mem_ram,
       g_ram_primitive => g_ram_primitive,
-      g_port_a_write_mode => "write_first",
-      g_port_b_write_mode => "read_first"
+      g_write_mode_a  => "write_first",
+      g_write_mode_b  => "read_first"
     )
     PORT MAP(
       clk      => clk,
