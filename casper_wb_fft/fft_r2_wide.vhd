@@ -209,6 +209,7 @@ architecture rtl of fft_r2_wide is
     signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others => '0');
 
 begin
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be false, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
 
     -- Default to fft_r2_pipe when g_fft.wb_factor=1
     gen_fft_r2_pipe : if g_fft.wb_factor = 1 generate

@@ -177,6 +177,8 @@ architecture str of fft_r2_par is
 begin
     assert g_fft.stage_dat_w<=44 report "Size of input exceed 32 bits that's not going to work with hard coded input_width";
     assert g_fft.out_dat_w<=63 report "Size of output exceed 63 bits that's not going to work with hard coded output_width";
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be 0, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
+    
     ------------------------------------------------------------------------------
     -- Inputs are prepared/shuffled for the input stage    
     ------------------------------------------------------------------------------

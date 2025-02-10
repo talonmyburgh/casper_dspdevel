@@ -116,6 +116,7 @@ architecture str of fft_r2_pipe is
     signal raw_out_rst : std_logic := '0';
 
 begin
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be 0, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
 
     -- Inputs
     data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
