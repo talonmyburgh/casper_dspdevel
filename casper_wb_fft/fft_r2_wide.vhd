@@ -105,7 +105,7 @@ entity fft_r2_wide is
     );
 end entity fft_r2_wide;
 
-architecture rtl of fft_r2_wide is
+architecture fft_r2_wide_arch of fft_r2_wide is
 
     type t_fft_arr is array (integer range <>) of t_fft; -- An array of t_fft's generics. 
 
@@ -495,4 +495,4 @@ begin
             );
 
     end generate;
-end rtl;
+end fft_r2_wide_arch;
