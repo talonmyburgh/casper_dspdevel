@@ -86,6 +86,7 @@ s_count_rst <= '1' when unsigned(s_count_val) >= unsigned(s_difference) else '0'
   delay_spram : ENTITY casper_ram_lib.common_ram_r_w
     GENERIC MAP (
       g_ram            => c_mem_ram,
+      g_init_file      => "",
       g_true_dual_port => FALSE,
       g_ram_primitive  => g_ram_primitive,
       g_write_mode_a   => "read_first",
