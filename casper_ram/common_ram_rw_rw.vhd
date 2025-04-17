@@ -30,7 +30,7 @@ ENTITY common_ram_rw_rw IS
 		g_true_dual_port : BOOLEAN := TRUE;
 		g_ram_primitive  : STRING  := "auto";
 		g_port_a_write_mode : STRING  := "write_first";
-		g_port_b_write_mode : STRING  := "write_first"
+		g_port_b_write_mode : STRING  := "read_first"
 	);
 	PORT(
 		clk      : IN  STD_LOGIC;
