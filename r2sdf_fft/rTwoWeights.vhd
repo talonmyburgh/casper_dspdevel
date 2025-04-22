@@ -10,13 +10,13 @@ use r2sdf_fft_lib.twiddlesPkg.all;
 entity rTwoWeights is
 	generic(
 		g_stage                     : natural := 4; -- The stage number of the pft
-		g_wb_factor	            : natural := 1; -- The wideband factor of the wideband FFT
-		g_wb_inst		    : natural := 1; -- WB instance index
+		g_wb_factor	            	: natural := 1; -- The wideband factor of the wideband FFT
+		g_wb_inst		    		: natural := 1; -- WB instance index
 		g_twid_file_stem            : string  := "UNUSED"; -- Pull the file stem from the rTwoSDFPkg
 		g_ram_primitive             : string  := "block";	-- BRAM primitive for Weights 
-		g_do_ifft		    : boolean := false;
+		g_do_ifft		    		: boolean := false;
 		g_use_inferred_ram          : boolean := true;
-		g_ram			    : t_c_mem := c_mem_ram -- RAM parameters
+		g_ram			    		: t_c_mem := c_mem_ram -- RAM parameters
 	);
 	port(
 		clk       : in  std_logic;
@@ -77,7 +77,7 @@ architecture rTwoWeights_rtl of rTwoWeights is
 	signal weight_im_irom			: std_logic_vector(weight_im'length-1 downto 0);
 begin
 
-	assert c_latency>0 and c_latency<3 report "rTwoWeights: unsupported latency" severity failure;
+	
 
 
 
@@ -86,6 +86,7 @@ begin
       --  assert FALSE REPORT "Using twiddle file: " & c_twid_file severity error;
       -- Instantiate a BRAM for the coefficients
 	use_tech_rom : if not(g_use_inferred_ram) generate
+		assert c_latency>0 and c_latency<3 report "rTwoWeights: unsupported latency" severity failure;
 		re_addr <= in_wAdr & "0";
 		im_addr <= in_wAdr & "1";
 
@@ -110,6 +111,7 @@ begin
 			);
 	end generate use_tech_rom;
 	use_infer_rom: if (g_use_inferred_ram) generate
+		assert c_latency=4 report "rTwoWeights: unsupported latency in inferred mode" severity failure;
 		noaddress : if in_wAdr'length=0 generate
 			-- When this happens we have null array addresses
 			-- But we still need to use the twiddle rom to properly calculate the I/Q
@@ -121,12 +123,15 @@ begin
 			begin
 				if clk'event and clk='1' then
 					--addr_reg	<= unsigned(in_wAdr);
-					rom_data	<= rom(0); -- What we want should be in address 0.
+					rom_data	      <= rom(0); -- What we want should be in address 0.
+					weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
+					weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
+               weight_re      <= weight_re_irom;
+               weight_im      <= weight_im_irom;
 				end if;
 			end process twiddle_rom_proc;
 
-			weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
-			weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
+
 		end generate noaddress;
 
 		rom_infer : if in_wAdr'length>0 generate
@@ -140,16 +145,19 @@ begin
 			twiddle_rom_proc : process (clk)
 			begin
 				if clk'event and clk='1' then
-					addr_reg	<= unsigned(in_wAdr);
-					rom_data	<= rom(to_integer(add_reg_mux));
+               addr_reg       <= unsigned(in_wAdr);
+               rom_data       <= rom(to_integer(add_reg_mux));
+               weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
+               weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
+               weight_re      <= weight_re_irom;
+               weight_im      <= weight_im_irom;
+		
 				end if;
 			end process twiddle_rom_proc;
 
-			weight_re_irom <= std_logic_vector(rom_data(weight_re'length-1 downto 0));
-			weight_im_irom <= std_logic_vector(rom_data(rom_data'length-1 downto weight_re'length));
+
 		end generate rom_infer;
-		weight_re <= weight_re_irom;
-		weight_im <= weight_im_irom;
+
 	end generate use_infer_rom;
 
 end rTwoWeights_rtl;

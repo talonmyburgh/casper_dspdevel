@@ -89,6 +89,14 @@ architecture str of rTwoSDFStage is
 	signal bf_im  : std_logic_vector(in_im'range);
 	signal bf_sel : std_logic;
 	signal bf_val : std_logic;
+	signal bf_re_d1  : std_logic_vector(in_re'range);
+	signal bf_im_d1  : std_logic_vector(in_im'range);
+	signal bf_sel_d1 : std_logic;
+	signal bf_val_d1 : std_logic;
+	signal bf_re_d2  : std_logic_vector(in_re'range);
+	signal bf_im_d2  : std_logic_vector(in_im'range);
+	signal bf_sel_d2 : std_logic;
+	signal bf_val_d2 : std_logic;
 
 	signal bf_re_tomult  : std_logic_vector(in_re'range);
 	signal bf_im_tomult  : std_logic_vector(in_im'range);
@@ -186,19 +194,26 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
-		-- When the Twiddle memory is delay 2 (which it should be for timing) we need to delay every thing else.
-		tgen_comb : if c_ram.latency<=1 generate
-			bf_re_tomult <= bf_re;
-			bf_im_tomult <= bf_im;
-			bf_val_tomult<= bf_val;
-			bf_sel_tomult<= bf_sel;
-		end generate;
-		tgen_reg : if c_ram.latency=2 generate
-			bf_re_tomult <= bf_re when rising_edge(clk);
-			bf_im_tomult <= bf_im when rising_edge(clk);
-			bf_val_tomult<= bf_val when rising_edge(clk);
-			bf_sel_tomult<= bf_sel when rising_edge(clk);
-		end generate;
+
+		--tgen_dly4 : if c_ram.latency=4 generate
+		dly_proc : process (clk)
+		begin
+			if rising_edge(clk) then
+				bf_re_d1  <= bf_re;
+				bf_im_d1  <= bf_im;
+				bf_val_d1 <= bf_val;
+				bf_sel_d1 <= bf_sel;
+				bf_re_d2  <= bf_re_d1;
+				bf_im_d2  <= bf_im_d1;
+				bf_val_d2 <= bf_val_d1;
+				bf_sel_d2 <= bf_sel_d1;
+				bf_re_tomult <= bf_re_d2;
+				bf_im_tomult <= bf_im_d2;
+				bf_val_tomult<= bf_val_d2;
+				bf_sel_tomult<= bf_sel_d2;
+			end if;
+		end process;
+		--end generate tgen_dly4;				
 
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
