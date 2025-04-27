@@ -70,6 +70,7 @@ begin
         VARIABLE v_test_pass : BOOLEAN := TRUE;
         VARIABLE v_count: UNSIGNED(g_bit_width-1 downto 0) := to_unsigned(0, g_bit_width);
         VARIABLE v_value : STD_LOGIC_VECTOR(g_bit_width-1 downto 0);
+        VARIABLE s_exp_tmp : STD_LOGIC_VECTOR(g_bit_width-1 downto 0);
     BEGIN
         -- set inputs
         -- index 0 will be time-variant, `v_count`
@@ -102,10 +103,11 @@ begin
             END IF;
             
             FOR r IN 0 to 2 LOOP
+                s_exp_tmp := STD_LOGIC_VECTOR(v_count);
                 slv_arr_set_variable(
                     s_idata,
                     0,
-                    STD_LOGIC_VECTOR(v_count)
+                    s_exp_tmp
                 );
                 -- s
                 WAIT FOR clk_period;
