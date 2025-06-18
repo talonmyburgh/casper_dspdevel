@@ -13,6 +13,7 @@ casper_accumulators_test:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -32,6 +33,7 @@ casper_adders_test:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -50,6 +52,7 @@ counter:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -68,6 +71,7 @@ delay:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -87,6 +91,7 @@ filter:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -105,6 +110,7 @@ flow_control:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -123,6 +129,7 @@ misc:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -141,6 +148,7 @@ multiplexer:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -159,6 +167,7 @@ multiplier:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -177,6 +186,7 @@ fifo:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -195,6 +205,7 @@ ram:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -213,6 +224,7 @@ rtwosdf_fft:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -231,6 +243,7 @@ rtwosdf_fft_bitaccurate_twid:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -250,6 +263,7 @@ pipe_fft:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -269,6 +283,7 @@ par_fft:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -287,6 +302,7 @@ wide_fft:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -306,6 +322,7 @@ single_filter:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -324,6 +341,7 @@ wide_filter:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
@@ -342,6 +360,7 @@ wbpfb:   # This job runs in the test stage.
     - ghdl
   script:
     - python3 -m pip install pytest --progress-bar off
+    - python3 -m pip install casper-r2sdf-fft --progress-bar off
     - python3 -m pip install numpy --progress-bar off
     - echo Attempting to start Vunit Tests
     - cd $GIT_CLONE_PATH
