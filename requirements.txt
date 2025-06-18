@@ -1,0 +1,11 @@
+casper_r2sdf_fft==0.0.6
+colorama==0.4.6
+iniconfig==2.0.0
+logging==0.4.9.6
+numpy==2.2.2
+packaging==24.2
+pathlib==1.0.1
+pluggy==1.5.0
+pytest==8.3.4
+scipy==1.15.1
+vunit_hdl==4.7.0

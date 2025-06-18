@@ -1,0 +1,30 @@
+[project]
+name = "casper_r2sdf_fft"
+version = "0.0.6"
+authors = [
+  { name="Matthew Schiller", email="mschille@nrao.edu" },
+]
+description = "A model for the CASPER FFT"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    'License :: OSI Approved :: BSD License',
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "numpy",
+  "pathlib",
+  "logging",
+]
+[project.urls]
+Homepage = "https://github.com/talonmyburgh/casper_dspdevelt"
+Issues = "https://github.com/talonmyburgh/casper_dspdevel/issues"
+
+[build-system]
+requires = ["hatchling","numpy","pathlib"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/casper_r2sdf_fft"]
+

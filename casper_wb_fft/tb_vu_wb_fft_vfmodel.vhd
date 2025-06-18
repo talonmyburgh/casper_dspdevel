@@ -28,7 +28,7 @@ entity tb_vu_wb_fft_vfmodel is
         g_use_round         : string                    := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
         g_use_mult_round    : string                    := "ROUND";		--! Rounding behaviour "ROUND" or "TRUNCATE"
         g_enable_pattern    : integer                   := 0; --0=Full speed, 1=Random, 2=10 Clocks between enables, 3=100 Clock between enables
-        
+        g_do_ifft           : boolean                   := false;
         -- generics for rTwoSDF
         runner_cfg : string;
         output_path : string
@@ -85,6 +85,7 @@ BEGIN
 fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
   generic map(
     g_fft               => c_fft_test,
+    g_do_ifft           => g_do_ifft,
     g_pft_pipeline      => c_fft_pipeline, -- r2sdf_fft_lib.rTwoSDFPkg
     g_fft_pipeline      => c_fft_pipeline, -- r2sdf_fft_lib.rTwoSDFPkg
     g_alt_output        => true,
@@ -194,7 +195,29 @@ fft_r2_wide_inst : entity wb_fft_lib.fft_r2_wide
           writeline(text_file,line_var);
           --write(line_var,twidQR);
           --writeline(textR_file,line_var);
-      end loop;  
+      end loop;
+      file_close(text_file);
+      fftsize := 2**stageidx;
+      file_open(text_file,output_path & "/" & "twiddlepkg_twidth" & integer'image(g_twiddle_width) & "_ifftsize" & integer'image(fftsize) & ".txt",WRITE_MODE);
+      --file_open(textR_file,output_path & "/" & "twiddlepkgR_twidth" & integer'image(g_twiddle_width) & "_fftsize" & integer'image(fftsize) & ".txt",WRITE_MODE);
+
+      report "IFFTsize = " & integer'image(fftsize) & " Twiddle Width = " & integer'image(g_twiddle_width) severity note;
+      for k in 0 to fftsize-1 loop
+          twidI           := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,true,true);
+          --twidIR          := gen_twiddle_factor_real(k,0,stageidx,1,g_twiddle_width,false,true);
+          temp_number     := to_integer(twidI);
+          write(line_var,temp_number);
+          writeline(text_file,line_var);
+          --write(line_var,twidIR);
+          --writeline(textR_file,line_var);
+          twidQ           := gen_twiddle_factor(k,0,stageidx,1,g_twiddle_width,true,false);
+          --twidQR          := gen_twiddle_factor_real(k,0,stageidx,1,g_twiddle_width,false,false);
+          temp_number     := to_integer(twidQ);
+          write(line_var,temp_number);
+          writeline(text_file,line_var);
+          --write(line_var,twidQR);
+          --writeline(textR_file,line_var);
+      end loop;    
       file_close(text_file);
       --file_close(textR_file);
     end loop;

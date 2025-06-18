@@ -77,6 +77,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_wide is
     generic(
         g_fft            : t_fft           := c_fft; --! generics for the FFT
+        g_do_ifft        : boolean         := false;
         g_pft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the pipelined part, from r2sdf_fft_lib.rTwoSDFPkg
         g_fft_pipeline   : t_fft_pipeline  := c_fft_pipeline; --! For the parallel part, from r2sdf_fft_lib.rTwoSDFPkg
         g_alt_output     : boolean         := FALSE; --! Governs the ordering of the output samples. False = ArBrArBr;AiBiAiBi, True = AiArAiAr;BiBrBiBr
@@ -104,7 +105,7 @@ entity fft_r2_wide is
     );
 end entity fft_r2_wide;
 
-architecture rtl of fft_r2_wide is
+architecture fft_r2_wide_arch of fft_r2_wide is
 
     type t_fft_arr is array (integer range <>) of t_fft; -- An array of t_fft's generics. 
 
@@ -116,14 +117,14 @@ architecture rtl of fft_r2_wide is
     -- Most imortant in the settings the nof_points.
     ----------------------------------------------------------
     function func_create_generic_for_pipe_fft(input : t_fft) return t_fft_arr is
-        variable v_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages
+        constant c_nof_points : natural                                 := input.nof_points / input.wb_factor; -- The nof_points for the pipelined fft stages
         variable v_return     : t_fft_arr(input.wb_factor - 1 downto 0) := (others => input); -- Variable that holds the return values
     begin
         for I in 0 to input.wb_factor - 1 loop
             v_return(I).use_reorder   := input.use_reorder; -- Reorder should only happen on the parallel FFT when using both like this.
             v_return(I).use_fft_shift := false; -- FFT shift function is forced to false
             v_return(I).use_separate  := false; -- Separate function is forced to false. 
-            v_return(I).nof_points    := v_nof_points; -- Set the nof points 
+            v_return(I).nof_points    := c_nof_points; -- Set the nof points 
             v_return(I).in_dat_w      := input.stage_dat_w; -- Set the input width  
             v_return(I).out_dat_w     := input.stage_dat_w; -- Set the output width.
             v_return(I).stage_dat_w   := input.stage_dat_w; -- Set stage data width 
@@ -208,6 +209,7 @@ architecture rtl of fft_r2_wide is
     signal int_sync_d : std_logic_vector(g_fft.wb_factor - 1 downto 0) := (others => '0');
 
 begin
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be false, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
 
     -- Default to fft_r2_pipe when g_fft.wb_factor=1
     gen_fft_r2_pipe : if g_fft.wb_factor = 1 generate
@@ -221,7 +223,8 @@ begin
                 g_round          => g_round,
                 g_use_mult_round => g_use_mult_round,
                 g_ram_primitive  => g_ram_primitive,
-                g_twid_file_stem => g_twid_file_stem
+                g_twid_file_stem => g_twid_file_stem,
+                g_do_ifft        => g_do_ifft
             )
             port map(
                 clken    => clken,
@@ -257,6 +260,7 @@ begin
         u_fft_r2_par : entity work.fft_r2_par
             generic map(
                 g_fft            => g_fft,
+                g_do_ifft        => g_do_ifft,
                 g_pipeline       => g_fft_pipeline,
                 g_use_variant    => g_use_variant,
                 g_use_dsp        => g_use_dsp,
@@ -306,7 +310,8 @@ begin
                     g_round          => g_round,
                     g_use_mult_round => g_use_mult_round,
                     g_ram_primitive  => g_ram_primitive,
-                    g_twid_file_stem => g_twid_file_stem
+                    g_twid_file_stem => g_twid_file_stem,
+                    g_do_ifft            => g_do_ifft
                 )
                 port map(
                     clken    => clken,
@@ -354,6 +359,7 @@ begin
         u_fft : entity work.fft_r2_par
             generic map(
                 g_fft            => c_fft_r2_par, -- generics for the FFT
+                g_do_ifft        => g_do_ifft,
                 g_pipeline       => g_fft_pipeline, -- pipeline generics for the parallel FFT
                 g_use_variant    => g_use_variant,
                 g_use_dsp        => g_use_dsp,
@@ -489,4 +495,4 @@ begin
             );
 
     end generate;
-end rtl;
+end fft_r2_wide_arch;

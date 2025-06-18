@@ -14,6 +14,7 @@ entity tb_vu_twiddlepkg is
     GENERIC(
         g_twiddle_width     : integer  := 18;
         g_fftsize_log2      : integer  := 13;     -- 1 = always active, others = random control
+        g_do_ifft           : boolean  := False;
         -- generics for rTwoSDF
         runner_cfg : string;
         output_path : string
@@ -37,14 +38,19 @@ BEGIN
 
     BEGIN
 		test_runner_setup(runner, runner_cfg);
-        file_open(text_file,output_path & "/" & "twiddlepkg_twidth" & integer'image(g_twiddle_width) & "_fftsize" & integer'image(c_fftsize) & ".txt",WRITE_MODE);
-        report "FFTsize = " & integer'image(c_fftsize) & " Twiddle Width = " & integer'image(g_twiddle_width) severity note;
+        if g_do_ifft then
+            file_open(text_file,output_path & "/" & "twiddlepkg_twidth" & integer'image(g_twiddle_width) & "_ifftsize" & integer'image(c_fftsize) & ".txt",WRITE_MODE);
+            report "IFFTsize = " & integer'image(c_fftsize) & " Twiddle Width = " & integer'image(g_twiddle_width) severity note;        
+        else
+            file_open(text_file,output_path & "/" & "twiddlepkg_twidth" & integer'image(g_twiddle_width) & "_fftsize" & integer'image(c_fftsize) & ".txt",WRITE_MODE);
+            report "FFTsize = " & integer'image(c_fftsize) & " Twiddle Width = " & integer'image(g_twiddle_width) severity note;
+        end if;
         for k in 0 to c_fftsize-1 loop
-            twidI           := gen_twiddle_factor(k,0,g_fftsize_log2,1,g_twiddle_width,false,true);
+            twidI           := gen_twiddle_factor(k,0,g_fftsize_log2,1,g_twiddle_width,g_do_ifft,true);
             temp_number     := to_integer(twidI);
             write(line_var,temp_number);
             writeline(text_file,line_var);
-            twidQ           := gen_twiddle_factor(k,0,g_fftsize_log2,1,g_twiddle_width,false,false);
+            twidQ           := gen_twiddle_factor(k,0,g_fftsize_log2,1,g_twiddle_width,g_do_ifft,false);
             temp_number     := to_integer(twidQ);
             write(line_var,temp_number);
             writeline(text_file,line_var);

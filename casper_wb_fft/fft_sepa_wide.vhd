@@ -69,7 +69,7 @@ entity fft_sepa_wide is
 
 end entity fft_sepa_wide;
 
-architecture rtl of fft_sepa_wide is
+architecture fft_sepa_wide_arch of fft_sepa_wide is
 
 	constant c_pipeline_output : natural := 0; -- no need for extra pipeline output, because output is already registered
 
@@ -380,4 +380,4 @@ begin
 		end if;
 	end process final_reg;
 
-end rtl;
+end fft_sepa_wide_arch;

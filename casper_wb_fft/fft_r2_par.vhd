@@ -47,6 +47,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_par is
     generic(
         g_fft               : t_fft             := c_fft; --! generics for the FFT
+        g_do_ifft           : boolean           := false;
         g_pipeline          : t_fft_pipeline    := c_fft_pipeline; --! generics for pipelining, defined in r2sdf_fft_lib.rTwoSDFPkg
         g_use_variant       : string            := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp           : string            := "yes"; --! = "yes" or "no"
@@ -176,6 +177,8 @@ architecture str of fft_r2_par is
 begin
     assert g_fft.stage_dat_w<=44 report "Size of input exceed 32 bits that's not going to work with hard coded input_width";
     assert g_fft.out_dat_w<=63 report "Size of output exceed 63 bits that's not going to work with hard coded output_width";
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be 0, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
+    
     ------------------------------------------------------------------------------
     -- Inputs are prepared/shuffled for the input stage    
     ------------------------------------------------------------------------------
@@ -198,6 +201,7 @@ begin
                     g_stage       => stage,
                     g_element     => element,
                     g_twiddle_width => c_fft.twiddle_dat_w,
+                    g_do_ifft       => g_do_ifft,
                     g_pipeline    => g_pipeline,
                     g_use_variant => g_use_variant,
                     g_ovflw_behav => g_ovflw_behav,

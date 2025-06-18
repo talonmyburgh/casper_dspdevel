@@ -5,9 +5,9 @@ USE common_pkg_lib.common_pkg.ALL;
 
 PACKAGE fft_gnrcs_intrfcs_pkg IS
 	--UPDATED BY MATLAB CODE GENERATION FOR SLV ARRAYS/INTERFACES:
-	CONSTANT c_fft_in_dat_w    : natural := 8;
-	CONSTANT c_fft_out_dat_w   : natural := 16;
-	CONSTANT c_fft_stage_dat_w : natural := 18;
+CONSTANT c_fft_in_dat_w       : natural := 8;
+CONSTANT c_fft_out_dat_w      : natural := 16;
+CONSTANT c_fft_stage_dat_w    : natural := 18;
 
 	--UPDATED THROUGH THE MATLAB CONFIG FOR FFT OPERATION:
 	CONSTANT c_fft_use_reorder   : boolean := true; -- = false for bit-reversed output, true for normal output

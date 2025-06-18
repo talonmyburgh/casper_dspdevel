@@ -65,6 +65,7 @@ entity rTwoSDF is
 		-- generics for the FFT    
 		g_nof_chan      : natural := 0; --! Exponent of nr of subbands (0 means 1 subband)
 		g_use_reorder   : boolean := true; --! Reorder output
+		g_do_ifft       : boolean := false;
 		g_in_dat_w      : natural := 14; --! Number of input bits
 		g_out_dat_w     : natural := 18; --! Number of output bits
 		g_stage_dat_w   : natural := 18; --! Number of bits used between the stages
@@ -164,6 +165,7 @@ begin
 				g_use_mult_round => g_use_mult_round,
 				g_ram_primitive	 => g_ram_primitive,
 				g_twid_file_stem => g_twid_file_stem,
+				g_do_ifft        => g_do_ifft,
 				g_pipeline       => pipeline
 			)
 			port map(

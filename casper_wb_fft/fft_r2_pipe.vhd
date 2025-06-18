@@ -59,6 +59,7 @@ use work.fft_gnrcs_intrfcs_pkg.all;
 entity fft_r2_pipe is
     generic(
         g_fft                : t_fft            := c_fft;           --! generics for the FFT
+        g_do_ifft            : boolean          := false;
         g_pipeline           : t_fft_pipeline   := c_fft_pipeline;  --! generics for pipelining in each stage, defined in r2sdf_fft_lib.rTwoSDFPkg
         g_dont_flip_channels : boolean          := false;           --! generic to prevent re-ordering of the channels
         g_wb_inst            : natural          := 0;               --! pipeline instance in a wb fft. =1 if r2sdf_fft.
@@ -115,6 +116,7 @@ architecture str of fft_r2_pipe is
     signal raw_out_rst : std_logic := '0';
 
 begin
+    assert (g_do_ifft and not(g_fft.use_fft_shift)) or (not(g_do_ifft)) report "In IFFT mode use_fft_shift must be 0, we don't support inputs that are FFTshifted and fftshifting time domain doesn't make sense" severity failure;
 
     -- Inputs
     data_re(c_nof_stages)  <= scale_and_resize_svec(in_re, c_in_scale_w, g_fft.stage_dat_w);
@@ -142,6 +144,7 @@ begin
                 g_use_mult_round => g_use_mult_round,
                 g_ram_primitive  => g_ram_primitive,
                 g_twid_file_stem => g_twid_file_stem,
+                g_do_ifft        => g_do_ifft,
                 g_pipeline       => g_pipeline
             )
             port map(
