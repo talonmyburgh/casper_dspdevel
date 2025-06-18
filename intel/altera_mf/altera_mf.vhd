@@ -43290,7 +43290,7 @@ end translated;
 --                    RAM with 1 write port and 2 read ports.
 --
 -- Limitation       : This megafunction is provided only for backward 
---                    compatibility in Stratix™ designs; instead, Altera® 
+--                    compatibility in Stratixï¿½ designs; instead, Alteraï¿½ 
 --                    recommends using the altsyncram megafunction
 --
 --                    In MAX 3000, and MAX 7000 devices, 
@@ -48983,7 +48983,7 @@ end altsquare_syn; -- altsquare
 --
 library ieee ;
 use ieee.std_logic_1164.all;
-use work.all;
+--use work.all;
 
 -- BEGINNING OF ENTITY
 entity altera_std_synchronizer is
@@ -49080,7 +49080,7 @@ end behavioral;
 
 library ieee ;
 use ieee.std_logic_1164.all;
-use work.all;
+--use work.all;
 
 -- BEGINNNG OF ENTITY
 entity altera_std_synchronizer_bundle is

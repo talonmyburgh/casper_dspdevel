@@ -1,11 +1,21 @@
 # Don't track content of these folders
 .settings/
+docs/build
 
 # Compiled source #
-*/.project
+#*/.project
 */vunit_out
 vunit_out
 */*.xml
 .vscode
 build/*
 __pycache__
+twiddlepkg*.txt
+vivado*.log
+vivado*.jou
+vivado*.str
+*vrs_config*
+*proj.runs*
+*.cache/
+*proj*.sim/
+casper_wb_fft/ngvla_test_proj/*

@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 --
 -- Purpose: The fft_r2_bf_par describes a parallel complex butterfly.
 --
@@ -29,6 +33,7 @@
 
 library ieee, common_pkg_lib, common_components_lib, casper_requantize_lib, r2sdf_fft_lib;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all; 
 use common_pkg_lib.common_pkg.all;
 use common_pkg_lib.common_str_pkg.all;
 use r2sdf_fft_lib.twiddlesPkg.all;
@@ -38,12 +43,15 @@ entity fft_r2_bf_par is
 	generic(
 		g_stage        	 : natural        	:= 3;
 		g_element      	 : natural        	:= 1;
+		
+		g_twiddle_width	 : natural			:= 18;
 		-- internal pipeline settings
 		g_pipeline       : t_fft_pipeline := c_fft_pipeline; -- defined in r2sdf_fft_lib.rTwoSDFPkg
 		-- multiplier settings
 		g_use_variant  	 : STRING     		:= "4DSP";
 		g_ovflw_behav  	 : string			:= "WRAP";
-		g_use_round	   	 : string			:= "ROUND";
+		g_round	   	 	 : t_rounding_mode	:= ROUND;
+		g_use_mult_round : t_rounding_mode  := TRUNCATE;
 		g_use_dsp      	 : STRING         	:= "yes"
 	);
 	port(
@@ -66,9 +74,7 @@ end entity fft_r2_bf_par;
 
 architecture str of fft_r2_bf_par is
 
-	constant c_round	: boolean := sel_a_b(g_use_round ="ROUND", TRUE, FALSE);
 	constant c_clip		: boolean := sel_a_b(g_ovflw_behav="SATURATE", TRUE, FALSE);
-
 	constant c_out_dat_w : natural := x_out_re'length; -- re and im have same width  
 
 	constant c_bf_in_a_zdly  : natural := 0; -- No delays in bf_stage, since they only apply to one in- or output
@@ -90,8 +96,8 @@ architecture str of fft_r2_bf_par is
 	signal bf_dif_complex     : std_logic_vector(c_nof_complex * c_out_dat_w - 1 downto 0);
 	signal bf_dif_complex_dly : std_logic_vector(bf_dif_complex'range);
 
-	signal weight_re   : wTyp;
-	signal weight_im   : wTyp;
+	signal weight_re   			: std_logic_vector(g_twiddle_width-1 downto 0);
+	signal weight_im   			: std_logic_vector(g_twiddle_width-1 downto 0);
 
 	signal mul_out_re   : std_logic_vector(y_out_re'range);
 	signal mul_out_im   : std_logic_vector(y_out_im'range);
@@ -101,7 +107,8 @@ architecture str of fft_r2_bf_par is
 	signal mul_in_val   : std_logic;
 
 	signal ovflw_det	: std_logic_vector(1 DOWNTO 0); -- record overflow in any of the requantizings
-
+    attribute keep_hierarchy : string;
+    attribute keep_hierarchy of str : architecture is "yes";
 begin
 
 	------------------------------------------------------------------------------
@@ -145,7 +152,7 @@ begin
 	------------------------------------------------------------------------------
 	u_requantize_x_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => sum_re'LENGTH,
 			g_out_dat_w           => sum_quant_re'LENGTH
@@ -160,7 +167,7 @@ begin
 
 	u_requantize_x_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round           => c_round,
+			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => sum_im'LENGTH,
 			g_out_dat_w           => sum_quant_im'LENGTH
@@ -242,6 +249,7 @@ begin
 			g_use_dsp    	=> g_use_dsp,
 			g_use_variant	=> g_use_variant,
 			g_stage      	=> g_stage,
+			g_round  		=> g_use_mult_round,
 			g_lat        	=> g_pipeline.mul_lat
 		)
 		port map(
@@ -261,17 +269,18 @@ begin
 	------------------------------------------------------------------------------
 	-- fetch twiddle coefficient values
 	------------------------------------------------------------------------------
-	weight_re <= wRe(wMap(g_element, g_stage));
-	weight_im <= wIm(wMap(g_element, g_stage));
 
-	print_str("Parallel: [stage = " & integer'image(g_stage) & " [element = " & integer'image(g_element) & "] " & "[index = " & integer'image(wMap(g_element, g_stage)) & "] ");
+	weight_re <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,true));
+	weight_im <= std_logic_vector(gen_twiddle_factor(0,g_element,g_stage-1,1,g_twiddle_width,FALSE,false));
+
+	--print_str("Parallel: [stage = " & integer'image(g_stage) & " [element = " & integer'image(g_element) & "] " & "[index = " & integer'image(wMap(g_element, g_stage)) & "] ");
 
 	------------------------------------------------------------------------------
 	-- requantize y output
 	------------------------------------------------------------------------------
 	u_requantize_y_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round         => c_round,
+			g_lsb_round         => g_round,
 			g_lsb_round_clip    => FALSE,
 			g_in_dat_w          => mul_out_re'LENGTH,
 			g_out_dat_w         => mul_quant_re'LENGTH
@@ -286,7 +295,7 @@ begin
 
 	u_requantize_y_im : entity casper_requantize_lib.r_shift_requantize
 		generic map(
-			g_lsb_round         => c_round,
+			g_lsb_round         => g_round,
 			g_lsb_round_clip    => FALSE,
 			g_in_dat_w          => mul_out_im'LENGTH,
 			g_out_dat_w         => mul_quant_im'LENGTH

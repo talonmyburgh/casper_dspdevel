@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 --
 -- Purpose: Test bench for fft_r2_wide.vhd using file data
 --
@@ -220,8 +224,11 @@ architecture tb of tb_fft_r2_wide is
   signal t_blk                  : integer := 0;  -- block time counter
 
   -- Input
-  signal in_re_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
-  signal in_im_arr              : t_fft_slv_arr_in(g_fft.wb_factor-1 downto 0);
+  type t_din_array              is array (g_fft.wb_factor-1 downto 0) of std_logic_vector(g_fft.in_dat_w-1 downto 0);
+  signal in_re_arr              : t_din_array;
+  signal in_im_arr              : t_din_array;
+  signal in_re_arr44            : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
+  signal in_im_arr44            : t_slv_44_arr(g_fft.wb_factor - 1 downto 0);
   signal in_re_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_im_data             : std_logic_vector(g_fft.wb_factor*c_in_dat_w-1 DOWNTO 0);
   signal in_val                 : std_logic:= '0';
@@ -234,8 +241,8 @@ architecture tb of tb_fft_r2_wide is
   signal in_val_scope           : std_logic:= '0';
 
   -- Output
-  signal out_re_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr_out(g_fft.wb_factor-1 downto 0);
+  signal out_re_arr             : t_slv_64_arr(g_fft.wb_factor-1 downto 0);
+  signal out_im_arr             : t_slv_64_arr(g_fft.wb_factor-1 downto 0);
   signal out_re_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_im_data            : std_logic_vector(g_fft.wb_factor*c_out_dat_w-1 DOWNTO 0);
   signal out_val                : std_logic:= '0';  -- for parallel output
@@ -318,11 +325,11 @@ begin
     for J in 0 to g_data_file_nof_lines/g_fft.wb_factor-1 loop  -- serial
       for I in 0 to g_fft.wb_factor-1 loop  -- parallel
         if c_in_complex then
-          in_re_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)));
-          in_im_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1));
+          in_re_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)),c_in_dat_w);
+          in_im_arr(I) <= to_fft_in_svec(input_data_c_arr(2*(J*g_fft.wb_factor+I)+1),c_in_dat_w);
         else
-          in_re_arr(I) <= to_fft_in_svec(input_data_a_arr(J*g_fft.wb_factor+I));
-          in_im_arr(I) <= to_fft_in_svec(input_data_b_arr(J*g_fft.wb_factor+I));
+          in_re_arr(I) <= to_fft_in_svec(input_data_a_arr(J*g_fft.wb_factor+I),c_in_dat_w);
+          in_im_arr(I) <= to_fft_in_svec(input_data_b_arr(J*g_fft.wb_factor+I),c_in_dat_w);
         end if;
       end loop;
       in_val <= '1';
@@ -345,13 +352,18 @@ begin
   ---------------------------------------------------------------
   -- DUT = Device Under Test
   ---------------------------------------------------------------
+  gen_inputs : for idx in 0 to g_fft.wb_factor-1 generate
+    in_re_arr44(idx) <= RESIZE_SVEC(in_re_arr(idx),44);
+    in_im_arr44(idx) <= RESIZE_SVEC(in_im_arr(idx),44);
+  end generate gen_inputs;
+
   u_dut : entity work.fft_r2_wide
   generic map(
     g_fft            => g_fft,
     g_alt_output     => g_alt_output,
     g_use_variant    => g_use_variant,
     g_ovflw_behav    => g_ovflw_behav,
-    g_use_round      => g_use_round,
+    g_round      => stringround_to_enum_round(g_use_round),
     g_twid_file_stem => g_twid_file_stem
   )
   port map(
@@ -359,8 +371,8 @@ begin
     clken      => '1',
     rst        => rst,
     shiftreg   => (0=>'0', 1=>'0', others=>'1'),
-    in_re_arr  => in_re_arr,
-    in_im_arr  => in_im_arr,
+    in_re_arr  => in_re_arr44,
+    in_im_arr  => in_im_arr44,
     in_val     => in_val,
     out_re_arr => out_re_arr,
     out_im_arr => out_im_arr,

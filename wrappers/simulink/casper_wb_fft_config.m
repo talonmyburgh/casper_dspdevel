@@ -100,15 +100,15 @@ function casper_wb_fft_config(this_block)
 %inport declarations
 this_block.addSimulinkInport('rst');
 in_rst_port = this_block.port('rst');
-in_rst_port.setType('Ufix_1_0');
+in_rst_port.setType('Bool');
 in_rst_port.useHDLVector(false);
 this_block.addSimulinkInport('in_sync');
 in_sync_port = this_block.port('in_sync');
-in_sync_port.setType('Ufix_1_0');
+in_sync_port.setType('Bool');
 in_sync_port.useHDLVector(false);
 this_block.addSimulinkInport('in_valid');
 in_valid_port = this_block.port('in_valid');
-in_valid_port.setType('Ufix_1_0');
+in_valid_port.setType('Bool');
 in_valid_port.useHDLVector(false);
 this_block.addSimulinkInport('in_shiftreg');
 in_shiftreg_port = this_block.port('in_shiftreg');
@@ -123,12 +123,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
 
   this_block.addSimulinkInport('in_sop');
   in_sop_port = this_block.port('in_sop');
-  in_sop_port.setType('Ufix_1_0');
+  in_sop_port.setType('Bool');
   in_sop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_eop');
   in_eop_port = this_block.port('in_eop');
-  in_eop_port.setType('Ufix_1_0');
+  in_eop_port.setType('Bool');
   in_eop_port.useHDLVector(false);
   
   this_block.addSimulinkInport('in_empty');
@@ -159,12 +159,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   
   this_block.addSimulinkOutport('out_sync');
   out_sync_port = this_block.port('out_sync');
-  out_sync_port.setType('Ufix_1_0');
+  out_sync_port.setType('Bool');
   out_sync_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('out_valid');
   out_valid_port = this_block.port('out_valid');
-  out_valid_port.setType('Ufix_1_0');
+  out_valid_port.setType('Bool');
   out_valid_port.useHDLVector(false);
   
   this_block.addSimulinkOutport('out_ovflw');
@@ -178,12 +178,12 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
     
     this_block.addSimulinkOutport('out_sop');
     out_sop_port = this_block.port('out_sop');
-    out_sop_port.setType('Ufix_1_0');
+    out_sop_port.setType('Bool');
     out_sop_port.useHDLVector(false);
     
     this_block.addSimulinkOutport('out_eop');
     out_eop_port = this_block.port('out_eop');
-    out_eop_port.setType('Ufix_1_0');
+    out_eop_port.setType('Bool');
     out_eop_port.useHDLVector(false);
     
     this_block.addSimulinkOutport('out_empty');
@@ -239,7 +239,7 @@ in_shiftreg_port.setType(ovflwshiftreg_type);
   this_block.addGeneric('use_variant','String',variant);
   this_block.addGeneric('use_dsp','String',use_dsp);
   this_block.addGeneric('ovflw_behav','String',ovflw_behav);
-  this_block.addGeneric('use_round','String',use_round);
+  this_block.addGeneric('use_round','natural',use_round);
   this_block.addGeneric('ram_primitive','String',ram_primitive);
   
 
@@ -268,6 +268,8 @@ end % if technology UniBoard
 copyfile(source_technology_select_pkg, [srcloc '/technology_select_pkg.vhd']);
 
 this_block.addFileToLibrary(vhdlfile,'xil_defaultlib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_adder/common_add_sub.vhd'],'casper_adder_lib');
@@ -276,6 +278,7 @@ this_block.addFileToLibrary([filepath '/../../common_components/common_areset.vh
 this_block.addFileToLibrary([filepath '/../../common_components/common_bit_delay.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../common_components/common_pipeline_sl.vhd'],'common_components_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_mult_component.vhd'],'casper_multiplier_lib');
+this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_agilex_versal_cmult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([srcloc '/technology_select_pkg.vhd'],'technology_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/tech_complex_mult.vhd'],'casper_multiplier_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplier/common_complex_mult.vhd'],'casper_multiplier_lib');
@@ -303,9 +306,7 @@ this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r_r.vhd'],'c
 this_block.addFileToLibrary([filepath '/../../common_pkg/common_str_pkg.vhd'],'common_pkg_lib');
 this_block.addFileToLibrary([filepath '/../../casper_multiplexer/common_zip.vhd'],'casper_multiplexer_lib');
 this_block.addFileToLibrary([srcloc   '/fft_gnrcs_intrfcs_pkg.vhd'],'casper_wb_fft_lib');
-if dbl_wb_factor > 1
-  this_block.addFileToLibrary([srcloc   '/twiddlesPkg.vhd'],'r2sdf_fft_lib');
-end
+this_block.addFileToLibrary([filepath '/../../r2sdf_fft/twiddlesPkg.vhd'], 'r2sdf_fft_lib');
 this_block.addFileToLibrary([srcloc   '/rTwoSDFPkg.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../r2sdf_fft/rTwoBF.vhd'],'r2sdf_fft_lib');
 this_block.addFileToLibrary([filepath '/../../casper_requantize/r_shift_requantize.vhd'],'casper_requantize_lib');

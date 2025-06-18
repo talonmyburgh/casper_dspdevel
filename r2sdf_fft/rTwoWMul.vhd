@@ -26,7 +26,8 @@ use common_pkg_lib.common_pkg.all;
 entity rTwoWMul is
 	generic(
 		g_use_dsp    : STRING  := "yes";
-		g_use_variant    : STRING  := "4DSP";
+		g_use_variant: STRING  := "4DSP";
+		g_round		 : t_rounding_mode := ROUND; -- even rounding by default
 		g_stage      : natural := 1;
 		g_lat        : natural := 3 + 1 -- 3 for mult, 1 for round
 	);
@@ -51,7 +52,7 @@ architecture str of rTwoWMul is
 	-- Apertif and using the WG at various frequencies at subband or between subbands it appears that
 	-- using truncate or sround does not make a noticable difference in the SST. Still choose to use
 	-- signed rounding to preserve zero DC.
-	constant c_use_truncate : boolean := true; --false;
+	constant c_use_truncate : boolean := sel_a_b(g_round = TRUNCATE, True, False); --false;
 
 	-- Derive the common_complex_mult g_pipeline_* values from g_lat. The sum c_total_lat = g_lat, so that g_lat defines
 	-- the total latency from in_* to out_*.
@@ -186,14 +187,15 @@ begin
 	gen_sround : if c_use_truncate = false GENERATE
 		-- Use resize_svec(s_round()) instead of truncate_and_resize_svec() to have symmetrical rounding around 0
 		-- Rounding takes logic due to adding 0.5 therefore need to use c_round_lat=1 to achieve timing
+		-- Overflow style is set to wrap, rounding can be specified by generic g_round
 		gen_comb : if c_round_lat = 0 generate
 			ASSERT false REPORT "rTwoWMul: can probably not achieve timing for sround without pipeline" SEVERITY FAILURE;
-			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w), c_out_dat_w);
-			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w), c_out_dat_w);
+			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w);
+			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w);
 		end generate;
 		gen_reg : if c_round_lat = 1 generate
-			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w), c_out_dat_w) when rising_edge(clk);
-			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w), c_out_dat_w) when rising_edge(clk);
+			round_re <= RESIZE_SVEC(s_round(product_re, c_round_w, FALSE, g_round), c_out_dat_w) when rising_edge(clk);
+			round_im <= RESIZE_SVEC(s_round(product_im, c_round_w, FALSE, g_round), c_out_dat_w) when rising_edge(clk);
 		end generate;
 	end generate;
 

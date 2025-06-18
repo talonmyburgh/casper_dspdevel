@@ -77,6 +77,7 @@ entity tb_rTwoSDF is
     g_use_uniNoise_file : boolean  := true;
     g_in_en             : natural  := 1;     -- 1 = always active, others = random control
     -- generics for rTwoSDF
+    g_use_mult_round    : t_rounding_mode   := ROUND;
     g_use_reorder       : boolean  := false;  -- tb supports both true and false
     g_nof_points        : natural  := 1024;
     g_in_dat_w          : natural  := 8;   
@@ -274,6 +275,7 @@ begin
     g_nof_points  => g_nof_points,
     -- generics for rTwoSDFStage
     g_variant     => "4DSP",   -- Use 3DSP or 4DSP for multiplication
+    g_use_mult_round => g_use_mult_round,
     g_twid_file_stem => g_twid_file_stem
   )
   port map(

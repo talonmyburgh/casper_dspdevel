@@ -29,12 +29,14 @@ LIBRARY ip_stratixiv_ram_lib;
 
 ENTITY tech_memory_ram_crw_crw IS
 	GENERIC(
-		g_adr_w         : NATURAL := 10;
-		g_dat_w         : NATURAL := 18;
-		g_nof_words     : NATURAL := 2**5;
-		g_rd_latency    : NATURAL := 2; -- choose 1 or 2
-		g_init_file     : STRING  := "UNUSED";
-		g_ram_primitive : STRING  := "auto"
+		g_adr_w             : NATURAL := 10;
+		g_dat_w             : NATURAL := 18;
+		g_nof_words         : NATURAL := 2 ** 5;
+		g_rd_latency        : NATURAL := 2; -- choose 1 or 2
+		g_init_file         : STRING  := "UNUSED";
+		g_ram_primitive     : STRING  := "auto";
+		g_port_a_write_mode : STRING  := "write_first";
+		g_port_b_write_mode : STRING  := "write_first"
 	);
 	PORT(
 		address_a : IN  STD_LOGIC_VECTOR(g_adr_w - 1 DOWNTO 0);
@@ -57,15 +59,17 @@ END tech_memory_ram_crw_crw;
 ARCHITECTURE str OF tech_memory_ram_crw_crw IS
 
 BEGIN
-	gen_ip_xpm : IF c_tech_select_default = c_tech_xpm GENERATE  -- Xilinx
+	gen_ip_xpm : IF (c_tech_select_default = c_tech_xpm or c_tech_select_default = c_tech_versal) GENERATE -- Xilinx
 		u1 : ip_xpm_ram_crw_crw
 			generic map(
-				g_adr_w         => g_adr_w,
-				g_dat_w         => g_dat_w,
-				g_nof_words     => g_nof_words,
-				g_rd_latency    => g_rd_latency,
-				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_adr_w             => g_adr_w,
+				g_dat_w             => g_dat_w,
+				g_nof_words         => g_nof_words,
+				g_rd_latency        => g_rd_latency,
+				g_init_file         => g_init_file,
+				g_ram_primitive     => g_ram_primitive,
+				g_port_a_write_mode => g_port_a_write_mode,
+				g_port_b_write_mode => g_port_b_write_mode
 			)
 			port map(
 				address_a => address_a,
@@ -85,11 +89,10 @@ BEGIN
 			);
 	END GENERATE;
 
-	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv GENERATE  -- Intel Altera on UniBoard1
-			u0 : ip_stratixiv_ram_crw_crw
-				GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
-				PORT MAP(address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
+	gen_ip_stratixiv : IF c_tech_select_default = c_tech_stratixiv or c_tech_select_default = c_tech_agilex GENERATE -- Intel Altera on UniBoard1
+		u0 : ip_stratixiv_ram_crw_crw
+			GENERIC MAP(g_adr_w, g_dat_w, g_nof_words, g_rd_latency, g_init_file)
+			PORT MAP(address_a, address_b, clock_a, clock_b, data_a, data_b, enable_a, enable_b, rden_a, rden_b, wren_a, wren_b, q_a, q_b);
 	END GENERATE;
-
 
 END ARCHITECTURE;

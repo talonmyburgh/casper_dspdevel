@@ -59,7 +59,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_variant       : string  		     := ""4DSP"";       -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
-    "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
+    "    g_use_round         : natural           := 1;  -- = 0, 1, 2 - indices corresponding to the rounding modes in the common_pkg_lib"
     "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
@@ -69,8 +69,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    ce                  : in  std_logic := '1';"
     "    shiftreg            : in  std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register"
     "    ovflw               : out std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'0');"
-    "    in_sync             : in std_logic;"
-    "    in_valid            : in std_logic;"
+    "    in_sync             : in std_logic := '0';"
+    "    in_valid            : in std_logic :=' 0';"
     "    out_sync            : out std_logic := '0';"
     "    out_valid           : out std_logic := '0';"
     "    fil_sync            : out std_logic := '0';"
@@ -143,7 +143,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    g_use_variant       : string  		     := ""4DSP"";       -- = ""4DSP"" or ""3DSP"" for 3 or 4 mult cmult."
     "    g_use_dsp           : string  		     := ""yes"";        -- = ""yes"" or ""no"""
     "    g_ovflw_behav       : string  		     := ""WRAP"";       -- = ""WRAP"" or ""SATURATE"" will default to WRAP if invalid option used"
-    "    g_use_round         : string  		     := ""ROUND"";      -- = ""ROUND"" or ""TRUNCATE"" will default to TRUNCATE if invalid option used"
+    "    g_use_round         : natural           := 1;  -- = 0, 1, 2 - indices corresponding to the rounding modes in the common_pkg_lib"
     "    g_fft_ram_primitive : string  		     := ""block""      -- = ""auto"", ""distributed"", ""block"" or ""ultra"" for RAM architecture"
     ");"
     "port"
@@ -153,8 +153,8 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "    ce                  : in  std_logic := '1';"
     "    shiftreg            : in  std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'1');			--! Shift register"
     "    ovflw               : out std_logic_vector(ceil_log2(g_nof_points) - 1 DOWNTO 0) := (others=>'0');"
-    "    in_sync             : in std_logic;"
-    "    in_valid            : in std_logic;"
+    "    in_sync             : in std_logic := '0';"
+    "    in_valid            : in std_logic := '0';"
     "    out_sync            : out std_logic := '0';"
     "    out_valid           : out std_logic := '0';"
     "    fil_sync            : out std_logic := '0';"
@@ -167,12 +167,13 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     lnsafterarchopen_w_xtradat = [");"
         "end wbpfb_unit_top;"
         "architecture RTL of wbpfb_unit_top is"
+        "constant round_mode : t_rounding_mode := t_rounding_mode'val(g_use_round);"
         "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                                  "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                                  "g_twiddle_dat_w, g_max_addr_w, g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
+    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fil_sosi_rst_out);"
+    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fft_sosi_rst_out);"
     "begin"
     " wbpfb_unit : entity wpfb_lib.wbpfb_unit_dev"
     " generic map ("
@@ -186,7 +187,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
-    "   g_use_round          => g_use_round,"
+    "   g_round              => round_mode,"
     "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
@@ -209,37 +210,54 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "in_fil_sosi_arr(j).channel <= in_channel;"
     "in_fil_sosi_arr(j).err <= in_err;"
     "end generate;"
-    "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
-    "out_sync <= out_fft_sosi_arr(k).sync;"
-    "out_bsn <= out_fft_sosi_arr(k).bsn;"
-    "out_valid <= out_fft_sosi_arr(k).valid ;"
-    "out_sop <= out_fft_sosi_arr(k).sop;"
-    "out_eop <= out_fft_sosi_arr(k).eop;"
-    "out_empty <= out_fft_sosi_arr(k).empty;"
-    "out_channel <= out_fft_sosi_arr(k).channel;"
-    "out_err <= out_fft_sosi_arr(k).err;"
-    "end generate;"
-    "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
-    "fil_sync <= out_fil_sosi_arr(k).sync;"
-    "fil_bsn <= out_fil_sosi_arr(k).bsn;"
-    "fil_valid <= out_fil_sosi_arr(k).valid ;"
-    "fil_sop <= out_fil_sosi_arr(k).sop;"
-    "fil_eop <= out_fil_sosi_arr(k).eop;"
-    "fil_empty <= out_fil_sosi_arr(k).empty;"
-    "fil_channel <= out_fil_sosi_arr(k).channel;"
-    "fil_err <= out_fil_sosi_arr(k).err;"
-    "end generate;"
+    "out_sync <= out_fft_sosi_arr(0).sync;"
+    "out_bsn <= out_fft_sosi_arr(0).bsn;"
+    "out_valid <= out_fft_sosi_arr(0).valid ;"
+    "out_sop <= out_fft_sosi_arr(0).sop;"
+    "out_eop <= out_fft_sosi_arr(0).eop;"
+    "out_empty <= out_fft_sosi_arr(0).empty;"
+    "out_channel <= out_fft_sosi_arr(0).channel;"
+    "out_err <= out_fft_sosi_arr(0).err;"
+%     "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "out_sync <= out_fft_sosi_arr(k).sync;"
+%     "out_bsn <= out_fft_sosi_arr(k).bsn;"
+%     "out_valid <= out_fft_sosi_arr(k).valid ;"
+%     "out_sop <= out_fft_sosi_arr(k).sop;"
+%     "out_eop <= out_fft_sosi_arr(k).eop;"
+%     "out_empty <= out_fft_sosi_arr(k).empty;"
+%     "out_channel <= out_fft_sosi_arr(k).channel;"
+%     "out_err <= out_fft_sosi_arr(k).err;"
+%     "end generate;"
+    "fil_sync <= out_fil_sosi_arr(0).sync;"
+    "fil_bsn <= out_fil_sosi_arr(0).bsn;"
+    "fil_valid <= out_fil_sosi_arr(0).valid ;"
+    "fil_sop <= out_fil_sosi_arr(0).sop;"
+    "fil_eop <= out_fil_sosi_arr(0).eop;"
+    "fil_empty <= out_fil_sosi_arr(0).empty;"
+    "fil_channel <= out_fil_sosi_arr(0).channel;"
+    "fil_err <= out_fil_sosi_arr(0).err;"
+%     "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "fil_sync <= out_fil_sosi_arr(k).sync;"
+%     "fil_bsn <= out_fil_sosi_arr(k).bsn;"
+%     "fil_valid <= out_fil_sosi_arr(k).valid ;"
+%     "fil_sop <= out_fil_sosi_arr(k).sop;"
+%     "fil_eop <= out_fil_sosi_arr(k).eop;"
+%     "fil_empty <= out_fil_sosi_arr(k).empty;"
+%     "fil_channel <= out_fil_sosi_arr(k).channel;"
+%     "fil_err <= out_fil_sosi_arr(k).err;"
+%     "end generate;"
 	];
     
     lnsafterarchopen_w_o_xtradat = [");"
     "end wbpfb_unit_top;"
     "architecture RTL of wbpfb_unit_top is"
+    "constant round_mode : t_rounding_mode := t_rounding_mode'val(g_use_round);"
     "constant cc_wpfb : t_wpfb := (g_wb_factor, g_nof_points, g_nof_chan, g_nof_wb_streams, g_nof_taps, g_fil_backoff_w, g_fil_in_dat_w, g_fil_out_dat_w,"
                              "g_coef_dat_w, g_use_reorder, g_use_fft_shift, g_use_separate, g_fft_in_dat_w, g_fft_out_dat_w, g_fft_out_gain_w, g_stage_dat_w,"
                              "g_twiddle_dat_w, g_max_addr_w,g_guard_w, g_guard_enable, g_pipe_reo_in_place, 56, 2, 800000, c_fft_pipeline, c_fft_pipeline, c_fil_ppf_pipeline);"
     "signal in_fil_sosi_arr  : t_fil_sosi_arr_in(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
-    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0);"
+    "signal out_fil_sosi_arr : t_fil_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fil_sosi_rst_out);"
+    "signal out_fft_sosi_arr : t_fft_sosi_arr_out(g_wb_factor*g_nof_wb_streams - 1 downto 0) := (others => c_fft_sosi_rst_out);"
     "begin"
     " wbpfb_unit : entity wpfb_lib.wbpfb_unit_dev"
     " generic map ("
@@ -253,7 +271,7 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "   g_use_variant        => g_use_variant,"
     "   g_use_dsp            => g_use_dsp,"
     "   g_ovflw_behav        => g_ovflw_behav,"
-    "   g_use_round          => g_use_round,"
+    "   g_round              => round_mode,"
     "   g_fft_ram_primitive  => g_fft_ram_primitive"
     ")"
     " port map("
@@ -270,14 +288,18 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     "in_fil_sosi_arr(j).sync <= in_sync;"
     "in_fil_sosi_arr(j).valid <= in_valid;"
     "end generate;"
-    "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
-    "out_sync <= out_fft_sosi_arr(k).sync;"
-    "out_valid <= out_fft_sosi_arr(k).valid;"
-    "end generate;"
-    "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
-    "fil_sync <= out_fil_sosi_arr(k).sync;"
-    "fil_valid <= out_fil_sosi_arr(k).valid;"
-    "end generate;"
+    "out_sync <= out_fft_sosi_arr(0).sync;"
+    "out_valid <= out_fft_sosi_arr(0).valid;"
+%     "otheroutprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "out_sync <= out_fft_sosi_arr(k).sync;"
+%     "out_valid <= out_fft_sosi_arr(k).valid;"
+%     "end generate;"
+    "fil_sync <= out_fil_sosi_arr(0).sync;"
+    "fil_valid <= out_fil_sosi_arr(0).valid;"
+%     "otherfilprtmap: for k in 0 to g_wb_factor-1 generate"
+%     "fil_sync <= out_fil_sosi_arr(k).sync;"
+%     "fil_valid <= out_fil_sosi_arr(k).valid;"
+%     "end generate;"
 	];
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %create an array of lines from architecture opening till where 
@@ -330,8 +352,10 @@ function vhdlfile = top_wbpfb_code_gen(wb_factor, nof_wb_streams, twid_dat_w, no
     twid_filepath_stem = strtrim(cmdout);
     updatefftpkg(filepathscript,vhdlfilefolder,fft_in_dat_w,fft_out_dat_w,fft_stage_dat_w,twid_filepath_stem);
 
-    %generate twiddlePkg for parallel twiddle factors:
-    par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    %generate twiddlePkg for parallel twiddle factors if wb_factor > 1:
+    % if wb_factor > 1
+    %     par_twiddle_pkg_gen(wb_factor, twid_dat_w, vhdlfilefolder);
+    % end
 end
 
 function chararr = mknprts(wbfctr,nof_wb_streams)
@@ -356,7 +380,7 @@ function chararr = mknprts(wbfctr,nof_wb_streams)
             i=i+1;
             chararr(i,1)=sprintf(outimchar,k,j);
             i=i+1;
-            if (j ~= wbfctr-1)
+            if (j ~= wbfctr-1 | k ~= nof_wb_streams-1)
                 chararr(i,1)=sprintf(outrechar,k,j);
             else
                 chararr(i,1)=sprintf(strip(outrechar,';'),k,j);
@@ -375,9 +399,9 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
     omap_re_c = "out_re_str%d_wb%d <= out_fft_sosi_arr(%d).re;";
     omap_im_c = "out_im_str%d_wb%d <= out_fft_sosi_arr(%d).im;";
     l = 1;
+    arr_index = 0;
     for n=0:1:nof_wb_streams-1
         for m=0:1:wbfctr-1
-            arr_index = (n+1)*m;
             achararr(l,1)=sprintf(imap_re_c,arr_index,n,m);
             l=l+1;
             achararr(l,1)=sprintf(imap_im_c,arr_index,n,m);
@@ -390,6 +414,7 @@ function achararr = mkarch(wbfctr,nof_wb_streams)
             l=l+1;
             achararr(l,1)=sprintf(omap_im_c,n,m,arr_index);
             l=l+1;
+            arr_index = arr_index + 1;
         end
     end
 end

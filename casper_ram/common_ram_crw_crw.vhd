@@ -25,10 +25,12 @@ USE work.common_ram_pkg.ALL;
 
 ENTITY common_ram_crw_crw IS
 	GENERIC(
-		g_ram            : t_c_mem := c_mem_ram;
-		g_init_file      : STRING  := "UNUSED";
-		g_true_dual_port : BOOLEAN := TRUE;
-		g_ram_primitive  : STRING  := "auto"
+		g_ram               : t_c_mem := c_mem_ram;
+		g_init_file         : STRING  := "UNUSED";
+		g_true_dual_port    : BOOLEAN := TRUE;
+		g_ram_primitive     : STRING  := "auto";
+		g_port_a_write_mode : STRING  := "write_first";
+		g_port_b_write_mode : STRING  := "write_first"
 	);
 	PORT(
 		clk_a    : IN  STD_LOGIC;
@@ -75,12 +77,14 @@ BEGIN
 	gen_true_dual_port : IF g_true_dual_port = TRUE GENERATE
 		u_ram : ENTITY work.tech_memory_ram_crw_crw
 			GENERIC MAP(
-				g_adr_w         => g_ram.adr_w,
-				g_dat_w         => g_ram.dat_w,
-				g_nof_words     => g_ram.nof_dat,
-				g_rd_latency    => c_rd_latency,
-				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_adr_w             => g_ram.adr_w,
+				g_dat_w             => g_ram.dat_w,
+				g_nof_words         => g_ram.nof_dat,
+				g_rd_latency        => c_rd_latency,
+				g_init_file         => g_init_file,
+				g_ram_primitive     => g_ram_primitive,
+				g_port_a_write_mode => g_port_a_write_mode,
+				g_port_b_write_mode => g_port_b_write_mode
 			)
 			PORT MAP(
 				clock_a   => clk_a,
@@ -101,12 +105,13 @@ BEGIN
 	gen_simple_dual_port : IF g_true_dual_port = FALSE GENERATE
 		u_ram : ENTITY work.tech_memory_ram_cr_cw
 			GENERIC MAP(
-				g_adr_w         => g_ram.adr_w,
-				g_dat_w         => g_ram.dat_w,
-				g_nof_words     => g_ram.nof_dat,
-				g_rd_latency    => c_rd_latency,
-				g_init_file     => g_init_file,
-				g_ram_primitive => g_ram_primitive
+				g_adr_w             => g_ram.adr_w,
+				g_dat_w             => g_ram.dat_w,
+				g_nof_words         => g_ram.nof_dat,
+				g_rd_latency        => c_rd_latency,
+				g_init_file         => g_init_file,
+				g_ram_primitive     => g_ram_primitive,
+				g_port_b_write_mode => "read_first"
 			)
 			PORT MAP(
 				wrclock   => clk_a,

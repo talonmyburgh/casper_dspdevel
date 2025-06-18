@@ -37,7 +37,7 @@ ENTITY dp_requantize IS
 		g_lsb_w               : INTEGER := 4; -- when > 0, number of LSbits to remove from in_dat
 		                                      -- when < 0, number of LSBits to insert as a gain before resize to out_dat'LENGTH
 		                                      -- when 0 then no effect
-		g_lsb_round           : BOOLEAN := TRUE; -- when true ROUND else TRUNCATE the input LSbits                                                                
+		g_lsb_round           : t_rounding_mode := ROUND; -- when true ROUND else TRUNCATE the input LSbits                                                                
 		g_lsb_round_clip      : BOOLEAN := FALSE; -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding        
 		g_msb_clip            : BOOLEAN := TRUE; -- when true CLIP else WRAP the input MSbits                                                                     
 		g_msb_clip_symmetric  : BOOLEAN := FALSE; -- when TRUE clip signed symmetric to +c_smax and -c_smax, else to +c_smax and c_smin_symm                       

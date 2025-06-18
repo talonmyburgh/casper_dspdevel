@@ -20,6 +20,7 @@
 
 -- Author:
 -- . Eric Kooistra
+-- . Talon Myburgh
 -- Purpose:
 -- . Collection of commonly used base funtions
 -- Interface:
@@ -32,6 +33,8 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 USE IEEE.MATH_REAL.ALL;
+use work.common_fixed_float_types.all;
+use work.fixed_pkg.all;
 
 PACKAGE common_pkg IS
 
@@ -116,16 +119,24 @@ PACKAGE common_pkg IS
 	TYPE t_slv_32_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(31 DOWNTO 0);
 	TYPE t_slv_44_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(43 DOWNTO 0);
 	TYPE t_slv_48_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(47 DOWNTO 0);
+	TYPE t_signed_48_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(47 DOWNTO 0);
 	TYPE t_slv_64_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(63 DOWNTO 0);
+	TYPE t_signed_96_arr IS ARRAY (INTEGER RANGE <>) OF SIGNED(95 DOWNTO 0);
 	TYPE t_slv_128_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(127 DOWNTO 0);
 	TYPE t_slv_256_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(255 DOWNTO 0);
 	TYPE t_slv_512_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(511 DOWNTO 0);
 	TYPE t_slv_1024_arr IS ARRAY (INTEGER RANGE <>) OF STD_LOGIC_VECTOR(1023 DOWNTO 0);
+	--type t_unsigned_array is array(natural range <>)    of unsigned;
+	--type t_slv_array is array(natural range <>)         of std_logic_vector;
+	--type t_signed_array is array(natural range <>)      of signed;
+	TYPE t_rounding_mode is (TRUNCATE, ROUND, ROUNDINF);
 
 	CONSTANT c_boolean_arr     : t_boolean_arr     := (TRUE, FALSE); -- array all possible values that can be iterated over
 	CONSTANT c_nat_boolean_arr : t_nat_boolean_arr := (TRUE, FALSE); -- array all possible values that can be iterated over
 
+	TYPE t_natural_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF NATURAL;
 	TYPE t_integer_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF INTEGER;
+	TYPE t_nat_integer_matrix IS ARRAY (NATURAL RANGE <>, NATURAL RANGE <>) OF INTEGER;
 	TYPE t_boolean_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF BOOLEAN;
 	TYPE t_sl_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF STD_LOGIC;
 	TYPE t_slv_8_matrix IS ARRAY (INTEGER RANGE <>, INTEGER RANGE <>) OF STD_LOGIC_VECTOR(7 DOWNTO 0);
@@ -168,6 +179,7 @@ PACKAGE common_pkg IS
 
 	FUNCTION true_log2(n : NATURAL) RETURN NATURAL; -- true_log2(n) = log2(n)
 	FUNCTION ceil_log2(n : NATURAL) RETURN NATURAL; -- ceil_log2(n) = log2(n), but force ceil_log2(1) = 1
+	FUNCTION next_pow2(n : NATURAL) RETURN NATURAL; -- next_pow2(n) = next power of two that is >= n
 
 	FUNCTION floor_log10(n : NATURAL) RETURN NATURAL;
 
@@ -326,6 +338,8 @@ PACKAGE common_pkg IS
 	FUNCTION func_slv_extract(use_a, use_b, use_c : BOOLEAN; a_w, b_w, c_w : NATURAL; vec : STD_LOGIC_VECTOR; sel : NATURAL) RETURN STD_LOGIC_VECTOR;
 	FUNCTION func_slv_extract(use_a, use_b : BOOLEAN; a_w, b_w : NATURAL; vec : STD_LOGIC_VECTOR; sel : NATURAL) RETURN STD_LOGIC_VECTOR;
 
+	FUNCTION func_slv_reverse(a : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR;
+
 	FUNCTION TO_UINT(vec : STD_LOGIC_VECTOR) RETURN NATURAL; -- beware: NATURAL'HIGH = 2**31-1, not 2*32-1, use TO_SINT to avoid warning
 	FUNCTION TO_SINT(vec : STD_LOGIC_VECTOR) RETURN INTEGER;
 
@@ -355,7 +369,7 @@ PACKAGE common_pkg IS
 	FUNCTION INCR_UVEC(vec : STD_LOGIC_VECTOR; dec : UNSIGNED) RETURN STD_LOGIC_VECTOR;
 	FUNCTION INCR_SVEC(vec : STD_LOGIC_VECTOR; dec : INTEGER) RETURN STD_LOGIC_VECTOR;
 	FUNCTION INCR_SVEC(vec : STD_LOGIC_VECTOR; dec : SIGNED) RETURN STD_LOGIC_VECTOR;
-	    
+
 	-- Used in common_add_sub.vhd
 	FUNCTION ADD_SVEC(l_vec : STD_LOGIC_VECTOR; r_vec : STD_LOGIC_VECTOR; res_w : NATURAL) RETURN STD_LOGIC_VECTOR; -- l_vec + r_vec, treat slv operands as signed,   slv output width is res_w
 	FUNCTION SUB_SVEC(l_vec : STD_LOGIC_VECTOR; r_vec : STD_LOGIC_VECTOR; res_w : NATURAL) RETURN STD_LOGIC_VECTOR; -- l_vec - r_vec, treat slv operands as signed,   slv output width is res_w
@@ -370,9 +384,9 @@ PACKAGE common_pkg IS
 	FUNCTION COMPLEX_MULT_REAL(a_re, a_im, b_re, b_im : INTEGER) RETURN INTEGER; -- Calculate real part of complex multiplication: a_re*b_re - a_im*b_im 
 	FUNCTION COMPLEX_MULT_IMAG(a_re, a_im, b_re, b_im : INTEGER) RETURN INTEGER; -- Calculate imag part of complex multiplication: a_im*b_re + a_re*b_im 
 
-	FUNCTION S_ADD_OVFLW_DET (a, b, sum_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is addition overflow for signed values 
-	FUNCTION S_SUB_OVFLW_DET (a, b, sub_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is subtraction overflow for signed values 
-	
+	FUNCTION S_ADD_OVFLW_DET(a, b, sum_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is addition overflow for signed values 
+	FUNCTION S_SUB_OVFLW_DET(a, b, sub_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC; -- Preempt whether there is subtraction overflow for signed values 
+
 	FUNCTION SHIFT_UVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR; -- < 0 shift left, > 0 shift right
 	FUNCTION SHIFT_SVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR; -- < 0 shift left, > 0 shift right
 
@@ -387,7 +401,8 @@ PACKAGE common_pkg IS
 	FUNCTION truncate_or_resize_uvec(vec : STD_LOGIC_VECTOR; b : BOOLEAN; w : NATURAL) RETURN STD_LOGIC_VECTOR; -- when b=TRUE then truncate to width w, else resize to width w
 	FUNCTION truncate_or_resize_svec(vec : STD_LOGIC_VECTOR; b : BOOLEAN; w : NATURAL) RETURN STD_LOGIC_VECTOR; -- idem for signed values
 
-	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
+	FUNCTION s_round_inf(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
+	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN; round_style : t_rounding_mode) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n, and clip to avoid wrap
 	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR; -- remove n LSBits from vec by rounding away from 0, so result has width vec'LENGTH-n
 	FUNCTION s_round_up(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR; -- idem but round up to +infinity (s_round_up = u_round)
 	FUNCTION s_round_up(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR; -- idem but round up to +infinity (s_round_up = u_round)
@@ -438,13 +453,13 @@ PACKAGE common_pkg IS
 	PROCEDURE proc_common_fifo_asserts(CONSTANT c_fifo_name   : IN STRING;
 	                                   CONSTANT c_note_is_ful : IN BOOLEAN;
 	                                   CONSTANT c_fail_rd_emp : IN BOOLEAN;
-	                                   SIGNAL wr_rst          : IN STD_LOGIC;
-	                                   SIGNAL wr_clk          : IN STD_LOGIC;
-	                                   SIGNAL wr_full         : IN STD_LOGIC;
-	                                   SIGNAL wr_en           : IN STD_LOGIC;
-	                                   SIGNAL rd_clk          : IN STD_LOGIC;
-	                                   SIGNAL rd_empty        : IN STD_LOGIC;
-	                                   SIGNAL rd_en           : IN STD_LOGIC);
+	                                   SIGNAL   wr_rst        : IN STD_LOGIC;
+	                                   SIGNAL   wr_clk        : IN STD_LOGIC;
+	                                   SIGNAL   wr_full       : IN STD_LOGIC;
+	                                   SIGNAL   wr_en         : IN STD_LOGIC;
+	                                   SIGNAL   rd_clk        : IN STD_LOGIC;
+	                                   SIGNAL   rd_empty      : IN STD_LOGIC;
+	                                   SIGNAL   rd_en         : IN STD_LOGIC);
 
 	-- common_fanout_tree  
 	FUNCTION func_common_fanout_tree_pipelining(c_nof_stages, c_nof_output_per_cell, c_nof_output : NATURAL;
@@ -459,22 +474,22 @@ PACKAGE common_pkg IS
 
 	-- Generate faster sample SCLK from digital DCLK for sim only
 	PROCEDURE proc_common_dclk_generate_sclk(CONSTANT Pfactor : IN POSITIVE;
-	                                         SIGNAL dclk      : IN STD_LOGIC;
-	                                         SIGNAL sclk      : INOUT STD_LOGIC);
-
+	                                         SIGNAL   dclk    : IN STD_LOGIC;
+	                                         SIGNAL   sclk    : INOUT STD_LOGIC);
+	function stringround_to_enum_round(stringin : string) return t_rounding_mode;
 END common_pkg;
 
 PACKAGE BODY common_pkg IS
 
 	FUNCTION pow2(n : NATURAL) RETURN NATURAL IS
 	BEGIN
-		RETURN 2**n;
+		RETURN 2 ** n;
 	END;
 
 	FUNCTION ceil_pow2(n : INTEGER) RETURN NATURAL IS
 		-- Also allows negative exponents and rounds up before returning the value
 	BEGIN
-		RETURN natural(integer(ceil(2**real(n))));
+		RETURN natural(integer(ceil(2 ** real(n))));
 	END;
 
 	FUNCTION true_log2(n : NATURAL) RETURN NATURAL IS
@@ -514,6 +529,17 @@ PACKAGE BODY common_pkg IS
 		END IF;
 	END;
 
+	FUNCTION next_pow2(n : NATURAL) return NATURAL is
+		variable pow    : NATURAL := 1;
+		variable result : NATURAL;
+	begin
+		while pow < n loop
+			pow := pow * 2;
+		end loop;
+		result := ceil_log2(pow);
+		return result;
+	end FUNCTION;
+
 	FUNCTION floor_log10(n : NATURAL) RETURN NATURAL IS
 	BEGIN
 		RETURN natural(integer(floor(log10(real(n)))));
@@ -521,12 +547,12 @@ PACKAGE BODY common_pkg IS
 
 	FUNCTION is_pow2(n : NATURAL) RETURN BOOLEAN IS
 	BEGIN
-		RETURN n = 2**true_log2(n);
+		RETURN n = 2 ** true_log2(n);
 	END;
 
 	FUNCTION true_log_pow2(n : NATURAL) RETURN NATURAL IS
 	BEGIN
-		RETURN 2**true_log2(n);
+		RETURN 2 ** true_log2(n);
 	END;
 
 	FUNCTION ratio(n, d : NATURAL) RETURN NATURAL IS
@@ -671,7 +697,7 @@ PACKAGE BODY common_pkg IS
 		-- Instead use binary tree to determine result with smallest combinatorial delay that depends on log2(slv'LENGTH)
 		CONSTANT c_slv_w      : NATURAL   := slv'LENGTH;
 		CONSTANT c_nof_stages : NATURAL   := ceil_log2(c_slv_w);
-		CONSTANT c_w          : NATURAL   := 2**c_nof_stages; -- extend the input slv to a vector with length power of 2 to ease using binary tree
+		CONSTANT c_w          : NATURAL   := 2 ** c_nof_stages; -- extend the input slv to a vector with length power of 2 to ease using binary tree
 		TYPE t_stage_arr IS ARRAY (-1 TO c_nof_stages - 1) OF STD_LOGIC_VECTOR(c_w - 1 DOWNTO 0);
 		VARIABLE v_stage_arr  : t_stage_arr;
 		VARIABLE v_result     : STD_LOGIC := '0';
@@ -688,7 +714,7 @@ PACKAGE BODY common_pkg IS
 		END IF;
 		v_stage_arr(-1)(c_slv_w - 1 DOWNTO 0) := slv; -- any unused input c_w : c_slv_w bits have void default value
 		FOR J IN 0 TO c_nof_stages - 1 LOOP
-			FOR I IN 0 TO c_w / (2**(J + 1)) - 1 LOOP
+			FOR I IN 0 TO c_w / (2 ** (J + 1)) - 1 LOOP
 				IF operation = "AND" THEN
 					v_stage_arr(J)(I) := v_stage_arr(J - 1)(2 * I) AND v_stage_arr(J - 1)(2 * I + 1);
 				ELSIF operation = "OR" THEN
@@ -1774,6 +1800,16 @@ PACKAGE BODY common_pkg IS
 		RETURN func_slv_extract(use_a, use_b, FALSE, FALSE, FALSE, FALSE, FALSE, a_w, b_w, 0, 0, 0, 0, 0, vec, sel);
 	END func_slv_extract;
 
+	FUNCTION func_slv_reverse(a : STD_LOGIC_VECTOR) RETURN STD_LOGIC_VECTOR IS
+		VARIABLE result : STD_LOGIC_VECTOR(a'RANGE);
+		ALIAS aa        : STD_LOGIC_VECTOR(a'REVERSE_RANGE) is a;
+	BEGIN
+		FOR i in aa'RANGE LOOP
+			result(i) := aa(i);
+		END LOOP;
+		RETURN result;
+	END;
+
 	FUNCTION TO_UINT(vec : STD_LOGIC_VECTOR) RETURN NATURAL IS
 	BEGIN
 		RETURN TO_INTEGER(UNSIGNED(vec));
@@ -1934,33 +1970,33 @@ PACKAGE BODY common_pkg IS
 	END;
 
 	FUNCTION S_ADD_OVFLW_DET(a, b, sum_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
-		VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
-		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
+		VARIABLE a_sign       : SIGNED(a'RANGE)       := SIGNED(a);
+		VARIABLE b_sign       : SIGNED(a'RANGE)       := SIGNED(b);
 		VARIABLE sum_a_b_sign : SIGNED(sum_a_b'RANGE) := SIGNED(sum_a_b);
 	BEGIN
 		IF (a_sign >= 0 xor b_sign >= 0) THEN
-			RETURN '0'; -- no overflow from addition can occur when signed values have different signs
+			RETURN '0';                 -- no overflow from addition can occur when signed values have different signs
 		ELSIF (sum_a_b_sign >= 0 xor a_sign >= 0) THEN -- signs are same so use either a_sign|b_sign
-			RETURN '1';	-- overflow has occured - note sum wrapped to a different sign than inputs
-		ELSE 
+			RETURN '1';                 -- overflow has occured - note sum wrapped to a different sign than inputs
+		ELSE
 			RETURN '0';
 		END IF;
 	END;
 
 	FUNCTION S_SUB_OVFLW_DET(a, b, sub_a_b : STD_LOGIC_VECTOR) RETURN STD_LOGIC is
-		VARIABLE a_sign : SIGNED(a'RANGE) := SIGNED(a);
-		VARIABLE b_sign : SIGNED(a'RANGE) := SIGNED(b);
-		VARIABLE sub_a_b_sign: SIGNED(sub_a_b'RANGE) := SIGNED(sub_a_b);
+		VARIABLE a_sign       : SIGNED(a'RANGE)       := SIGNED(a);
+		VARIABLE b_sign       : SIGNED(a'RANGE)       := SIGNED(b);
+		VARIABLE sub_a_b_sign : SIGNED(sub_a_b'RANGE) := SIGNED(sub_a_b);
 	BEGIN
 		IF not (a_sign >= 0 xor b_sign >= 0) THEN
-			RETURN '0'; -- no overflow from subtraction can occur when signed values have same signs
+			RETURN '0';                 -- no overflow from subtraction can occur when signed values have same signs
 		ELSIF not (sub_a_b_sign >= 0 xor b_sign >= 0) THEN
-			RETURN '1'; -- overflow occurs if the result has the same sign as the subtrahend
-		ELSE 
+			RETURN '1';                 -- overflow occurs if the result has the same sign as the subtrahend
+		ELSE
 			RETURN '0';
 		END IF;
 	END;
-	
+
 	FUNCTION SHIFT_UVEC(vec : STD_LOGIC_VECTOR; shift : INTEGER) RETURN STD_LOGIC_VECTOR is
 	BEGIN
 		IF shift < 0 THEN
@@ -2099,9 +2135,32 @@ PACKAGE BODY common_pkg IS
 	--   wires (NOP, no operation).
 	-- . Both have the same implementation but different c_max and c_clip values.
 	-- . Round up for unsigned so +2.5 becomes 3
-	-- . Round away from zero for signed so round up for positive and round down for negative, so +2.5 becomes 3 and -2.5 becomes -3.
-	-- . Round away from zero is also used by round() in Matlab, Python, TCL
-	-- . Rounding up implies adding 0.5 and then truncation, use clip = TRUE to
+
+	--   Round away from zero was previously implemented here, but for DSP applications
+	--   Round Away from zero can cause a noticable dc bias when using large FFTs and/or doing correlation.
+	--   A more appopriate rounding logic is to use round to nearest even for DSP
+	-- 
+	-- Generates rounding logic when there is bits to round off
+	-- Round nearest Even does the following assuming two fractional bits and two integer bits
+	-- with an output of no fractional and two integer bits.
+	-- #     Binary    Round out
+	-- -1.75  "10.01"     -2   "10"
+	-- -1.5   "10.10"     -2   "10"
+	-- -1.25  "10.11"     -1   "11"
+	-- -1.00  "11.00"     -1   "11"
+	-- -0.75  "11.01"     -1   "11"
+	-- -0.5   "11.10"      0   "00"
+	-- -0.25  "11.11"      0   "00"
+	--  0.00  "00.00"      0   "00"
+	--  0.25  "00.01"      0   "00"
+	--  0.50  "00.10"      0   "00"
+	--  0.75  "00.11"      1   "01"
+	--  1.00  "01.00"      1   "01"
+	--  1.25  "01.01"      1   "01"
+	--  1.5   "01.10"      2   "10"
+	--  1.75  "01.11"      2   "10"
+
+	-- . Rounding can cause an increase to the integer part, use clip = TRUE to
 	--   clip the potential overflow due to adding 0.5 to +max.
 	-- . For negative values overflow due to rounding can not occur, because c_half-1 >= 0 for n>0
 	-- . If the input comes from a product and is rounded to the input width then
@@ -2110,7 +2169,7 @@ PACKAGE BODY common_pkg IS
 	--   maximum product is -8*-8=+64 <= 127-8, so wrapping due to rounding
 	--   overflow will never occur.
 
-	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR IS
+	FUNCTION s_round_inf(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN) RETURN STD_LOGIC_VECTOR IS
 		-- Use SIGNED to avoid NATURAL (32 bit range) overflow error
 		CONSTANT c_in_w  : NATURAL                      := vec'LENGTH;
 		CONSTANT c_out_w : NATURAL                      := vec'LENGTH - n;
@@ -2123,7 +2182,7 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		v_in := SIGNED(vec);
 		IF n > 0 THEN
-			IF clip = TRUE AND v_in > c_max THEN
+			IF clip AND v_in > c_max THEN
 				v_out := c_clip;        -- Round clip to maximum positive to avoid wrap to negative
 			ELSE
 				IF vec(vec'HIGH) = '0' THEN
@@ -2138,9 +2197,32 @@ PACKAGE BODY common_pkg IS
 		RETURN STD_LOGIC_VECTOR(v_out);
 	END;
 
+	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL; clip : BOOLEAN; round_style : t_rounding_mode) RETURN STD_LOGIC_VECTOR IS
+		-- Use SIGNED to avoid NATURAL (32 bit range) overflow error
+		CONSTANT c_out_w           : NATURAL := vec'LENGTH - n;
+		variable input_data_fixed  : sfixed(c_out_w - 1 downto (-n)); -- we will use Fixed Point Lib in VHDL 2008 to do the calcs
+		variable output_data_fixed : sfixed(c_out_w - 1 downto 0);
+	BEGIN
+		input_data_fixed := sfixed(signed(vec));
+		--even rounding specified
+		if round_style = ROUND then
+			if clip then
+				output_data_fixed := resize(arg => input_data_fixed, size_res => output_data_fixed, overflow_style => fixed_saturate, round_style => fixed_round);
+			else
+				output_data_fixed := resize(arg => input_data_fixed, size_res => output_data_fixed, overflow_style => fixed_wrap, round_style => fixed_round);
+			end if;
+		--infinite rounding specified
+		elsif round_style = ROUNDINF then
+			RETURN s_round_inf(vec => vec, n => n, clip => clip);
+		else
+			RETURN truncate(vec, n);
+		end if;
+		RETURN to_slv(output_data_fixed);
+	END;
+
 	FUNCTION s_round(vec : STD_LOGIC_VECTOR; n : NATURAL) RETURN STD_LOGIC_VECTOR IS
 	BEGIN
-		RETURN s_round(vec, n, FALSE);  -- no round clip
+		RETURN s_round(vec, n, FALSE, ROUND); -- no even-round clip
 	END;
 
 	-- An alternative is to always round up, also for negative numbers (i.e. s_round_up = u_round).
@@ -2168,7 +2250,7 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		v_in := UNSIGNED(vec);
 		IF n > 0 THEN
-			IF clip = TRUE AND v_in > c_max THEN
+			IF clip AND v_in > c_max THEN
 				v_out := c_clip;        -- Round clip to +max to avoid wrap to 0
 			ELSE
 				v_out := RESIZE_NUM(SHIFT_RIGHT(v_in + c_half, n), c_out_w); -- Round up
@@ -2351,7 +2433,7 @@ PACKAGE BODY common_pkg IS
 	END;
 
 	FUNCTION split_w(input_w : NATURAL; min_out_w : NATURAL; max_out_w : NATURAL) RETURN NATURAL IS -- Calculate input_w in multiples as close as possible to max_out_w
-	-- Examples: split_w(256, 8, 32) = 32;  split_w(16, 8, 32) = 16; split_w(72, 8, 32) = 18;    -- Input_w must be multiple of 2.
+		-- Examples: split_w(256, 8, 32) = 32;  split_w(16, 8, 32) = 16; split_w(72, 8, 32) = 18;    -- Input_w must be multiple of 2.
 		VARIABLE r : NATURAL;
 	BEGIN
 		r := input_w;
@@ -2407,13 +2489,13 @@ PACKAGE BODY common_pkg IS
 	PROCEDURE proc_common_fifo_asserts(CONSTANT c_fifo_name   : IN STRING;
 	                                   CONSTANT c_note_is_ful : IN BOOLEAN;
 	                                   CONSTANT c_fail_rd_emp : IN BOOLEAN;
-	                                   SIGNAL wr_rst          : IN STD_LOGIC;
-	                                   SIGNAL wr_clk          : IN STD_LOGIC;
-	                                   SIGNAL wr_full         : IN STD_LOGIC;
-	                                   SIGNAL wr_en           : IN STD_LOGIC;
-	                                   SIGNAL rd_clk          : IN STD_LOGIC;
-	                                   SIGNAL rd_empty        : IN STD_LOGIC;
-	                                   SIGNAL rd_en           : IN STD_LOGIC) IS
+	                                   SIGNAL   wr_rst        : IN STD_LOGIC;
+	                                   SIGNAL   wr_clk        : IN STD_LOGIC;
+	                                   SIGNAL   wr_full       : IN STD_LOGIC;
+	                                   SIGNAL   wr_en         : IN STD_LOGIC;
+	                                   SIGNAL   rd_clk        : IN STD_LOGIC;
+	                                   SIGNAL   rd_empty      : IN STD_LOGIC;
+	                                   SIGNAL   rd_en         : IN STD_LOGIC) IS
 	BEGIN
 		-- c_fail_rd_emp : when TRUE report FAILURE when read from an empty FIFO, important when FIFO rd_val is not used
 		-- c_note_is_ful : when TRUE report NOTE when FIFO goes full, to note that operation is on the limit
@@ -2442,7 +2524,7 @@ PACKAGE BODY common_pkg IS
 	BEGIN
 		loop_stage : FOR j IN 0 TO c_nof_stages - 1 LOOP
 			v_prev_stage_pipeline_arr := v_stage_pipeline_arr;
-			loop_cell : FOR i IN 0 TO c_nof_output_per_cell**j - 1 LOOP
+			loop_cell : FOR i IN 0 TO c_nof_output_per_cell ** j - 1 LOOP
 				v_stage_pipeline_arr((i + 1) * c_nof_output_per_cell - 1 DOWNTO i * c_nof_output_per_cell) := v_prev_stage_pipeline_arr(i) + (k_cell_pipeline_factor_arr(j) * k_cell_pipeline_arr);
 			END LOOP;
 		END LOOP;
@@ -2578,8 +2660,8 @@ PACKAGE BODY common_pkg IS
 	--   rising edge of the DCLK.
 	------------------------------------------------------------------------------
 	PROCEDURE proc_common_dclk_generate_sclk(CONSTANT Pfactor : IN POSITIVE;
-	                                         SIGNAL dclk      : IN STD_LOGIC;
-	                                         SIGNAL sclk      : INOUT STD_LOGIC) IS
+	                                         SIGNAL   dclk    : IN STD_LOGIC;
+	                                         SIGNAL   sclk    : INOUT STD_LOGIC) IS
 		VARIABLE v_dperiod : TIME;
 		VARIABLE v_speriod : TIME;
 	BEGIN
@@ -2609,4 +2691,15 @@ PACKAGE BODY common_pkg IS
 		WAIT;
 	END proc_common_dclk_generate_sclk;
 
+	function stringround_to_enum_round(stringin : string) return t_rounding_mode is
+	begin
+		-- use an ugly if because CASE expects string to always be the same length
+		if stringin = "ROUND" then
+			return ROUND;
+		elsif stringin = "ROUNDINF" then
+			return ROUNDINF;
+		else
+			return TRUNCATE;
+		end if;
+	end function stringround_to_enum_round;
 END common_pkg;

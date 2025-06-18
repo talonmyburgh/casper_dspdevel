@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 
 LIBRARY IEEE, common_pkg_lib, casper_mm_lib, casper_ram_lib;
 USE IEEE.STD_LOGIC_1164.ALL;

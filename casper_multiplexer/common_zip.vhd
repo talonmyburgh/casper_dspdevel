@@ -54,7 +54,7 @@ architecture rtl of common_zip is
   end record;
   
   signal r, rin : reg_type; 
-  
+   
 begin
   
   comb : process(r, rst, in_val, in_dat_arr)

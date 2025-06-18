@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 
 -- Purpose: Test bench for fft_reorder_sepa_pipe
 -- Features:

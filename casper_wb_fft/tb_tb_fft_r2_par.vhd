@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 
 -- Purpose: Multi-testbench for fft_r2_par using file data
 -- Description:

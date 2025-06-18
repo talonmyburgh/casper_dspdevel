@@ -304,6 +304,21 @@ PACKAGE tb_common_pkg IS
 	PROCEDURE proc_common_read_mem_file(file_name           : IN STRING;
 	                                    SIGNAL return_array : OUT t_integer_arr);									
 
+	PROCEDURE csv_parse_line_to_array(line_in : IN STRING;
+								delimiter : IN CHARACTER;
+								value_array : OUT t_nat_integer_arr;
+								nof_values : OUT INTEGER);									
+	PROCEDURE csv_read_file_to_array(file_status  : INOUT FILE_OPEN_STATUS;
+                             FILE in_file : TEXT;
+                             value_matrix : OUT t_nat_integer_matrix;
+                             max_lines    : IN INTEGER;
+                             delimiter    : IN CHARACTER);
+	
+	PROCEDURE csv_open_and_read_file(file_name : IN STRING;
+								value_matrix : OUT t_nat_integer_matrix;
+								max_lines    : IN INTEGER;
+								delimiter    : IN CHARACTER);
+
 	-- Complex multiply function with conjugate option for input b
 	FUNCTION func_complex_multiply(in_ar, in_ai, in_br, in_bi : STD_LOGIC_VECTOR; conjugate_b : BOOLEAN; str : STRING; g_out_dat_w : NATURAL) RETURN STD_LOGIC_VECTOR;
 
@@ -1262,6 +1277,97 @@ PACKAGE BODY tb_common_pkg IS
 		proc_common_close_file(v_file_status, v_in_file);
 	END proc_common_read_mem_file;
 
+	------------------------------------------------------------------------------
+	-- PROCEDURE: Parses a line of text into an integer array using a specified delimiter.
+	------------------------------------------------------------------------------
+	PROCEDURE csv_parse_line_to_array(line_in : IN STRING;
+								delimiter : IN CHARACTER;
+								value_array : OUT t_nat_integer_arr;
+								nof_values : OUT INTEGER) IS
+		VARIABLE v_idx : INTEGER := 1;
+		VARIABLE v_len : INTEGER := line_in'LENGTH;
+		VARIABLE v_start : INTEGER := 1;
+		VARIABLE v_cnt_vals : INTEGER := 0;
+		VARIABLE v_substr : STRING(1 TO 100);
+		VARIABLE v_int : INTEGER;
+		VARIABLE v_good : BOOLEAN;
+		VARIABLE v_subline : LINE;
+	BEGIN
+		WHILE v_start <= v_len LOOP
+			-- Find the next delimiter position
+			v_idx := v_start;
+			WHILE v_idx <= v_len AND line_in(v_idx) /= delimiter LOOP
+				v_idx := v_idx + 1;
+			END LOOP;
+			-- Extract substring
+			IF v_idx > v_start THEN
+				v_substr := line_in(v_start TO v_idx - 1);
+			ELSE
+				v_substr := line_in(v_start TO v_len);
+			END IF;
+			-- Convert substring to integer
+			WRITE(v_subline, v_substr);
+			READ(v_subline, v_int, v_good);
+			IF v_good = FALSE THEN
+				REPORT "COMMON : Read from line unsuccessful " SEVERITY FAILURE;
+			END IF;
+			value_array(v_cnt_vals) := v_int;
+			v_cnt_vals := v_cnt_vals + 1;
+			-- Move to the next part of the line
+			v_start := v_idx + 1;
+		END LOOP;
+		nof_values := v_cnt_vals;
+	END csv_parse_line_to_array;
+
+	------------------------------------------------------------------------------
+	-- PROCEDURE: Reads a file line by line and populates an array of integer arrays.
+	------------------------------------------------------------------------------
+	PROCEDURE csv_read_file_to_array(file_status  : INOUT FILE_OPEN_STATUS;
+								FILE in_file : TEXT;
+								value_matrix : OUT t_nat_integer_matrix;
+								max_lines    : IN INTEGER;
+								delimiter    : IN CHARACTER) IS
+		VARIABLE v_line : LINE;
+		VARIABLE v_array : t_nat_integer_arr(0 TO 100); -- Adjust size as needed
+		VARIABLE v_nof_values : INTEGER;
+		VARIABLE v_line_idx : INTEGER := 0;
+	BEGIN
+		IF file_status /= OPEN_OK THEN
+			REPORT "COMMON : File is not opened " SEVERITY FAILURE;
+		ELSE
+			WHILE NOT ENDFILE(in_file) AND v_line_idx < max_lines LOOP
+				READLINE(in_file, v_line);
+				csv_parse_line_to_array(v_line.all, delimiter, v_array, v_nof_values);
+				FOR i IN 0 TO v_nof_values - 1 LOOP
+					value_matrix(v_line_idx, i) := v_array(i);
+				END LOOP;
+				v_line_idx := v_line_idx + 1;
+			END LOOP;
+		END IF;
+	END csv_read_file_to_array;
+
+	------------------------------------------------------------------------------
+	-- PROCEDURE: Opens a file and calls read_file_to_array to process it.
+	------------------------------------------------------------------------------
+	PROCEDURE csv_open_and_read_file(file_name : IN STRING;
+								value_matrix : OUT t_nat_integer_matrix;
+								max_lines    : IN INTEGER;
+								delimiter    : IN CHARACTER) IS
+		FILE in_file : TEXT;
+		VARIABLE file_status : FILE_OPEN_STATUS;
+	BEGIN
+		-- Open the file
+		proc_common_open_file(file_status, in_file, file_name, READ_MODE);
+		IF file_status /= OPEN_OK THEN
+			REPORT "COMMON : Unable to open file " & file_name SEVERITY FAILURE;
+		ELSE
+			-- Call read_file_to_array to process the file
+			csv_read_file_to_array(file_status, in_file, value_matrix, max_lines, delimiter);
+			-- Close the file
+			FILE_CLOSE(in_file);
+		END IF;
+	END csv_open_and_read_file;
+	
 	------------------------------------------------------------------------------
 	-- FUNCTION: Complex multiply with conjugate option for input b
 	------------------------------------------------------------------------------

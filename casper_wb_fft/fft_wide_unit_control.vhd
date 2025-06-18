@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 -- Purpose: Composition of the SOSI output streams for the fft_wide_unit. 
 --
 -- Description: This unit monitors the in_val signal. Based on the assertion of the 
@@ -50,8 +54,8 @@ entity fft_wide_unit_control is
     port(
         rst          : in  std_logic := '0';
         clk          : in  std_logic;
-        in_re_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
-        in_im_arr    : in  t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+        in_re_arr    : in  t_slv_64_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0); -- note only g_fft.out_dat_w bits used!
+        in_im_arr    : in  t_slv_64_arr(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
         in_val       : in  std_logic;
         ctrl_sosi    : in  t_fft_sosi_in; -- Inputrecord for tapping off the sync, bsn and err.              
         out_sosi_arr : out t_fft_sosi_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0) -- Streaming output interface    
@@ -64,8 +68,8 @@ architecture rtl of fft_wide_unit_control is
     constant c_pipe_ctrl       : natural := c_pipe_data - 1; -- Delay depth for the control signals
     constant c_packet_size     : natural := (2 ** g_fft.nof_chan) * g_fft.nof_points / g_fft.wb_factor; -- Definition of the packet size
     constant c_ctrl_fifo_depth : natural := 16; -- Depth of the bsn and err fifo.  
-
-    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_out(g_nof_ffts * g_fft.wb_factor - 1 downto 0);
+    type t_fft_slv_arr_outl is array(g_nof_ffts * g_fft.wb_factor - 1 downto 0) of std_logic_vector(g_fft.out_dat_w-1 downto 0);
+    type t_fft_slv_arr2 is array (integer range <>) of t_fft_slv_arr_outl;
 
     type state_type is (s_idle, s_run, s_hold);
 
@@ -205,10 +209,9 @@ begin
 
         for I in g_nof_ffts * g_fft.wb_factor - 1 downto 0 loop
             v.out_sosi_arr(I).sync := '0';
+            v.in_re_arr2_dly(0)(I) := in_re_arr(I)(g_fft.out_dat_w-1 downto 0); -- Latch the data into the input registers. 
+            v.in_im_arr2_dly(0)(I) := in_im_arr(I)(g_fft.out_dat_w-1 downto 0); -- Latch the data into the input registers
         end loop;
-
-        v.in_re_arr2_dly(0) := in_re_arr; -- Latch the data into the input registers. 
-        v.in_im_arr2_dly(0) := in_im_arr; -- Latch the data into the input registers. 
 
         v.in_re_arr2_dly(c_pipe_data - 1 downto 1) := r.in_re_arr2_dly(c_pipe_data - 2 downto 0); -- Shift the delay registers
         v.in_im_arr2_dly(c_pipe_data - 1 downto 1) := r.in_im_arr2_dly(c_pipe_data - 2 downto 0); -- Shift the delay registers

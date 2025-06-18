@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 -- Purpose: Test bench for fft_r2_pipe.vhd using file data
 --
 -- Usage:
@@ -167,6 +171,7 @@ entity tb_fft_r2_pipe is
     g_data_file_nof_lines   : natural := 6400;
     g_enable_in_val_gaps    : boolean := FALSE;   -- when false then in_val flow control active continuously, else with random inactive gaps
     g_twid_file_stem        : string := "UNUSED";
+
     g_use_variant : STRING := "4DSP";
     g_ovflw_behav : STRING := "WRAP";
     g_use_round   : STRING := "TRUNCATE"
@@ -223,6 +228,10 @@ architecture tb of tb_fft_r2_pipe is
   signal input_data_b_arr       : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- one value per line (B via im input)
   signal input_data_c_arr       : t_integer_arr(0 to g_data_file_nof_lines*c_nof_complex-1) := (OTHERS=>0);  -- two values per line (re, im)
   
+  signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0); 
+  -- signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := "1111100";
+  --signal shiftreg               : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := "111100";
+
   signal ovflw                  : std_logic_vector(ceil_log2(g_fft.nof_points)-1 Downto 0) := (others=>'0');
 
   signal expected_data_a_arr    : t_integer_arr(0 to g_data_file_nof_lines-1) := (OTHERS=>0);                -- half spectrum, two values per line (re, im)
@@ -299,6 +308,9 @@ architecture tb of tb_fft_r2_pipe is
   
 begin
 
+  shiftreg(1 downto 0) <= "00";
+  shiftreg(ceil_log2(g_fft.nof_points)-1 Downto 2) <= (others=>'1');
+
   clk <= (not clk) or tb_end after c_clk_period/2;
   rst <= '1', '0' after c_clk_period*7;
   random <= func_common_random(random) WHEN rising_edge(clk);
@@ -365,7 +377,7 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round,
+    g_round => stringround_to_enum_round(g_use_round),
     g_twid_file_stem => g_twid_file_stem
   )
   port map (

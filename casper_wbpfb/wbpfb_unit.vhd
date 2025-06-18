@@ -67,7 +67,7 @@ entity wbpfb_unit is
         g_use_variant       : string  := "4DSP"; --! = "4DSP" or "3DSP" for 3 or 4 mult cmult.
         g_use_dsp           : string  := "yes"; --! = "yes" or "no"
         g_ovflw_behav       : string  := "WRAP"; --! = "WRAP" or "SATURATE" will default to WRAP if invalid option used
-        g_use_round         : string  := "ROUND"; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
+        g_use_round         : t_rounding_mode  := ROUND; --! = "ROUND" or "TRUNCATE" will default to TRUNCATE if invalid option used
         g_fft_ram_primitive : string  := "auto"; --! = "auto", "distributed", "block" or "ultra" for RAM architecture
         g_fil_ram_primitive : string  := "auto"
     );
@@ -116,16 +116,16 @@ architecture str of wbpfb_unit is
     signal fil_out_arr : t_fil_slv_arr_out(c_nof_complex * g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0); -- output of the filterbank is the fft input 
     signal fil_out_val : std_logic;
 
-    signal fft_in_re_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_in_im_arr : t_fft_slv_arr_in(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_re_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_in_im_arr : t_slv_44_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fft_in_val    : std_logic;
 
     signal fft_in_sosi : t_fft_sosi_in;
-
-    signal fft_out_re_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_im_arr_i : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_re_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
-    signal fft_out_im_arr   : t_fft_slv_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    type t_fft_out_type is array (g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) of std_logic_vector(g_wpfb.fft_out_dat_w-1 downto 0);
+    signal fft_out_re_arr_i : t_fft_out_type;
+    signal fft_out_im_arr_i : t_fft_out_type;
+    signal fft_out_re_arr   : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
+    signal fft_out_im_arr   : t_slv_64_arr(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0);
     signal fft_out_val      : std_logic_vector(g_wpfb.nof_wb_streams - 1 downto 0);
 
     signal fft_out_sosi_arr : t_fft_sosi_arr_out(g_wpfb.nof_wb_streams * g_wpfb.wb_factor - 1 downto 0) := (others => c_fft_sosi_rst_out);
@@ -247,8 +247,8 @@ begin
         -----------------------------------------------------------------------------------------------------
         gen_prep_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
             gen_prep_fft_wb_factor : for J in 0 to g_wpfb.wb_factor - 1 generate
-                fft_in_re_arr(I * g_wpfb.wb_factor + J) <= fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex);
-                fft_in_im_arr(I * g_wpfb.wb_factor + J) <= fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex + 1);
+                fft_in_re_arr(I * g_wpfb.wb_factor + J) <= RESIZE_SVEC(fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex),44);
+                fft_in_im_arr(I * g_wpfb.wb_factor + J) <= RESIZE_SVEC(fil_out_arr(J * c_nof_complex * g_wpfb.nof_wb_streams + I * c_nof_complex + 1),44);
             end generate;
         end generate;
         -----------------------------------------------------------------------------------------------------
@@ -287,8 +287,8 @@ begin
         -- PREPARE INPUT DATA FOR WIDEBAND FFT
         ---------------------------------------------------------------
         gen_prep_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
-            fft_in_re_arr(I) <= fil_out_arr(I * c_nof_complex);
-            fft_in_im_arr(I) <= fil_out_arr(I * c_nof_complex + 1);
+            fft_in_re_arr(I) <= RESIZE_SVEC(fil_out_arr(I * c_nof_complex),44);
+            fft_in_im_arr(I) <= RESIZE_SVEC(fil_out_arr(I * c_nof_complex + 1),44);
         end generate;
 
         gen_prep_pipe_fft_streams : for I in 0 to g_wpfb.nof_wb_streams - 1 generate
@@ -301,7 +301,7 @@ begin
                     g_use_variant => g_use_variant,
                     g_use_dsp => g_use_dsp,
                     g_ovflw_behav => g_ovflw_behav,
-                    g_use_round => g_use_round
+                    g_round => g_use_round
                 )
                 port map(
                     clk      => clk,
@@ -316,8 +316,8 @@ begin
                     ovflw    => ovflw,
                     out_val  => fft_out_val(I)
                 );
-            fft_out_re_arr(I) <= fft_out_re_arr_i(I);
-            fft_out_im_arr(I) <= fft_out_im_arr_i(I);
+            fft_out_re_arr(I) <= RESIZE_SVEC(fft_out_re_arr_i(I),64);
+            fft_out_im_arr(I) <= RESIZE_SVEC(fft_out_im_arr_i(I),64);
         end generate;
     end generate;
 

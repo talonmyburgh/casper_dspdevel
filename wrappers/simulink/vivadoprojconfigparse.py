@@ -24,6 +24,7 @@ with open('./tmp.txt', mode="r") as hierarchyfile:
 hierarchyfile.close()
 
 # open matlab config file in read mode
+print(sys.argv)
 with open(sys.argv[2], mode='r') as mlibfile:
     mlib_lines = mlibfile.readlines()
     # locate where comment tag to include file names is

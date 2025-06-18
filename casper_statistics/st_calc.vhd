@@ -191,7 +191,8 @@ BEGIN
   --mul: ENTITY common_lib.common_complex_mult(str)
   mul: ENTITY casper_multiplier_lib.common_complex_mult
   GENERIC MAP (
-    g_variant          => "IP",
+   --g_use_ip           => "IP",
+
     g_in_a_w           => in_ar'LENGTH,
     g_in_b_w           => in_br'LENGTH,
     g_out_p_w          => mult_re'LENGTH,

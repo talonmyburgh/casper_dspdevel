@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 --
 -- Purpose: Test bench for fft_r2_par.vhd using file data
 --
@@ -216,16 +220,16 @@ architecture tb of tb_fft_r2_par is
   signal in_dat_b               : std_logic_vector(c_in_dat_w-1 downto 0);
   signal in_dat_b_scope         : integer;
   signal in_val_ab              : std_logic:= '0';
-  signal in_re_arr              : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
-  signal in_im_arr              : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
+  signal in_re_arr              : t_slv_44_arr(g_fft.nof_points-1 downto 0);
+  signal in_im_arr              : t_slv_44_arr(g_fft.nof_points-1 downto 0);
   signal in_val                 : std_logic:= '0';
   signal in_val_cnt             : natural := 0;
   signal in_gap                 : std_logic := '0';
 
   -- Output control
 
-  signal out_re_arr             : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
-  signal out_im_arr             : t_fft_slv_arr_stg(g_fft.nof_points-1 downto 0);
+  signal out_re_arr             : t_slv_64_arr(g_fft.nof_points-1 downto 0);
+  signal out_im_arr             : t_slv_64_arr(g_fft.nof_points-1 downto 0);
   signal out_val                : std_logic:= '0';  -- for parallel output
   signal out_val_cnt            : natural := 0;
   signal out_channel            : natural := 0;     -- not used for parallel FFT, set at default 0
@@ -310,11 +314,11 @@ begin
     for B in 0 to g_data_file_nof_lines/g_fft.nof_points-1 loop  -- serial
       for I in 0 to g_fft.nof_points-1 loop  -- parallel
         if c_in_complex then
-          in_re_arr(I) <= to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)));
-          in_im_arr(I) <= to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)+1));
+          in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)),g_fft.stage_dat_w),44);
+          in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_c_arr(2*(B*g_fft.nof_points+I)+1),g_fft.stage_dat_w),44);
         else
-          in_re_arr(I) <= to_fft_stg_svec(input_data_a_arr(B*g_fft.nof_points+I));
-          in_im_arr(I) <= to_fft_stg_svec(input_data_b_arr(B*g_fft.nof_points+I));
+          in_re_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_a_arr(B*g_fft.nof_points+I),g_fft.stage_dat_w),44);
+          in_im_arr(I) <= RESIZE_SVEC(to_fft_stg_svec(input_data_b_arr(B*g_fft.nof_points+I),g_fft.stage_dat_w),44);
         end if;
       end loop;
       in_val <= '1';
@@ -340,7 +344,7 @@ begin
     g_fft      => g_fft,
     g_use_variant => g_use_variant,
     g_ovflw_behav => g_ovflw_behav,
-    g_use_round => g_use_round
+    g_round => stringround_to_enum_round(g_use_round)
   )
   port map(
     clk        => dut_clk,

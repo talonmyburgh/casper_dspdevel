@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 --
 -- Purpose: This unit performs the reordering and the separation for the two real
 --          input option of the complex fft.
@@ -148,8 +152,16 @@ architecture rtl of fft_reorder_sepa_pipe is
 		count_chan : natural;           -- Counter that holds the number of channels for reading. 
 		state      : state_type;        -- The state machine. 
 	end record;
+	
+	constant c_reg_type : reg_type := (
+	       rd_en => '0',
+	       switch => '0',
+	       count_up => 0,
+	       count_down => 0,
+	       count_chan => 0,
+	       state => s_idle);
 
-	signal r, rin : reg_type;
+	signal r, rin : reg_type := c_reg_type;
 
 begin
     u_adr_chan_cnt : entity casper_counter_lib.common_counter
@@ -486,8 +498,11 @@ begin
     -- the output signals are directly driven. 
     gen_no_separate : if g_separate = false generate
         rd_adr  <= TO_UVEC(r.count_up, c_adr_tot_w);
-        sep_out_dat_i <= buf_rd_dat;
-        sep_out_val_i <= buf_rd_val;
+
+        -- Taking data directly from Block ram is not advisable add a pipeline stage here to improve place and route timing into the pipeline sum block will improve performance.
+        
+        sep_out_dat_i <= buf_rd_dat; -- when rising_edge(clk);
+        sep_out_val_i <= buf_rd_val; -- when rising_edge(clk);
     end generate;
 
     -- when doing things in place, read transaction is same as write

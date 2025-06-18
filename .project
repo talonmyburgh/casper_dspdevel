@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sigasi_dspdevel</name>
+	<name>casper_dspdevel</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,9 +17,9 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>com.sigasi.hdt.toolchains.vunit.nature</nature>
 		<nature>com.sigasi.hdt.vhdl.ui.vhdlNature</nature>
 		<nature>org.eclipse.xtext.ui.shared.xtextNature</nature>
-		<nature>com.sigasi.hdt.toolchains.vunit.nature</nature>
 	</natures>
 	<linkedResources>
 		<link>
@@ -35,17 +35,22 @@
 		<link>
 			<name>Common Libraries/IEEE</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/IEEE</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/IEEE</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/IEEE Synopsys</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/IEEE%20Synopsys</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/IEEE%20Synopsys</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/STD</name>
 			<type>2</type>
-			<locationURI>sigasiresource:/vhdl/2008/STD</locationURI>
+			<locationURI>sigasiresource:/vhdl/93/STD</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/osvvm</name>
+			<type>2</type>
+			<location>//export/data_1/vunit/vunit/vhdl/osvvm</location>
 		</link>
 		<link>
 			<name>Common Libraries/unisim</name>
@@ -128,6 +133,21 @@
 			<locationURI>VUNIT/vhdl/data_types/src/data_types_context.vhd</locationURI>
 		</link>
 		<link>
+			<name>Common Libraries/vunit_lib/data_types_private_pkg.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/data_types_private_pkg.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/dict_pkg-2008p.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/dict_pkg-2008p.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/dict_pkg-body.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/dict_pkg-body.vhd</locationURI>
+		</link>
+		<link>
 			<name>Common Libraries/vunit_lib/dict_pkg.vhd</name>
 			<type>1</type>
 			<locationURI>VUNIT/vhdl/data_types/src/dict_pkg.vhd</locationURI>
@@ -136,6 +156,21 @@
 			<name>Common Libraries/vunit_lib/dictionary.vhd</name>
 			<type>1</type>
 			<locationURI>VUNIT/vhdl/dictionary/src/dictionary.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/event_common_pkg.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/event_common_pkg.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/event_pkg.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/event_pkg.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/event_private_pkg.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/event_private_pkg.vhd</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/vunit_lib/external_integer_vector_pkg.vhd</name>
@@ -151,6 +186,11 @@
 			<name>Common Libraries/vunit_lib/file_pkg.vhd</name>
 			<type>1</type>
 			<locationURI>VUNIT/vhdl/logging/src/file_pkg.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/vunit_lib/id_pkg.vhd</name>
+			<type>1</type>
+			<locationURI>VUNIT/vhdl/data_types/src/id_pkg.vhd</locationURI>
 		</link>
 		<link>
 			<name>Common Libraries/vunit_lib/integer_array_pkg-body.vhd</name>
@@ -326,6 +366,11 @@
 			<name>Common Libraries/vunit_lib/vunit_run_context.vhd</name>
 			<type>1</type>
 			<locationURI>VUNIT/vhdl/vunit_run_context.vhd</locationURI>
+		</link>
+		<link>
+			<name>Common Libraries/xpm/xpm_VCOMP.vhd</name>
+			<type>1</type>
+			<locationURI>/export/data_1/Xilinx/Vivado/2022.2/data/ip/xpm/xpm_VCOMP.vhd</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
