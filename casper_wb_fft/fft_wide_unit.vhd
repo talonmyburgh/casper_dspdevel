@@ -17,6 +17,11 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
+
 -- Purpose: Wideband FFT with Subband Statistics and streaming interfaces. 
 --
 -- Description: This unit connects an incoming array of streaming interfaces

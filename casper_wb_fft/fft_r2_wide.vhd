@@ -17,6 +17,10 @@
 -- limitations under the License.
 --
 --------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 -- Purpose: The fft_r2_wide unit performs a complex FFT that is partly pipelined 
 --          and partly parallel. 
 --
@@ -237,10 +241,10 @@ begin
     gen_fft_r2_par : if g_fft.wb_factor = g_fft.nof_points generate
         --RESIZE
         gen_fft_pipe_inputs : for I in 0 to g_fft.wb_factor - 1 generate
-            par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), g_fft.stage_dat_w);
-            par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), g_fft.stage_dat_w);
-            out_re_arr(I)        <= RESIZE_SVEC(par_stg_fft_re_out(I), g_fft.out_dat_w);
-            out_im_arr(I)        <= RESIZE_SVEC(par_stg_fft_im_out(I), g_fft.out_dat_w);
+            par_stg_fft_re_in(I) <= RESIZE_SVEC(in_re_arr(I), 44);
+            par_stg_fft_im_in(I) <= RESIZE_SVEC(in_im_arr(I), 44);
+            out_re_arr(I)        <= RESIZE_SVEC(par_stg_fft_re_out(I), 64);
+            out_im_arr(I)        <= RESIZE_SVEC(par_stg_fft_im_out(I), 64);
         end generate;
 
         u_fft_r2_par : entity work.fft_r2_par

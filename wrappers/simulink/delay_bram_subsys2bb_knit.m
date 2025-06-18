@@ -10,10 +10,10 @@ function delay_bram_subsys2bb_knit()
 
     subsysblk = gcb;
     delay_bram_bb = [subsysblk '/delay_bram'];
-    is_async = checkbox2bool(get_param(subsysblk,'is_async'))
+    is_async = checkbox2bool(get_param(subsysblk,'is_async'));
 
     inprts = find_system(subsysblk,'LookUnderMasks','on','BlockType','Inport');
-    in_en = find(contains(inprts,'en'))
+    in_en = find(contains(inprts,'en'));
 
     bbports = get_param(delay_bram_bb,'PortHandles');
     if(is_async)

@@ -15,6 +15,7 @@ IP Cores:
    multiplier
    misc
    r2sdf_fft
+   reorder
    wideband_fft
    wideband_pfb
    

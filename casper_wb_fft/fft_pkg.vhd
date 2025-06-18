@@ -17,7 +17,10 @@
 -- limitations under the License.
 --
 -------------------------------------------------------------------------------
-
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 library ieee, common_pkg_lib;
 use IEEE.std_logic_1164.all;
 use common_pkg_lib.common_pkg.all;

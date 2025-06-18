@@ -56,6 +56,8 @@ function bit_reverse_config(this_block)
 
   %Add Files:
   this_block.addFileToLibrary([filepath '/../../misc/bit_reverse.vhd'],'misc_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
 return;
 end

@@ -16,7 +16,11 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 --
---------------------------------------------------------------------------------  --
+--------------------------------------------------------------------------------
+-- Modified for CASPER by:
+-- @author: Talon Myburgh
+-- @company: Mydon Solutions
+--------------------------------------------------------------------------------
 -- Purpose:  Complex Pipelined Fast Fourier Transform
 -- 
 -- Description: The fft_r2_pipe unit performs a complex pipelined FFT on the incoming data stream.

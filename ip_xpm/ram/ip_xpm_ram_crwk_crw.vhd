@@ -53,6 +53,13 @@ architecture Behavioral of ip_xpm_ram_crwk_crw is
 	SIGNAL we_b      : STD_LOGIC_VECTOR(1 DOWNTO 0) := (others => wren_b);
 
 begin
+	assert 2**g_adr_a_w >= g_nof_words_a
+	report "Address width "&natural'image(g_adr_a_w)&" does not cover the number of words " &natural'image(g_nof_words_a)& " (A)"
+	severity failure;
+
+	assert 2**g_adr_b_w >= g_nof_words_b
+	report "Address width "&natural'image(g_adr_b_w)&" does not cover the number of words " &natural'image(g_nof_words_b)& " (B)"
+	severity failure;
 
 	q_a <= sub_wire0(g_dat_a_w - 1 DOWNTO 0) when rden_a = '1' else (others => 'X');
 	q_b <= sub_wire1(g_dat_b_w - 1 DOWNTO 0) when rden_b = '1' else (others => 'X');

@@ -75,6 +75,8 @@ function addr_bram_vacc_config(this_block)
   this_block.addGeneric('g_bit_w','NATURAL',output_bit_w);
   
   this_block.addFileToLibrary([filepath '/../../casper_accumulators/addr_bram_vacc.vhd'],'xil_defaultlib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_float_types_c.vhd'],'common_pkg_lib');
+  this_block.addFileToLibrary([filepath '/../../common_pkg/fixed_pkg_c.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_pkg/common_pkg.vhd'],'common_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../common_components/common_delay.vhd'],'common_components_lib');
   this_block.addFileToLibrary([filepath '/../../misc/edge_detect.vhd'],'casper_misc_lib');
