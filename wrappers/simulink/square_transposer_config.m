@@ -73,7 +73,7 @@ function square_transposer_config(this_block)
   this_block.addFileToLibrary([filepath '/../../common_slv_arr_pkg/common_slv_arr_pkg.vhd'], 'common_slv_arr_pkg_lib');
   this_block.addFileToLibrary([filepath '/../../casper_delay/delay_simple.vhd'], 'casper_delay_lib');
   this_block.addFileToLibrary([filepath '/../../casper_reorder/mux.vhd'], 'xil_defaultlib');
-  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'], 'casper_counter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_counter.vhd'], 'casper_counter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_reorder/barrel_switcher.vhd'], 'xil_defaultlib');
   this_block.addFileToLibrary([filepath '/../../casper_reorder/square_transposer.vhd'], 'xil_defaultlib');
   return;

@@ -130,7 +130,7 @@ function reorder_config(this_block)
   this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r_r.vhd'],'casper_ram_lib');
   this_block.addFileToLibrary([filepath '/../../casper_ram/common_rom_r.vhd'],'casper_ram_lib');
 
-  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_up_counter.vhd'], 'casper_counter_lib');
+  this_block.addFileToLibrary([filepath '/../../casper_counter/free_run_counter.vhd'], 'casper_counter_lib');
   this_block.addFileToLibrary([filepath '/../../casper_counter/common_counter.vhd'], 'casper_counter_lib');
 
   this_block.addFileToLibrary([filepath '/../../casper_bus/bus_fill_slv_arr.vhd'], 'casper_bus_lib');

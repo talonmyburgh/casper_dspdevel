@@ -38,7 +38,7 @@ begin
     )
   );
 
-  u_counter : entity casper_counter_lib.free_run_up_counter
+  u_counter : entity casper_counter_lib.free_run_counter
     generic map (
       g_cnt_w => s_counter_out'length,
       g_cnt_up_not_down => FALSE,

@@ -2,8 +2,9 @@
 <com.sigasi.hdt.shared.librarymapping.model:LibraryMappings xmlns:com.sigasi.hdt.shared.librarymapping.model="com.sigasi.hdt.vhdl.scoping.librarymapping" Version="2">
   <Mappings Location="intel/altera_mf/altera_mf.vhd" Library="altera_mf"/>
   <Mappings Location="intel/altera_mf/altera_mf_components.vhd" Library="altera_mf"/>
-  <Mappings Location="casper_accumulators" Library="casper_accumulator_lib"/>
+  <Mappings Location="casper_accumulators" Library="casper_accumulators_lib"/>
   <Mappings Location="casper_adder" Library="casper_adder_lib"/>
+  <Mappings Location="casper_bus" Library="casper_bus_lib"/>
   <Mappings Location="casper_counter" Library="casper_counter_lib"/>
   <Mappings Location="casper_delay" Library="casper_delay_lib"/>
   <Mappings Location="casper_diagnostics" Library="casper_diagnostics_lib"/>
@@ -19,6 +20,7 @@
   <Mappings Location="casper_pipeline" Library="casper_pipeline_lib"/>
   <Mappings Location="casper_ram" Library="casper_ram_lib"/>
   <Mappings Location="casper_requantize" Library="casper_requantize_lib"/>
+  <Mappings Location="casper_reorder" Library="casper_reorder_lib"/>
   <Mappings Location="casper_sim_tools" Library="casper_sim_tools_lib"/>
   <Mappings Location="casper_statistics" Library="casper_statistics_lib"/>
   <Mappings Location="common_components" Library="common_components_lib"/>

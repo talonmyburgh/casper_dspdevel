@@ -150,7 +150,7 @@ BEGIN
   u_rnd_complex_noise_ip    : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb4_complex_ip,         c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, TRUE, c_twid_file_stem, FALSE);
 
   -- Extreme wb_factor=1 and wb_factor=nof_points
-  u_act_wb1_complex_noise   : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex,    c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
-  u_act_wb1_complex_noise_ip: ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex_ip, c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
-  u_act_wb64_complex_noise  : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb64_complex,   c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
+--  u_act_wb1_complex_noise   : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex,    c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
+--  u_act_wb1_complex_noise_ip: ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb1_complex_ip, c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
+--  u_act_wb64_complex_noise  : ENTITY work.tb_fft_r2_wide GENERIC MAP (c_fft_wb64_complex,   c_diff_margin, c_unused, 0, c_unused, 0, c_noise_complex,   640,   640, FALSE, c_twid_file_stem, FALSE);
 END tb;

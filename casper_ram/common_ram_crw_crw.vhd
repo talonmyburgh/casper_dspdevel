@@ -111,7 +111,7 @@ BEGIN
 				g_rd_latency        => c_rd_latency,
 				g_init_file         => g_init_file,
 				g_ram_primitive     => g_ram_primitive,
-				g_port_b_write_mode => g_write_mode_b
+				g_port_b_write_mode => "read_first"
 			)
 			PORT MAP(
 				wrclock   => clk_a,

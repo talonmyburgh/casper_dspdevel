@@ -5,7 +5,7 @@ LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 USE IEEE.numeric_std.all;
 
-ENTITY free_run_up_counter is
+ENTITY free_run_counter is
     generic (
         g_cnt_w : NATURAL := 4;
         g_cnt_up_not_down : BOOLEAN := TRUE;
@@ -21,7 +21,7 @@ ENTITY free_run_up_counter is
     );
 END ENTITY;
 
-ARCHITECTURE rtl of free_run_up_counter is
+ARCHITECTURE rtl of free_run_counter is
     CONSTANT c_max_count : NATURAL := 2**g_cnt_w - 1;
 
     SIGNAL s_count : STD_LOGIC_VECTOR(g_cnt_w - 1 DOWNTO 0);
@@ -34,13 +34,15 @@ BEGIN
         IF (reset = '1') THEN
             cnt := g_cnt_initial_value;
         ELSIF (rising_edge(clk) and ce = '1') THEN
-            IF g_cnt_up_not_down THEN
-                cnt := cnt + 1;
-            ELSE
-                IF (cnt = 0) THEN
-                    cnt := c_max_count;
+            IF enable = '1' THEN
+                IF g_cnt_up_not_down THEN
+                    cnt := cnt + 1;
                 ELSE
-                    cnt := cnt - 1;
+                    IF (cnt = 0) THEN
+                        cnt := c_max_count;
+                    ELSE
+                        cnt := cnt - 1;
+                    END IF;
                 END IF;
             END IF;
         END IF;

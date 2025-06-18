@@ -54,7 +54,7 @@ begin
       o_data => o_sync
   );
   
-  u_counter : entity casper_counter_lib.free_run_up_counter
+  u_counter : entity casper_counter_lib.free_run_counter
     generic map (
       g_cnt_w => c_inputs_log2,
       g_cnt_up_not_down => FALSE,
