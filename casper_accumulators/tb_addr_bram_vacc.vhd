@@ -2,7 +2,7 @@
 -- @author: Talon Myburgh
 -- @company: Mydon Solutions
 
-LIBRARY IEEE, std, common_pkg_lib;
+LIBRARY IEEE, common_pkg_lib;
 USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 USE common_pkg_lib.common_pkg.ALL;

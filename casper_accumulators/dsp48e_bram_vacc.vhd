@@ -117,7 +117,7 @@ valid <= s_pulse_ext_out;
 -- DSP48 blocks
 --------------------------------------------------------------
 use_dsp48e1 : IF g_dsp48_version = 1 GENERATE 
-DSP48E1_inst : DSP48E1
+DSP48E1_inst : entity unisim.DSP48E1
    generic map (
       -- Feature Control Attributes: Data Path Selection
       A_INPUT => "DIRECT",               -- Selects A input source, "DIRECT" (A port) or "CASCADE" (ACIN port)
@@ -210,7 +210,7 @@ DSP48E1_inst : DSP48E1
 END GENERATE;
 
 use_dsp48e2 : IF g_dsp48_version = 2 GENERATE 
-   DSP48E2_inst : DSP48E2
+   DSP48E2_inst : entity unisim.DSP48E2
    generic map (
       -- Feature Control Attributes: Data Path Selection
       AMULTSEL => "A",                   -- Selects A input to multiplier (A, AD)

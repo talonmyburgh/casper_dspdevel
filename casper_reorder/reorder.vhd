@@ -478,7 +478,7 @@ BEGIN
             out_sig => s_counter_msb_falling_edge
           );
 
-        u_map_src : entity casper_misc_lib.reg
+        u_map_src : entity casper_misc_lib.reg_vhdl
           generic map (
             g_initial_value => TO_UVEC(0, 1)
           )

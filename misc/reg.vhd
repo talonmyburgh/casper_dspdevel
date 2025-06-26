@@ -5,7 +5,7 @@
 LIBRARY IEEE;
 USE IEEE.std_logic_1164.all;
 
-ENTITY reg is
+ENTITY reg_vhdl is
   generic (
     g_initial_value  : std_logic_vector
   );
@@ -20,7 +20,7 @@ ENTITY reg is
   );
 end ENTITY;
 
-ARCHITECTURE rtl of reg is
+ARCHITECTURE rtl of reg_vhdl is
 begin
   p_register : process(clk)
   BEGIN
