@@ -10,6 +10,7 @@ IP Cores:
    :maxdepth: 5
 
    accumulators
+   bus
    delay
    flow_control
    multiplier

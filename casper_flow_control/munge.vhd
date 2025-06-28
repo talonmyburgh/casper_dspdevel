@@ -26,6 +26,9 @@ ARCHITECTURE rtl of munge is
   alias dout_v : STD_LOGIC_VECTOR (dout'length-1 downto 0) is dout;
 begin
 
+  assert din'length = g_number_of_divisions*g_division_size_bits;
+  assert dout'length = g_number_of_divisions*g_division_size_bits;
+
   division_reorder: FOR I IN 0 TO g_number_of_divisions-1 GENERATE
     dout_v((g_packing_order(g_packing_order'LOW+I)+1)*g_division_size_bits - 1 downto g_packing_order(g_packing_order'LOW+I)*g_division_size_bits) <= din_v((I+1)*g_division_size_bits - 1 downto I*g_division_size_bits);
   end GENERATE;
