@@ -120,6 +120,10 @@ architecture str of rTwoSDFStage is
 	signal start_of_frame	: std_logic;
 	signal start_of_frame_op1 : std_logic;
 	signal reject_data				: std_logic;
+	signal weight_re_d1 : std_logic_vector(g_twid_dat_w -1 downto 0);
+	signal weight_im_d1 : std_logic_vector(g_twid_dat_w -1 downto 0);
+	signal weight_re_to_mult : std_logic_vector(g_twid_dat_w -1 downto 0);
+	signal weight_im_to_mult : std_logic_vector(g_twid_dat_w -1 downto 0);
 begin
 	rst 					<= '1' when in_sync='1' and in_val='1' else '0';
 	valid_int 			    <= in_val when in_sync='0' else '0';
@@ -194,11 +198,13 @@ begin
 			weight_re => weight_re,
 			weight_im => weight_im
 		);
-
+		
 		--tgen_dly4 : if c_ram.latency=4 generate
 		dly_proc : process (clk)
 		begin
 			if rising_edge(clk) then
+				weight_re_d1 <= weight_re;
+				weight_im_d1 <= weight_im;
 				bf_re_d1  <= bf_re;
 				bf_im_d1  <= bf_im;
 				bf_val_d1 <= bf_val;
@@ -218,6 +224,12 @@ begin
 	------------------------------------------------------------------------------
 	-- twiddle multiplication
 	------------------------------------------------------------------------------
+	assert g_pipeline.bf_lat <= 2 report "Error: g_pipeline.bf_lat must be <= 2" severity failure;
+
+	weight_re_to_mult <= weight_re_d1 when g_pipeline.bf_lat=2 else
+						 weight_re;
+	weight_im_to_mult <= weight_im_d1 when g_pipeline.bf_lat=2 else
+						 weight_im;
 	u_TwiddleMult : entity work.rTwoWMul
 		generic map(
             g_use_dsp          => g_use_dsp,
@@ -229,8 +241,8 @@ begin
 		port map(
 			clk       => clk,
 			rst       => rst,
-			weight_re => weight_re,
-			weight_im => weight_im,
+			weight_re => weight_re_to_mult,
+			weight_im => weight_im_to_mult,
 			in_re     => bf_re_tomult,
 			in_im     => bf_im_tomult,
 			in_val    => bf_val_tomult,
@@ -309,7 +321,7 @@ begin
 
 	sof_delay : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_pipeline.stage_lat+g_pipeline.mul_lat+c_ram.latency-1
+			g_pipeline => g_pipeline.stage_lat+g_pipeline.mul_lat+c_ram.latency-2+g_pipeline.bf_lat
 		)
 		port map(
 			clk     => clk,
