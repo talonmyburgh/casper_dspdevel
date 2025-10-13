@@ -236,6 +236,7 @@ begin
             g_use_variant      => g_use_variant,
 			g_round     	   => g_use_mult_round,
             g_stage            => g_stage,
+			
             g_lat              => g_pipeline.mul_lat
 		)
 		port map(
@@ -254,11 +255,13 @@ begin
 	------------------------------------------------------------------------------
 	-- stage requantization
 	------------------------------------------------------------------------------
+	assert g_pipeline.stage_lat >= 2 report "Error: g_pipeline.stage_lat must be >= 2" severity failure;
 	u_requantize_re : entity casper_requantize_lib.r_shift_requantize
 		generic map(
 			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_re'LENGTH,
+			g_use_pipestages      => True,
 			g_out_dat_w           => out_re'LENGTH
 		)
 		port map(
@@ -273,6 +276,7 @@ begin
 			g_lsb_round           => g_round,
 			g_lsb_round_clip      => FALSE,
 			g_in_dat_w            => in_im'LENGTH,
+			g_use_pipestages      => True,
 			g_out_dat_w           => out_im'LENGTH
 		)
 		port map(
@@ -287,7 +291,7 @@ begin
 	------------------------------------------------------------------------------
 	u_re_lat : entity common_components_lib.common_pipeline
 		generic map(
-			g_pipeline  => g_pipeline.stage_lat,
+			g_pipeline  => g_pipeline.stage_lat-1,
 			g_in_dat_w  => out_re'length,
 			g_out_dat_w => out_re'length
 		)
@@ -299,7 +303,7 @@ begin
 
 	u_im_lat : entity common_components_lib.common_pipeline
 		generic map(
-			g_pipeline  => g_pipeline.stage_lat,
+			g_pipeline  => g_pipeline.stage_lat-1,
 			g_in_dat_w  => out_im'length,
 			g_out_dat_w => out_im'length
 		)
@@ -311,7 +315,7 @@ begin
 
 	u_val_lat : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_pipeline.stage_lat-1
+			g_pipeline => g_pipeline.stage_lat
 		)
 		port map(
 			clk     => clk,

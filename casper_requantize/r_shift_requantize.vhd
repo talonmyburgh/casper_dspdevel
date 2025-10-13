@@ -12,6 +12,7 @@ ENTITY r_shift_requantize IS
     g_lsb_round           : t_rounding_mode  := ROUND;  -- = ROUND, ROUNDINF or TRUNCATE
     g_lsb_round_clip      : BOOLEAN := FALSE;     -- when true round clip to +max to avoid wrapping to output -min (signed) or 0 (unsigned) due to rounding
     g_in_dat_w            : NATURAL := 17;        -- input data width
+    g_use_pipestages      : BOOLEAN := FALSE;    -- use pipestages for rounding logic.
     g_out_dat_w           : NATURAL := 18         -- output data width
   );
   PORT (
@@ -30,13 +31,35 @@ ARCHITECTURE str OF r_shift_requantize IS
 
 BEGIN
   -- Replace common_round, since we only shift down or not at all. Furthermore, we don't use the pipeline in this case.
-  shift_proc : process(scale, in_dat)
-  begin
-    if scale = '1' then
-        res_dat <= RESIZE_SVEC(s_round(in_dat, 1, g_lsb_round_clip, g_lsb_round), g_in_dat_w);
-    else
+  use_clk_gen : if g_use_pipestages generate
+    shift_proc : process(clk)
+    begin
+      if rising_edge(clk) then
+        if clken = '1' then
+          -- if scale = '1' then remove LSB by way of rshift, else pass input to output
+          -- Note that the rounding mode and clip only apply when scale = '1'
+          if scale = '1' then
+            res_dat <= RESIZE_SVEC(s_round(in_dat(g_in_dat_w-1 downto 0), 1, g_lsb_round_clip, g_lsb_round), g_in_dat_w);
+          else
+            res_dat <= in_dat;
+          end if;
+          out_dat   <= RESIZE_SVEC(res_dat, g_out_dat_w);
+        end if;
+      end if;
+    end process;
+  else generate
+    shift_proc : process(in_dat, scale)
+    begin
+      -- if scale = '1' then remove LSB by way of rshift, else pass input to output
+      -- Note that the rounding mode and clip only apply when scale = '1'
+      if scale = '1' then
+        res_dat <= RESIZE_SVEC(s_round(in_dat(g_in_dat_w-1 downto 0), 1, g_lsb_round_clip, g_lsb_round), g_in_dat_w);
+      else
         res_dat <= in_dat;
-    end if;
-  end process;
-  out_dat <= RESIZE_SVEC(res_dat, g_out_dat_w);
+      end if;
+    end process;
+    out_dat   <= RESIZE_SVEC(res_dat, g_out_dat_w);
+  end generate use_clk_gen;
+
+  
 END str;
