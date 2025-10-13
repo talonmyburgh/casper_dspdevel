@@ -291,7 +291,7 @@ begin
 	------------------------------------------------------------------------------
 	u_re_lat : entity common_components_lib.common_pipeline
 		generic map(
-			g_pipeline  => g_pipeline.stage_lat-1,
+			g_pipeline  => g_pipeline.stage_lat-2,
 			g_in_dat_w  => out_re'length,
 			g_out_dat_w => out_re'length
 		)
@@ -303,7 +303,7 @@ begin
 
 	u_im_lat : entity common_components_lib.common_pipeline
 		generic map(
-			g_pipeline  => g_pipeline.stage_lat-1,
+			g_pipeline  => g_pipeline.stage_lat-2,
 			g_in_dat_w  => out_im'length,
 			g_out_dat_w => out_im'length
 		)
