@@ -315,7 +315,7 @@ begin
 
 	u_val_lat : entity common_components_lib.common_pipeline_sl
 		generic map(
-			g_pipeline => g_pipeline.stage_lat
+			g_pipeline => g_pipeline.stage_lat-1
 		)
 		port map(
 			clk     => clk,
